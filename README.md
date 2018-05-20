@@ -30,31 +30,8 @@ The Overwatch window the CustomGame class is using must have default colorblind,
 
 ## Examples
 
-The code below will disable all maps except for Dorado and Eichenwalde.
-```C#
-CustomGame cg = new CustomGame();
+- [ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
 
-// Tells the CustomGame class which modes are enabled in the custom game.
-cg.ModesEnabled = new ModesEnabled()
-{
-	Assault = true,
-	AssaultEscort = true,
-	Control = true,
-	Escort = true,
-};
+- [1. Creating a game of tag](https://www.abyxa.net/Library/Tag.html "1. Creating a game of tag")
 
-// In case of event exclusive maps, tells the CustomGame class that there are no Overwatch events currently.
-cg.CurrentOverwatchEvent = Event.None;
-
-// Disable all maps except for dorado.
-cg.Maps.ToggleMap(ToggleAction.DisableAll, Map.E_Dorado, Map.AE_Eichenwalde);
-```
-[CustomGame.CG_Maps.ToggleMap()](https://www.abyxa.net/Library/CustomGame/Maps/ToggleMap.html "CustomGame.CG_Maps.ToggleMap()")
-
-<hr>
-
-[ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
-
-[1. Creating a game of tag](https://www.abyxa.net/Library/Tag.html "1. Creating a game of tag")
-
-[2. Map voting system](https://www.abyxa.net/Library/MapVoting.html "2. Map voting system")
+- [2. Map voting system](https://www.abyxa.net/Library/MapVoting.html "2. Map voting system")
