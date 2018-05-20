@@ -26,7 +26,7 @@ CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethod.ScreenCopy);
 
 The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum. Some methods may not work unless you are the moderator of the custom game and/or you are in spectator.
 
-##Example
+##Examples
 
 The code below will disable all maps except for Dorado and Eichenwalde.
 ```C#
@@ -48,3 +48,5 @@ cg.CurrentOverwatchEvent = Event.None;
 cg.Maps.ToggleMap(ToggleAction.DisableAll, Map.E_Dorado, Map.AE_Eichenwalde);
 ```
 [CustomGame.CG_Maps.ToggleMap()](https://www.abyxa.net/Library/CustomGame/Maps/ToggleMap.html "CustomGame.CG_Maps.ToggleMap()")
+
+For more examples, see ZombieBot.
