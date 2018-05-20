@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "CG_PlayerInfo";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <p><strong>Deltin.CustomGameAutomation.<span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span> class</strong></p>
+        <table style="margin-left: 10px">
+            <tr>
+                <th>Method</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><a href="GetQueueTeam.html">GetQueueTeam(<span class="blue">int</span>)</a></td>
+                <td>Gets the team a player in the queue is queueing for.</td>
+            </tr>
+            <tr>
+                <td><a href="IsHeroChosen.html">IsHeroChosen(<span class="type">int</span>, <span class="blue">bool</span>)</a></td>
+                <td>Checks if targetted player has chosen a hero.</td>
+            </tr>
+            <tr>
+                <td><a href="IsUltimateReady.html">IsUltimateReady(<span class="blue">int</span>)</a></td>
+                <td>Check if the input slot has their ultimate ability.</td>
+            </tr>
+            <tr>
+                <td><a href="MaxPlayerCount.html">MaxPlayerCount()</a></td>
+                <td>Returns the maximum player count of both teams.</td>
+            </tr>
+            <tr>
+                <td><a href="ModeratorSlot.html">ModeratorSlot()</a></td>
+                <td>Gets the slot that the moderator is on.</td>
+            </tr>
+            <tr>
+                <td><a href="PlayerExists.html">PlayerExists(<span class="blue">string</span>, <span class="type">Region</span>[])</a></td>
+                <td>Tests if player account exists via battletag.</td>
+            </tr>
+            <tr>
+                <td><a href="PlayersDead-1.html">PlayersDead(<span class="blue">bool</span>)</a></td>
+                <td>Returns a list of players who are dead.</td>
+            </tr>
+            <tr>
+                <td><a href="PlayersDead-2.html">PlayersDead(<span class="type">List</span>&lt;<span class="blue">int</span>&gt;, <span class="blue">bool</span>)</a></td>
+                <td>Returns a list of players who are dead.</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

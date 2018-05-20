@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "TogglePause()";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Pause</span>.TogglePause();</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> TogglePause()</pre>
+        </div>
+
+        <p>
+            Toggles moderator pause feature. Apon unpausing, a 5 second countdown is shown to all players until they can move again.
+        </p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="comment">// 5 second countdown for race.</span>
+
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    cg.Pause.TogglePause(); <span class="comment">// Pause game.</span>
+    cg.Pause.TogglePause(); <span class="comment">// Unpause and start 5 second countdown.</span>
+    cg.Chat.Chat(<span class="string">"Get ready to race!"</span>);
+}
+</pre>
+        <p>See also:</p>
+        <p><a href="Pause.html">Pause()</a></p>
+        <p><a href="Unpause.html">Unpause()</a></p>
+    </div>
+</body>
+</html>

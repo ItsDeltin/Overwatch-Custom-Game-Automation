@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "MapIDFromName(string)";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Maps</span>.MapIDFromName(<span class="blue">string</span> map)</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">Map</span> MapIDFromName(
+    <span class="blue">string</span> map
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>map</i><br />
+                    Map name.<br />
+                    Type: string<br />
+                </p>
+            </div>
+            <div class="returns">
+                Type: Deltin.CustomGameAutomation.Map<br />
+                The ID of the map from the name.
+            </div>
+        </div>
+
+        <p>Gets map ID from string.</p>
+
+        <p>The example below will switch the current map to Hollywood.</p>
+        
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="comment">// Set enabled modes.</span>
+    cg.ModesEnabled.Assault = <span class="blue">true</span>;
+    cg.ModesEnabled.AssaultEscort = <span class="blue">true</span>;
+    cg.ModesEnabled.Control = <span class="blue">true</span>;
+    cg.ModesEnabled.Escort = <span class="blue">true</span>;
+
+    <span class="comment">// Set the current overwatch event.</span>
+    cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+    <span class="blue">string</span> mapname = <span class="string">"AE_Hollywood"</span>; <span class="comment">// Map name</span>
+    <span class="type">Map</span> mapID = cg.Maps.MapIDFromName(mapname); <span class="comment">// Get map ID from mapname</span>
+    cg.Maps.ToggleMap(<span class="type">MapToggleAction</span>.DisableAll, mapID); <span class="comment">// Disable all maps except Hollywood</span>
+}
+</pre>
+        <p>See also:</p>
+        <p><a href="ToggleMap.html">ToggleMap()</a></p>
+        <p><a href="MapNameFromID.html">MapNameFromID()</a></p>
+        <p><a href="../../Map.html">Map tutorial</a></p>
+    </div>
+</body>
+</html>

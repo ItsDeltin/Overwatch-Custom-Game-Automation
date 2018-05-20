@@ -1,0 +1,147 @@
+﻿body {
+    background-color: #313245;
+    font-family: Helvetica;
+    white-space: nowrap;
+}
+
+.sidebar {
+    background-color: #444675;
+    border: 2px solid #C2C2C2;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: inline-block;
+    width: 300px;
+}
+
+    .sidebar a {
+        color: white;
+        display: block;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sidebar a strong {
+        color: #E9FFB4;
+    }
+
+.content {
+    background-color: white;
+    padding: 10px;
+    border: 2px solid #C2C2C2;
+    display: inline-block;
+    vertical-align: top;
+    width: 1500px;
+    white-space: normal;
+    overflow: auto;
+    margin-left: 5px;
+}
+
+/*
+    &#9654; for arrow
+    &#9670; for diamond
+    &#9679; for circle
+*/
+.settings {
+    padding: 10px;
+    margin: 10px;
+    overflow: scroll;
+    max-height: 600px;
+	border: 1px solid gray;
+}
+    .settings .title {
+    }
+    .settings .primary {
+    }
+    .settings .secondary {
+        margin-left: 20px;
+    }
+    .settings .option {
+        margin-left: 40px;
+    }
+
+pre {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid gray;
+    overflow-x: auto;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    min-width: 300px;
+}
+tr:nth-child(even) {
+    background: #F2F2F2;
+}
+
+.p-icon {
+    width: 20px;
+    float: right;
+    margin-left: 5px;
+}
+
+.content hr {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.parameters::before {
+    content: "Parameters";
+    font-weight: bold;
+    margin-left: -30px;
+}
+.parameters p:first-of-type {
+    margin-top: 5px;
+}
+.parameters {
+    margin-left: 50px;
+}
+.parameters i {
+    margin-left: -20px;
+}
+.returns::before {
+    content: "Return Value";
+    display: block;
+    font-weight: bold;
+}
+.method-data {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.opacity {
+    opacity: 0.4;
+    transition: 0.25s;
+}
+.opacity:hover {
+    opacity: 1;
+    
+}
+a {
+	color: unset;
+}
+
+.field {
+    font-family: monospace;
+}
+.string {
+    color: darkred;
+}
+.blue {
+    color: blue;
+}
+.type {
+    color: #468989;
+}
+.comment {
+    color: green;
+}

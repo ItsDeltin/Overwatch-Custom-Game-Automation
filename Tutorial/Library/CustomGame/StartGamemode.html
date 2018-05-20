@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "StartGamemode()";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="../Methods.html">Methods</a><br />
+        <strong><a href="StartGamemode.html" style="margin-left: 10px;">StartGamemode</a></strong>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.StartGamemode();</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> StartGamemode()</pre>
+        </div>
+
+        <p>Starts the game when waiting for players.</p>
+    </div>
+</body>
+</html>

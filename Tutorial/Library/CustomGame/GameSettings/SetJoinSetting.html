@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "SetJoinSetting(Join)";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Settings</span>.SetJoinSetting(<span class="type">Join</span> setting);</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> SetJoinSetting(
+    <span class="type">Join</span> setting
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>setting</i><br />
+                    Change who can join to.<br />
+                    Type: Deltin.CustomGameAutomation.Join
+                </p>
+            </div>
+        </div>
+
+        <p>
+            Changes who can join.<br />
+            <span class="type">Join</span>.Everyone: Everyone from your region can join.<br />
+            <span class="type">Join</span>.FriendsOnly: Everyone from your friends list can join.<br />
+            <span class="type">Join</span>.InviteOnly: No one can join unless you invite them with CustomGame.InvitePlayer().
+        </p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> System.Threading;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="comment">// Set game to friends only when maximum player count has been reached. Set back to ispublic when slots open up.</span>
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+    <span class="blue">bool</span> ispublic = <span class="blue">true</span>;
+    <span class="blue">const int</span> maxplayercount = 10; <span class="comment">// Maximum player count</span>
+    <span class="blue">while</span> (<span class="blue">true</span>) 
+    {
+        <span class="blue">int</span> playercount = cg.PlayerCount; <span class="comment">// Get player count</span>
+        <span class="blue">if</span> (playercount < maxplayercount && ispublic == <span class="blue">false</span>) 
+        {
+            <span class="comment">// if the player count is less than the maximum player count and lobby is private, make lobby public.</span>
+            cg.GameSettings.SetJoinSetting(<span class="type">Join</span>.Everyone);
+            ispublic = <span class="blue">true</span>;
+        }
+        <span class="blue">else if</span> (playercount >= maxplayercount && ispublic == <span class="blue">true</span>) 
+        {
+            <span class="comment">// if the player count is equal to or greater than the maximum player count and lobby is public, make lobby private.</span>
+            cg.GameSettings.SetJoinSetting(<span class="type">Join</span>.FriendsOnly);
+            ispublic = <span class="blue">false</span>;
+        }
+        <span class="type">Thread</span>.Sleep(50);
+    }
+}
+</pre>
+    </div>
+</body>
+</html>

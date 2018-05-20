@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "CG_Interact";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <p><strong>Deltin.CustomGameAutomation.<span class="type">CustomGame</span>.<span class="type">CG_Interact</span> class</strong></p>
+        <table style="margin-left: 10px">
+            <tr>
+                <th>Method</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><a href="Move.html">Move(<span class="blue">int</span>, <span class="blue">int</span>)</a></td>
+                <td>Moves player's slot.</td>
+            </tr>
+            <tr>
+                <td><a href="RemoveAllBots.html">RemoveAllBots(<span class="blue">int</span>)</a></td>
+                <td>Removes all AI from the game. Input slot must be an AI.</td>
+            </tr>
+            <tr>
+                <td><a href="RemoveFromGame.html">RemoveFromGame(<span class="blue">int</span>)</a></td>
+                <td>Removes player or AI from the game.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapAll.html">SwapAll()</a></td>
+                <td>Swaps players in both teams. Only works when the max player count is the same for both teams.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapTeam.html">SwapTeam(<span class="blue">int</span>)</a></td>
+                <td>Swaps team of player.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapToBlue.html">SwapToBlue(<span class="blue">int</span>)</a></td>
+                <td>Swaps player to blue team.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapToNeutral.html">SwapToNeutral(<span class="blue">int</span>)</a></td>
+                <td>Swaps player in queue to neutral team.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapToRed.html">SwapToRed(<span class="blue">int</span>)</a></td>
+                <td>Swaps player to red team.</td>
+            </tr>
+            <tr>
+                <td><a href="SwapToSpectators.html">SwapToSpectators(<span class="blue">int</span>)</a></td>
+                <td>Swaps player to spectators.</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

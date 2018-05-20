@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "CG_Maps";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <p><strong>Deltin.CustomGameAutomation.<span class="type">CustomGame</span>.<span class="type">CG_Maps</span> class</strong></p>
+        <table style="margin-left: 10px">
+            <tr>
+                <th>Method</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><a href="MapIDFromName.html">MapIDFromName(<span class="blue">string</span>)</a></td>
+                <td>Gets map ID from string.</td>
+            </tr>
+            <tr>
+                <td><a href="MapNameFromID.html">MapNameFromID(<span class="type">Map</span>)</a></td>
+                <td>Gets map name from map ID.</td>
+            </tr>
+            <tr>
+                <td><a href="ToggleMap.html">ToggleMap(<span class="type">ToggleAction</span>, <span class="type">Map</span>[])</a></td>
+                <td>Toggles map in Overwatch.</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

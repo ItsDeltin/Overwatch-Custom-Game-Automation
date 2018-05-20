@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "GetQueueTeam(int)";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span>.GetQueueTeam(<span class="blue">int</span> slot)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">QueueTeam</span> GetQueueTeam(
+    <span class="blue">int</span> slot
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>slot</i><br />
+                    Slot to check team for.<br />
+                    Type: int
+                </p>
+            </div>
+            <div class="returns">
+                Type: Deltin.CustomGameAutomation.QueueTeam<br />
+                The team the player in the queue is queueing for.
+            </div>
+        </div>
+        <p>Gets the team that a player in the queue is queueing for.</p>
+        <p><span class="type">QueueTeam</span>.Neutral: Player in queue is queueing for both teams.</p>
+        <p><span class="type">QueueTeam</span>.Blue: Player in queue is queueing for blue.</p>
+        <p><span class="type">QueueTeam</span>.Red: Player in queue is queueing for red.</p>
+    </div>
+</body>
+</html>

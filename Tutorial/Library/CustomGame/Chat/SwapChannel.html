@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "SwapChannel(Channel)";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Chat</span>.SwapChannel(<span class="type">Channel</span> channel);</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> SwapChannel(
+    <span class="type">Channel</span> channel
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>channel</i><br />
+                    Channel to swap to.<br />
+                    Type: Deltin.CustomGameAutomation.Channel
+                </p>
+            </div>
+        </div>
+
+        <p>
+            Switches to a chat channel.
+        </p>
+
+        <p>The code below will send a message to everyone in spectators, then join match channel.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    cg.Chat.SwapChannel(<span class="type">Channel</span>.Team); <span class="comment">// join team channel (spectator)</span>
+
+    cg.Chat.Chat(<span class="string">"Welcome to typical boss battle! You are currently in the queue, please wait."</span>);
+
+    cg.Chat.SwapChannel(<span class="type">Channel</span>.Match); <span class="comment">// join match channel</span>
+}
+</pre>
+    </div>
+</body>
+</html>

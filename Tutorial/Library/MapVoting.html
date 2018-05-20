@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "2. Map voting system";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong>Map voting system</strong><br />
+        <p>This will make 3 random maps that the players can vote for by typing "$VOTE 1", "$VOTE 2", or "$VOTE 3" into the chat.</p>
+        <p>First, lets set which modes are enabled and which maps can be selected.</p>
+        <pre>
+<span style="color: blue">using</span> System;
+<span style="color: blue">using</span> System.Linq;
+<span style="color: blue">using</span> Deltin.CustomGameAutomation;
+
+<span style="color: blue">namespace</span> CustomgameBotLibrary_MapVoting
+{
+    <span style="color: blue">class</span> <span class="type">Program</span>
+    {
+        <span style="color: blue">static void</span> Main(<span style="color: blue">string</span>[] args)
+        {
+            <span class="type">CustomGame</span> cg = <span style="color: blue">new</span> <span class="type">CustomGame</span>();
+
+            <span class="comment">// Modes that are enabled in the custom game.</span>
+            cg.ModesEnabled.TeamDeathmatch = <span style="color: blue">true</span>;
+            <span class="comment">// Set the current overwatch event</span>
+            cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+            <span class="comment">// Maps that can be selected.</span>
+            <span class="type">Map</span>[] maps = <span class="blue">new</span> <span class="type">Map</span>[]
+            {
+                <span class="type">Map</span>.TDM_Dorado,
+                <span class="type">Map</span>.TDM_Eichenwalde,
+                <span class="type">Map</span>.TDM_Hanamura,
+                <span class="type">Map</span>.TDM_Hollywood,
+                <span class="type">Map</span>.TDM_HorizonLunarColony,
+                <span class="type">Map</span>.TDM_TempleOfAnubis,
+                <span class="type">Map</span>.TDM_VolskayaIndustries
+            };
+            <span class="blue">string</span>[] mapNames = <span class="blue">new string</span>[]
+            {
+                <span class="string">"Dorado"</span>,
+                <span class="string">"Eichenwalde"</span>,
+                <span class="string">"Hanamura"</span>,
+                <span class="string">"Hollywood"</span>,
+                <span class="string">"Horizon"</span>,
+                <span class="string">"TempleOfAnubis"</span>,
+                <span class="string">"Volskaya"</span>
+            };
+        }
+    }
+}
+</pre>
+        <p>Then, choose 3 random maps from the maps array and store it in a new array.</p>
+        <pre>
+<span style="color: blue">using</span> System;
+<span style="color: blue">using</span> System.Linq;
+<span style="color: blue">using</span> Deltin.CustomGameAutomation;
+
+<span style="color: blue">namespace</span> CustomgameBotLibrary_MapVoting
+{
+    <span style="color: blue">class</span> <span class="type">Program</span>
+    {
+        <span style="color: blue">static void</span> Main(<span style="color: blue">string</span>[] args)
+        {
+            <span class="opacity"><span class="type">CustomGame</span> cg = <span style="color: blue">new</span> <span class="type">CustomGame</span>();
+
+            <span class="comment">// Modes that are enabled in the custom game.</span>
+            cg.ModesEnabled.TeamDeathmatch = <span style="color: blue">true</span>;
+            <span class="comment">// Set the current overwatch event</span>
+            cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+            <span class="comment">// Maps that can be selected.</span>
+            <span class="type">Map</span>[] maps = <span class="blue">new</span> <span class="type">Map</span>[]
+            {
+                <span class="type">Map</span>.TDM_Dorado,
+                <span class="type">Map</span>.TDM_Eichenwalde,
+                <span class="type">Map</span>.TDM_Hanamura,
+                <span class="type">Map</span>.TDM_Hollywood,
+                <span class="type">Map</span>.TDM_HorizonLunarColony,
+                <span class="type">Map</span>.TDM_TempleOfAnubis,
+                <span class="type">Map</span>.TDM_VolskayaIndustries
+            };
+            <span class="blue">string</span>[] mapNames = <span class="blue">new string</span>[]
+            {
+                <span class="string">"Dorado"</span>,
+                <span class="string">"Eichenwalde"</span>,
+                <span class="string">"Hanamura"</span>,
+                <span class="string">"Hollywood"</span>,
+                <span class="string">"Horizon"</span>,
+                <span class="string">"TempleOfAnubis"</span>,
+                <span class="string">"Volskaya"</span>
+            };</span>
+
+            <span class="comment">// Get maps</span>
+            <span class="type">Random</span> rnd = <span class="blue">new</span> <span class="type">Random</span>();
+            <span class="blue">int</span>[] votemap = <span class="blue">new int</span>[3]; <span class="comment">// Index array of maps that can be voted for.</span>
+            <span class="comment">// Choose random maps to be added to the votemap variable.</span>
+            <span class="blue">for</span> (<span class="blue">int</span> i = 0; i < votemap.Length; i++)
+            {
+                <span class="blue">int</span> choose; <span class="comment">// Map index that is chosen.</span>
+                <span class="blue">while</span> (<span class="blue">true</span>)
+                {
+                    <span class="comment">// Make sure there are no duplicates when choosing the next map to be added to the votemap array</span>
+                    choose = rnd.Next(maps.Length);
+                    <span class="blue">if</span> (votemap.Contains(choose))
+                        <span class="blue">continue</span>;
+                    <span class="blue">break</span>;
+                }
+                votemap[i] = choose;
+            }
+            <span class="comment">// We now have an array, votemap, with 3 random map indexes from the maps array.</span>
+        }
+    }
+}
+</pre>
+        <p>Now send a chat message showing the maps that can be voted for.</p>
+        <pre>
+<span style="color: blue">using</span> System;
+<span style="color: blue">using</span> System.Linq;
+<span style="color: blue">using</span> Deltin.CustomGameAutomation;
+
+<span style="color: blue">namespace</span> CustomgameBotLibrary_MapVoting
+{
+    <span style="color: blue">class</span> <span class="type">Program</span>
+    {
+        <span style="color: blue">static void</span> Main(<span style="color: blue">string</span>[] args)
+        {
+            <span class="opacity"><span class="type">CustomGame</span> cg = <span style="color: blue">new</span> <span class="type">CustomGame</span>();
+
+            <span class="comment">// Modes that are enabled in the custom game.</span>
+            cg.ModesEnabled.TeamDeathmatch = <span style="color: blue">true</span>;
+            <span class="comment">// Set the current overwatch event</span>
+            cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+            <span class="comment">// Maps that can be selected.</span>
+            <span class="type">Map</span>[] maps = <span class="blue">new</span> <span class="type">Map</span>[]
+            {
+                <span class="type">Map</span>.TDM_Dorado,
+                <span class="type">Map</span>.TDM_Eichenwalde,
+                <span class="type">Map</span>.TDM_Hanamura,
+                <span class="type">Map</span>.TDM_Hollywood,
+                <span class="type">Map</span>.TDM_HorizonLunarColony,
+                <span class="type">Map</span>.TDM_TempleOfAnubis,
+                <span class="type">Map</span>.TDM_VolskayaIndustries
+            };
+            <span class="blue">string</span>[] mapNames = <span class="blue">new string</span>[]
+            {
+                <span class="string">"Dorado"</span>,
+                <span class="string">"Eichenwalde"</span>,
+                <span class="string">"Hanamura"</span>,
+                <span class="string">"Hollywood"</span>,
+                <span class="string">"Horizon"</span>,
+                <span class="string">"TempleOfAnubis"</span>,
+                <span class="string">"Volskaya"</span>
+            };
+
+            <span class="comment">// Get maps</span>
+            <span class="type">Random</span> rnd = <span class="blue">new</span> <span class="type">Random</span>();
+            <span class="blue">int</span>[] votemap = <span class="blue">new int</span>[3]; <span class="comment">// Index array of maps that can be voted for.</span>
+            <span class="comment">// Choose random maps to be added to the votemap variable.</span>
+            <span class="blue">for</span> (<span class="blue">int</span> i = 0; i < votemap.Length; i++)
+            {
+                <span class="blue">int</span> choose; <span class="comment">// Map index that is chosen.</span>
+                <span class="blue">while</span> (<span class="blue">true</span>)
+                {
+                    <span class="comment">// Make sure there are no duplicates when choosing the next map to be added to the votemap array</span>
+                    choose = rnd.Next(maps.Length);
+                    <span class="blue">if</span> (votemap.Contains(choose))
+                        <span class="blue">continue</span>;
+                    <span class="blue">break</span>;
+                }
+                votemap[i] = choose;
+            }
+            <span class="comment">// We now have an array, votemap, with 3 random map indexes from the maps array.</span></span>
+            <span class="comment">// Send message to chat of what maps can be voted for.</span>
+            <span class="blue">string</span> type = <span class="string">"Vote for map! (15 seconds)                                     " </span>
+                + mapNames[votemap[0]] + <span class="string">" - $VOTE 1                               " </span>
+                + mapNames[votemap[1]] + <span class="string">" - $VOTE 2                               " </span>
+                + mapNames[votemap[2]] + <span class="string">" - $VOTE 3"</span>;
+            cg.Chat.Chat(type);
+        }
+    }
+}
+</pre>
+        <p>This will send a chat message like this:</p>
+        <img src="Assets/VoteMap-1.jpg"/>
+        <p>To start listening to the $VOTE command, add the string "$VOTE" to the <span class="field"><span class="type">CustomGame</span>.<span class="type">Commands</span>.ListenTo</span> variable, and set <span class="field"><span class="type">CustomGame</span>.<span class="type">Commands</span>.Listen</span> to true.</p>
+                <pre>
+<span style="color: blue">using</span> System;
+<span style="color: blue">using</span> System.Linq;
+<span style="color: blue">using</span> Deltin.CustomGameAutomation;
+
+<span style="color: blue">namespace</span> CustomgameBotLibrary_MapVoting
+{
+    <span style="color: blue">class</span> <span class="type">Program</span>
+    {
+        <span style="color: blue">static void</span> Main(<span style="color: blue">string</span>[] args)
+        {
+            <span class="opacity"><span class="type">CustomGame</span> cg = <span style="color: blue">new</span> <span class="type">CustomGame</span>();
+
+            <span class="comment">// Modes that are enabled in the custom game.</span>
+            cg.ModesEnabled.TeamDeathmatch = <span style="color: blue">true</span>;
+            <span class="comment">// Set the current overwatch event</span>
+            cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+            <span class="comment">// Maps that can be selected.</span>
+            <span class="type">Map</span>[] maps = <span class="blue">new</span> <span class="type">Map</span>[]
+            {
+                <span class="type">Map</span>.TDM_Dorado,
+                <span class="type">Map</span>.TDM_Eichenwalde,
+                <span class="type">Map</span>.TDM_Hanamura,
+                <span class="type">Map</span>.TDM_Hollywood,
+                <span class="type">Map</span>.TDM_HorizonLunarColony,
+                <span class="type">Map</span>.TDM_TempleOfAnubis,
+                <span class="type">Map</span>.TDM_VolskayaIndustries
+            };
+            <span class="blue">string</span>[] mapNames = <span class="blue">new string</span>[]
+            {
+                <span class="string">"Dorado"</span>,
+                <span class="string">"Eichenwalde"</span>,
+                <span class="string">"Hanamura"</span>,
+                <span class="string">"Hollywood"</span>,
+                <span class="string">"Horizon"</span>,
+                <span class="string">"TempleOfAnubis"</span>,
+                <span class="string">"Volskaya"</span>
+            };
+
+            <span class="comment">// Get maps</span>
+            <span class="type">Random</span> rnd = <span class="blue">new</span> <span class="type">Random</span>();
+            <span class="blue">int</span>[] votemap = <span class="blue">new int</span>[3]; <span class="comment">// Index array of maps that can be voted for.</span>
+            <span class="comment">// Choose random maps to be added to the votemap variable.</span>
+            <span class="blue">for</span> (<span class="blue">int</span> i = 0; i < votemap.Length; i++)
+            {
+                <span class="blue">int</span> choose; <span class="comment">// Map index that is chosen.</span>
+                <span class="blue">while</span> (<span class="blue">true</span>)
+                {
+                    <span class="comment">// Make sure there are no duplicates when choosing the next map to be added to the votemap array</span>
+                    choose = rnd.Next(maps.Length);
+                    <span class="blue">if</span> (votemap.Contains(choose))
+                        <span class="blue">continue</span>;
+                    <span class="blue">break</span>;
+                }
+                votemap[i] = choose;
+            }
+            <span class="comment">// We now have an array, votemap, with 3 random map indexes from the maps array.</span>
+            <span class="comment">// Send message to chat of what maps can be voted for.</span>
+            <span class="blue">string</span> type = <span class="string">"Vote for map! (15 seconds)                                     " </span>
+                + mapNames[votemap[0]] + <span class="string">" - $VOTE 1                               " </span>
+                + mapNames[votemap[1]] + <span class="string">" - $VOTE 2                               " </span>
+                + mapNames[votemap[2]] + <span class="string">" - $VOTE 3"</span>;
+            cg.Chat.Chat(type);</span>
+
+            <span class="comment">// Now, start listening for the "$VOTE" command for 15 seconds.</span>
+            cg.Command.ListenTo.Add(<span class="string">"$VOTE"</span>, <span class="blue">true</span>); <span class="comment">// Listen to the "$VOTE" command</span>
+            cg.Command.SameExecutorCommandUpdate = <span class="blue">true</span>; <span class="comment">// Allows players to change their vote for a map.</span>
+            cg.Command.Listen = <span class="blue">true</span>; <span class="comment">// Start listening</span>
+            System.Threading.<span class="type">Thread</span>.Sleep(15000); <span class="comment">// Wait 15 seconds</span>
+            cg.Command.Listen = <span class="blue">false</span>; <span class="comment">// Stop listening</span>
+        }
+    }
+}
+</pre>
+        <p>Finally, sort through the commands to get the map highest voted for.</p>
+        <pre>
+<span style="color: blue">using</span> System;
+<span style="color: blue">using</span> System.Linq;
+<span style="color: blue">using</span> Deltin.CustomGameAutomation;
+
+<span style="color: blue">namespace</span> CustomgameBotLibrary_MapVoting
+{
+    <span style="color: blue">class</span> <span class="type">Program</span>
+    {
+        <span style="color: blue">static void</span> Main(<span style="color: blue">string</span>[] args)
+        {
+            <span class="opacity"><span class="type">CustomGame</span> cg = <span style="color: blue">new</span> <span class="type">CustomGame</span>();
+
+            <span class="comment">// Modes that are enabled in the custom game.</span>
+            cg.ModesEnabled.TeamDeathmatch = <span style="color: blue">true</span>;
+            <span class="comment">// Set the current overwatch event</span>
+            cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+            <span class="comment">// Maps that can be selected.</span>
+            <span class="type">Map</span>[] maps = <span class="blue">new</span> <span class="type">Map</span>[]
+            {
+                <span class="type">Map</span>.TDM_Dorado,
+                <span class="type">Map</span>.TDM_Eichenwalde,
+                <span class="type">Map</span>.TDM_Hanamura,
+                <span class="type">Map</span>.TDM_Hollywood,
+                <span class="type">Map</span>.TDM_HorizonLunarColony,
+                <span class="type">Map</span>.TDM_TempleOfAnubis,
+                <span class="type">Map</span>.TDM_VolskayaIndustries
+            };
+            <span class="blue">string</span>[] mapNames = <span class="blue">new string</span>[]
+            {
+                <span class="string">"Dorado"</span>,
+                <span class="string">"Eichenwalde"</span>,
+                <span class="string">"Hanamura"</span>,
+                <span class="string">"Hollywood"</span>,
+                <span class="string">"Horizon"</span>,
+                <span class="string">"TempleOfAnubis"</span>,
+                <span class="string">"Volskaya"</span>
+            };
+
+            <span class="comment">// Get maps</span>
+            <span class="type">Random</span> rnd = <span class="blue">new</span> <span class="type">Random</span>();
+            <span class="blue">int</span>[] votemap = <span class="blue">new int</span>[3]; <span class="comment">// Index array of maps that can be voted for.</span>
+            <span class="comment">// Choose random maps to be added to the votemap variable.</span>
+            <span class="blue">for</span> (<span class="blue">int</span> i = 0; i < votemap.Length; i++)
+            {
+                <span class="blue">int</span> choose; <span class="comment">// Map index that is chosen.</span>
+                <span class="blue">while</span> (<span class="blue">true</span>)
+                {
+                    <span class="comment">// Make sure there are no duplicates when choosing the next map to be added to the votemap array</span>
+                    choose = rnd.Next(maps.Length);
+                    <span class="blue">if</span> (votemap.Contains(choose))
+                        <span class="blue">continue</span>;
+                    <span class="blue">break</span>;
+                }
+                votemap[i] = choose;
+            }
+            <span class="comment">// We now have an array, votemap, with 3 random map indexes from the maps array.</span>
+            <span class="comment">// Send message to chat of what maps can be voted for.</span>
+            <span class="blue">string</span> type = <span class="string">"Vote for map! (15 seconds)                                     " </span>
+                + mapNames[votemap[0]] + <span class="string">" - $VOTE 1                               " </span>
+                + mapNames[votemap[1]] + <span class="string">" - $VOTE 2                               " </span>
+                + mapNames[votemap[2]] + <span class="string">" - $VOTE 3"</span>;
+            cg.Chat.Chat(type);
+
+            <span class="comment">// Now, start listening for the "$VOTE" command for 15 seconds.</span>
+            cg.Command.ListenTo.Add(<span class="string">"$VOTE"</span>, <span class="blue">true</span>); <span class="comment">// Listen to the "$VOTE" command</span>
+            cg.Command.SameExecutorCommandUpdate = <span class="blue">true</span>; <span class="comment">// Allows players to change their vote for a map.</span>
+            cg.Command.Listen = <span class="blue">true</span>; <span class="comment">// Start listening</span>
+            System.Threading.<span class="type">Thread</span>.Sleep(15000); <span class="comment">// Wait 15 seconds</span>
+            cg.Command.Listen = <span class="blue">false</span>; <span class="comment">// Stop listening</span></span>
+
+            <span class="comment">// Get results</span>
+            <span class="blue">int</span>[] results = <span class="blue">new int</span>[3]; <span class="comment">// Array to store results in.</span>
+            <span class="blue">foreach</span> (<span class="type">CustomGame</span>.<span class="type">Commands</span>.<span class="type">CommandData</span> command <span class="blue">in</span> cg.Command.ExecutedCommands)
+            {
+                <span class="blue">string</span>[] commandsplit = command.command.Split(<span class="string">' '</span>);
+                <span class="blue">if</span> (commandsplit[0] == <span class="string">"$VOTE"</span>) <span class="comment">// Make sure the command executed is a vote command.</span>
+                {
+                    <span class="blue">if</span> (commandsplit.Length == 2)
+                        <span class="blue">if</span> (<span class="blue">int</span>.TryParse(commandsplit[1], <span class="blue">out int</span> votefor))
+                        {
+                            <span class="comment">// Add to result the map the player voted for</span>
+                            votefor--;
+                            <span class="blue">if</span> (votefor >= 0 && votefor < 3)
+                                results[votefor]++;
+                        }
+                }
+            }
+
+            <span class="blue">string</span> winningmapname = mapNames[votemap[results.ToList().IndexOf(results.Max())]]; <span class="comment">// Gets the highest voted for map.</span>
+            <span class="type">Map</span> winningmap = maps[votemap[results.ToList().IndexOf(results.Max())]]; <span class="comment">// Gets the highest voted for map.</span>
+
+            cg.Command.RemoveAllExecutedCommands(); <span class="comment">// Resets executed commands variable.</span>
+
+            cg.Chat.Chat(<span class="type">String</span>.Format(<span class="string">"{0}: {1} votes, {2}: {3} votes, {4}: {5} votes"</span>
+                , mapNames[votemap[0]], results[0], mapNames[votemap[1]], results[1], mapNames[votemap[2]], results[2])); <span class="comment">// Write results to chat.</span>
+            cg.Chat.Chat(<span class="string">"Next map: "</span> + winningmapname); <span class="comment">// Write name of next map to chat.</span>
+
+            cg.ToggleMap(<span class="type">ToggleAction</span>.DisableAll, winningmap); <span class="comment">// Set next map in custom games.</span>
+
+            <span class="type">Console</span>.WriteLine(<span class="string">"Done. Press enter to exit."</span>);
+            <span class="type">Console</span>.ReadLine();
+        }
+    }
+}
+</pre>
+    </div>
+</body>
+</html>

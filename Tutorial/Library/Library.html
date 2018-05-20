@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "Getting started";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong>Getting started</strong><br />
+        <p>Brightness, gamma, and colorblind settings must be set to normal, with contrast at 0. The user running the bot must be the moderator of the Overwatch server. Some methods will not work unless the moderator is in spectator.</p>
+        <p><a href="">Github link</a></p>
+    </div>
+</body>
+</html>

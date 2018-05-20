@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "Maps";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+
+    <div class="content">
+        <table style="height: 500px; overflow-y: scroll; display: block;">
+            <tr>
+                <th>Map Name</th>
+                <th>Mode</th>
+                <th>ID</th>
+                <th>Event</th>
+            </tr>
+
+            <!-- Assault -->
+            <tr><td>A_Hanamura</td><td>Assault</td><td>0</td><td>None</td></tr>
+            <tr><td>A_Hanamura_Winter</td><td>Assault</td><td>1</td><td>WinterWonderland</td></tr>
+            <tr><td>A_HorizonLunarColony</td><td>Assault</td><td>2</td><td>None</td></tr>
+            <tr><td>A_TempleOfAnubis</td><td>Assault</td><td>3</td><td>None</td></tr>
+            <tr><td>A_VolskayaIndustries</td><td>Assault</td><td>4</td><td>None</td></tr>
+
+            <!-- AssaultEscort -->
+            <tr><td>AE_Eichenwalde</td><td>AssaultEscort</td><td>0</td><td>None</td></tr>
+            <tr><td>AE_Eichenwalde_Halloween</td><td>AssaultEscort</td><td>1</td><td>HalloweenTerror</td></tr>
+            <tr><td>AE_Hollywood</td><td>AssaultEscort</td><td>2</td><td>None</td></tr>
+            <tr><td>AE_Hollywood_Halloween</td><td>AssaultEscort</td><td>3</td><td>HalloweenTerror</td></tr>
+            <tr><td>AE_KingsRow</td><td>AssaultEscort</td><td>4</td><td>None</td></tr>
+            <tr><td>AE_KingsRow_Winter</td><td>AssaultEscort</td><td>5</td><td>WinterWonderland</td></tr>
+            <tr><td>AE_Numbani</td><td>AssaultEscort</td><td>6</td><td>None</td></tr>
+
+            <!-- Capture The Flag -->
+            <tr><td>CTF_Ilios_Lighthouse</td><td>CaptureTheFlag</td><td>0</td><td>None</td></tr>
+            <tr><td>CTF_Ilios_Ruins</td><td>CaptureTheFlag</td><td>1</td><td>None</td></tr>
+            <tr><td>CTF_Ilios_Well</td><td>CaptureTheFlag</td><td>2</td><td>None</td></tr>
+            <tr><td>CTF_Lijiang_ControlCenter</td><td>CaptureTheFlag</td><td>3</td><td>None</td></tr>
+            <tr><td>CTF_Lijiang_Garden</td><td>CaptureTheFlag</td><td>4</td><td>None</td></tr>
+            <tr><td>CTF_Lijiang_NightMarket</td><td>CaptureTheFlag</td><td>5</td><td>None</td></tr>
+            <tr><td>CTF_Nepal_Sanctum</td><td>CaptureTheFlag</td><td>6</td><td>None</td></tr>
+            <tr><td>CTF_Nepal_Shrine</td><td>CaptureTheFlag</td><td>7</td><td>None</td></tr>
+            <tr><td>CTF_Nepal_Village</td><td>CaptureTheFlag</td><td>8</td><td>None</td></tr>
+            <tr><td>CTF_Oasis_CityCenter</td><td>CaptureTheFlag</td><td>9</td><td>None</td></tr>
+            <tr><td>CTF_Oasis_Gardens</td><td>CaptureTheFlag</td><td>10</td><td>None</td></tr>
+            <tr><td>CTF_Oasis_University</td><td>CaptureTheFlag</td><td>11</td><td>None</td></tr>
+
+            <!-- Control -->
+            <tr><td>C_Ilios</td><td>Control</td><td>0</td><td>None</td></tr>
+            <tr><td>C_Lijiang</td><td>Control</td><td>1</td><td>None</td></tr>
+            <tr><td>C_Nepal</td><td>Control</td><td>2</td><td>None</td></tr>
+            <tr><td>C_Oasis</td><td>Control</td><td>3</td><td>None</td></tr>
+
+            <!-- Deathmatch -->
+            <tr><td>DM_BlackForest</td><td>Deathmatch</td><td>0</td><td>None</td></tr>
+            <tr><td>DM_BlackForest_Winter</td><td>Deathmatch</td><td>1</td><td>WinterWonderland</td></tr>
+            <tr><td>DM_Castillo</td><td>Deathmatch</td><td>2</td><td>None</td></tr>
+            <tr><td>DM_ChateauGuillard</td><td>Deathmatch</td><td>3</td><td>None</td></tr>
+            <tr><td>DM_Dorado</td><td>Deathmatch</td><td>4</td><td>None</td></tr>
+            <tr><td>DM_Antarctica</td><td>Deathmatch</td><td>5</td><td>None</td></tr>
+            <tr><td>DM_Antarctica_Winter</td><td>Deathmatch</td><td>6</td><td>None</td></tr>
+            <tr><td>DM_Eichenwalde</td><td>Deathmatch</td><td>7</td><td>None</td></tr>
+            <tr><td>DM_Eichenwalde_Halloween</td><td>Deathmatch</td><td>8</td><td>HalloweenTerror</td></tr>
+            <tr><td>DM_Hanamura</td><td>Deathmatch</td><td>9</td><td>None</td></tr>
+            <tr><td>DM_Hanamura_Winter</td><td>Deathmatch</td><td>10</td><td>WinterWonderland</td></tr>
+            <tr><td>DM_Hollywood</td><td>Deathmatch</td><td>11</td><td>None</td></tr>
+            <tr><td>DM_Hollywood_Halloween</td><td>Deathmatch</td><td>12</td><td>HalloweenTerror</td></tr>
+            <tr><td>DM_HorizonLunarColony</td><td>Deathmatch</td><td>13</td><td>None</td></tr>
+            <tr><td>DM_Ilios_Lighthouse</td><td>Deathmatch</td><td>14</td><td>None</td></tr>
+            <tr><td>DM_Ilios_Ruins</td><td>Deathmatch</td><td>15</td><td>None</td></tr>
+            <tr><td>DM_Ilios_Well</td><td>Deathmatch</td><td>16</td><td>None</td></tr>
+            <tr><td>DM_KingsRow</td><td>Deathmatch</td><td>17</td><td>None</td></tr>
+            <tr><td>DM_KingsRow_Winter</td><td>Deathmatch</td><td>18</td><td>None</td></tr>
+            <tr><td>DM_Lijiang_ControlCenter</td><td>Deathmatch</td><td>19</td><td>None</td></tr>
+            <tr><td>DM_Lijiang_Garden</td><td>Deathmatch</td><td>20</td><td>None</td></tr>
+            <tr><td>DM_Lijiang_NightMarket</td><td>Deathmatch</td><td>21</td><td>None</td></tr>
+            <tr><td>DM_Necropolis</td><td>Deathmatch</td><td>22</td><td>None</td></tr>
+            <tr><td>DM_Nepal_Sanctum</td><td>Deathmatch</td><td>23</td><td>None</td></tr>
+            <tr><td>DM_Nepal_Shrine</td><td>Deathmatch</td><td>24</td><td>None</td></tr>
+            <tr><td>DM_Nepal_Village</td><td>Deathmatch</td><td>25</td><td>None</td></tr>
+            <tr><td>DM_Oasis_CityCenter</td><td>Deathmatch</td><td>26</td><td>None</td></tr>
+            <tr><td>DM_Oasis_Gardens</td><td>Deathmatch</td><td>27</td><td>None</td></tr>
+            <tr><td>DM_Oasis_University</td><td>Deathmatch</td><td>28</td><td>None</td></tr>
+            <tr><td>DM_TempleOfAnubis</td><td>Deathmatch</td><td>29</td><td>None</td></tr>
+            <tr><td>DM_VolskayaIndustries</td><td>Deathmatch</td><td>30</td><td>None</td></tr>
+
+            <!-- Elimination -->
+            <tr><td>ELIM_BlackForest</td><td>Elimination</td><td>0</td><td>None</td></tr>
+            <tr><td>ELIM_BlackForest_Winter</td><td>Elimination</td><td>1</td><td>WinterWonderland</td></tr>
+            <tr><td>ELIM_Castillo</td><td>Elimination</td><td>2</td><td>None</td></tr>
+            <tr><td>ELIM_Antarctica</td><td>Elimination</td><td>3</td><td>None</td></tr>
+            <tr><td>ELIM_Antarctica_Winter</td><td>Elimination</td><td>4</td><td>None</td></tr>
+            <tr><td>ELIM_Ilios_Lighthouse</td><td>Elimination</td><td>5</td><td>None</td></tr>
+            <tr><td>ELIM_Ilios_Ruins</td><td>Elimination</td><td>6</td><td>None</td></tr>
+            <tr><td>ELIM_Ilios_Well</td><td>Elimination</td><td>7</td><td>None</td></tr>
+            <tr><td>ELIM_Lijiang_ControlCenter</td><td>Elimination</td><td>8</td><td>None</td></tr>
+            <tr><td>ELIM_Lijiang_Garden</td><td>Elimination</td><td>9</td><td>None</td></tr>
+            <tr><td>ELIM_Lijiang_NightMarket</td><td>Elimination</td><td>10</td><td>None</td></tr>
+            <tr><td>ELIM_Necropolis</td><td>Elimination</td><td>11</td><td>None</td></tr>
+            <tr><td>ELIM_Nepal_Sanctum</td><td>Elimination</td><td>12</td><td>None</td></tr>
+            <tr><td>ELIM_Nepal_Shrine</td><td>Elimination</td><td>13</td><td>None</td></tr>
+            <tr><td>ELIM_Nepal_Village</td><td>Elimination</td><td>14</td><td>None</td></tr>
+            <tr><td>ELIM_Oasis_CityCenter</td><td>Elimination</td><td>15</td><td>None</td></tr>
+            <tr><td>ELIM_Oasis_Gardens</td><td>Elimination</td><td>16</td><td>None</td></tr>
+            <tr><td>ELIM_Oasis_University</td><td>Elimination</td><td>17</td><td>None</td></tr>
+
+            <!-- Escort -->
+            <tr><td>E_Dorado</td><td>Escort</td><td>0</td><td>None</td></tr>
+            <tr><td>E_Junkertown</td><td>Escort</td><td>1</td><td>None</td></tr>
+            <tr><td>E_Route66</td><td>Escort</td><td>2</td><td>None</td></tr>
+            <tr><td>E_Gibraltar</td><td>Escort</td><td>3</td><td>None</td></tr>
+
+            <!-- Junkensteins Revenge -->
+            <tr><td>JR_Adlersbrunn</td><td>JunkensteinsRevenge</td><td>0</td><td>HalloweenTerror</td></tr>
+
+            <!-- Lucioball -->
+            <tr><td>LB_EstasioDasRas</td><td>Lucioball</td><td>0</td><td>SummerGames</td></tr>
+            <tr><td>LB_SydneyHarbourArena</td><td>Lucioball</td><td>1</td><td>SummerGames</td></tr>
+
+            <!-- Meis Snowball Offensive -->
+            <tr><td>MSO_BlackForest_Winter</td><td>MeisSnowballOffensive</td><td>0</td><td>WinterWonderland</td></tr>
+            <tr><td>MSO_Antarctica_Winter</td><td>MeisSnowballOffensive</td><td>1</td><td>WinterWonderland</td></tr>
+
+            <!-- Skirmish -->
+            <tr><td>SKIRM_Dorado</td><td>Skirmish</td><td>0</td><td>None</td></tr>
+            <tr><td>SKIRM_Eichenwalde</td><td>Skirmish</td><td>1</td><td>None</td></tr>
+            <tr><td>SKIRM_Eichenwalde_Halloween</td><td>Skirmish</td><td>2</td><td>HalloweenTerror</td></tr>
+            <tr><td>SKIRM_Hanamura</td><td>Skirmish</td><td>3</td><td>None</td></tr>
+            <tr><td>SKIRM_Hanamura_Winter</td><td>Skirmish</td><td>4</td><td>WinterWonderland</td></tr>
+            <tr><td>SKIRM_Hollywood</td><td>Skirmish</td><td>5</td><td>None</td></tr>
+            <tr><td>SKIRM_Hollywood_Halloween</td><td>Skirmish</td><td>6</td><td>HalloweenTerror</td></tr>
+            <tr><td>SKIRM_HorizonLunarColony</td><td>Skirmish</td><td>7</td><td>None</td></tr>
+            <tr><td>SKIRM_Ilios</td><td>Skirmish</td><td>8</td><td>None</td></tr>
+            <tr><td>SKIRM_Junkertown</td><td>Skirmish</td><td>9</td><td>None</td></tr>
+            <tr><td>SKIRM_KingsRow</td><td>Skirmish</td><td>10</td><td>None</td></tr>
+            <tr><td>SKIRM_KingsRow_Winter</td><td>Skirmish</td><td>11</td><td>WinterWonderland</td></tr>
+            <tr><td>SKIRM_Lijiang</td><td>Skirmish</td><td>12</td><td>None</td></tr>
+            <tr><td>SKIRM_Nepal</td><td>Skirmish</td><td>13</td><td>None</td></tr>
+            <tr><td>SKIRM_Numbani</td><td>Skirmish</td><td>14</td><td>None</td></tr>
+            <tr><td>SKIRM_Oasis</td><td>Skirmish</td><td>15</td><td>None</td></tr>
+            <tr><td>SKIRM_Route66</td><td>Skirmish</td><td>16</td><td>None</td></tr>
+            <tr><td>SKIRM_TempleOfAnubis</td><td>Skirmish</td><td>17</td><td>None</td></tr>
+            <tr><td>SKIRM_VolskayaIndustries</td><td>Skirmish</td><td>18</td><td>None</td></tr>
+            <tr><td>SKIRM_Gibraltar</td><td>Skirmish</td><td>19</td><td>None</td></tr>
+
+            <!-- Team Deathmatch -->
+            <tr><td>TDM_BlackForest</td><td>TeamDeathmatch</td><td>0</td><td>None</td></tr>
+            <tr><td>TDM_BlackForest_Winter</td><td>TeamDeathmatch</td><td>1</td><td>WinterWonderland</td></tr>
+            <tr><td>TDM_Castillo</td><td>TeamDeathmatch</td><td>2</td><td>None</td></tr>
+            <tr><td>TDM_ChateauGuillard</td><td>TeamDeathmatch</td><td>3</td><td>None</td></tr>
+            <tr><td>TDM_Dorado</td><td>TeamDeathmatch</td><td>4</td><td>None</td></tr>
+            <tr><td>TDM_Antarctica</td><td>TeamDeathmatch</td><td>5</td><td>None</td></tr>
+            <tr><td>TDM_Antarctica_Winter</td><td>TeamDeathmatch</td><td>6</td><td>None</td></tr>
+            <tr><td>TDM_Eichenwalde</td><td>TeamDeathmatch</td><td>7</td><td>None</td></tr>
+            <tr><td>TDM_Eichenwalde_Halloween</td><td>TeamDeathmatch</td><td>8</td><td>HalloweenTerror</td></tr>
+            <tr><td>TDM_Hanamura</td><td>TeamDeathmatch</td><td>9</td><td>None</td></tr>
+            <tr><td>TDM_Hanamura_Winter</td><td>TeamDeathmatch</td><td>10</td><td>WinterWonderland</td></tr>
+            <tr><td>TDM_Hollywood</td><td>TeamDeathmatch</td><td>11</td><td>None</td></tr>
+            <tr><td>TDM_Hollywood_Halloween</td><td>TeamDeathmatch</td><td>12</td><td>HalloweenTerror</td></tr>
+            <tr><td>TDM_HorizonLunarColony</td><td>TeamDeathmatch</td><td>13</td><td>None</td></tr>
+            <tr><td>TDM_Ilios_Lighthouse</td><td>TeamDeathmatch</td><td>14</td><td>None</td></tr>
+            <tr><td>TDM_Ilios_Ruins</td><td>TeamDeathmatch</td><td>15</td><td>None</td></tr>
+            <tr><td>TDM_Ilios_Well</td><td>TeamDeathmatch</td><td>16</td><td>None</td></tr>
+            <tr><td>TDM_KingsRow</td><td>TeamDeathmatch</td><td>17</td><td>None</td></tr>
+            <tr><td>TDM_KingsRow_Winter</td><td>TeamDeathmatch</td><td>18</td><td>None</td></tr>
+            <tr><td>TDM_Lijiang_ControlCenter</td><td>TeamDeathmatch</td><td>19</td><td>None</td></tr>
+            <tr><td>TDM_Lijiang_Garden</td><td>TeamDeathmatch</td><td>20</td><td>None</td></tr>
+            <tr><td>TDM_Lijiang_NightMarket</td><td>TeamDeathmatch</td><td>21</td><td>None</td></tr>
+            <tr><td>TDM_Necropolis</td><td>TeamDeathmatch</td><td>22</td><td>None</td></tr>
+            <tr><td>TDM_Nepal_Sanctum</td><td>TeamDeathmatch</td><td>23</td><td>None</td></tr>
+            <tr><td>TDM_Nepal_Shrine</td><td>TeamDeathmatch</td><td>24</td><td>None</td></tr>
+            <tr><td>TDM_Nepal_Village</td><td>TeamDeathmatch</td><td>25</td><td>None</td></tr>
+            <tr><td>TDM_Oasis_CityCenter</td><td>TeamDeathmatch</td><td>26</td><td>None</td></tr>
+            <tr><td>TDM_Oasis_Gardens</td><td>TeamDeathmatch</td><td>27</td><td>None</td></tr>
+            <tr><td>TDM_Oasis_University</td><td>TeamDeathmatch</td><td>28</td><td>None</td></tr>
+            <tr><td>TDM_TempleOfAnubis</td><td>TeamDeathmatch</td><td>29</td><td>None</td></tr>
+            <tr><td>TDM_VolskayaIndustries</td><td>TeamDeathmatch</td><td>30</td><td>None</td></tr>
+
+            <!-- Yeti Hunter -->
+            <tr><td>YH_Nepal_Village</td><td>YetiHunter</td><td>0</td><td>WinterWonderland</td></tr>
+
+        </table>
+        <p>To set maps, you need to set <span class="type">CustomGame</span>.EnabledModes and <span class="type">CustomGame</span>.CurrentOverwatchEvent. You can get the current Overwatch event using <span class="type">CustomGame</span>.GetCurrentOverwatchEvent(), while the enabled modes need to be set manually.</p>
+        <pre>
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+<span class="comment">// Set the enabled modes.</span>
+cg.ModesEnabled.Assault = <span class="blue">true</span>;
+cg.ModesEnabled.AssaultEscort = <span class="blue">true</span>;
+cg.ModesEnabled.Control = <span class="blue">true</span>;
+cg.ModesEnabled.Escort = <span class="blue">true</span>;
+
+<span class="comment">// Set the current event.</span>
+cg.CurrentOverwatchEvent = <span class="type">Event</span>.HalloweenTerror; <span class="comment">// You can do it manually, or...</span>
+cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent(); <span class="comment">// Get it automatically. This makes it so you don't need to update your code every time an Event starts or ends.</span></pre>
+        <p>See also:</p>
+        <p><a href="Methods/ToggleMap.html"><span class="type">CustomGame</span>.ToggleMap()</a></p>
+        <p><a href="Methods/MapIDFromName.html"><span class="type">CustomGame</span>.MapIDFromName()</a></p>
+        <p><a href="Methods/MapNameFromID.html"><span class="type">CustomGame</span>.MapNameFromID()</a></p>
+    </div>
+</body>
+</html>

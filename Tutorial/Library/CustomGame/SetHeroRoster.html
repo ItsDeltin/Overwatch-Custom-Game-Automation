@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "SetHeroRoster(ToggleAction, BotTeam, Hero[])";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.SetHeroRoster(<span class="type">ToggleAction</span> ta, <span class="type">BotTeam</span> team, <span class="blue">params</span> <span class="type">Hero</span>[] heroes);</strong><br />
+        
+        <div class="method-data" id="SetHeroRoster-0">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> SetHeroRoster(
+    <span class="type">ToggleAction</span> ta, 
+    <span class="type">BotTeam</span> team, 
+    <span class="blue">params</span> <span class="type">Hero</span>[] heroes
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>ta</i><br />
+                    Determines if all heroes should be disabled, enabled, or neither before toggling.<br />
+                    Type: Deltin.CustomGameAutomation.ToggleAction<br />
+                </p>
+                <p>
+                    <i>team</i><br />
+                    Team to target.<br />
+                    Type: Deltin.CustomGameAutomation.BotTeam
+                </p>
+                <p>
+                    <i>heroes</i><br />
+                    Heroes to toggle.<br />
+                    Type: Deltin.CustomGameAutomation.Hero[]
+                </p>
+            </div>
+        </div>
+
+        <p>Toggles what heroes are allowed to be selected.</p>
+    </div>
+</body>
+</html>

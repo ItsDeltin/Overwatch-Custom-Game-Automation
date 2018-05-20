@@ -1,0 +1,853 @@
+-General
+
+ability_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation value
+ultimate_generation_combat value
+ultimate_generation_passive value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Ana
+
+biotic_grenade toggle
+biotic_grenade_cooldown_time value
+sleep_dart toggle
+sleep_dart_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+no_automatic_fire toggle
+no_scope toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Bastion
+
+reconfigure toggle
+self_repair toggle
+self_repair_maximum_time value
+self_repair_recharge_rate value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+configuration_tank_weapon_knockback_scalar value
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+- Brigitte
+
+barrier_shield toggle
+barrier_shield_cooldown_time value
+barrier_shield_recharge_rate value
+repair_pack toggle
+repair_pack_cooldown_time value
+shield_bash toggle
+shield_bash_cooldown_time value
+shield_bash_knockback_scalar value
+whip_shot toggle
+whip_shot_cooldown_time value
+whip_shot_knockback_scalar value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+
+-Dva
+
+boosters toggle
+boosters_cooldown_time value
+defense_matrix toggle
+defense_matrix_maximum_time value
+defense_matrix_recharge_rate value
+micro_missiles toggle
+micro_missiles_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+boosters_knockback_scalar value
+call_mech_knockback_scalar value
+self_destruct_knockback_scalar value
+spawn_without_mech toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+
+-Doomfist
+
+rising_uppercut toggle
+rising_uppercut_cooldown_time value
+rising_uppercut_knockback_scalar value
+rocket_punch toggle
+rocket_punch_cooldown_time value
+rocket_punch_knockback_scalar value
+seismic_slam toggle
+seismic_slam_cooldown_time value
+quick_melee value
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+meteor_strike_knockback_scalar value
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+ammunition_regeneration_time_scalar value
+no_ammunition_requirement toggle
+
+-Gengi
+
+deflect toggle
+deflect_cooldown_time value
+swift_strike toggle
+swift_stike_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Hanzo
+
+scatter_arrow toggle
+scatter_arrow_cooldown_time value
+sonic_arrow toggle
+sonic_arrow_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+
+-Junkrat
+
+concussion_mine toggle
+concussion_mine_cooldown_time value
+concussion_mine_knockback_scalar value
+steel_trap toggle
+steel_trap_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+frag_launcher_knockback_scalar value
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Lucio
+
+amp_it_up toggle
+amp_it_up_cooldown_time value
+crossfade toggle
+soundwave toggle
+soundwave_cooldown_time value
+soundwave_knockback_scalar value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-McCree
+
+combat_roll toggle
+combat_roll_cooldown_time value
+flashbang toggle
+flashbang_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Mei
+
+cyro_freeze toggle
+cyro_freeze_cooldown_time value
+ice_wall toggle
+ice_wall_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+blizzard_freeze_minimum value
+blizzard_freeze_rate_scalar value
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+freeze_stacking toggle
+secondary_fire toggle
+weapon_freeze_duration_scalar value
+weapon_freeze_minimum value
+weapon_freeze_rate value
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Mercy
+
+guardian_angel toggle
+guardian_angel_cooldown_time value
+resurrect toggle
+resurrect_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+weapons_enabled dropdown
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Moira
+
+biotic_orb toggle
+biotic_orb_cooldown_time value
+biotic_orb_max_damage_scalar value
+biotic_orb_max_healing_scalar value
+fade toggle
+fade_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+biotic_energy_maximum value
+biotic_energy_recharge_rate value
+
+-Orisa
+
+fortify toggle
+fortify_cooldown_time value
+halt toggle
+halt_cooldown_time value
+protective_barrier toggle
+protective_barrier_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Pharah
+
+concussive_blast toggle
+concussive_blast_cooldown_time value
+concussive_blast_knockback_scalar value
+hover_jets toggle
+hover_jets_maximum_time value
+hover_jets_recharge_rate value
+hover_jets_unlimited_fuel toggle
+hover_jets_vertical_speed_scalar value
+jump_jet toggle
+jump_jet_acceleration_scalar value
+jump_jet_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+rocket_launcher_knockback_scalar value
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Reaper
+
+shadow_step toggle
+shadow_step_cooldown_time value
+wraith_form toggle
+wraith_form_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Reinhardt
+
+barrier_field toggle
+barrier_field_cooldown_time value
+barrier_field_recharge_rate value
+charge toggle
+charge_cooldown_time value
+charge_knockback_scalar value
+fire_strike toggle
+fire_strike_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+rocket_hammer_knockback_scalar value
+
+-Roadhog
+
+chain_hook toggle
+chain_hook_cooldown_time value
+take_a_breather toggle
+take_a_breather_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+whole_hog_knockback_scalar value
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Soldier76
+
+biotic_field toggle
+biotic_field_cooldown_time value
+helix_rockets toggle
+helix_rockets_cooldown_time value
+helix_rockets_knockback_scalar value
+sprint toggle
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration value
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Sombra
+
+hack toggle
+hack_cooldown_time value
+stealth toggle
+stealth_cooldown_time value
+translocator toggle
+translocator_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Symmetra
+
+photon_barrier toggle
+photon_barrier_cooldown_time value
+sentry_turret toggle
+sentry_turret_cooldown_time value
+ultimate_ability_shield_generator toggle
+ultimate_ability_teleporter toggle
+ultimate_generation value
+quick_melee toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Torbjorn
+
+armor_pack toggle
+build_turret toggle
+build_turret_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+weapons_enabled dropdown
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Tracer
+
+blink toggle
+blink_cooldown_time value
+recall toggle
+recall_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Widowmaker
+
+grappling_hook toggle
+grappling_hook_cooldown_time value
+venom_mine toggle
+venom_mine_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+no_automatic_fire toggle
+no_scope toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Winston
+
+barrier_projector toggle
+barrier_projector_cooldown_time value
+jump_pack toggle
+jump_pack_acceleration_scalar value
+jump_pack_cooldown_time value
+jump_pack_knockback_scalar value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+primal_rage_melee_knockback_scalar value
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Zarya
+
+particle_barrier toggle
+particle_barrier_cooldown_time value
+projected_barrier toggle
+projected_barrier_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+particle_cannon_secondary_knockback_scalar value
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
+-Zenyatta
+
+orb_of_discord toggle
+orb_of_harmony toggle
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle

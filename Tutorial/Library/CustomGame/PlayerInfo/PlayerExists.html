@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "PlayerExists(string, Region[])";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span>.PlayerExists(<span class="blue">string</span> battletag, <span class="blue">params</span> <span class="type">Region</span>[] regions);</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public bool</span> PlayerExists(
+    <span class="blue">string</span> battletag, 
+    <span class="blue">params</span> <span class="type">Region</span>[] regions
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>battletag</i><br />
+                    Battletag of user to check exists.<br />
+                    Type: string
+                </p>
+                <p>
+                    <i>regions</i><br />
+                    Regions to check user.<br />
+                    Type: Deltin.CustomGameAutomation.Region
+                </p>
+            </div>
+            <div class="returns">
+                Type: System.Boolean<br />
+                Returns true if the player exists.
+            </div>
+        </div>
+
+        <p>
+            Checks if a player account exists by their battletag. The user must play one full game in an input region to be found.
+        </p>
+    </div>
+</body>
+</html>

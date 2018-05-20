@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+
+        var page = "Move(int, int)";
+
+        $(function () {
+            $(".sidebar").load("/Library/Sidebar.html", function () {
+                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Interact</span>.Move(<span class="blue">int</span> slot1, <span class="blue">int</span> slot2);</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> Move(
+    <span class="blue">int</span> slot1,
+    <span class="blue">int</span> slot2
+)</pre>
+            <div class="parameters">
+                <p>
+                    <i>slot1</i><br />
+                    Slot target #1<br />
+                    Type: int
+                </p>
+                <p>
+                    <i>slot2</i><br />
+                    Slot target #2<br />
+                    Type: int
+                </p>
+            </div>
+        </div>
+
+        <p>
+            Moves a player to a slot.
+        </p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    cg.Interact.Move(0, 6); <span class="comment">// Swap player in slot 1 to slot 7</span>
+}
+</pre>
+    </div>
+</body>
+</html>
