@@ -5,18 +5,11 @@
     <meta charset="utf-8" />
     <title>Custom Game Bot Library</title>
     <link href="../../library.css" rel="stylesheet" type="text/css" />
-
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="../../Library.js"></script>
     <script>
-
         var page = "SwapChannel(Channel)";
 
-        $(function () {
-            $(".sidebar").load("/Library/Sidebar.html", function () {
-                $(this).html($(this).html().replace(">" + page + "<", "><strong>" + page + "</strong><"));
-            });
-        });
-
+        getSidebar(page);
     </script>
 </head>
 <body>
