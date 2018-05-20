@@ -16,9 +16,51 @@
     <div class="sidebar">
     </div>
     <div class="content">
-        <strong>Getting started</strong><br />
-        <p>Brightness, gamma, and colorblind settings must be set to normal, with contrast at 0. The user running the bot must be the moderator of the Overwatch server. Some methods will not work unless the moderator is in spectator.</p>
-        <p><a href="">Github link</a></p>
+        <h1>
+            Overwatch Custom Game Automation
+        </h1>
+        <h2>Getting Started</h2>
+        Add a reference to Deltin.CustomGameAutomation.
+        <pre>
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+</pre>
+        Create a CustomGame object. By default, it uses the first Overwatch process it finds.
+        <pre>
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+</pre>
+        If you want it to use a specific Overwatch process, you can use the main window handle as an argument.
+        <pre>
+<span class="type">Process</span> overwatchProcess = ...
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(overwatchProcess.MainWindowHandle);
+</pre>
+        By default the CustomGame class uses BitBlt to capture screenshots of the Overwatch process. Since this method doesn’t work on some systems, you can choose the screenshot method to use.
+        <pre>
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethod</span>.BitBlt);
+<span class="comment">// or</span>
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethod</span>.ScreenCopy);
+</pre>
+        <ul>
+            <li>BitBlt does not require to be on top. You can have other windows over the Overwatch window and it will still work.</li>
+            <li>ScreenCopy needs to be on top and have no windows overlapping the Overwatch window. Does not work with all border styles right now.</li>
+        </ul>
+        The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum. Some methods may not work unless you are the moderator of the custom game and/or you are in spectator.
+        <h2>Example</h2>
+        The code below will disable all maps except for Dorado and Eichenwalde.
+        <pre>
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+<span class="comment">// Tells the CustomGame class which modes are enabled in the custom game.</span>
+cg.ModesEnabled = <span class="blue">new</span> <span class="type">ModesEnabled</span>()
+{
+    Assault = <span class="blue">true</span>,
+    AssaultEscort = <span class="blue">true</span>,
+    Control = <span class="blue">true</span>,
+    Escort = <span class="blue">true</span>,
+};
+<span class="comment">// In case of event exclusive maps, tells the CustomGame class that there are no Overwatch events currently.</span>
+cg.CurrentOverwatchEvent = <span class="type">Event</span>.None;
+<span class="comment">// Disable all maps except for dorado.</span>
+cg.Maps.ToggleMap(<span class="type">ToggleAction</span>.DisableAll, <span class="type">Map</span>.E_Dorado, <span class="type">Map</span>.AE_Eichenwalde);
+</pre>
     </div>
 </body>
 </html>

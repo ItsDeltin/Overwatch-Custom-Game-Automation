@@ -24,7 +24,7 @@ CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethod.ScreenCopy);
 - BitBlt does not require to be on top. You can have other windows over the Overwatch window and it will still work.
 - ScreenCopy needs to be on top and have no windows overlapping the Overwatch window. Does not work with all border styles right now.
 
-The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum.
+The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum. Some methods may not work unless you are the moderator of the custom game and/or you are in spectator.
 
 ##Example
 
