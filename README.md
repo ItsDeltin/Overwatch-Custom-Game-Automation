@@ -52,6 +52,6 @@ cg.Maps.ToggleMap(ToggleAction.DisableAll, Map.E_Dorado, Map.AE_Eichenwalde);
 [CustomGame.CG_Maps.ToggleMap()](https://www.abyxa.net/Library/CustomGame/Maps/ToggleMap.html "CustomGame.CG_Maps.ToggleMap()")
 
 <hr>
-- [ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
-- [1. Creating a game of tag](https://www.abyxa.net/Library/Tag.html "1. Creating a game of tag")
-- [2. Map voting system](https://www.abyxa.net/Library/MapVoting.html "2. Map voting system")
+[ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
+[1. Creating a game of tag](https://www.abyxa.net/Library/Tag.html "1. Creating a game of tag")
+[2. Map voting system](https://www.abyxa.net/Library/MapVoting.html "2. Map voting system")
