@@ -36,6 +36,17 @@ The Overwatch window the CustomGame class is using must have default colorblind,
 
 It is possible to run your application and play Overwatch at the same time by starting 2 Overwatch processes directly from the Overwatch.exe file, which is by default at C:/Program Files (x86)/Overwatch/Overwatch.exe. Create the CustomGame object with the main window handle of the Overwatch process you want the CustomGame class to use. If you are using ScreenCopy, which requires the Overwatch window the CustomGame class is using to be on top, I recommend using a virtual machine.
 
+### Slots
+You can target a specific player on the server with their slot.
+
+![](https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/Tutorial/Library/Assets/slots.jpg "slots")
+
+`CustomGame.BlueSlots`, for the example above, will return a List<int> containing only the number 0.
+
+`CustomGame.CG_Interact.Move(0, 8)` will move the player Deltin from slot 0 on the blue team to slot 8 on the red team.
+
+`CustomGame.CG_PlayerInfo.IsUltimateReady(5)` will check if the player in slot 5's ultimate ability is ready.
+
 ### Examples
 
 - [ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
