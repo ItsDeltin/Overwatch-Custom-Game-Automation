@@ -4,6 +4,12 @@ A library for automating Overwatch custom games.
 
 ## Getting Started
 
+### Prerequisites
+- [Overwatch](http://playoverwatch.com/en-us/) 
+- .Net Framework 4.7.1 or later.
+
+### Usage
+
 Add a reference to Deltin.CustomGameAutomation.
 ```C#
 using Deltin.CustomGameAutomation;
@@ -28,7 +34,9 @@ CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethod.ScreenCopy);
 
 The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum. Some methods may not work unless you are the moderator of the custom game and/or you are in spectator.
 
-## Examples
+It is possible to run your application and play Overwatch at the same time by starting 2 Overwatch processes directly from the Overwatch.exe file, which is by default at C:/Program Files (x86)/Overwatch/Overwatch.exe. Create the CustomGame object with the main window handle of the Overwatch process you want the CustomGame class to use. If you are using ScreenCopy, which requires the Overwatch window the CustomGame class is using to be on top, I recommend using a virtual machine.
+
+### Examples
 
 - [ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
 
