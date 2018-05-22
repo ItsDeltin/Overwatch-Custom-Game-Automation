@@ -282,7 +282,7 @@
             </summary>
             <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.IsHeroChosen(System.Int32,System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.IsHeroChosen(System.Int32)">
             <summary>
             Test if input slot has chosen a hero.
             </summary>
