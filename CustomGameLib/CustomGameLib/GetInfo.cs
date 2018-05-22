@@ -409,7 +409,7 @@ namespace Deltin.CustomGameAutomation
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < playersConnected.Count; i++)
                     if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && cg.bmp.CompareColor(CALData.HeroChosenLocations[playersConnected[i]], CALData.HeroChosenY, CALData.HeroChosenColor, CALData.HeroChosenFade) == false)
+                        && _HeroChosen(playersConnected[i]) == false)
                         playersDead.Add(i);
                 return playersDead;
             }
@@ -425,11 +425,12 @@ namespace Deltin.CustomGameAutomation
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
                     if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && cg.bmp.CompareColor(CALData.HeroChosenLocations[i], CALData.HeroChosenY, CALData.HeroChosenColor, CALData.HeroChosenFade) == false)
+                        && _HeroChosen(i) == false)
                         playersDead.Add(i);
                 return playersDead;
             }
-            private static int[] KilledPlayerMarkerLocations = new int[] {
+            private static int[] KilledPlayerMarkerLocations = new int[]
+            {
                 66, // slot 0
                 115, // slot 1
                 164, // slot 2
@@ -481,18 +482,36 @@ namespace Deltin.CustomGameAutomation
             /// <param name="noUpdate"></param>
             /// <returns>True if hero is chosen</returns>
             /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
-            public bool IsHeroChosen(int slot, bool noUpdate = false)
+            public bool IsHeroChosen(int slot)
             {
                 if (slot >= CALData.HeroChosenLocations.Length || slot < 0)
                     throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
                 if (cg.PlayerSlots.Contains(slot) == false)
                     return false;
 
-                if (!noUpdate)
-                    cg.updateScreen();
-                if (cg.bmp.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenColor, CALData.HeroChosenFade) == false && PlayersDead().Contains(slot) == false)
-                    return false;
-                return true;
+                cg.updateScreen();
+
+                if (PlayersDead(true).Contains(slot))
+                    return true;
+
+                return _HeroChosen(slot);
+            }
+
+            // Private method to check if a hero is chosen.
+            // The screen is not updated, run updateScreen() beforehand.
+            // There is no argument checking.
+            bool _HeroChosen(int slot)
+            {
+                if (slot < 6)
+                {
+                    //Console.WriteLine(cg.bmp.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenBlueY));
+                    return !cg.bmp.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                }
+                else
+                {
+                    //Console.WriteLine(cg.bmp.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenRedY));
+                    return !cg.bmp.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                }
             }
 
             // These are the locations the moderator icon is (green crown)

@@ -1,11 +1,10 @@
-﻿minimumPlayers=5 // Determines the minimum player count before game starts. Must be greater than 0 and less than or equal to 7.
-NoHeroChosenSwap=true // If true, survivors who did not choose a hero when the zombies are released is swapped to zombies.
-DefaultMode=None // Abyxa, ServerBrowser, Private, or None
-AutoStart=false // If true, the console will not wait for input before starting.
+﻿// 0 = Elimination variant
+// 1 = Team Deathmatch variant
+version=0
 
-Maps=TDM_Dorado, TDM_Eichenwalde, TDM_Hanamura, TDM_Hollywood, TDM_HorizonLunarColony, TDM_KingsRow, TDM_TempleOfAnubis, TDM_VolskayaIndustries, TDM_Ilios_Well, TDM_Ilios_Ruins
-MapsSend=Dorado, Eichenwalde,     Hanamura,     Hollywood,     Horizon,                KingsRow,     TempleOfAnubis,     Volskaya,               Ilios-Well,     Ilios-Ruins
-CustomGameMode=TeamDeathmatch
+minimumPlayers=5 // Determines the minimum player count before game starts. Must be greater than 0 and less than or equal to 7.
+DefaultMode=None // Abyxa, ServerBrowser, Private, or None
+
 // The current overwatch event. Set to empty to get the event automatically.
 // Can be SummerGames, HalloweenTerror, WinterWonderland, LunarNewYear, Uprising, Aniversary
 Event=None
@@ -16,7 +15,3 @@ ScreenshotMethod=BitBlt // Screenshot method to use. Can be BitBlt or ScreenCopy
 local=false
 name=Zombies - Infection
 region=us // Valid regions: "us", "eu", "kr"
-
-// -- Debug --
-NoInviteWait=false // If true, the bot will not wait for invited players to join.
-InstantStart=false // If true, the game will start right away without waiting for players.

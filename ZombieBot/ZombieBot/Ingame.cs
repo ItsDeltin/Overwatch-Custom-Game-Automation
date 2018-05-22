@@ -89,8 +89,8 @@ namespace ZombieBot
                             cg.AI.RemoveAllBotsAuto();
                             cg.Chat.Chat("Zombies have been released. Good luck.");
 
-                            // Swap blue players who didn't choose a hero to red.
-                            if (NoHeroChosenSwap)
+                            // Swap blue players who didn't choose a hero to red if the version is TDM.
+                            if (version == 1)
                             {
                                 var blueslots = cg.BlueSlots;
                                 for (int i = 0; i < blueslots.Count; i++)

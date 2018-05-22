@@ -16,6 +16,10 @@ namespace ZombieBot
             Stopwatch pregame = new Stopwatch();
             Stopwatch skirmish = new Stopwatch();
             skirmish.Start();
+            Stopwatch advertTimer = new Stopwatch();
+            advertTimer.Start();
+            // advertWait is 3 minutes in milliseconds
+            int advertWait = 3 * 60 * 1000;
 
             while (true)
             {
@@ -28,9 +32,18 @@ namespace ZombieBot
                     prevPlayerCount = 0;
                     skirmish.Restart();
                     cg.Chat.SwapChannel(Channel.Match);
+                    PregameMessage();
+
+                    advertTimer.Restart();
                 }
 
-                int totalPlayerCount = cg.TotalPlayerCount; // Get total number of players in server
+                if (advertTimer.ElapsedMilliseconds >= advertWait)
+                {
+                    PregameMessage();
+                    advertTimer.Restart();
+                }
+
+                int totalPlayerCount = cg.TotalPlayerCount - 1; // Get total number of players in server
 
                 // update server
                 if (Join == JoinType.Abyxa)
@@ -42,31 +55,33 @@ namespace ZombieBot
                 }
 
                 // invite players to game
-                string[] lines = new string[0];
+                string[] queue = new string[0];
                 if (Join == JoinType.Abyxa)
-                    lines = a.Queuelist(); // get list of player in queue
-
-                int addamount = 7 - (totalPlayerCount); // get the total number of players that can be added to the game.
-                for (int i = 0; i < addamount && i < lines.Length; i++)
                 {
-                    // Make sure server doesn't invite more players than it needs to
-                    if (totalPlayerCount < 7 && lines.Length > 0 && cg.SpectatorCount == 1) // if there is less than 7 players, invite players.
-                    {
-                        // Get player data
-                        string[] data = lines[i].Split(' ');
+                    queue = a.Queuelist(); // get list of player in queue
 
-                        // wait=true: check if there is enough players that are waiting and are ingame.
-                        // wait=false: just invite them.
-                        if ((totalPlayerCount + lines.Length >= minimumPlayers && data[1] == "true") || data[1] == "false")
+                    int addamount = 7 - (totalPlayerCount); // get the total number of players that can be added to the game.
+                    for (int i = 0; i < addamount && i < queue.Length; i++)
+                    {
+                        // Make sure server doesn't invite more players than it needs to
+                        if (totalPlayerCount < 7 && queue.Length > 0 && cg.SpectatorCount == 1) // if there is less than 7 players, invite players.
                         {
-                            Console.WriteLine("Inviting the player " + data[0] + "...");
-                            // invite player to game
-                            cg.InvitePlayer(data[0]); // invite player to game
-                            a.RemoveFromQueue(data[0]); // remove player from queue
+                            // Get player data
+                            string[] data = queue[i].Split(' ');
+
+                            // wait=true: check if there is enough players that are waiting and are ingame.
+                            // wait=false: just invite them.
+                            if ((totalPlayerCount + queue.Length >= minimumPlayers && data[1] == "true") || data[1] == "false")
+                            {
+                                Console.WriteLine("Inviting the player " + data[0] + "...");
+                                // invite player to game
+                                cg.InvitePlayer(data[0]); // invite player to game
+                                a.RemoveFromQueue(data[0]); // remove player from queue
+                            }
                         }
+                        Thread.Sleep(500);
+                        totalPlayerCount = cg.TotalPlayerCount;
                     }
-                    Thread.Sleep(500);
-                    totalPlayerCount = cg.TotalPlayerCount;
                 }
 
                 // If players are in spectator and slots are available, switch them to blue/red
@@ -81,8 +96,6 @@ namespace ZombieBot
                 // Send a message when someone joins
                 var playerslots = cg.PlayerSlots;
                 int loading = cg.GetInvitedCount(playerslots);
-                if (NoInviteWait)
-                    loading = 0;
                 if (playerslots.Count - loading > prevPlayerCount)
                 {
                     int wait = minimumPlayers - playerslots.Count;
@@ -104,10 +117,11 @@ namespace ZombieBot
                  * 2. and the number of players in blue and red is more greater than or equal to the minimum required players
                  * 3. and if the game isnt full, there isnt anyone in the queue.
                 */
+
                 if (
                     pregame.IsRunning == false // 1
                     && playercount >= minimumPlayers // 2
-                    && (playercount < 7 && (lines.Length > 0 || cg.SpectatorCount > 1)) == false // 3
+                    && (playercount < 7 && (queue.Length > 0 || cg.SpectatorCount > 1)) == false // 3
                     )
                 {
                     cg.Chat.Chat("Enough players have joined, starting game in 15 seconds.");
@@ -138,7 +152,7 @@ namespace ZombieBot
                 // and the pregame timer elapsed 15 seconds,
                 // and there is no one invited and loading,
                 // start the game.
-                if ((playercount >= 7 || (lines.Length == 0 && playercount >= minimumPlayers)) && pregame.ElapsedMilliseconds >= 15 * 1000 && (NoInviteWait || cg.GetInvitedCount(cg.PlayerSlots) == 0) || InstantStart)
+                if ((playercount >= 7 || (queue.Length == 0 && playercount >= minimumPlayers)) && pregame.ElapsedMilliseconds >= 15 * 1000 && cg.GetInvitedCount(cg.PlayerSlots) == 0)
                 {
                     if (Join == JoinType.Abyxa)
                     {
@@ -207,15 +221,14 @@ namespace ZombieBot
                     var commands = cg.Command.ExecutedCommands;
                     for (int i = 0; i < commands.Count; i++)
                     {
-                        try
-                        {
-                            if (commands[i].command.Split(' ')[0] == "$VOTE")
+                        string[] commandSplit = commands[i].command.Split(' ');
+                        if (commandSplit.Length >= 2)
+                            if (commandSplit[0] == "$VOTE")
                             {
                                 int votefor = Int32.Parse(commands[i].command.Split(' ')[1]) - 1;
-                                results[votefor]++;
+                                if (votefor >= 0 && votefor < results.Length)
+                                    results[votefor]++;
                             }
-                        }
-                        catch (Exception) { }
                     }
                     int winningmap = votemap[results.ToList().IndexOf(results.Max())];
                     cg.Command.RemoveAllExecutedCommands();
@@ -232,13 +245,10 @@ namespace ZombieBot
                     while (redslots.Count > 0)
                     {
                         cg.Interact.SwapToBlue(redslots[0]);
-                        cg.WaitForSlotUpdate();
-                        redslots = cg.RedSlots;
                     }
+                    redslots = cg.RedSlots;
 
-                    Thread.Sleep(1500);
-
-                    cg.AI.AddAI(AIHero.McCree, Difficulty.Easy, BotTeam.Red); // fill team 2 with mccree bots
+                    cg.AI.AddAI(AIHero.McCree, Difficulty.Easy, BotTeam.Red, 6); // fill team 2 with mccree bots
 
                     Thread.Sleep(1500);
 
@@ -292,5 +302,21 @@ namespace ZombieBot
                 }
             }
         }
+
+        public static void PregameMessage()
+        {
+            cg.Chat.Chat(Messages[MessageIndex]);
+
+            MessageIndex++;
+            if (MessageIndex >= Messages.Length)
+                MessageIndex = 0;
+        }
+
+        static int MessageIndex = 0;
+
+        static string[] Messages = new string[]
+        {
+            "Welcome to zombies! I am a bot; Source code is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation.",
+        };
     }
 }

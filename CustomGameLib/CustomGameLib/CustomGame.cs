@@ -192,16 +192,6 @@ namespace Deltin.CustomGameAutomation
             Command.StopScanning();
             // Remove data of all executed commands.
             Command.RemoveAllExecutedCommands();
-            // Dispose bitmaps used
-            Interact.RemoveAllBotsMarkup.Dispose();
-            Interact.RemoveFromGameMarkup.Dispose();
-            Interact.SwapToBlueMarkup.Dispose();
-            Interact.SwapToNeutralMarkup.Dispose();
-            Interact.SwapToRedMarkup.Dispose();
-            Interact.SwapToSpectatorsMarkup.Dispose();
-            AI.DifficultyMarkups[0].Dispose();
-            AI.DifficultyMarkups[1].Dispose();
-            AI.DifficultyMarkups[2].Dispose();
             if (bmp != null)
                 bmp.Dispose();
         }

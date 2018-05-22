@@ -267,7 +267,7 @@ namespace Deltin.CustomGameAutomation
                     return null;
             }
 
-            internal Bitmap[] DifficultyMarkups = new Bitmap[]
+            static internal Bitmap[] DifficultyMarkups = new Bitmap[]
             {
                 new Bitmap(Properties.Resources.easy_difficulty),
                 new Bitmap(Properties.Resources.medium_difficulty),

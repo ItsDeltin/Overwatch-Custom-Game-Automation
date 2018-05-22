@@ -245,7 +245,7 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            internal Bitmap RemoveFromGameMarkup = new Bitmap(Properties.Resources.remove_from_game); // Get remove from game markup
+            static internal Bitmap RemoveFromGameMarkup = new Bitmap(Properties.Resources.remove_from_game); // Get remove from game markup
             /// <summary>
             /// Removes player from the game
             /// </summary>
@@ -257,7 +257,7 @@ namespace Deltin.CustomGameAutomation
                 return MenuOptionScan(slot, RemoveFromGameMarkup, 80, 3); // Attempt to remove slot from game
             }
 
-            internal Bitmap SwapToRedMarkup = new Bitmap(Properties.Resources.swap_to_red);
+            static internal Bitmap SwapToRedMarkup = new Bitmap(Properties.Resources.swap_to_red);
             /// <summary>
             /// Swaps player to red team.
             /// </summary>
@@ -270,7 +270,7 @@ namespace Deltin.CustomGameAutomation
             }
 
 
-            internal Bitmap SwapToBlueMarkup = new Bitmap(Properties.Resources.swap_to_blue);
+            static internal Bitmap SwapToBlueMarkup = new Bitmap(Properties.Resources.swap_to_blue);
             /// <summary>
             /// Swaps player to blue team.
             /// </summary>
@@ -305,7 +305,7 @@ namespace Deltin.CustomGameAutomation
                 return false;
             }
 
-            internal Bitmap SwapToSpectatorsMarkup = new Bitmap(Properties.Resources.swap_to_spectators);
+            static internal Bitmap SwapToSpectatorsMarkup = new Bitmap(Properties.Resources.swap_to_spectators);
             /// <summary>
             /// Swaps player to spectator.
             /// </summary>
@@ -317,7 +317,7 @@ namespace Deltin.CustomGameAutomation
                 return MenuOptionScan(slot, SwapToSpectatorsMarkup, 80, 6);
             }
 
-            internal Bitmap SwapToNeutralMarkup = new Bitmap(Properties.Resources.swap_to_neutral_team);
+            static internal Bitmap SwapToNeutralMarkup = new Bitmap(Properties.Resources.swap_to_neutral_team);
             /// <summary>
             /// Swaps player in queue to the neutral team.
             /// </summary>
@@ -329,7 +329,7 @@ namespace Deltin.CustomGameAutomation
                 return MenuOptionScan(slot, SwapToNeutralMarkup, 80, 6);
             }
 
-            internal Bitmap RemoveAllBotsMarkup = new Bitmap(Properties.Resources.remove_all_bots);
+            static internal Bitmap RemoveAllBotsMarkup = new Bitmap(Properties.Resources.remove_all_bots);
             /// <summary>
             /// Removes all AI from the game. Input slot must be an AI.
             /// </summary>
