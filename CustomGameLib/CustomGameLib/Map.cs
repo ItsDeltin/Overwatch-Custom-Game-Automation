@@ -214,37 +214,10 @@ namespace Deltin.CustomGameAutomation
                         selected.Add(allmaps[i]);
                 return selected;
             }
-            /*
-            private static string[] GetGamemodeMaps(Gamemode gamemode)
-            {
-                var maps = GetAllMapNames();
-                List<string> gamemodeMaps = new List<string>();
-                for (int i = 0; i < maps.Length; i++)
-                    if (maps[i].Split('_')[0] == GamemodeAcronyms[(int)gamemode])
-                        gamemodeMaps.Add(maps[i]);
-                return gamemodeMaps.ToArray();
-            }
-            */
             private static string[] GetAllMapNames()
             {
                 return typeof(Map).GetFields().Select(field => field.Name).ToArray();
             }
-            private static string[] GamemodeAcronyms = new string[]
-            {
-                "A",
-                "AE",
-                "CTF",
-                "C",
-                "DM",
-                "ELIM",
-                "E",
-                "JR",
-                "LB",
-                "MSO",
-                "SKIRM",
-                "TDM",
-                "YH"
-            };
         }
     }
 
@@ -330,8 +303,9 @@ namespace Deltin.CustomGameAutomation
         public static Map DM_Oasis_CityCenter = new Map(Gamemode.Deathmatch, 29, Event.None);
         public static Map DM_Oasis_Gardens = new Map(Gamemode.Deathmatch, 30, Event.None);
         public static Map DM_Oasis_University = new Map(Gamemode.Deathmatch, 31, Event.None);
-        public static Map DM_TempleOfAnubis = new Map(Gamemode.Deathmatch, 32, Event.None);
-        public static Map DM_VolskayaIndustries = new Map(Gamemode.Deathmatch, 33, Event.None);
+        public static Map DM_Petra = new Map(Gamemode.Deathmatch, 32, Event.None);
+        public static Map DM_TempleOfAnubis = new Map(Gamemode.Deathmatch, 33, Event.None);
+        public static Map DM_VolskayaIndustries = new Map(Gamemode.Deathmatch, 34, Event.None);
 
         // Elimination
         public static Map ELIM_Ayutthaya = new Map(Gamemode.Elimination, 0, Event.None);
@@ -433,6 +407,7 @@ namespace Deltin.CustomGameAutomation
         public static Map TDM_Oasis_CityCenter = new Map(Gamemode.TeamDeathmatch, 29, Event.None);
         public static Map TDM_Oasis_Gardens = new Map(Gamemode.TeamDeathmatch, 30, Event.None);
         public static Map TDM_Oasis_University = new Map(Gamemode.TeamDeathmatch, 31, Event.None);
+        public static Map TDM_Petra = new Map(Gamemode.TeamDeathmatch, 32, Event.None);
         public static Map TDM_TempleOfAnubis = new Map(Gamemode.TeamDeathmatch, 32, Event.None);
         public static Map TDM_VolskayaIndustries = new Map(Gamemode.TeamDeathmatch, 33, Event.None);
 
