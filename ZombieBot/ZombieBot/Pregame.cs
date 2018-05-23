@@ -16,10 +16,6 @@ namespace ZombieBot
             Stopwatch pregame = new Stopwatch();
             Stopwatch skirmish = new Stopwatch();
             skirmish.Start();
-            Stopwatch advertTimer = new Stopwatch();
-            advertTimer.Start();
-            // advertWait is 3 minutes in milliseconds
-            int advertWait = 3 * 60 * 1000;
 
             while (true)
             {
@@ -32,15 +28,6 @@ namespace ZombieBot
                     prevPlayerCount = 0;
                     skirmish.Restart();
                     cg.Chat.SwapChannel(Channel.Match);
-                    PregameMessage();
-
-                    advertTimer.Restart();
-                }
-
-                if (advertTimer.ElapsedMilliseconds >= advertWait)
-                {
-                    PregameMessage();
-                    advertTimer.Restart();
                 }
 
                 int totalPlayerCount = cg.TotalPlayerCount - 1; // Get total number of players in server
@@ -99,9 +86,10 @@ namespace ZombieBot
                 if (playerslots.Count - loading > prevPlayerCount)
                 {
                     int wait = minimumPlayers - playerslots.Count;
-                    if (wait > 1) cg.Chat.Chat("Welcome to zombies. Waiting for " + wait + " more players, please wait.");
-                    if (wait == 1) cg.Chat.Chat("Welcome to zombies. Waiting for " + wait + " more player, please wait.");
-                    if (wait < -1) cg.Chat.Chat("Welcome to zombies. Game will be starting soon.");
+                    if (wait > 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more players. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    if (wait == 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more player. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    // wait == 0 will send "Enough players have joined, starting in 15 seconds."
+                    if (wait < -1) cg.Chat.Chat("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     Thread.Sleep(500);
                 }
                 prevPlayerCount = playerslots.Count - loading;
@@ -302,21 +290,5 @@ namespace ZombieBot
                 }
             }
         }
-
-        public static void PregameMessage()
-        {
-            cg.Chat.Chat(Messages[MessageIndex]);
-
-            MessageIndex++;
-            if (MessageIndex >= Messages.Length)
-                MessageIndex = 0;
-        }
-
-        static int MessageIndex = 0;
-
-        static string[] Messages = new string[]
-        {
-            "Welcome to zombies! I am a bot; Source code is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation.",
-        };
     }
 }
