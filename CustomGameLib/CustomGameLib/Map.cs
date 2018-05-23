@@ -188,6 +188,11 @@ namespace Deltin.CustomGameAutomation
                 return null;
             }
 
+            public static Map[] GetMapsFromGamemode(Gamemode gamemode, Event owevent)
+            {
+                return GetMaps().Where(map => map.GameMode == gamemode && (map.GameEvent == Event.None || map.GameEvent == owevent)).ToArray();
+            }
+
             private static FieldInfo[] GetMapFieldInfo()
             {
                 return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);

@@ -233,8 +233,8 @@ namespace ZombieBot
                     while (redslots.Count > 0)
                     {
                         cg.Interact.SwapToBlue(redslots[0]);
+                        redslots = cg.RedSlots;
                     }
-                    redslots = cg.RedSlots;
 
                     cg.AI.AddAI(AIHero.McCree, Difficulty.Easy, BotTeam.Red, 6); // fill team 2 with mccree bots
 

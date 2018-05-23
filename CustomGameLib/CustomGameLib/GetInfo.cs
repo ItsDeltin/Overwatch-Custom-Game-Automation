@@ -408,8 +408,7 @@ namespace Deltin.CustomGameAutomation
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < playersConnected.Count; i++)
-                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && _HeroChosen(playersConnected[i]) == false)
+                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade))
                         playersDead.Add(i);
                 return playersDead;
             }
@@ -424,8 +423,7 @@ namespace Deltin.CustomGameAutomation
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
-                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && _HeroChosen(i) == false)
+                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade))
                         playersDead.Add(i);
                 return playersDead;
             }

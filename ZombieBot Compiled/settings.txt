@@ -1,0 +1,45 @@
+﻿version 1
+
+Settings/Lobby:
+	Map Rotation: After a game
+	Return to lobby: Never
+	Blue max players: 6
+	Red max players: 6
+	Max spectators: 6
+
+Settings/Modes/All:
+	Game mode start: Manual
+	Health pack respawn time scalar: 10%
+	Kill cam: Disabled
+	Kill feed: Disabled
+	Spawn health packs: Enabled
+	Hero limit: Off
+
+Settings/Modes/Elimination:
+	Hero selection: Random
+
+Hero Roster:
+	Blue:
+		Torbjorn
+	Red:
+		Reinhardt
+
+Hero Settings:
+	General:
+		Healing recieved: 10%
+	Torbjorn:
+		Armor pack: Off
+		Build turret cooldown time: 125%
+		Damage dealt: 80%
+		Primary fire: Off
+		Ultimate ability (Molten Core): Off
+		Weapons enabled: Rivet gun only
+	Reinhardt:
+		Barrier field: Off
+		Charge cooldown time: 50%
+		Damage dealt: 95%
+		Fire strike: Off
+		Health: 40%
+		Movement speed: 175%
+		Rocket hammer knockback scalar: 200%
+		Ultimate ability (Earthshatter): Off

@@ -52,22 +52,22 @@ namespace Deltin.CustomGameAutomation
             sw.Start();
             while (true)
             {
-                // for debugging
                 /*
+                // for debugging
                 Console.WriteLine("Start color: {0}\nEntering Game color: {1}\nBlack Screen: {2}\nLoading logo: {3}",
                     bmp.CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade),
-                    bmp.CompareColor(450, 325, new int[] { 206, 169, 122 }, 15),
+                    bmp.CompareColor(450, 325, new int[] { 176, 141, 89 }, 20),
                     bmp.CompareColor(400, 300, new int[] { 64, 64, 64 }, 15),
                     bmp.CompareColor(853, 483, new int[] { 154, 157, 157 }, 15));
                 */
                 if (
                     bmp.CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade) || // Test for "START" button color
 
-                    bmp.CompareColor(450, 325, new int[] { 206, 169, 122 }, 25) || // Test for "ENTERING GAME" color
+                    bmp.CompareColor(450, 325, new int[] { 176, 141, 89 }, 20) || // Test for "ENTERING GAME" color
 
                     bmp.CompareColor(400, 300, new int[] { 64, 64, 64 }, 15) || // Test for black screen color
 
-                    bmp.CompareColor(853, 483, new int[] { 154, 157, 157 }, 25) // Test for overwatch loading logo
+                    bmp.CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
                     )
                 {
                     sc.Reset(); // reset timer
