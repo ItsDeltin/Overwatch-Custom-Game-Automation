@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Deltin.CustomGameAutomation;
 
@@ -22,8 +21,8 @@ namespace ZombieBot
         public static Random rnd = new Random();
 
         public static int version = 0;
-        public static string[] maps = new string[0];
-        public static string[] mapsSend = new string[0];
+        public static string[] maps = null;
+        public static string[] mapsSend = null;
         static string[] ElimMaps = new string[]
         {
             "ELIM_Ayutthaya",

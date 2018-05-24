@@ -18,10 +18,6 @@ namespace ZombieBot
                 a += list[i];
             return a;
         }
-        public static int SquashArray(List<int> list, int count)
-        {
-            return SquashArray(list.ToArray(), count);
-        }
 
         public static string ConsoleInput(string send, params string[] validinputs)
         {
@@ -43,8 +39,7 @@ namespace ZombieBot
 
         public static string GetExecutingDirectory()
         {
-            string[] executorFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location.Split('\\');
-            return String.Join("\\", executorFilePath, 0, executorFilePath.Length - 1) + "\\";
+            return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + System.IO.Path.DirectorySeparatorChar;
         }
     }
 }
