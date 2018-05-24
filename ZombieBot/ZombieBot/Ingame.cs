@@ -17,16 +17,16 @@ namespace ZombieBot
 
             while (true)
             {
+                Thread.Sleep(10);
+
                 if (Join == JoinType.Abyxa)
                     a.Update();
 
                 // Swap killed survivors to red
                 List<int> playersDead = cg.PlayerInfo.PlayersDead();
                 for (int i = 0; i < playersDead.Count(); i++)
-                {
-                    cg.Interact.SwapToRed(playersDead[i]);
-                    Thread.Sleep(500);
-                }
+                    if (playersDead[i] < 6)
+                        cg.Interact.SwapToRed(playersDead[i]);
 
                 // end game if winning condition is met
                 bool endgame = false;

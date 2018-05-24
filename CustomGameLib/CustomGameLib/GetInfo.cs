@@ -631,22 +631,21 @@ namespace Deltin.CustomGameAutomation
             /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
             /// <param name="regions">Regions to check. More regions take longer to check.</param>
             /// <returns>Returns true if player exists, else returns false.</returns>
-            public bool PlayerExists(string battletag, params Region[] regions)
+            public static bool PlayerExists(string battletag)
             {
                 // If the website "https://playoverwatch.com/en-us/career/pc/(REGION)/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
                 try
                 {
-                    for (int i = 0; i < regions.Length; i++)
-                    {
-                        string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + regions[i].ToString() + "/" + battletag.Replace('#', '-');
+                    string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
 
-                        WebClient wc = new WebClient();
-                        string pageinfo = wc.DownloadString(playerprofile);
-                        // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
-                        // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
-                        if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
-                            return true;
-                    }
+                    WebClient wc = new WebClient();
+                    string pageinfo = wc.DownloadString(playerprofile);
+                    wc.Dispose();
+
+                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
+                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
+                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
+                        return true;
                 }
                 catch (WebException) { }
 

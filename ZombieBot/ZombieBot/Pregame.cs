@@ -88,8 +88,7 @@ namespace ZombieBot
                     int wait = minimumPlayers - playerslots.Count;
                     if (wait > 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more players. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     if (wait == 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more player. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
-                    // wait == 0 will send "Enough players have joined, starting in 15 seconds."
-                    if (wait < -1) cg.Chat.Chat("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    if (wait < 0) cg.Chat.Chat("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     Thread.Sleep(500);
                 }
                 prevPlayerCount = playerslots.Count - loading;

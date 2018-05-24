@@ -66,6 +66,11 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final|AnyCPU'">
+    <OutputPath>..\..\ZombieBot bin\</OutputPath>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Deltin.CustomGameAutomation">
       <HintPath>..\..\CustomGameLib\CustomGameLib\bin\Debug\Deltin.CustomGameAutomation.dll</HintPath>
