@@ -37,7 +37,11 @@ namespace Deltin.CustomGameAutomation
                 }
             }
             else
-                Monitor.Wait(screenshotLock);
+            {
+                while (!Monitor.TryEnter(screenshotLock)) Thread.Sleep(10);
+                Monitor.Exit(screenshotLock);
+            }
+            //Monitor.Wait(screenshotLock);
         }
 
         static void Screenshot(ScreenshotMethods method, IntPtr hWnd, ref Bitmap bmp)
