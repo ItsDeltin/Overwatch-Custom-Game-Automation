@@ -9,7 +9,7 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        public static int Queueid = 18;
+        public const int Queueid = 18;
 
         public CG_Interact Interact;
         public class CG_Interact

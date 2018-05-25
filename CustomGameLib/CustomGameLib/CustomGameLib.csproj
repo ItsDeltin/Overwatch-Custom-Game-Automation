@@ -71,6 +71,7 @@
     <Compile Include="CustomGame.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extras.cs" />
+    <Compile Include="GameOver.cs" />
     <Compile Include="GamePause.cs" />
     <Compile Include="GetInfo.cs" />
     <Compile Include="InputSimulation.cs" />

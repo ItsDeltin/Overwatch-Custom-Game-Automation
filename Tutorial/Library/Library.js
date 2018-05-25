@@ -8,7 +8,7 @@
     var path = window.location.href.split("/");
     var sidebarPage = "";
     for (var p = path.length - 2; p >= 0; p--) {
-        if (path[p] == "Library")
+        if (path[p].toLowerCase() == "library")
             break;
         sidebarPage += "../";
     }
@@ -16,4 +16,17 @@
 
     req.open('GET', sidebarPage);
     req.send();
+}
+
+function toggleDropdown(div) {
+    var hidediv = div.nextElementSibling;
+
+    if (hidediv.style.display == "none") {
+        hidediv.style.display = "block";
+        div.innerHTML = "<img src=\"/Library/Assets/vs/open.png\" />"
+    }
+    else {
+        hidediv.style.display = "none";
+        div.innerHTML = "<img src=\"/Library/Assets/vs/closed.png\" />"
+    }
 }

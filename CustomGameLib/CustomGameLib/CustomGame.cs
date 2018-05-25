@@ -77,6 +77,8 @@ namespace Deltin.CustomGameAutomation
             OpenChatIsDefault = openChatIsDefault;
             if (OpenChatIsDefault)
                 Chat.OpenChat();
+
+            SetupGameOverCheck();
         }
 
         static void SetupWindow(IntPtr hWnd, ScreenshotMethods method)
@@ -182,9 +184,12 @@ namespace Deltin.CustomGameAutomation
                 return GameState.Ingame;
 
             return GameState.Unknown;
-        }
+        } 
 
         internal bool Disposed = false;
+        /// <summary>
+        /// Disposes of all resources being used by the CustomGame instance.
+        /// </summary>
         public void Dispose()
         {
             Disposed = true;
@@ -194,6 +199,7 @@ namespace Deltin.CustomGameAutomation
             Command.RemoveAllExecutedCommands();
             if (bmp != null)
                 bmp.Dispose();
+            DisposeGameOverCheck();
         }
 
     } // CustomGame class

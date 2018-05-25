@@ -175,6 +175,17 @@
             </summary>
             <returns>Returns the state of the game.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Dispose">
+            <summary>
+            Disposes of all resources being used by the CustomGame instance.
+            </summary>
+        </member>
+        <member name="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver">
+            <summary>
+            Events that are executed when the game is over.
+            To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.TogglePause">
             <summary>
             Toggle pause.
