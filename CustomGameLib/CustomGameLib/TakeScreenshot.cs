@@ -17,7 +17,7 @@ namespace Deltin.CustomGameAutomation
     {
         public ScreenshotMethods ScreenshotMethod;
 
-        object screenshotLock = new object();
+        object ScreenshotLock = new object();
 
         // This grabs a screenshot of the Overwatch handle
         void updateScreen()
@@ -25,23 +25,26 @@ namespace Deltin.CustomGameAutomation
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
 
-            if (Monitor.TryEnter(screenshotLock))
+            if (Monitor.TryEnter(ScreenshotLock))
             {
-                try
+                lock (BmpLock)
                 {
-                    Screenshot(ScreenshotMethod, OverwatchHandle, ref bmp);
-                }
-                finally
-                {
-                    Monitor.Exit(screenshotLock);
+                    try
+                    {
+                        Screenshot(ScreenshotMethod, OverwatchHandle, ref bmp);
+                    }
+                    finally
+                    {
+                        Monitor.Exit(ScreenshotLock);
+                    }
                 }
             }
             else
             {
-                while (!Monitor.TryEnter(screenshotLock)) Thread.Sleep(10);
-                Monitor.Exit(screenshotLock);
+                //Monitor.Wait(screenshotLock);
+                while (!Monitor.TryEnter(ScreenshotLock)) Thread.Sleep(10);
+                Monitor.Exit(ScreenshotLock);
             }
-            //Monitor.Wait(screenshotLock);
         }
 
         static void Screenshot(ScreenshotMethods method, IntPtr hWnd, ref Bitmap bmp)

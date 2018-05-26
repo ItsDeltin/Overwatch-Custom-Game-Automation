@@ -272,6 +272,34 @@
             Gets all the slots of every player in the custom game server. Does not include players in queue.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotBlue(System.Int32)">
+            <summary>
+            Returns true if the slot is in blue.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotRed(System.Int32)">
+            <summary>
+            Returns true if the slot is in red.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotSpectator(System.Int32)">
+            <summary>
+            Returns true if the slot is in Spectator.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotInQueue(System.Int32)">
+            <summary>
+            Returns true if the slot is in queue.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayersDead(System.Collections.Generic.List{System.Int32},System.Boolean)">
             <summary>
             Gets players who died from list.

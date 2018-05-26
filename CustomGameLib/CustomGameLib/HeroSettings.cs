@@ -250,7 +250,7 @@ namespace Deltin.CustomGameAutomation
                     // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\TopOption.png" scale="0.55" />
                     updateScreen();
                     // Check if the second option is highlighted.
-                    if (bmp.CompareColor(422, 200, CALData.WhiteColor, 10))
+                    if (CompareColor(422, 200, CALData.WhiteColor, 10))
                     {
                         // If it is, press the up arrow.
                         KeyPress(Keys.Up);
@@ -280,17 +280,17 @@ namespace Deltin.CustomGameAutomation
                                 Thread.Sleep(100); // Sleep to allow the scrolling animation to catch up
                                 updateScreen();
                                 for (int y = 110; y < 436; y++)
-                                    if (bmp.CompareColor(653, y, new int[] { 127, 127, 127 }, 10)
-                                        && bmp.CompareColor(649, y, CALData.WhiteColor, 10))
+                                    if (CompareColor(653, y, new int[] { 127, 127, 127 }, 10)
+                                        && CompareColor(649, y, CALData.WhiteColor, 10))
                                     {
                                         bool option = (bool)hero.SetTo[setSettingIndex];
 
-                                        bool selectedOption = !bmp.CompareColor(600, y, CALData.WhiteColor, 10); // Will equal true if selected setting is ENABLED,
+                                        bool selectedOption = !CompareColor(600, y, CALData.WhiteColor, 10); // Will equal true if selected setting is ENABLED,
                                                                                                                            // and equal false if DISABLED, OFF, or ON.
                                         // if selected option is OFF or ON...
-                                        if (!selectedOption && bmp.CompareColor(599, y, CALData.WhiteColor, 10))
+                                        if (!selectedOption && CompareColor(599, y, CALData.WhiteColor, 10))
                                         {
-                                            if (bmp.CompareColor(582, y, CALData.WhiteColor, 20) != option)
+                                            if (CompareColor(582, y, CALData.WhiteColor, 20) != option)
                                             {
                                                 KeyPress(Keys.Space);
                                                 Thread.Sleep(KeyPressWait);

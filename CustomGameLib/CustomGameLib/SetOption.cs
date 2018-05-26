@@ -38,7 +38,7 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(103, 183, 2000); // Clicks "Preset" button
 
                 cg.updateScreen();
-                while (cg.bmp.CompareColor(91, 174, new int[] { 188, 143, 77 }, 10)) { cg.updateScreen(); Thread.Sleep(100); }
+                while (cg.CompareColor(91, 174, new int[] { 188, 143, 77 }, 10)) { cg.updateScreen(); Thread.Sleep(100); }
                 cg.LeftClick(x, y); // Clicks the preset
                 cg.LeftClick(480, 327); // Clicks confirm
 

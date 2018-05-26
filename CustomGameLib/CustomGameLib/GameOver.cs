@@ -41,46 +41,49 @@ namespace Deltin.CustomGameAutomation
 
             while (KeepGameOverCheckScanning)
             {
-                updateScreen(); // Start
+                if (OnGameOver != null)
+                {
+                    updateScreen(); // Start
 
-                PlayerTeam? thisCheck = null;
+                    PlayerTeam? thisCheck = null;
 
-                for (int x = 110; x < 450; x++)
-                    // Test for a straight line '|'
-                    if (bmp.CompareColor(x, 295, new int[] { 132, 117, 87 }, 7) && bmp.CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+                    for (int x = 110; x < 450; x++)
+                        // Test for a straight line '|'
+                        if (CompareColor(x, 295, new int[] { 132, 117, 87 }, 7) && CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+                        {
+                            thisCheck = PlayerTeam.Blue;
+                            break;
+                        }
+                        // Test for just the top '*'
+                        else if (CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+                        {
+                            thisCheck = PlayerTeam.Red;
+                            break;
+                        }
+
+                    if (thisCheck == null)
                     {
-                        thisCheck = PlayerTeam.Blue;
-                        break;
+                        executed = false;
+                        currentWinningTeamCheck = null;
+                        checkTime.Stop();
                     }
-                    // Test for just the top '*'
-                    else if (bmp.CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+
+                    else if (currentWinningTeamCheck != thisCheck)
                     {
-                        thisCheck = PlayerTeam.Red;
-                        break;
+                        executed = false;
+                        currentWinningTeamCheck = thisCheck;
+                        checkTime.Stop();
+
+                        checkTime.Start();
                     }
 
-                if (thisCheck == null)
-                {
-                    executed = false;
-                    currentWinningTeamCheck = null;
-                    checkTime.Stop();
-                }
-
-                else if (currentWinningTeamCheck != thisCheck)
-                {
-                    executed = false;
-                    currentWinningTeamCheck = thisCheck;
-                    checkTime.Stop();
-
-                    checkTime.Start();
-                }
-
-                else if (currentWinningTeamCheck == thisCheck)
-                {
-                    if (!executed && checkTime.ElapsedMilliseconds >= checkLength)
+                    else if (currentWinningTeamCheck == thisCheck)
                     {
-                        OnGameOver(this, new GameOverArgs((PlayerTeam)thisCheck));
-                        executed = true;
+                        if (!executed && checkTime.ElapsedMilliseconds >= checkLength)
+                        {
+                            OnGameOver(this, new GameOverArgs((PlayerTeam)thisCheck));
+                            executed = true;
+                        }
                     }
                 }
 

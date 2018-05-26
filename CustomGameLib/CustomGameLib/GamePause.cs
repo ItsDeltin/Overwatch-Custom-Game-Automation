@@ -41,7 +41,7 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
                 // Check if the pause text is there. If not, toggle pause.
-                if (cg.bmp.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10) == false)
+                if (cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10) == false)
                     TogglePause();
             }
             /// <summary>
@@ -51,7 +51,7 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
                 // Check if the pause text is there. If it is, toggle pause.
-                if (cg.bmp.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10))
+                if (cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10))
                     TogglePause();
             }
         }

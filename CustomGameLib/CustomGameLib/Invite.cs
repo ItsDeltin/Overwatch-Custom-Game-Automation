@@ -40,7 +40,7 @@ namespace Deltin.CustomGameAutomation
 
             updateScreen();
 
-            if (bmp.CompareColor(460, 434, CALData.ConfirmColor, 30))
+            if (CompareColor(460, 434, CALData.ConfirmColor, 30))
             {
                 LeftClick(460, 434); // invite player
                 ResetMouse();

@@ -97,42 +97,6 @@ namespace Deltin.CustomGameAutomation
             Thread.Sleep(200);
         }
 
-        bool WaitForColor(int x, int y, int[] color, int fade, int maxtime)
-        {
-            Stopwatch wait = new Stopwatch();
-            wait.Start();
-            while (wait.ElapsedMilliseconds <= maxtime)
-            {
-                updateScreen();
-                if (bmp.CompareColor(x, y, color, fade))
-                    return true;
-                Thread.Sleep(10);
-            }
-            return false;
-        }
-
-        bool WaitForUpdate(int x, int y, int fade, int maxtime)
-        {
-            Stopwatch wait = new Stopwatch();
-            wait.Start();
-            Color startcolor = bmp.GetPixelAt(x, y);
-
-            while (wait.ElapsedMilliseconds <= maxtime)
-            {
-                updateScreen();
-                Color newcolor = bmp.GetPixelAt(x, y);
-
-                if (Math.Abs(newcolor.R - startcolor.R) > fade ||
-                    Math.Abs(newcolor.G - startcolor.G) > fade ||
-                    Math.Abs(newcolor.B - startcolor.B) > fade)
-                    return true;
-
-                Thread.Sleep(10);
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// Waits for the slots in overwatch to change.
         /// </summary>
@@ -170,17 +134,17 @@ namespace Deltin.CustomGameAutomation
             updateScreen();
 
             // Check if in lobby
-            if (bmp.CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade)) // Get "START GAME" color
+            if (CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade)) // Get "START GAME" color
                 return GameState.InLobby;
 
             // Check if waiting
-            if (bmp.CompareColor(599, 456, CALData.LobbyChangeColor, 50)) // Check if "START GAMEMODE" button exists.
+            if (CompareColor(599, 456, CALData.LobbyChangeColor, 50)) // Check if "START GAMEMODE" button exists.
                 return GameState.Waiting;
 
-            if (bmp.CompareColor(53, 62, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
+            if (CompareColor(53, 62, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
                 return GameState.Ending_Commend;
 
-            if (bmp.CompareColor(394, 457, CALData.LobbyChangeColor, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+            if (CompareColor(394, 457, CALData.LobbyChangeColor, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                 return GameState.Ingame;
 
             return GameState.Unknown;

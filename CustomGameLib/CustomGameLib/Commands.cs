@@ -211,7 +211,7 @@ namespace Deltin.CustomGameAutomation
                     var seed = GetSeed(bmp, 13);
                     var seedfade = GetSeedFade(bmp, 13);
                     LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
-                    if (/* bmp.CompareColor(0, 13, seed, seedfade) == false && */ linescan.Word.Contains("]"))
+                    if (/* CompareColor(0, 13, seed, seedfade) == false && */ linescan.Word.Contains("]"))
                     {
                         // If the second line contains ], scan the first line.
                         LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
@@ -267,7 +267,7 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
                 if (bmp != null)
                     bmp.Dispose();
-                bmp = cg.bmp.Clone(new Rectangle(shotarea.X, shotarea.Y, shotarea.Width, shotarea.Height), cg.bmp.PixelFormat);
+                bmp = cg.BmpClone(shotarea.X, shotarea.Y, shotarea.Width, shotarea.Height);
 
                 //var gfx = Graphics.FromImage(bmp);
                 //gfx.CopyFromScreen(shotarea.X, shotarea.Y, 0, 0, shotarea.Size, CopyPixelOperation.SourceCopy);
@@ -289,7 +289,7 @@ namespace Deltin.CustomGameAutomation
                 {
                     for (int xi = 0; xi < bmp.Width; xi++)
                         for (int yi = y - 7; yi < y + 2; yi++)
-                            if (bmp.CompareColor(xi, yi, seed, seedfade))
+                            if (cg.CompareColor(xi, yi, seed, seedfade))
                                 bmp.SetPixel(xi, yi, Color.Purple);
                     //bmp.SetPixel(0, y, Color.Orange);
                     cg.g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width * scale, bmp.Height * scale));
@@ -300,15 +300,15 @@ namespace Deltin.CustomGameAutomation
             // Gets chat color
             int[] GetSeed(Bitmap bmp, int y)
             {
-                var seedpix = bmp.GetPixelAt(0, y);
+                var seedpix = cg.GetPixelAt(0, y);
                 return new int[] { seedpix.R, seedpix.G, seedpix.B };
             }
             
             // Gets chat color seed fade.
             int GetSeedFade(Bitmap bmp, int y)
             {
-                var seedpix = bmp.GetPixelAt(0, y);
-                var antipix = bmp.GetPixelAt(1, y);
+                var seedpix = cg.GetPixelAt(0, y);
+                var antipix = cg.GetPixelAt(1, y);
                 // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.5. Default is 50 
                 return (int)(((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2) / 2.5);
             }
@@ -404,7 +404,7 @@ namespace Deltin.CustomGameAutomation
                 for (int i = 0; i < bmp.Width; i++)
                 {
                     // Test if pixel color is near seed color. if it is, scan for all the letters.
-                    if (bmp.CompareColor(i, y, seed, seedfade))
+                    if (cg.CompareColor(i, y, seed, seedfade))
                     {
                         var bestletter = checkLetter(bmp, i, y, seed, seedfade); // Scan for letter.
 
@@ -451,7 +451,7 @@ namespace Deltin.CustomGameAutomation
                             // check if not out of bounds of BMP
                             if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
                             {
-                                if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
+                                if (cg.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                                 {
                                     successcount++;
                                 }
@@ -460,7 +460,7 @@ namespace Deltin.CustomGameAutomation
                         // Check optional pixels
                         else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
                         {
-                            if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
+                            if (cg.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                             {
                                 optional++;
                             }
@@ -471,7 +471,7 @@ namespace Deltin.CustomGameAutomation
                     if (letters[li].ignore != null)
                         for (int pi = 0; pi < letters[li].ignore.GetLength(0); pi++)
                             if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < shotarea.Width && y + letters[li].ignore[pi, 1] < shotarea.Height)
-                                if (bmp.CompareColor(x + letters[li].ignore[pi, 0], y + letters[li].ignore[pi, 1], seed, seedfade))
+                                if (cg.CompareColor(x + letters[li].ignore[pi, 0], y + letters[li].ignore[pi, 1], seed, seedfade))
                                     totalpixels++;
 
                     // Get percent.

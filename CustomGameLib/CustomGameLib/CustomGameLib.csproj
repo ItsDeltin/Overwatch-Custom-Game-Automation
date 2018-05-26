@@ -66,6 +66,7 @@
     <Compile Include="AI.cs" />
     <Compile Include="Chat.cs" />
     <Compile Include="ColorAndLocationData.cs" />
+    <Compile Include="ColorChecking.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="CreateOverwatchProcess.cs" />
     <Compile Include="CustomGame.cs" />

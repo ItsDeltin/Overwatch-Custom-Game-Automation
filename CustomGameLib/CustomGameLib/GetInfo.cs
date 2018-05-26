@@ -30,7 +30,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 int playersConnected = 0;
                 for (int i = 0; i < 12; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         playersConnected++;
                 return playersConnected;
             }
@@ -46,7 +46,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 List<int> slot = new List<int>();
                 for (int i = 0; i < 12; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         slot.Add(i);
                 return slot;
             }
@@ -65,7 +65,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 int playersConnected = 0;
                 for (int i = 0; i < 6; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         playersConnected++;
                 return playersConnected;
             }
@@ -81,7 +81,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 List<int> slot = new List<int>();
                 for (int i = 0; i < 6; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         slot.Add(i);
                 return slot;
             }
@@ -100,7 +100,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 int playersConnected = 0;
                 for (int i = 6; i < 12; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         playersConnected++;
                 return playersConnected;
             }
@@ -116,7 +116,7 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
                 List<int> slot = new List<int>();
                 for (int i = 6; i < 12; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
                         slot.Add(i);
                 return slot;
             }
@@ -138,7 +138,7 @@ namespace Deltin.CustomGameAutomation
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
                 // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
                 for (int i = 0; i < 6; i++)
-                    if (bmp.CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, 20))
+                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, 20))
                         inq = i + 1;
                 // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
                 // Check for the length of the scrollbar to get the number of players in the queue
@@ -148,8 +148,8 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < 4; i++)
                     {
                         int y = 304 - (i * (10 - i));
-                        if (bmp.CompareColor(894, y, new int[] { 153, 153, 152 }, 20)
-                            || bmp.CompareColor(894, y, new int[] { 132, 126, 123 }, 20))
+                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, 20)
+                            || CompareColor(894, y, new int[] { 132, 126, 123 }, 20))
                         {
                             inq = inq + i + 1;
                             break;
@@ -176,7 +176,7 @@ namespace Deltin.CustomGameAutomation
 
                 int specConnected = 0;
                 for (int i = 12; i < Queueid; i++)
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
                         specConnected++;
                 return specConnected;
             }
@@ -197,7 +197,7 @@ namespace Deltin.CustomGameAutomation
                 List<int> ss = new List<int>();
                 for (int i = 12; i < Queueid; i++)
                 {
-                    if (bmp.CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
+                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
                         ss.Add(i);
                 }
                 return ss;
@@ -309,7 +309,7 @@ namespace Deltin.CustomGameAutomation
                     // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo1.png" scale="1.3" />
                     // And if the color isnt there...
                     // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo2.png" scale="1.3" />
-                    && !(bmp.CompareColor(InvitedMarkerLocations[i], 81, color, 20) || (bmp.CompareColor(InvitedMarkerLocations[i], 83, deadcolor, 20) && !bmp.CompareColor(InvitedMarkerLocations[i], 81, deadcolor, 20))))
+                    && !(CompareColor(InvitedMarkerLocations[i], 81, color, 20) || (CompareColor(InvitedMarkerLocations[i], 83, deadcolor, 20) && !CompareColor(InvitedMarkerLocations[i], 81, deadcolor, 20))))
                     // If everything above is false, the player is invited but not ingame.
                     invited.Add(i);
             }
@@ -387,6 +387,53 @@ namespace Deltin.CustomGameAutomation
             return offset;
         }
 
+        #region Is slot X?
+        /// <summary>
+        /// Returns true if the slot is in blue.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public bool IsSlotBlue(int slot)
+        {
+            if (slot >= 0 && slot <= 5)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Returns true if the slot is in red.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public bool IsSlotRed(int slot)
+        {
+            if (slot >= 6 && slot <= 11)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Returns true if the slot is in Spectator.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public bool IsSlotSpectator(int slot)
+        {
+            if (slot >= 12 && slot < Queueid)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Returns true if the slot is in queue.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public bool IsSlotInQueue(int slot)
+        {
+            if (slot >= Queueid && slot < Queueid + 6)
+                return true;
+            return false;
+        }
+        #endregion
+
         public CG_PlayerInfo PlayerInfo;
         public class CG_PlayerInfo
         {
@@ -408,7 +455,8 @@ namespace Deltin.CustomGameAutomation
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < playersConnected.Count; i++)
-                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade))
+                    if (cg.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
+                        && !HasHealthBar(playersConnected[i], true))
                         playersDead.Add(i);
                 return playersDead;
             }
@@ -423,7 +471,8 @@ namespace Deltin.CustomGameAutomation
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
-                    if (cg.bmp.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade))
+                    if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
+                        && !HasHealthBar(i, true))
                         playersDead.Add(i);
                 return playersDead;
             }
@@ -444,6 +493,37 @@ namespace Deltin.CustomGameAutomation
                 879, // slot 11
             };
 
+            bool HasHealthBar(int slot, bool noUpdate = false)
+            {
+                int[] healthBarLocations = new int[]
+                {
+                    // Blue
+                    45,
+                    94,
+                    143,
+                    192,
+                    242,
+                    291,
+                    // Red
+                    610,
+                    660,
+                    709,
+                    758,
+                    808,
+                    856,
+                };
+                int xLength = 43;
+                int y = 96;
+
+                if (!noUpdate)
+                    cg.updateScreen();
+
+                for (int x = healthBarLocations[slot]; x < healthBarLocations[slot] + xLength; x++)
+                    if (cg.CompareColor(x, y, new int[] { 110, 110, 110 }, 10))
+                        return true;
+                return false;
+            }
+
             /// <summary>
             /// Get max player count for both teams.
             /// </summary>
@@ -459,10 +539,10 @@ namespace Deltin.CustomGameAutomation
                 int[] blueColor = new int[] { 148, 202, 224 };
                 int[] redColor = new int[] { 167, 76, 86 };
                 for (int i = 0; i < searchArea.Length; i++)
-                    if (cg.bmp.CompareColor(302, searchArea[i], blueColor, 50))
+                    if (cg.CompareColor(302, searchArea[i], blueColor, 50))
                         result[0]++;
                 for (int i = 0; i < searchArea.Length; i++)
-                    if (cg.bmp.CompareColor(370, searchArea[i], redColor, 50))
+                    if (cg.CompareColor(370, searchArea[i], redColor, 50))
                         result[1]++;
                 return result;
             }
@@ -502,13 +582,13 @@ namespace Deltin.CustomGameAutomation
             {
                 if (slot < 6)
                 {
-                    //Console.WriteLine(cg.bmp.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenBlueY));
-                    return !cg.bmp.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                    //Console.WriteLine(cg.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenBlueY));
+                    return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
                 }
                 else
                 {
-                    //Console.WriteLine(cg.bmp.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenRedY));
-                    return !cg.bmp.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                    //Console.WriteLine(cg.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenRedY));
+                    return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
                 }
             }
 
@@ -550,19 +630,19 @@ namespace Deltin.CustomGameAutomation
 
                 // Red and blue
                 for (int i = 0; i < 12; i++)
-                    if (cg.bmp.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
                         return i;
 
                 // Spectators
                 int offset = cg.findOffset();
                 for (int i = 12; i < Queueid; i++)
-                    if (cg.bmp.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
                         return i;
 
                 // Queue
                 int queuecount = cg.QueueCount;
                 for (int i = 12; i < 12 + queuecount; i++)
-                    if (cg.bmp.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
                         return i + 6;
 
                 return -1;
@@ -581,7 +661,7 @@ namespace Deltin.CustomGameAutomation
                 Point check = cg.Interact.FindSlotLocation(slot);
                 check.X -= 25;
                 cg.updateScreen();
-                Color color = cg.bmp.GetPixelAt(check.X, check.Y);
+                Color color = cg.GetPixelAt(check.X, check.Y);
 
                 // If the blue color is greater than the red color, the queue slot is on blue team.
                 if (color.B > color.R)
@@ -606,7 +686,7 @@ namespace Deltin.CustomGameAutomation
                     throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
                 if (!noUpdate)
                     cg.updateScreen();
-                return /* GetLoadSlots(new int[] { slot }.ToList()).Contains(slot) == false && */ cg.bmp.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
+                return /* GetLoadSlots(new int[] { slot }.ToList()).Contains(slot) == false && */ cg.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
             }
             Point[] UltimateCheckLocations = new Point[]
             {

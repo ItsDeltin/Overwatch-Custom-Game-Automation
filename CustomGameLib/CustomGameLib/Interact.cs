@@ -66,7 +66,7 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(100);
                 // <image url="$(ProjectDir)\ImageComments\Interact.cs\OptionSelect.png" scale="0.7" />
                 cg.updateScreen();
-                if (cg.bmp.CompareColor(point.X, point.Y, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
+                if (cg.CompareColor(point.X, point.Y, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
                 {
                     cg.LeftClick(point.X, point.Y, 0);
                     return true;
@@ -84,10 +84,10 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
 
                 // Tests for the blue outline for the first option selection.
-                if (cg.bmp.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 5))
+                if (cg.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 5))
                     return Direction.RightDown;
                 // Tests for the border of the option menu for right/left-up
-                else if (cg.bmp.CompareColor(point.X + 5, point.Y - 5, new int[] { 166, 165, 166 }, 50))
+                else if (cg.CompareColor(point.X + 5, point.Y - 5, new int[] { 166, 165, 166 }, 50))
                     return Direction.RightUp;
                 else
                     return Direction.RightDown;
@@ -140,7 +140,7 @@ namespace Deltin.CustomGameAutomation
                 for (int mi = 0, yii = ystart; mi < max; mi++, yii = ystart + (int)(yincrement * (mi))) // Mi is the line to scan, yii is the Y coordinate of line mi.
                 {
                     // Get bitmap of option
-                    Bitmap work = cg.bmp.Clone(new Rectangle(xstart, yii, xmax, ymax), cg.bmp.PixelFormat);
+                    Bitmap work = cg.BmpClone(xstart, yii, xmax, ymax);
 
                     for (int xi = 0; xi < work.Width; xi++)
                         for (int yi = 0; yi < work.Height; yi++)
@@ -209,7 +209,7 @@ namespace Deltin.CustomGameAutomation
                     int success = 0;
                     int total = 0;
 
-                    Bitmap work = cg.bmp.Clone(new Rectangle(xstart, yii, xmax, ymax), cg.bmp.PixelFormat); // Get the option.
+                    Bitmap work = cg.BmpClone(xstart, yii, xmax, ymax); // Get the option.
                     for (int xi = 0; xi < work.Width; xi++)
                         for (int yi = 0; yi < work.Height; yi++)
                         {
@@ -367,7 +367,7 @@ namespace Deltin.CustomGameAutomation
 
                 cg.updateScreen();
 
-                if (cg.bmp.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25);
+                if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25);
                 else cg.LeftClick(660, 180, 25);
 
                 return true;
@@ -391,7 +391,7 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
 
                 // Click done
-                if (cg.bmp.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25); // with add AI button
+                if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25); // with add AI button
                 else cg.LeftClick(660, 180, 25); // without add AI button
             }
         }

@@ -115,11 +115,11 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
                 int[] scales = new int[] { 33, 49, 34 };
-                Bitmap tmp = cg.bmp.Clone(new Rectangle(402, 244, scales[scalar], 16), cg.bmp.PixelFormat);
+                Bitmap tmp = cg.BmpClone(402, 244, scales[scalar], 16);
                 for (int x = 0; x < tmp.Width; x++)
                     for (int y = 0; y < tmp.Height; y++)
                     {
-                        if (tmp.CompareColor(x, y, AIColor, 25))
+                        if (tmp.CompareColor(x, y, CALData.WhiteColor, 25))
                             tmp.SetPixel(x, y, Color.Black);
                         else
                             tmp.SetPixel(x, y, Color.White);
@@ -147,6 +147,9 @@ namespace Deltin.CustomGameAutomation
                 if (slot < 0 || (slot > 11 && slot < Queueid) || slot > Queueid + 6)
                     throw new InvalidSlotException(string.Format("Slot {0} is out of range of possible slots to check for AI.", slot));
 
+                if (slot == 5 && cg.OpenChatIsDefault)
+                    cg.Chat.CloseChat();
+
                 if (!noUpdate)
                     cg.updateScreen();
 
@@ -167,10 +170,10 @@ namespace Deltin.CustomGameAutomation
                         if (foundWhite)
                             foundWhiteIndex++;
 
-                        Color cc = cg.bmp.GetPixelAt(IsAILocations[slot, 0] + xi, IsAILocations[slot, 1]);
+                        Color cc = cg.GetPixelAt(IsAILocations[slot, 0] + xi, IsAILocations[slot, 1]);
                         // Check for white color of text
-                        if (cg.bmp.CompareColor(IsAILocations[slot, 0] + xi, IsAILocations[slot, 1], AIColor, 110)
-                            && (slot > 5 || cc.B - cc.R < 30))
+                        if (cg.CompareColor(IsAILocations[slot, 0] + xi, IsAILocations[slot, 1], CALData.WhiteColor, 110)
+                            && (slot > 5 || cc.B - cc.R < 20))
                         {
                             foundWhite = true;
 
@@ -179,7 +182,7 @@ namespace Deltin.CustomGameAutomation
                             {
                                 Bitmap tmp = null;
                                 if (draw)
-                                    tmp = cg.bmp.Clone(new Rectangle(0, 0, cg.bmp.Width, cg.bmp.Height), cg.bmp.PixelFormat);
+                                    tmp = cg.BmpClone(0, 0, cg.bmp.Width, cg.bmp.Height);
 
                                 // Check if bitmap matches checking area
                                 double success = 0;
@@ -196,7 +199,7 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (cg.bmp.CompareColor(IsAILocations[slot, 0] + xi + x, IsAILocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), AIColor, 50) == tc)
+                                            if (cg.CompareColor(IsAILocations[slot, 0] + xi + x, IsAILocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), CALData.WhiteColor, 50) == tc)
                                             {
                                                 success++;
 
@@ -241,6 +244,9 @@ namespace Deltin.CustomGameAutomation
                         }
                     }
 
+                    if (slot == 5 && cg.OpenChatIsDefault)
+                        cg.Chat.OpenChat();
+
                     // Return the difficulty that is most possible.
                     if (rl.Count > 0)
                     {
@@ -258,7 +264,7 @@ namespace Deltin.CustomGameAutomation
                 {
                     int y = IsAILocationsQueue[slot - Queueid];
                     for (int x = IsAILocationQueueX; x < 150 + IsAILocationQueueX; x++)
-                        if (cg.bmp.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
+                        if (cg.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
                             return null;
                     return Difficulty.Easy;
                 }
@@ -273,7 +279,6 @@ namespace Deltin.CustomGameAutomation
                 new Bitmap(Properties.Resources.medium_difficulty),
                 new Bitmap(Properties.Resources.hard_difficulty)
             };
-            static int[] AIColor = new int[] { 191, 191, 191 };
 
             static int[,] IsAILocations = new int[,]
             {
@@ -379,7 +384,7 @@ namespace Deltin.CustomGameAutomation
                     cg.LeftClick(slotlocation.X, slotlocation.Y);
                     // Check if Edit AI window has opened by checking if the confirm button exists.
                     cg.updateScreen();
-                    if (cg.bmp.CompareColor(447, 354, CALData.ConfirmColor, 20))
+                    if (cg.CompareColor(447, 354, CALData.ConfirmColor, 20))
                     {
                         var sim = new List<Keys>();
                         // Set hero if setToHero does not equal null.

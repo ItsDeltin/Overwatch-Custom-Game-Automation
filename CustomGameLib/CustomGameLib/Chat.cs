@@ -27,7 +27,7 @@ namespace Deltin.CustomGameAutomation
                     OpenChat();
                 cg.updateScreen();
                 // To prevent abuse, make sure that the channel is not general.
-                if (!cg.bmp.CompareColor(50, 505, CALData.GeneralChatColor, 20) || !BlockGeneralChat)
+                if (!cg.CompareColor(50, 505, CALData.GeneralChatColor, 20) || !BlockGeneralChat)
                 {
                     cg.TextInput(words);
                 }
@@ -78,13 +78,13 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Return);
                 Thread.Sleep(250);
                 cg.updateScreen();
-                if (cg.bmp.CompareColor(CALData.ChatLocation.X, CALData.ChatLocation.Y, GetChannelColor(channel), CALData.ChatFade))
+                if (cg.CompareColor(CALData.ChatLocation.X, CALData.ChatLocation.Y, GetChannelColor(channel), CALData.ChatFade))
                 {
                     Chat("/leavechannel");
                     if (cg.OpenChatIsDefault)
                     {
                         cg.updateScreen();
-                        if (cg.bmp.CompareColor(CALData.ChatLocation.X, CALData.ChatLocation.Y, GetChannelColor(channel), CALData.ChatFade))
+                        if (cg.CompareColor(CALData.ChatLocation.X, CALData.ChatLocation.Y, GetChannelColor(channel), CALData.ChatFade))
                             cg.KeyPress(Keys.Tab);
                     }
                 }
