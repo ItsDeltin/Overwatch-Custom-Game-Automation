@@ -25,9 +25,9 @@ CustomGame cg = new CustomGame(overwatchProcess.MainWindowHandle);
 ```
 By default the CustomGame class uses BitBlt to capture screenshots of the Overwatch process. Since this method doesn't work on some systems, you can choose the screenshot method to use.
 ```C#
-CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethod.BitBlt);
+CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethods.BitBlt);
 // or
-CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethod.ScreenCopy);
+CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethods.ScreenCopy);
 ```
 - BitBlt does not require to be on top. You can have other windows over the Overwatch window and it will still work.
 - ScreenCopy needs to be on top and have no windows overlapping the Overwatch window. Does not work with all border styles right now.

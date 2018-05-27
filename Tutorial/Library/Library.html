@@ -44,9 +44,9 @@
 </pre>
         By default the CustomGame class uses BitBlt to capture screenshots of the Overwatch process. Since this method doesn’t work on some systems, you can choose the screenshot method to use.
         <pre>
-<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethod</span>.BitBlt);
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethods</span>.BitBlt);
 <span class="comment">// or</span>
-<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethod</span>.ScreenCopy);
+<span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>(<span class="blue">default</span>(<span class="type">IntPtr</span>), <span class="type">ScreenshotMethods</span>.ScreenCopy);
 </pre>
         <ul>
             <li>BitBlt does not require to be on top. You can have other windows over the Overwatch window and it will still work.</li>
