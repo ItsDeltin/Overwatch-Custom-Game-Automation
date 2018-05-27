@@ -87,7 +87,7 @@ namespace Deltin.CustomGameAutomation
             /// <param name="maps">Maps that should be toggled.</param>
             public void ToggleMap(ToggleAction ta, params Map[] maps)
             {
-                cg.gotosettings();
+                cg.GoToSettings();
 
                 cg.LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
 

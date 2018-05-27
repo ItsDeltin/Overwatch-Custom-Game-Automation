@@ -34,7 +34,7 @@ namespace Deltin.CustomGameAutomation
                 else if (preset == 2) x = 440; // Column 3
                 else if (preset == 3) x = 590; // Column 4
 
-                cg.gotosettings();
+                cg.GoToSettings();
                 cg.LeftClick(103, 183, 2000); // Clicks "Preset" button
 
                 cg.updateScreen();
@@ -105,7 +105,7 @@ namespace Deltin.CustomGameAutomation
             /// <param name="spectatorCount">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</param>
             public void SetMaxPlayers(int? blueCount, int? redCount, int? ffaCount, int? spectatorCount)
             {
-                cg.gotosettings();
+                cg.GoToSettings();
                 cg.LeftClick(297, 183, 100); // Click "lobby" option
 
                 if (blueCount < 1 || blueCount > 6)

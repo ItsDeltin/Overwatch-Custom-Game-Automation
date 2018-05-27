@@ -15,7 +15,7 @@ namespace Deltin.CustomGameAutomation
             updateScreen();
             // check if the add AI button is there.
             // because the invite button gets moved if it is/isnt there.
-            if (addbutton())
+            if (DoesAddButtonExist())
             {
                 LeftClick(778, 180, 250); // click invite
             }

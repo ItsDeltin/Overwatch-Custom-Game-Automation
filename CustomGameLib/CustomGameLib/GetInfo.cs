@@ -389,15 +389,22 @@ namespace Deltin.CustomGameAutomation
 
         #region Is slot X?
         /// <summary>
+        /// Returns true if the slot is blue, red, spectator, or in queue.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public bool IsSlotValid(int slot)
+        {
+            return slot >= 0 && slot < Queueid + 6;
+        }
+        /// <summary>
         /// Returns true if the slot is in blue.
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
         public bool IsSlotBlue(int slot)
         {
-            if (slot >= 0 && slot <= 5)
-                return true;
-            return false;
+            return slot >= 0 && slot <= 5;
         }
         /// <summary>
         /// Returns true if the slot is in red.
@@ -406,9 +413,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsSlotRed(int slot)
         {
-            if (slot >= 6 && slot <= 11)
-                return true;
-            return false;
+            return slot >= 6 && slot <= 11;
         }
         /// <summary>
         /// Returns true if the slot is in Spectator.
@@ -417,9 +422,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsSlotSpectator(int slot)
         {
-            if (slot >= 12 && slot < Queueid)
-                return true;
-            return false;
+            return slot >= 12 && slot < Queueid;
         }
         /// <summary>
         /// Returns true if the slot is in queue.
@@ -428,9 +431,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsSlotInQueue(int slot)
         {
-            if (slot >= Queueid && slot < Queueid + 6)
-                return true;
-            return false;
+            return slot >= Queueid && slot < Queueid + 6;
         }
         #endregion
 

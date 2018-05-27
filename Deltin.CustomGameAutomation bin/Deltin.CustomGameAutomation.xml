@@ -272,6 +272,13 @@
             Gets all the slots of every player in the custom game server. Does not include players in queue.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotValid(System.Int32)">
+            <summary>
+            Returns true if the slot is blue, red, spectator, or in queue.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotBlue(System.Int32)">
             <summary>
             Returns true if the slot is in blue.
@@ -433,7 +440,6 @@
             </summary>
             <param name="slot1">Target 1</param>
             <param name="slot2">Target 2</param>
-            <returns>Returns true if swapping slots is successful.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if the slot1 or slot2 argument is out of range of possible slots to move.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapAll">

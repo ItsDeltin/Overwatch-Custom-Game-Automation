@@ -123,23 +123,31 @@ namespace Deltin.CustomGameAutomation
         }
 
         // go to settings
-        private void gotosettings()
+        private void GoToSettings()
         {
             updateScreen();
             // The "Add AI" button moves the "Settings" button, this detects if that happens.
-            if (addbutton())
+            if (DoesAddButtonExist())
                 LeftClick(716, 180, 250); // "Add AI" Button
             else
                 LeftClick(774, 180, 250); // No "Add AI" Button
         }
 
-        private bool addbutton()
+        private bool DoesAddButtonExist()
         {
             updateScreen();
+
+            /* old
             int[] addAIcolor = new int[] { 121, 152, 184 };
             // The "Add AI" button moves the "Settings" button, this detects if that happens.
             if (CompareColor(659, 180, addAIcolor, 50)) return true; // "Add AI" Button
             else return false; // No "Add AI" Button
+            */
+
+            return CompareColor(
+                700, 182, // Location of the "MOVE" button
+                715, 182, // Location of the "SETTINGS" button
+                20);
         }
 
         private void GoBack(int settingpages, params int[] checkForErrorsAt)

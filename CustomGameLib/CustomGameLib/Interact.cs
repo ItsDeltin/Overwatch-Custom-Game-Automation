@@ -346,18 +346,19 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             /// <param name="slot1">Target 1</param>
             /// <param name="slot2">Target 2</param>
-            /// <returns>Returns true if swapping slots is successful.</returns>
             /// <exception cref="InvalidSlotException">Thrown if the slot1 or slot2 argument is out of range of possible slots to move.</exception>
             // Swap slots
-            public bool Move(int slot1, int slot2)
+            public void Move(int slot1, int slot2)
             {
                 if (slot1 < 0 || slot1 > Queueid + 5)
                     throw new InvalidSlotException(string.Format("slot1 argument '{0}' is out of range.", slot1));
                 if (slot2 < 0 || slot2 > Queueid + 5)
                     throw new InvalidSlotException(string.Format("slot2 argument '{0}' is out of range.", slot2));
 
+                cg.ResetMouse();
+
                 cg.updateScreen();
-                if (cg.addbutton()) cg.LeftClick(661, 180, 25);
+                if (cg.DoesAddButtonExist()) cg.LeftClick(661, 180, 25);
                 else cg.LeftClick(717, 180, 25);
 
                 Point slot1loc = FindSlotLocation(slot1); // Get the location of the target
@@ -365,12 +366,18 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(slot1loc.X, slot1loc.Y, 25); // Click the target
                 cg.LeftClick(slot2loc.X, slot2loc.Y, 25); // Click the destination
 
+                Thread.Sleep(200);
+
                 cg.updateScreen();
 
-                if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25);
-                else cg.LeftClick(660, 180, 25);
+                //if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30))
+                Color color = cg.GetPixelAt(661, 175);
+                if (color.R - color.B > 40)
+                    cg.LeftClick(660, 175, 25);
+                else
+                    cg.LeftClick(717, 175, 25);
 
-                return true;
+                cg.ResetMouse();
             }
 
             /// <summary>
@@ -378,7 +385,7 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             public void SwapAll()
             {
-                bool aistatus = cg.addbutton();
+                bool aistatus = cg.DoesAddButtonExist();
 
                 // click move
                 if (aistatus) cg.LeftClick(661, 180, 25); // with add AI button

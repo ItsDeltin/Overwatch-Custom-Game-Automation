@@ -33,7 +33,7 @@ namespace Deltin.CustomGameAutomation
 
                 // Find the maximum amount of bots that can be placed on a team, and store it in the maxBots variable
 
-                if (cg.addbutton())
+                if (cg.DoesAddButtonExist())
                 /*
                  * If the blue shade of the "Move" button is there, that means that the Add AI button is there. 
                  * If the Add AI button is missing, we can't add AI, so return false. If it is there, add the bots.

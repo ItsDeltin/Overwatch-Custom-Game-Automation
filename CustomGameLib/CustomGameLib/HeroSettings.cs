@@ -17,7 +17,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="heroes">Heroes to toggle.</param>
         public void SetHeroRoster(ToggleAction ta, BotTeam team, params Hero[] heroes)
         {
-            gotosettings();
+            GoToSettings();
             LeftClick(351, 311); // click heroes
             LeftClick(287, 158); // click hero roster
             // If team doesn't equal both, click a team to change hero roster for.
@@ -177,7 +177,7 @@ namespace Deltin.CustomGameAutomation
 
             if (OpenChatIsDefault)
                 Chat.CloseChat();
-            gotosettings(); // Open settings (SETTINGS/)
+            GoToSettings(); // Open settings (SETTINGS/)
             LeftClick(351, 311); // click heroes (SETTINGS/HEROES/)
             // For each hero to change settings for
             foreach (SetHero hero in herodata)
