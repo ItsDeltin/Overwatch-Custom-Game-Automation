@@ -28,6 +28,11 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        static int[] ColorToInt(Color color)
+        {
+            return new int[] { color.R, color.G, color.B };
+        }
+
         Color GetPixelAt(int x, int y)
         {
             lock (BmpLock)

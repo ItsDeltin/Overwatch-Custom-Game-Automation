@@ -48,14 +48,13 @@ namespace Deltin.CustomGameAutomation
                 return true;
             }
 
-            private bool OpenSlotMenu(Point point)
+            private void OpenSlotMenu(Point point)
             {
                 // Open slot menu by right clicking on slot.
                 cg.Cursor = point;
                 Thread.Sleep(100);
                 cg.RightClick(cg.Cursor.X, cg.Cursor.Y);
                 cg.updateScreen();
-                return true;
             }
 
             // Selects an option in the slot menu.
@@ -185,11 +184,9 @@ namespace Deltin.CustomGameAutomation
                 int[] offset = OffsetViaDirection(dir);
 
                 int xstart = slotlocation.X + 14,  // X position to start scanning.
-                    xmax = 79,  // How far on the X axis to scan.
-                    xselect = slotlocation.X + 10, // Amount to increment X when selecting the option after the option has been found.
-                    ystart = 0, // Y position to start scanning.
-                    ymax = 6; // How far on the Y axis to scan.
+                    xselect = slotlocation.X + 10; // Amount to increment X when selecting the option after the option has been found.
                 double yincrement = 0; // Amount to increment Y after scanning option
+                int ystart = 0; // Y position to start scanning.
                 if (dir == Direction.RightDown)
                 {
                     ystart = slotlocation.Y + 12;
@@ -204,24 +201,27 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
                 List<int> percentResults = new List<int>();
                 // Scan each option and get the likelyhood in percent of the option being the markup.
-                for (int mi = 0, yii = ystart; mi < max; mi++, yii = ystart + (int)(yincrement * mi)) // Mi is the line to scan, yii is the Y coordinate of line mi.
+                for 
+                (
+                    int mi = 0, yii = ystart; 
+                    mi < max; 
+                    mi++, yii = ystart + (int)(yincrement * mi)
+                ) // Mi is the line to scan, yii is the Y coordinate of line mi.
                 {
                     int success = 0;
                     int total = 0;
 
-                    Bitmap work = cg.BmpClone(xstart, yii, xmax, ymax); // Get the option.
-                    for (int xi = 0; xi < work.Width; xi++)
-                        for (int yi = 0; yi < work.Height; yi++)
+                    for (int xi = 0; xi < markup.Width; xi++)
+                        for (int yi = 0; yi < markup.Height; yi++)
                         {
-                            if (work.CompareColor(xi, yi, new int[] { 169, 169, 169 }, 80))
-                                work.SetPixel(xi, yi, Color.Black);
-                            else
-                                work.SetPixel(xi, yi, Color.White);
                             total++;
-                            if (work.GetPixelAt(xi, yi) == markup.GetPixelAt(xi, yi))
+
+                            bool bmpPixelIsBlack = cg.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
+                            bool markupPixelIsBlack = markup.GetPixelAt(xi, yi) == Color.FromArgb(0, 0, 0);
+
+                            if (bmpPixelIsBlack == markupPixelIsBlack)
                                 success++;
                         }
-                    work.Dispose();
                     int percent = (int)((Convert.ToDouble(success) / Convert.ToDouble(total)) * 100);
                     percentResults.Add(percent);
                 }
