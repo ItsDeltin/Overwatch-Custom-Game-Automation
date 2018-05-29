@@ -36,7 +36,7 @@ namespace Deltin.CustomGameAutomation
         {
             PlayerTeam? currentWinningTeamCheck = null;
             Stopwatch checkTime = new Stopwatch();
-            int checkLength = (int)(1.5 * 1000); // 0.5 seconds in milliseconds
+            int checkLength = (int)(1.5 * 1000); // 1.5 seconds in milliseconds
             bool executed = false;
 
             while (KeepGameOverCheckScanning)
@@ -65,16 +65,14 @@ namespace Deltin.CustomGameAutomation
                     {
                         executed = false;
                         currentWinningTeamCheck = null;
-                        checkTime.Stop();
+                        checkTime.Reset();
                     }
 
                     else if (currentWinningTeamCheck != thisCheck)
                     {
                         executed = false;
                         currentWinningTeamCheck = thisCheck;
-                        checkTime.Stop();
-
-                        checkTime.Start();
+                        checkTime.Restart();
                     }
 
                     else if (currentWinningTeamCheck == thisCheck)
@@ -85,6 +83,12 @@ namespace Deltin.CustomGameAutomation
                             executed = true;
                         }
                     }
+                }
+                else
+                {
+                    executed = false;
+                    currentWinningTeamCheck = null;
+                    checkTime.Reset();
                 }
 
                 Thread.Sleep(10); // End
