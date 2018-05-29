@@ -316,15 +316,13 @@ namespace Deltin.CustomGameAutomation
             /// <returns>Returns true if successful.</returns>
             public bool RemoveAllBotsAuto()
             {
-                cg.updateScreen();
-
-                for (int i = 0; i < IsAILocations.GetLength(0); i++)
-                    if (GetAIDifficulty(i, true) != null)
+                for (int i = 0; i < 12; i++)
+                    if (IsAI(i))
                         if (cg.Interact.RemoveAllBots(i))
                             return true;
 
-                for (int i = 0; i < IsAILocationsQueue.Length; i++)
-                    if (GetAIDifficulty(Queueid + i, true) != null)
+                for (int i = 0; i < 6; i++)
+                    if (IsAI(Queueid + i))
                         if (cg.Interact.RemoveAllBots(Queueid + i))
                             return true;
                 return false;

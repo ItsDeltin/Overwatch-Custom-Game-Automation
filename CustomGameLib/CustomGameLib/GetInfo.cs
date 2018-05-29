@@ -583,12 +583,10 @@ namespace Deltin.CustomGameAutomation
             {
                 if (slot < 6)
                 {
-                    //Console.WriteLine(cg.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenBlueY));
                     return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
                 }
                 else
                 {
-                    //Console.WriteLine(cg.GetPixelAt(CALData.HeroChosenLocations[slot], CALData.HeroChosenRedY));
                     return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
                 }
             }
@@ -706,15 +704,135 @@ namespace Deltin.CustomGameAutomation
                 new Point(857, 75)
             };
 
+            public void GetHeroMarkup(int slot, string saveTo)
+            {
+                cg.updateScreen();
+
+                Bitmap save = cg.BmpClone(HeroCheckLocations[slot], HeroCheckY, 20, 9);
+
+                save.Save(saveTo);
+            }
+
+            /// <summary>
+            /// Gets the hero a player is playing.
+            /// </summary>
+            /// <param name="slot">Slot to check.</param>
+            /// <returns>Returns the hero the slot is playing.</returns>
+            public Hero? GetHero(int slot)
+            {
+                if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+                    throw new InvalidSlotException("Slot is out of range. Slot must be a player on blue or red team.");
+
+                if (!cg.PlayerSlots.Contains(slot)
+                    || PlayersDead(true).Contains(slot)
+                    || !_HeroChosen(slot))
+                    return null;
+
+                List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
+
+                for (int m = 0; m < HeroMarkups.Length; m++)
+                {
+                    if (HeroMarkups[m] != null)
+                    {
+                        double total = 0;
+                        double success = 0;
+
+                        for (int x = 0; x < HeroMarkups[m].Width; x++)
+                            for (int y = 0; y < HeroMarkups[m].Height; y++)
+                            {
+                                int bmpX = HeroCheckLocations[slot] + x;
+                                int bmpY = HeroCheckY + y;
+
+                                int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
+
+                                if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
+                                {
+                                    total++;
+                                    if (cg.CompareColor(bmpX, bmpY, markupColor, 20))
+                                        success++;
+                                }
+                            }
+
+                        double probability = (success / total) * 100;
+
+                        if (probability >= 90)
+                            results.Add(new Tuple<Hero, double>((Hero)m, probability));
+                    }
+                }
+
+                if (results.Count == 0)
+                    return null;
+                else
+                {
+                    int highestIndex = -1;
+                    double highest = 0;
+
+                    for (int i = 0; i < results.Count; i++)
+                        if (results[i].Item2 > highest)
+                        {
+                            highestIndex = i;
+                            highest = results[i].Item2;
+                        }
+
+                    return results[highestIndex].Item1;
+                }
+            }
+            static Bitmap[] HeroMarkups = new Bitmap[]
+            {
+                Properties.Resources.ana_markup, // Ana
+                Properties.Resources.bastion_markup, // Bastion
+                Properties.Resources.brigitte_markup, // Brigitte
+                Properties.Resources.dva_markup, // Dva
+                Properties.Resources.doomfist_markup, // Doomfist
+                Properties.Resources.gengi_markup, // Genji
+                Properties.Resources.hanzo_markup, // Hanzo
+                Properties.Resources.junkrat_markup, // Junkrat
+                Properties.Resources.lucio_markup, // Lucio
+                Properties.Resources.mccree_markup, // McCree
+                Properties.Resources.mei_markup, // Mei
+                Properties.Resources.mercy_markup, // Mercy
+                Properties.Resources.moira_markup, // Moira
+                Properties.Resources.orisa_markup, // Orisa
+                Properties.Resources.pharah_markup, // Pharah
+                Properties.Resources.reaper_markup, // Reaper
+                Properties.Resources.reinhardt_markup, // Reinhardt
+                Properties.Resources.roadhog_markup, // Roadhog
+                Properties.Resources.soldier_markup, // Soldier: 76
+                Properties.Resources.sombra_markup, // Sombra
+                Properties.Resources.symmetra_markup, // Symmetra
+                Properties.Resources.torbjorn_markup, // Torbjorn
+                Properties.Resources.tracer_markup, // Tracer
+                Properties.Resources.widowmaker_markup, // Widowmaker
+                Properties.Resources.winston_markup, // Winston
+                Properties.Resources.zarya_markup, // Zarya
+                Properties.Resources.zenyatta_markup // Zenyatta
+            };
+            int[] HeroCheckLocations = new int[]
+            {
+                76,
+                125,
+                175,
+                224,
+                273,
+                322,
+
+                629,
+                678,
+                727,
+                777,
+                826,
+                875
+            };
+            int HeroCheckY = 73;
+
             /// <summary>
             /// Checks if player exists via battletag. Is case and region sensitive.
             /// </summary>
             /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
-            /// <param name="regions">Regions to check. More regions take longer to check.</param>
             /// <returns>Returns true if player exists, else returns false.</returns>
             public static bool PlayerExists(string battletag)
             {
-                // If the website "https://playoverwatch.com/en-us/career/pc/(REGION)/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
+                // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
                 try
                 {
                     string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');

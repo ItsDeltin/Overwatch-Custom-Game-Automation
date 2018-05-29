@@ -118,8 +118,29 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="ana_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ana_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bastion_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bastion_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="brigitte_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brigitte_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="doomfist_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\doomfist_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="dva_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dva_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="easy_difficulty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\easy_difficulty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gengi_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gengi_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hanzo_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hanzo_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hard_difficulty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hard_difficulty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -127,20 +148,59 @@
   <data name="hero_settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hero_settings.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="junkrat_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\junkrat_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="lucio_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\lucio_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="maplist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\maplist.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="mccree_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mccree_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="medium_difficulty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\medium_difficulty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="mei_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mei_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="mercy_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\mercy_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="moira_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\moira_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="orisa_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\orisa_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pharah_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pharah_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="put_in_queue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\put_in_queue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reaper_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reaper_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="reinhardt_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\reinhardt_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="remove_all_bots" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\remove_all_bots.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="remove_from_game" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\remove_from_game.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="roadhog_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\roadhog_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="soldier_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\soldier_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sombra_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sombra_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="spectate_all" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\spectate_all.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -162,5 +222,26 @@
   </data>
   <data name="swap_to_spectators" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\swap_to_spectators.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="symmetra_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\symmetra_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="torbjorn_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\torbjorn_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tracer_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tracer_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="widowmaker_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\widowmaker_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="winston_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\winston_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="zarya_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zarya_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="zenyatta_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\zenyatta_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

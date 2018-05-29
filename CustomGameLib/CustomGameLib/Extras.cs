@@ -51,6 +51,11 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
+        public static int[] ToInt(this Color color)
+        {
+            return new int[] { color.R, color.G, color.B };
+        }
+
         // Inverts a number
         public static int InvertNumber(int num, int invertMax, int invertMin = 0)
         {

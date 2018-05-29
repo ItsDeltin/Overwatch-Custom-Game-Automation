@@ -28,11 +28,6 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static int[] ColorToInt(Color color)
-        {
-            return new int[] { color.R, color.G, color.B };
-        }
-
         Color GetPixelAt(int x, int y)
         {
             lock (BmpLock)
@@ -45,7 +40,7 @@ namespace Deltin.CustomGameAutomation
         {
             lock (BmpLock)
             {
-                return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+                return bmp.Clone(new Rectangle(x, y, width, height), bmp.PixelFormat);
             }
         }
 
