@@ -170,7 +170,7 @@
             Returns the state of the game.
             <para>In lobby: GameState.InLobby</para>
             <para>Waiting for players: GameState.Waiting</para>
-            <para>Playing POTG: GameState.Ending_POTG</para>
+            <para>Ingame: GameState.Ingame</para>
             <para>Commending players: GameState.Ending_Commend</para>
             </summary>
             <returns>Returns the state of the game.</returns>
@@ -514,125 +514,6 @@
             </summary>
             <param name="path">Path to save screenshot to.</param>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_HIDE">
-            <summary>
-            Hides the window and activates another window.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWNORMAL">
-            <summary>
-            Activates and displays a window. 
-            If the window is minimized or maximized, the system restores it to its original size and position. 
-            An application should specify this flag when displaying the window for the first time.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWMINIMIZED">
-            <summary>
-            Activates the window and displays it as a minimized window.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWMAXIMIZED">
-            <summary>
-            Activates the window and displays it as a maximized window.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWNOACTIVATE">
-            <summary>
-            Displays a window in its most recent size and position. 
-            This value is similar to SW_SHOWNORMAL, except that the window is not activated.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOW">
-            <summary>
-            Activates the window and displays it in its current size and position.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_MINIMIZE">
-            <summary>
-            Minimizes the specified window and activates the next top-level window in the Z order.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWMINNOACTIVE">
-            <summary>
-            Displays the window as a minimized window. 
-            This value is similar to SW_SHOWMINIMIZED, except the window is not activated.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWNA">
-            <summary>
-            Displays the window in its current size and position. 
-            This value is similar to SW_SHOW, except that the window is not activated.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_RESTORE">
-            <summary>
-            Activates and displays the window. 
-            If the window is minimized or maximized, the system restores it to its original size and position. 
-            An application should specify this flag when restoring a minimized window.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_SHOWDEFAULT">
-            <summary>
-            Sets the show state based on the SW_ value specified in the STARTUPINFO structure passed to the CreateProcess function by the program that started the application.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.User32.nCmdShow.SW_FORCEMINIMIZE">
-            <summary>
-            Minimizes a window, even if the thread that owns the window is not responding. 
-            This flag should only be used when minimizing windows from a different thread.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.SRCCOPY">
-            <summary>dest = source</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.SRCPAINT">
-            <summary>dest = source OR dest</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.SRCAND">
-            <summary>dest = source AND dest</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.SRCINVERT">
-            <summary>dest = source XOR dest</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.SRCERASE">
-            <summary>dest = source AND (NOT dest)</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.NOTSRCCOPY">
-            <summary>dest = (NOT source)</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.NOTSRCERASE">
-            <summary>dest = (NOT src) AND (NOT dest)</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.MERGECOPY">
-            <summary>dest = (source AND pattern)</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.MERGEPAINT">
-            <summary>dest = (NOT source) OR dest</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.PATCOPY">
-            <summary>dest = pattern</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.PATPAINT">
-            <summary>dest = DPSnoo</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.PATINVERT">
-            <summary>dest = pattern XOR dest</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.DSTINVERT">
-            <summary>dest = (NOT dest)</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.BLACKNESS">
-            <summary>dest = BLACK</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.WHITENESS">
-            <summary>dest = WHITE</summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Gdi32.TernaryRasterOperations.CAPTUREBLT">
-            <summary>
-            Capture window as seen on screen.  This includes layered windows 
-            such as WPF windows with AllowsTransparency="true"
-            </summary>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.BackToMenu">
             <summary>
             Go back to executing position.
@@ -889,6 +770,125 @@
         <member name="T:Deltin.CustomGameAutomation.ModesEnabled">
             <summary>
             Overwatch gamemodes that are enabled.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_HIDE">
+            <summary>
+            Hides the window and activates another window.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWNORMAL">
+            <summary>
+            Activates and displays a window. 
+            If the window is minimized or maximized, the system restores it to its original size and position. 
+            An application should specify this flag when displaying the window for the first time.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWMINIMIZED">
+            <summary>
+            Activates the window and displays it as a minimized window.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWMAXIMIZED">
+            <summary>
+            Activates the window and displays it as a maximized window.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWNOACTIVATE">
+            <summary>
+            Displays a window in its most recent size and position. 
+            This value is similar to SW_SHOWNORMAL, except that the window is not activated.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOW">
+            <summary>
+            Activates the window and displays it in its current size and position.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_MINIMIZE">
+            <summary>
+            Minimizes the specified window and activates the next top-level window in the Z order.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWMINNOACTIVE">
+            <summary>
+            Displays the window as a minimized window. 
+            This value is similar to SW_SHOWMINIMIZED, except the window is not activated.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWNA">
+            <summary>
+            Displays the window in its current size and position. 
+            This value is similar to SW_SHOW, except that the window is not activated.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_RESTORE">
+            <summary>
+            Activates and displays the window. 
+            If the window is minimized or maximized, the system restores it to its original size and position. 
+            An application should specify this flag when restoring a minimized window.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_SHOWDEFAULT">
+            <summary>
+            Sets the show state based on the SW_ value specified in the STARTUPINFO structure passed to the CreateProcess function by the program that started the application.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_FORCEMINIMIZE">
+            <summary>
+            Minimizes a window, even if the thread that owns the window is not responding. 
+            This flag should only be used when minimizing windows from a different thread.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCCOPY">
+            <summary>dest = source</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCPAINT">
+            <summary>dest = source OR dest</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCAND">
+            <summary>dest = source AND dest</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCINVERT">
+            <summary>dest = source XOR dest</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCERASE">
+            <summary>dest = source AND (NOT dest)</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.NOTSRCCOPY">
+            <summary>dest = (NOT source)</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.NOTSRCERASE">
+            <summary>dest = (NOT src) AND (NOT dest)</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.MERGECOPY">
+            <summary>dest = (source AND pattern)</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.MERGEPAINT">
+            <summary>dest = (NOT source) OR dest</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.PATCOPY">
+            <summary>dest = pattern</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.PATPAINT">
+            <summary>dest = DPSnoo</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.PATINVERT">
+            <summary>dest = pattern XOR dest</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.DSTINVERT">
+            <summary>dest = (NOT dest)</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.BLACKNESS">
+            <summary>dest = BLACK</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.WHITENESS">
+            <summary>dest = WHITE</summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.CAPTUREBLT">
+            <summary>
+            Capture window as seen on screen.  This includes layered windows 
+            such as WPF windows with AllowsTransparency="true"
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Properties.Resources">

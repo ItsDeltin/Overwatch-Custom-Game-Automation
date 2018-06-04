@@ -44,6 +44,14 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        Bitmap BmpClone()
+        {
+            lock (BmpLock)
+            {
+                return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+            }
+        }
+
         bool WaitForColor(int x, int y, int[] color, int fade, int maxtime)
         {
             Stopwatch wait = new Stopwatch();

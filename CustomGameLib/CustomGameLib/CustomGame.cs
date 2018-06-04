@@ -125,7 +125,7 @@ namespace Deltin.CustomGameAutomation
         /// Returns the state of the game.
         /// <para>In lobby: GameState.InLobby</para>
         /// <para>Waiting for players: GameState.Waiting</para>
-        /// <para>Playing POTG: GameState.Ending_POTG</para>
+        /// <para>Ingame: GameState.Ingame</para>
         /// <para>Commending players: GameState.Ending_Commend</para>
         /// </summary>
         /// <returns>Returns the state of the game.</returns>
