@@ -28,22 +28,20 @@ namespace Deltin.CustomGameAutomation
             public static int[] ConfirmColor = new int[] { 176, 141, 89 }; // The yellow confirm color.
             public static int[] LobbyChangeColor = new int[] { 126, 158, 181 };
 
-            public static Point ChatLocation = new Point(50, 505);
-            public static int ChatFade = 20;
-            public static int[] TeamChatColor = new int[] { 65, 139, 162 };
-            public static int[] MatchChatColor = new int[] { 161, 122, 91 };
-            public static int[] GeneralChatColor = new int[] { 161, 161, 162 };
-            public static int[] GroupChatColor = new int[] { 0, 0, 0 }; // TODO: Get this color
-            public static int[] PrivateMessageChatColor = new int[] { 160, 118, 167 };
-            public static int[][] ChatColors = new int[][] { TeamChatColor, MatchChatColor, GeneralChatColor, GroupChatColor, PrivateMessageChatColor };
-
+            // * Start Game button
+            // <image url="$(ProjectDir)\ImageComments\ColorAndLocationData.cs\StartGame.png" scale="1" />
             public static int[] StartGameColor = new int[] { 150, 127, 96 }; // The yellow button in the lobby that starts the game
             public static int StartGameFade = 30;
             public static Point StartGameLocation = new Point(426, 457);
+            // *
 
+            // * Settings Error
+            // <image url="$(ProjectDir)\ImageComments\ColorAndLocationData.cs\Error.png" scale="1" />
+            // Works with every invalid setting occurence, for example no hero chosen, no map chosen, or no mode chosen.
             public static Point ErrorLocation = new Point(522, 320);
             public static int[] ErrorColor = new int[] { 151, 119, 81 };
             public static int ErrorFade = 20;
+            // *
         }
     }
 }

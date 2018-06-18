@@ -24,7 +24,7 @@ namespace Deltin.CustomGameAutomation
                 int offset = 0;
                 int xoffset = 0;
                 int queuecount = cg.QueueCount;
-                if (slot > 11 && slot <= Queueid) offset = cg.findOffset(); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
+                if (slot > 11 && slot <= Queueid) offset = cg.FindOffset(); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
                 if (slot - Queueid >= queuecount) return new Point(); // If there is no one in the queue and the slot selected is a queue value, return invalid
                 if (slot > 11) xoffset = -100; // If there is more than 6 players in the queue, a scrollbar appears offsetting the slot's x location by a few pixels.
                 if (slot > Queueid) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at. Not 17 because that is set when returning 891, 24
@@ -350,9 +350,9 @@ namespace Deltin.CustomGameAutomation
             // Swap slots
             public void Move(int slot1, int slot2)
             {
-                if (slot1 < 0 || slot1 > Queueid + 5)
+                if (!cg.IsSlotValid(slot1))
                     throw new InvalidSlotException(string.Format("slot1 argument '{0}' is out of range.", slot1));
-                if (slot2 < 0 || slot2 > Queueid + 5)
+                if (!cg.IsSlotValid(slot2))
                     throw new InvalidSlotException(string.Format("slot2 argument '{0}' is out of range.", slot2));
 
                 cg.ResetMouse();
@@ -368,16 +368,7 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(200);
 
-                cg.updateScreen();
-
-                //if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30))
-                Color color = cg.GetPixelAt(661, 175);
-                if (color.R - color.B > 40)
-                    cg.LeftClick(660, 175, 25);
-                else
-                    cg.LeftClick(717, 175, 25);
-
-                cg.ResetMouse();
+                ExitMoveMenu();
             }
 
             /// <summary>
@@ -395,11 +386,24 @@ namespace Deltin.CustomGameAutomation
                 if (aistatus) cg.LeftClick(617, 180, 25); // with add AI button
                 else cg.LeftClick(678, 180, 25); // without add AI button
 
-                cg.updateScreen();
+                ExitMoveMenu();
+            }
 
-                // Click done
+            private void ExitMoveMenu()
+            {
+                cg.updateScreen();
+                /*
                 if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25); // with add AI button
                 else cg.LeftClick(660, 180, 25); // without add AI button
+                */
+
+                Color color = cg.GetPixelAt(661, 175);
+                if (color.R - color.B > 40)
+                    cg.LeftClick(660, 175, 25);
+                else
+                    cg.LeftClick(717, 175, 25);
+
+                cg.ResetMouse();
             }
         }
     }

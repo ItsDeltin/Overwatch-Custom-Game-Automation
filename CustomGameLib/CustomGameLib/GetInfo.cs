@@ -34,7 +34,6 @@ namespace Deltin.CustomGameAutomation
                         playersConnected++;
                 return playersConnected;
             }
-            private set { }
         }
         /// <summary>
         /// Gets the slots filled in red team and blue team.
@@ -50,7 +49,6 @@ namespace Deltin.CustomGameAutomation
                         slot.Add(i);
                 return slot;
             }
-            private set { }
         }
         #endregion
 
@@ -69,7 +67,6 @@ namespace Deltin.CustomGameAutomation
                         playersConnected++;
                 return playersConnected;
             }
-            private set { }
         }
         /// <summary>
         /// Gets the slots filled in blue team.
@@ -85,7 +82,6 @@ namespace Deltin.CustomGameAutomation
                         slot.Add(i);
                 return slot;
             }
-            private set { }
         }
         #endregion
 
@@ -104,7 +100,6 @@ namespace Deltin.CustomGameAutomation
                         playersConnected++;
                 return playersConnected;
             }
-            private set { }
         }
         /// <summary>
         /// Gets the slots filled in red team.
@@ -120,7 +115,6 @@ namespace Deltin.CustomGameAutomation
                         slot.Add(i);
                 return slot;
             }
-            private set { }
         }
         #endregion
 
@@ -158,7 +152,6 @@ namespace Deltin.CustomGameAutomation
                 }
                 return inq;
             }
-            private set { }
         }
         #endregion
 
@@ -172,7 +165,7 @@ namespace Deltin.CustomGameAutomation
             {
                 updateScreen();
 
-                int offset = findOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
+                int offset = FindOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
 
                 int specConnected = 0;
                 for (int i = 12; i < Queueid; i++)
@@ -180,7 +173,6 @@ namespace Deltin.CustomGameAutomation
                         specConnected++;
                 return specConnected;
             }
-            private set { }
         }
         /// <summary>
         /// Gets the slots filled in spectator excluding the first slot.
@@ -191,7 +183,7 @@ namespace Deltin.CustomGameAutomation
             {
                 updateScreen();
 
-                int offset = findOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
+                int offset = FindOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
 
                 // List of slots filled
                 List<int> ss = new List<int>();
@@ -202,7 +194,6 @@ namespace Deltin.CustomGameAutomation
                 }
                 return ss;
             }
-            private set { }
         }
         #endregion
 
@@ -334,7 +325,6 @@ namespace Deltin.CustomGameAutomation
         #endregion
 
         #region All Players
-
         /// <summary>
         /// Gets the total amount of players in the custom game server.
         /// </summary>
@@ -369,11 +359,10 @@ namespace Deltin.CustomGameAutomation
             }
             private set { }
         }
-
         #endregion
 
         // Finds the offset in pixels of the queue to spectator displacement
-        internal int findOffset()
+        internal int FindOffset()
         {
             updateScreen();
             int inq = QueueCount;
@@ -442,25 +431,6 @@ namespace Deltin.CustomGameAutomation
             internal CG_PlayerInfo(CustomGame cg)
             { this.cg = cg; }
 
-            // Returns which players who died by checking the killed marker locations for a red 'X'.
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
-            /// <summary>
-            /// Gets players who died from list.
-            /// </summary>
-            /// <param name="playersConnected">Slots to check.</param>
-            /// <param name="noUpdate"></param>
-            /// <returns>List of players who are dead.</returns>
-            public List<int> PlayersDead(List<int> playersConnected, bool noUpdate = false)
-            {
-                if (!noUpdate)
-                    cg.updateScreen();
-                List<int> playersDead = new List<int>();
-                for (int i = 0; i < playersConnected.Count; i++)
-                    if (cg.CompareColor(KilledPlayerMarkerLocations[playersConnected[i]], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && !HasHealthBar(playersConnected[i], true))
-                        playersDead.Add(i);
-                return playersDead;
-            }
             /// <summary>
             /// Gets a list of players who died.
             /// </summary>
@@ -468,6 +438,9 @@ namespace Deltin.CustomGameAutomation
             /// <returns>List of players who are dead.</returns>
             public List<int> PlayersDead(bool noUpdate = false)
             {
+                // Returns which players that are dead by checking the killed marker locations for a red 'X'.
+                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
+
                 if (!noUpdate)
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
@@ -548,17 +521,10 @@ namespace Deltin.CustomGameAutomation
                 return result;
             }
 
-            /*
-                Test if a player has chosen a hero by checking if they have a health bar. 
-                Check for the absent of a white-ish color in the first pixel of their health in spectator mode
-                If the player is dead, that means they have a hero selected. Test via GetPlayersDead()
-                R 78, G 76, B 76 is the color of the health bar. 
-            */
             /// <summary>
             /// Test if input slot has chosen a hero.
             /// </summary>
             /// <param name="slot">Slot to check</param>
-            /// <param name="noUpdate"></param>
             /// <returns>True if hero is chosen</returns>
             /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
             public bool IsHeroChosen(int slot)
@@ -623,6 +589,7 @@ namespace Deltin.CustomGameAutomation
             public int ModeratorSlot()
             {
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
+                // Find the moderator icon.
 
                 cg.updateScreen();
                 int fade = 20;
@@ -633,7 +600,7 @@ namespace Deltin.CustomGameAutomation
                         return i;
 
                 // Spectators
-                int offset = cg.findOffset();
+                int offset = cg.FindOffset();
                 for (int i = 12; i < Queueid; i++)
                     if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
                         return i;

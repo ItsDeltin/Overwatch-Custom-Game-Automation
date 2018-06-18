@@ -521,10 +521,10 @@ namespace Deltin.CustomGameAutomation
 
             private Channel GetChannelFromSeed(int[] seed)
             {
-                for (int i = 0; i < CALData.ChatColors.Length; i++)
-                    if (Math.Abs(CALData.ChatColors[i][0] - seed[0]) < CALData.ChatFade &&
-                        Math.Abs(CALData.ChatColors[i][1] - seed[1]) < CALData.ChatFade &&
-                        Math.Abs(CALData.ChatColors[i][2] - seed[2]) < CALData.ChatFade)
+                for (int i = 0; i < CG_Chat.ChatColors.Length; i++)
+                    if (Math.Abs(CG_Chat.ChatColors[i][0] - seed[0]) < CG_Chat.ChatFade &&
+                        Math.Abs(CG_Chat.ChatColors[i][1] - seed[1]) < CG_Chat.ChatFade &&
+                        Math.Abs(CG_Chat.ChatColors[i][2] - seed[2]) < CG_Chat.ChatFade)
                     {
                         return (Channel)i;
                     }

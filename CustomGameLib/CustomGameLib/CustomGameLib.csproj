@@ -114,6 +114,8 @@
     <None Include="ImageComments\SelectHero.cs\TopOption.png" />
     <Content Include="ImageComments\AI.cs\EditAIDifficulty.png" />
     <Content Include="ImageComments\AI.cs\EditAIHero.png" />
+    <Content Include="ImageComments\ColorAndLocationData.cs\Error.png" />
+    <Content Include="ImageComments\ColorAndLocationData.cs\StartGame.png" />
     <Content Include="ImageComments\GetInfo.cs\DeadPlayers.png" />
     <Content Include="ImageComments\GetInfo.cs\InviteInfo2.png" />
     <Content Include="ImageComments\GetInfo.cs\MaxPlayers.png" />
@@ -188,6 +190,8 @@
   <ItemGroup>
     <None Include="Resources\medium_difficulty.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ImageComments\Chat.cs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
