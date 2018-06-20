@@ -91,6 +91,12 @@
             </summary>
             <param name="channel">Channel to leave.</param>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.JoinChannel(Deltin.CustomGameAutomation.Channel)">
+            <summary>
+            Joins a channel after leaving it with LeaveChannel.
+            </summary>
+            <param name="channel">Channel to rejoin.</param>
+        </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.ListenTo">
             <summary>
             <para>Indexer: Command to listen to.</para>
@@ -307,14 +313,6 @@
             <param name="slot">Slot to check</param>
             <returns></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayersDead(System.Collections.Generic.List{System.Int32},System.Boolean)">
-            <summary>
-            Gets players who died from list.
-            </summary>
-            <param name="playersConnected">Slots to check.</param>
-            <param name="noUpdate"></param>
-            <returns>List of players who are dead.</returns>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayersDead(System.Boolean)">
             <summary>
             Gets a list of players who died.
@@ -333,7 +331,6 @@
             Test if input slot has chosen a hero.
             </summary>
             <param name="slot">Slot to check</param>
-            <param name="noUpdate"></param>
             <returns>True if hero is chosen</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
         </member>

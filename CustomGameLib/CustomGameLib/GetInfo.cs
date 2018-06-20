@@ -153,6 +153,21 @@ namespace Deltin.CustomGameAutomation
                 return inq;
             }
         }
+        /// <summary>
+        /// Gets the slots filled in the queue.
+        /// </summary>
+        public List<int> QueueSlots
+        {
+            get
+            {
+                // No need for updateScreen() because QueueCount updates it.
+                List<int> slots = new List<int>();
+                int inq = QueueCount;
+                for (int i = 0; i < inq; i++)
+                    slots.Add(Queueid + i);
+                return slots;
+            }
+        }
         #endregion
 
         #region Players in spectator
