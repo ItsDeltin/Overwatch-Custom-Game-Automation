@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "PlayerExists(string)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span>.PlayerExists(<span class="blue">string</span> battletag)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public bool</span> PlayerExists(
+    <span class="blue">string</span> battletag
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">battletag</div>
+                    <div class="pType">System.String</div>
+                    <div class="pDescription">Battletag of user to check exists.</div>
+                </div>
+            </div>
+            <div class="return">
+                <div class="rType">System.Boolean</div>
+                <div class="rDescription">Returns true if the player exists.</div>
+            </div>
+        </div>
+
+        <p>Checks if a player account exists by their battletag. The user must play one full game to be found.</p>
+    </div>
+</body>
+</html>

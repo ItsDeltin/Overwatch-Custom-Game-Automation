@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "OnGameOver";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.OnGameOver</strong><br />
+
+        <p>OnGameOver is an event that gets executed when the Overwatch game ends.</p>
+
+        <p>To get the team that wins, the blue team must have <span class="field">\</span> (backslash) on the start of their name, and the red team must have <span class="field">*</span> (asterisk) on the start of their name.</p>
+
+        <p>The example below will send a message to chat when the game is over.</p>
+
+        <pre>
+<span class="blue">class</span> <span class="type">Program</span>
+{
+    <span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+    {
+        <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+        cg.GameSettings.SetTeamName(<span class="type">PlayerTeam</span>.Blue, <span class="string">@"\ Blue Team"</span>);
+        cg.GameSettings.SetTeamName(<span class="type">PlayerTeam</span>.Red,   <span class="string">"* Red Team"</span>);
+
+        cg.StartGamemode();
+
+        cg.OnGameOver += GameOver;
+    }
+
+    <span class="blue">static void</span> GameOver(<span class="blue">object</span> sender, <span class="type">GameOverArgs</span> e)
+    {
+        <span class="type">CustomGame</span> cg = (<span class="type">CustomGame</span>)sender;
+        cg.Chat.Chat(<span class="string">The game is over! Team "</span> + e.GetWinningTeam() + <span class="string"> has won!"</span>);
+    }
+}
+</pre>
+    </div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "ToggleMap(ToggleAction, Map[])";
+
+            getSidebar(page);
+
+            getMaps();
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Maps</span>.ToggleMap(<span class="type">MapToggleAction</span> mta, <span class="blue">params</span> <span class="type">Map</span>[] maps)</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> ToggleMap(
+    <span class="type">MapToggleAction</span> mta, 
+    <span class="blue">params</span> <span class="type">Map</span>[] maps
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">mta</div>
+                    <div class="pType">Deltin.CustomGameAutomation.MapToggleAction</div>
+                    <div class="pDescription">Determines if all maps should be enabled, disabled, or neither before toggling.</div>
+                </div>
+                <div class="parameter">
+                    <div class="pName">maps</div>
+                    <div class="pType">Deltin.CustomGameAutomation.Map[]</div>
+                    <div class="pDescription">Maps that should be toggled.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>Toggles maps in Overwatch.</p>
+
+        <p>Setting <span class="field">CustomGame.EnabledModes</span> and <span class="field">CustomGame.CurrentOverwatchEvent</span> is required for <span class="field">ToggleMap()</span> to work. You can use <span class="field">CustomGame.GetCurrentOverwatchEvent()</span> to get the current Overwatch event.<br /></p>
+
+        <p>The code below sets the enabled maps to Route 66, Hanamura, Ilios, and Eichenwalde.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="comment">// Set enabled modes.</span>
+    cg.EnabledModes.Assault = <span class="blue">true</span>;
+    cg.EnabledModes.AssaultEscort = <span class="blue">true</span>;
+    cg.EnabledModes.Control = <span class="blue">true</span>;
+    cg.EnabledModes.Escort = <span class="blue">true</span>;
+
+    <span class="comment">// Set current Overwatch event.</span>
+    cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+
+    <span class="comment">// Get Map variable of Route 66, Hanamura, Ilios, and Eichenwalde.</span>
+    <span class="type">Map</span>[] mapsToSet = <span class="blue">new</span> <span class="type">Map</span>[]
+    {
+        <span class="type">Map</span>.E_Route66,
+        <span class="type">Map</span>.A_Hanamura,
+        <span class="type">Map</span>.C_Ilios,
+        <span class="type">Map</span>.AE_Eichenwalde
+    };
+
+    <span class="comment">// Set the maps enabled in custom games to only Route 66, Hanamura, Ilios, and Eichenwalde.</span>
+    cg.Maps.ToggleMap(<span class="type">MapToggleAction</span>.DisableAll, mapsToSet);
+}
+</pre>
+
+        <p>
+            Map List:
+            <div id="mapList">Getting map list...</div>
+        </p>
+
+        <p>See also:</p>
+        <p><a href="MapIDFromName.html">MapIDFromName()</a></p>
+        <p><a href="MapNameFromID.html">MapNameFromID()</a></p>
+    </div>
+</body>
+</html>

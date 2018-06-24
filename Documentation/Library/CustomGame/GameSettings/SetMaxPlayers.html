@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "SetMaxPlayers(int?, int?, int?, int?)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Settings</span>.SetMaxPlayers(<span class="blue">int</span>? blueCount, <span class="blue">int</span>? redCount, <span class="blue">int</span>? ffaCount, <span class="blue">int</span>? spectatorCount)</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> SetMaxPlayers(
+    <span class="blue">int</span>? blueCount,
+    <span class="blue">int</span>? redCount,
+    <span class="blue">int</span>? ffaCount,
+    <span class="blue">int</span>? spectatorCount
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">blueCount</div>
+                    <div class="pType">System.Int32?</div>
+                    <div class="pDescription">Maximum number of blue players. Must be in the range of 1-6. Set to null to ignore.</div>
+                </div>
+                <div class="parameter">
+                    <div class="pName">redCount</div>
+                    <div class="pType">System.Int32?</div>
+                    <div class="pDescription">Maximum number of red players. Must be in the range of 1-6. Set to null to ignore.</div>
+                </div>
+                <div class="parameter">
+                    <div class="pName">ffaCount</div>
+                    <div class="pType">System.Int32?</div>
+                    <div class="pDescription">Maximum number of FFA players. Must be in the range of 1-12. Set to null to ignore.</div>
+                </div>
+                <div class="parameter">
+                    <div class="pName">spectatorCount</div>
+                    <div class="pType">System.Int32?</div>
+                    <div class="pDescription">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>Sets maximum player count of blue team, red team, FFA count or spectators.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="comment">// Set max player count of red team (bosses) to half of blue team player count.</span>
+    <span class="blue">int</span>? bosscount = cg.BlueCount / 2;
+    cg.GameSettings.SetMaxPlayers(<span class="blue">null</span>, bosscount, <span class="blue">null</span>, <span class="blue">null</span>);
+}
+</pre>
+    </div>
+</body>
+</html>

@@ -206,6 +206,7 @@ namespace ZombieBot
                 if (overwatchProcesses.Length == 0)
                 {
                     Console.WriteLine("No Overwatch processes found, press enter to recheck.");
+                    Console.ReadLine();
                     continue;
                 }
 

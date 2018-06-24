@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "SwapTeam(int)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Interact</span>.SwapTeam(<span class="blue">int</span> slot)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public bool</span> SwapTeam(
+    <span class="blue">int</span> slot
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">slot</div>
+                    <div class="pType">System.Int32</div>
+                    <div class="pDescription">Slot to swap team.</div>
+                </div>
+            </div>
+            <div class="return">
+                <div class="rType">System.Boolean</div>
+                <div class="rDescription">Returns true if swapping team of slot was successful.</div>
+            </div>
+        </div>
+
+        <p>Swaps the team of a player. Swapping a blue player will swap their team to red. A red player will swap swap to blue. A player queueing for blue team will be swapped to queueing for red and vice versa.</p>
+    </div>
+</body>
+</html>

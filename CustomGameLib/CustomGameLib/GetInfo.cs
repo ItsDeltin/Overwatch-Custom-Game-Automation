@@ -819,38 +819,21 @@ namespace Deltin.CustomGameAutomation
                 {
                     string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
 
-                    WebClient wc = new WebClient();
-                    string pageinfo = wc.DownloadString(playerprofile);
-                    wc.Dispose();
+                    using (WebClient wc = new WebClient())
+                    {
+                        string pageinfo = wc.DownloadString(playerprofile);
+                        wc.Dispose();
 
-                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
-                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
-                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
-                        return true;
+                        // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
+                        // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
+                        if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
+                            return true;
+                    }
                 }
                 catch (WebException) { }
 
                 return false;
             }
-
-            public PlayerInfo GetPlayerInfo()
-            {
-                return new PlayerInfo()
-                {
-                    BlueCount = cg.BlueCount,
-                    BlueSlots = cg.BlueSlots,
-                    PlayerCount = cg.PlayerCount,
-                    PlayerSlots = cg.PlayerSlots,
-                    QueueCount = cg.QueueCount,
-                    RedCount = cg.RedCount,
-                    RedSlots = cg.RedSlots,
-                    SpectatorCount = cg.SpectatorCount,
-                    SpectatorSlots = cg.SpectatorSlots,
-                    TotalPlayerCount = cg.TotalPlayerCount,
-                    TotalPlayerSlots = cg.TotalPlayerSlots
-                };
-            }
-
         }
     }
     
@@ -859,63 +842,5 @@ namespace Deltin.CustomGameAutomation
         Neutral,
         Blue,
         Red
-    }
-
-    public enum Region
-    {
-        us,
-        eu,
-        kr
-    }
-
-    public class PlayerInfo
-    {
-        /// <summary>
-        /// Number of players in custom game server.
-        /// </summary>
-        public int TotalPlayerCount;
-        /// <summary>
-        /// Slots of every player in the custom game server.
-        /// </summary>
-        public List<int> TotalPlayerSlots;
-        /// <summary>
-        /// Number of players in blue and red team.
-        /// </summary>
-        public int PlayerCount;
-        /// <summary>
-        /// Slots of every player in blue and red team.
-        /// </summary>
-        public List<int> PlayerSlots;
-        /// <summary>
-        /// Number of players in blue team.
-        /// </summary>
-        public int BlueCount;
-        /// <summary>
-        /// Slots of all players in blue team.
-        /// </summary>
-        public List<int> BlueSlots;
-        /// <summary>
-        /// Number of players in red team.
-        /// </summary>
-        public int RedCount;
-        /// <summary>
-        /// Slots of all players in red team.
-        /// </summary>
-        public List<int> RedSlots;
-        /// <summary>
-        /// Number of players spectating.
-        /// </summary>
-        public int SpectatorCount;
-        /// <summary>
-        /// Slots of players spectating.
-        /// </summary>
-        public List<int> SpectatorSlots;
-        /// <summary>
-        /// Number of players in queue.
-        /// </summary>
-        public int QueueCount;
-
-        public PlayerInfo()
-        { }
     }
 }

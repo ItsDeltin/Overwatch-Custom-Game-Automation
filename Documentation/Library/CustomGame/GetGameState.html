@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "GetGameState()";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.GetGameState()</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">GameState</span> GetGameState()</pre>
+            <div class="return">
+                <div class="rType">Deltin.CustomGameAutomation.GameState</div>
+                <div class="rDescription">Returns the current state of the game.</div>
+            </div>
+        </div>
+
+        <p>Returns a Deltin.CustomGameAutomation.GameState enum of the current state of the game.</p>
+        <p>
+            In lobby: <span class="field"><span class="type">GameState</span>.InLobby</span>
+            <br />Waiting For Players: <span class="field"><span class="type">GameState</span>.Waiting</span>
+            <br />Playing POTG: <span class="field"><span class="type">GameState</span>.Ending_POTG</span>
+            <br />Commending: <span class="field"><span class="type">GameState</span>.Ending_Commend</span>
+            <br />Unknown: <span class="field"><span class="type">GameState</span>.Unknown</span>
+        </p>
+
+        <p>The example below will restart the game after POTG.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> System.Threading;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="comment">// Restart the game during commending.</span>
+
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="blue">while</span>(<span class="blue">true</span>)
+    {
+        <span class="blue">if</span> (cg.GetGameState() == <span class="type">GameState</span>.Ending_Commend)
+            cg.RestartGame();
+        <span class="type">Thread</span>.Sleep(1000);
+    }
+}
+</pre>
+        <p>See also:</p>
+        <p><a href="SwapAll.html"><span class="type">CustomGame</span>.SwapAll()</a></p>
+    </div>
+</body>
+</html>

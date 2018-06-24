@@ -20,6 +20,9 @@ namespace Deltin.CustomGameAutomation
             // Loads a preset in Overwatch Custom Games
             public void LoadPreset(int preset)
             {
+                if (preset < 0)
+                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be greater than 0.");
+
                 int x = 0;
                 int y = 155;
 

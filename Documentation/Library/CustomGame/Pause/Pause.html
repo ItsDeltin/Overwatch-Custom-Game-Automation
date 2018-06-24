@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "Pause()";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Pause</span>.Pause()</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> Pause()</pre>
+        </div>
+
+        <p>Pauses the server if the server is unpaused, else it does nothing.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="comment">// 5 second countdown for race.</span>
+
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    cg.Pause.Pause(); <span class="comment">// Pause game.</span>
+    cg.Pause.Unpause(); <span class="comment">// Unpause and start 5 second countdown.</span>
+    cg.Chat.Chat(<span class="string">"Get ready to race!"</span>);
+}
+</pre>
+        <p>See also:</p>
+        <p><a href="Unpause.html">Unpause()</a></p>
+        <p><a href="TogglePause.html">TogglePause()</a></p>
+    </div>
+</body>
+</html>

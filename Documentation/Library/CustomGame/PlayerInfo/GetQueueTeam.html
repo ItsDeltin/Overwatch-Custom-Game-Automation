@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "GetQueueTeam(int)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span>.GetQueueTeam(<span class="blue">int</span> slot)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">QueueTeam</span> GetQueueTeam(
+    <span class="blue">int</span> slot
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">slot</div>
+                    <div class="pType">System.Int32</div>
+                    <div class="pDescription">Slot to check team for.</div>
+                </div>
+            </div>
+            <div class="return">
+                <div class="rType">Deltin.CustomGameAutomation.QueueTeam</div>
+                <div class="rDescription">The team the player in the queue is queueing for.</div>
+            </div>
+        </div>
+        <p>Gets the team that a player in the queue is queueing for.</p>
+        <p><span class="type">QueueTeam</span>.Neutral: Player in queue is queueing for both teams.</p>
+        <p><span class="type">QueueTeam</span>.Blue: Player in queue is queueing for blue.</p>
+        <p><span class="type">QueueTeam</span>.Red: Player in queue is queueing for red.</p>
+    </div>
+</body>
+</html>

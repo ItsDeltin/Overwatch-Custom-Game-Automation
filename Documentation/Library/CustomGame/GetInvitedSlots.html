@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "GetInvitedSlots(List&lt;int&gt;)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.GetInvitedSlots(<span class="type">List</span><<span class="blue">int</span>> playersConnected)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">List</span><<span class="blue">int</span>> GetInvitedSlots(
+    <span class="type">List</span><<span class="blue">int</span>> playersConnected
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">playersConnected</div>
+                    <div class="pType">System.Collections.Generic.List&lt;int&gt;</div>
+                    <div class="pDescription">Slots to check that are invited.</div>
+                </div>
+            </div>
+            <div class="return">
+                <div class="rType">System.Collections.Generic.List&lt;int&gt;</div>
+                <div class="rDescription">List of slots that are invited but are not ingame.</div>
+            </div>
+        </div>
+
+        <p>
+            Returns a list of the slots that are invited but not ingame, caused by using CustomGame.InvitePlayer().
+        </p>
+
+        <p>The example below will invite Tracer#1818 to the custom game, and display a welcoming message when she joins.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="comment">// Send an invite to Tracer#1818, wait for her to join the game, then send an message welcoming her to the game.</span>
+
+    cg.InvitePlayer(<span class="string">"Tracer#1818"</span>); <span class="comment">// Invite Tracer#1818 to the game</span>
+
+    <span class="blue">while</span>(<span class="blue">true</span>)
+    {
+        <span class="blue">int</span> ingame = cg.PlayerCount - cg.GetInvitedCount(cg.PlayerSlot); <span class="comment">// Get number of players ingame rather than slots filled</span>
+        <span class="blue">if</span> (ingame > 0)
+        {
+            cg.Chat(<span class="string">"Welcome, Tracer, to the game!"</span>);
+            <span style="color: blue">break;</span>
+        }
+    }
+}
+</pre>
+        <p>See also:</p>
+        <p><a href="GetInvitedCount.html"><span class="type">CustomGame</span>.GetInvitedCount()</a></p>
+        <p><a href="InvitePlayer.html"><span class="type">CustomGame</span>.InvitePlayer()</a></p>
+    </div>
+</body>
+</html>

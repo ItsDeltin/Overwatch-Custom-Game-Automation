@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "IsHeroChosen(int, bool)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_PlayerInfo</span>.IsHeroChosen(<span class="blue">int</span> slot)</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public bool</span> IsHeroChosen(
+    <span class="blue">int</span> slot
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">slot</div>
+                    <div class="pType">System.Int32</div>
+                    <div class="pDescription">Slot to check.</div>
+                </div>
+            </div>
+            <div class="return">
+                <div class="rType">System.Boolean</div>
+                <div class="rDescription">Returns true if the player chose a hero.</div>
+            </div>
+        </div>
+
+        <p>
+            Checks if targetted player has chosen a hero.
+        </p>
+
+        <p>The code below will switch everyone who hasn't chosen a hero to the opposite team.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> System.Collections.Generic;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="type">List</span><<span class="blue">int</span>> slots = cg.PlayerSlot;
+
+    <span class="comment">// Check each slot filled</span>
+    <span class="blue">for</span> (<span class="blue">int</span> i = 0; i < slots.Length; i++)
+    {
+        <span class="comment">// Check if player chose a hero</span>
+        <span class="blue">if</span> (cg.PlayerInfo.IsHeroChosen(slots[i]) == <span class="blue">false</span>) 
+        {
+            <span class="comment">// If not, switch them to the opposite team.</span>
+            cg.Interact.SwapTeam(slots[i]);
+        }
+    }
+}
+</pre>
+    </div>
+</body>
+</html>

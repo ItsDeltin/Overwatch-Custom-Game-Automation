@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../library.css" rel="stylesheet" type="text/css" />
+    <script src="../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "GetCurrentOverwatchEvent()";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.GetCurrentOverwatchEvent()</strong><br />
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public</span> <span class="type">Event</span> GetCurrentOverwatchEvent()</pre>
+            <div class="return">
+                <div class="rType">Deltin.CustomGameAutomation.Event</div>
+                <div class="rDescription">Returns the current Overwatch event depending on the date.</div>
+            </div>
+        </div>
+        <p>Gets the current Overwatch event.</p>
+        <p>The event returned depends on the current date, based off of past Overwatch events. Specific times may be inaccurate. Setting <span class="type">CustomGame</span>.CurrentOverwatchEvent is required when using ToggleMap() because of event-exclusive maps. Dates are inclusive.</p>
+        <p>Month/Day</p>
+        <p><span class="type">Event</span>.SummerGames: August 8th - August 28th</p>
+        <p><span class="type">Event</span>.HalloweenTerror: October 10th - November 1st</p>
+        <p><span class="type">Event</span>.WinterWonderland: December 12th - January 1st</p>
+        <p><span class="type">Event</span>.LunarNewYear: Febuary 8th - March 5th</p>
+        <p><span class="type">Event</span>.Uprising: April 11th - May 1st</p>
+        <p><span class="type">Event</span>.Anniversary: May 23rd - June 12th</p>
+    </div>
+</body>
+</html>

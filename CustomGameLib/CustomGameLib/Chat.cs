@@ -20,17 +20,17 @@ namespace Deltin.CustomGameAutomation
             /// <summary>
             /// Send message to chat.
             /// </summary>
-            /// <param name="words">Text to send.</param>
-            public void Chat(string words)
+            /// <param name="text">Text to send.</param>
+            public void Chat(string text)
             {
-                if (ChatPrefix != null) words = ChatPrefix + " " + words;
+                if (ChatPrefix != null) text = ChatPrefix + " " + text;
                 //if (!cg.OpenChatIsDefault)
                 OpenChat();
                 cg.updateScreen();
                 // To prevent abuse, make sure that the channel is not general.
                 if (!cg.CompareColor(ChatLocation.X, ChatLocation.Y, GeneralChatColor, 20) || !BlockGeneralChat)
                 {
-                    cg.TextInput(words);
+                    cg.TextInput(text);
                 }
                 cg.KeyPress(Keys.Return);
                 if (cg.OpenChatIsDefault)

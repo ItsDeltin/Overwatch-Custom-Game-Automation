@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "SetTeamName(PlayerTeam, string)";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong><span class="type">CustomGame</span>.<span class="type">CG_Settings</span>.SetTeamName(<span class="type">PlayerTeam</span> team, <span class="blue">string</span> name)</strong><br />
+        
+        <div class="method-data">
+            <strong>Syntax</strong>
+            <pre>
+<span class="blue">public void</span> SetTeamName(
+    <span class="type">PlayerTeam</span> team, 
+    <span class="blue">string</span> name
+)</pre>
+            <div class="parameters">
+                <div class="parameter">
+                    <div class="pName">team</div>
+                    <div class="pType">Deltin.CustomGameAutomation.PlayerTeam</div>
+                    <div class="pDescription">Team to target.</div>
+                </div>
+                <div class="parameter">
+                    <div class="pName">name</div>
+                    <div class="pType">System.String</div>
+                    <div class="pDescription">Name to change team name to.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>Changes a team's name.</p>
+
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+...
+
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+    cg.GameSettings.SetTeamName(<span class="type">PlayerTeam</span>.Blue, <span class="string">"The defenders"</span>);
+    cg.GameSettings.SetTeamName(<span class="type">PlayerTeam</span>.Red, <span class="string">"The attackers"</span>);
+}
+</pre>
+    </div>
+</body>
+</html>

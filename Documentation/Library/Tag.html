@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="library.css" rel="stylesheet" type="text/css" />
+    <script src="Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "1. Creating a game of tag";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <strong>Creating a game of tag</strong><br/>
+        There will be 1 tagger and 6 runners. When a tagger hits a runner, the runner turns into a tagger. For this gamemode, team deathmatch will be used. These are the settings I used:<br />
+        <div class="settings">
+            <div class="title">MODES</div>
+                <div class="primary">&#9679; TEAM DEATHMATCH</div>
+                    <div class="secondary">&#9670; GAMEMODE START: IMMEDIATELY</div>
+                    <div class="secondary">&#9670; SCORE TO WIN: 200</div>
+                    <div class="secondary">&#9670; SELF INITIATED RESPAWN: OFF</div>
+                    <div class="secondary">&#9670; SPAWN HEALTH PACKS: DISABLED</div>
+            <div class="title">HEROES</div>
+                <div class="primary">&#9679; RUNNER</div>
+                    <div class="secondary">&#9670; LUCIO</div>
+                        <div class="option">&#9654; AMP IT UP: OFF</div>
+                        <div class="option">&#9654; CROSSFADE: OFF</div>
+                        <div class="option">&#9654; HEALTH: 10%</div>
+                        <div class="option">&#9654; PRIMARY FIRE: OFF</div>
+                        <div class="option">&#9654; QUICK MELEE: OFF</div>
+                        <div class="option">&#9654; SOUNDWAVE: OFF</div>
+                        <div class="option">&#9654; ULTIMATE ABILITY (SOUND BARRIER): OFF</div>
+                <div class="primary">&#9679; TAGGER</div>
+                    <div class="secondary">&#9670; LUCIO</div>
+                        <div class="option">&#9654; CROSSFADE: OFF</div>
+                        <div class="option">&#9654; PRIMARY FIRE: OFF</div>
+                        <div class="option">&#9654; SOUNDWAVE: OFF</div>
+                        <div class="option">&#9654; ULTIMATE ABILITY (SOUND BARRIER): OFF</div>
+                <div class="primary">&#9679; LUCIO</div>
+                <div class="primary">&#9679; RUNNER MAX PLAYERS: 6</div>
+                <div class="primary">&#9679; TAGGER MAX PLAYERS: 1</div>
+        </div>
+        This makes it so the only hero allowed is Lucio. The tagger lucio can one-hit-kill and can only melee. Do not set the respawn timer too low, or else the bot may not be able to detect a death.<br/>
+        To start, create an object instance of CustomGame from the Deltin.CustomGameAutomation namespace.<br />
+        <pre>
+<span class="blue">using</span> System;
+<span class="blue">using</span> System.Collections.Generic;
+<span class="blue">using</span> Deltin.CustomGameAutomation;
+
+<span class="blue">namespace</span> CustomgameBotLibrary_Tag
+{
+    <span class="blue">class</span> <span class="type">Program</span>
+    {
+        <span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+        {
+            <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+        }
+    }
+}
+</pre>
+        If a runner dies, we need the bot to switch them to become a tagger. We can use the method CustomGame.PlayersDead to get a list of dead players.<pre>
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="blue">while</span> (<span class="blue">true</span>)
+    {
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; runners = cg.BlueSlots; <span class="comment">// Get list of slots filled in blue team (runners)</span>
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; playersDead = cg.PlayerInfo.PlayersDead(runners); <span class="comment">// Get list of players dead that are in blue team.</span>
+    }
+}</pre>
+        We can use the method CustomGame.Move to swap the tagger and the player that was tagged's team.
+        <pre>
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="blue">while</span> (<span class="blue">true</span>)
+    {
+
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; runners = cg.BlueSlots; <span class="comment">// Get list of slots filled in blue team (runners)</span>
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; playersDead = cg.PlayerInfo.PlayersDead(runners); <span class="comment">// Get list of players dead that are in blue team.</span>
+        <span class="blue">if</span> (playersDead.Count > 0)
+        {
+            cg.Interact.Move(playersDead[0], 6); <span class="comment">// Swaps the player who was tagged and the tagger.</span>
+        }
+    }
+}</pre>
+        When the tagger tags someone, we can start a countdown by pausing and then unpausing the game. We can also send a message to the chat telling the server that there is a new tagger.<br/>
+        <pre>
+<span class="blue">static void</span> Main(<span class="blue">string</span>[] args)
+{
+    <span class="type">CustomGame</span> cg = <span class="blue">new</span> <span class="type">CustomGame</span>();
+
+    <span class="blue">while</span> (<span class="blue">true</span>)
+    {
+
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; runners = cg.BlueSlots; <span class="comment">// Get list of slots filled in blue team (runners)</span>
+        <span class="type">List</span>&lt;<span class="blue">int</span>&gt; playersDead = cg.PlayerInfo.PlayersDead(runners); <span class="comment">// Get list of players dead that are in blue team.</span>
+        <span class="blue">if</span> (playersDead.Count > 0)
+        {
+            cg.Pause.Pause(); <span class="comment">// Pause the game.</span>
+            cg.Interact.Move(playersDead[0], 6); <span class="comment">// Swaps the player who was tagged and the tagger.</span>
+            cg.Chat.Chat(<span class="string">"There is a new tagger!"</span>);
+            cg.Pause.Unpause(); <span class="comment">// Unpause the game.</span>
+        }
+    }
+}</pre>
+    </div>
+</body>
+</html>

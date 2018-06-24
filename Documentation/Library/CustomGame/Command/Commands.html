@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Custom Game Bot Library</title>
+    <link href="../../library.css" rel="stylesheet" type="text/css" />
+    <script src="../../Library.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <script>
+            var page = "Commands";
+
+            getSidebar(page);
+        </script>
+    </div>
+    <div class="content">
+        <p><strong>Deltin.CustomGameAutomation.<span class="type">Commands</span> class</strong></p>
+        <table style="margin-left: 10px">
+            <tr>
+                <th>Class</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><a><span class="type">CommandData</span></a></td>
+                <td>Data regarding an executed command.</td>
+            </tr>
+        </table>
+
+        <table style="margin-left: 10px; margin-top: 20px;">
+            <tr>
+                <th>Method</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><a>RemoveAllExecutedCommands()</a></td>
+                <td>Disposes data of all executed commands.</td>
+            </tr>
+            <tr>
+                <td><a>RemoveExecutedCommand(<span class="blue">int</span>)</a></td>
+                <td>Disposes data of an executed command.</td>
+            </tr>
+        </table>
+
+        <table style="margin-left: 10px; margin-top: 20px;">
+            <tr>
+                <th>Property</th>
+                <th>Description</th>
+            </tr>
+
+            <tr>
+                <td><a><span class="type">ReadOnlyCollection</span>&lt;<span class="type">CommandData</span>&gt; ExecutedCommands</a></td>
+                <td>List of executed commands.</td>
+            </tr>
+        </table>
+
+        <table style="margin-left: 10px; margin-top: 20px;">
+            <tr>
+                <th>Field</th>
+                <th>Description</th>
+            </tr>
+
+            <tr>
+                <td><a><span class="blue">bool</span> AllowMultipleCommandExecutions</a></td>
+                <td>Allows one executor to execute more than one command.</td>
+            </tr>
+            <tr>
+                <td><a><span class="blue">bool</span> Listen</a></td>
+                <td>Set to true to start listening for commands. Set to false to stop.</td>
+            </tr>
+            <tr>
+                <td><a><span class="type">Dictionary</span>&lt;<span class="blue">string</span>, <span class="blue">bool</span>&gt; ListenTo</a></td>
+                <td>Dictionary of commands to listen to. Indexer is the command to listen to, value is a bool that determines if this command should be listened to.</td>
+            </tr>
+            <tr>
+                <td><a><span class="blue">bool</span> ListenToAllCommands</a></td>
+                <td>If true, listens to all commands rather than just the commands in the ListenTo dictionary.</td>
+            </tr>
+            <tr>
+                <td><a><span class="blue">bool</span> SameExecutorCommandUpdate</a></td>
+                <td>If true, updates an already executed command from an executor. AllowMultipleCommandExecutions must be false.</td>
+            </tr>
+        </table>
+
+        <p>See also:</p>
+        <p><a href="../../MapVoting.html">Map voting system using commands</a></p>
+    </div>
+</body>
+</html>
