@@ -694,9 +694,9 @@
             Gamemode of the map.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Map.MapID">
+        <member name="F:Deltin.CustomGameAutomation.Map.MapName">
             <summary>
-            ID of map in alphabetical order of other maps in the gamemode.
+            Name of the map.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.Map.GameEvent">

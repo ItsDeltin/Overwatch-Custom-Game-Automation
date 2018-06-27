@@ -170,9 +170,9 @@ namespace Deltin.CustomGameAutomation
 
     public enum BotTeam
     {
+        Both,
         Blue,
-        Red,
-        Both
+        Red
     }
     public enum InviteTeam
     {

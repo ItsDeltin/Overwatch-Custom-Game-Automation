@@ -35,31 +35,31 @@
                 <th>Description</th>
             </tr>
             <tr>
-                <td><a href="AI/CG_AI.html"><span class="type">CG_AI</span></a></td>
+                <td><a href="CustomGame/AI/CG_AI.html"><span class="type">CG_AI</span></a></td>
                 <td>Fields relating to AI. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.AI</span>.</td>
             </tr>
             <tr>
-                <td><a href="Chat/CG_Chat.html"><span class="type">CG_Chat</span></a></td>
+                <td><a href="CustomGame/Chat/CG_Chat.html"><span class="type">CG_Chat</span></a></td>
                 <td>Fields relating to the Overwatch chat. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.Chat</span>.</td>
             </tr>
             <tr>
-                <td><a href="GameSettings/CG_Settings.html"><span class="type">CG_Settings</span></a></td>
+                <td><a href="CustomGame/GameSettings/CG_Settings.html"><span class="type">CG_Settings</span></a></td>
                 <td>Fields related to the custom game settings. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.GameSettings</span>.</td>
             </tr>
             <tr>
-                <td><a href="Interact/CG_Interact.html"><span class="type">CG_Interact</span></a></td>
+                <td><a href="CustomGame/Interact/CG_Interact.html"><span class="type">CG_Interact</span></a></td>
                 <td>Fields related to player roles. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.Interact</span>.</td>
             </tr>
             <tr>
-                <td><a href="Maps/CG_Maps.html"><span class="type">CG_Maps</span></a></td>
+                <td><a href="CustomGame/Maps/CG_Maps.html"><span class="type">CG_Maps</span></a></td>
                 <td>Fields related to maps. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.Maps</span>.</td>
             </tr>
             <tr>
-                <td><a href="Pause/CG_Pause.html"><span class="type">CG_Pause</span></a></td>
+                <td><a href="CustomGame/Pause/CG_Pause.html"><span class="type">CG_Pause</span></a></td>
                 <td>Fields related to the moderator pause feature. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.Pause</span>.</td>
             </tr>
             <tr>
-                <td><a href="Command/Commands.html"><span class="type">Commands</span></a></td>
+                <td><a href="CustomGame/Command/Commands.html"><span class="type">Commands</span></a></td>
                 <td>Fields related to chat commands. Accessed in a <span class="type field">CustomGame</span> object under the field <span class="field"><span class="type">CustomGame</span>.Command</span>.</td>
             </tr>
         </table>
@@ -70,47 +70,67 @@
                 <th>Description</th>
             </tr>
             <tr>
-                <td><a href="GetCurrentOverwatchEvent.html">GetCurrentOverwatchEvent()</a></td>
+                <td><a href="CustomGame/GetCurrentOverwatchEvent.html">GetCurrentOverwatchEvent()</a></td>
                 <td>Gets the current event in Overwatch.</td>
             </tr>
             <tr>
-                <td><a href="GetGameState.html">GetGameState()</a></td>
+                <td><a href="CustomGame/GetGameState.html">GetGameState()</a></td>
                 <td>Gets the current state of the game.</td>
             </tr>
             <tr>
-                <td><a href="GetInvitedCount.html">GetInvitedCount(<span class="type">List</span>&lt;<span class="blue">int</span>&gt;)</a></td>
+                <td><a href="CustomGame/GetInvitedCount.html">GetInvitedCount(<span class="type">List</span>&lt;<span class="blue">int</span>&gt;)</a></td>
                 <td>Returns the number of players that are invited but not ingame.</td>
             </tr>
             <tr>
-                <td><a href="GetInvitedSlots.html">GetInvitedSlots(<span class="type">List</span>&lt;<span class="blue">int</span>&gt;)</a></td>
+                <td><a href="CustomGame/GetInvitedSlots.html">GetInvitedSlots(<span class="type">List</span>&lt;<span class="blue">int</span>&gt;)</a></td>
                 <td>Returns a list of the slots that are invited but not ingame.</td>
             </tr>
             <tr>
-                <td><a href="InvitePlayer.html">InvitePlayer(<span class="blue">string</span>, <span class="type">InviteTeam</span>)</a></td>
+                <td><a href="CustomGame/InvitePlayer.html">InvitePlayer(<span class="blue">string</span>, <span class="type">InviteTeam</span>)</a></td>
                 <td>Invites a player to the custom game. Is case sensitive.</td>
             </tr>
             <tr>
-                <td><a href="RestartGame.html">RestartGame()</a></td>
+                <td><a href="CustomGame/IsSlotBlue.html">IsSlotBlue(<span class="blue">int</span>)</a></td>
+                <td>Checks if the slot is in blue.</td>
+            </tr>
+            <tr>
+                <td><a href="CustomGame/IsSlotInQueue.html">IsSlotInQueue(<span class="blue">int</span>)</a></td>
+                <td>Checks if the slot is in the queue.</td>
+            </tr>
+            <tr>
+                <td><a href="CustomGame/IsSlotRed.html">IsSlotRed(<span class="blue">int</span>)</a></td>
+                <td>Checks if the slot is in red.</td>
+            </tr>
+            <tr>
+                <td><a href="CustomGame/IsSlotSpectator.html">IsSlotSpectator(<span class="blue">int</span>)</a></td>
+                <td>Checks if the slot is a spectator.</td>
+            </tr>
+            <tr>
+                <td><a href="CustomGame/IsSlotValid.html">IsSlotValid(<span class="blue">int</span>)</a></td>
+                <td>Checks if the slot is in blue, red, the queue, or is a spectator.</td>
+            </tr>
+            <tr>
+                <td><a href="CustomGame/RestartGame.html">RestartGame()</a></td>
                 <td>Restarts the game.</td>
             </tr>
             <tr>
-                <td><a href="SendServerToLobby.html">SendServerToLobby()</a></td>
+                <td><a href="CustomGame/SendServerToLobby.html">SendServerToLobby()</a></td>
                 <td>Sends the custom game server to the lobby.</td>
             </tr>
             <tr>
-                <td><a href="SetHeroRoster.html">SetHeroRoster(<span class="type">ToggleAction</span>, <span class="type">BotTeam</span>, <span class="type">Hero</span>[])</a></td>
+                <td><a href="CustomGame/SetHeroRoster.html">SetHeroRoster(<span class="type">ToggleAction</span>, <span class="type">BotTeam</span>, <span class="type">Hero</span>[])</a></td>
                 <td>Changes hero roster.</td>
             </tr>
             <tr>
-                <td><a href="SetHeroSettings.html">SetHeroSettings(<span class="type">SetHero</span>[])</a></td>
+                <td><a href="CustomGame/SetHeroSettings.html">SetHeroSettings(<span class="type">SetHero</span>[])</a></td>
                 <td>Changes individual hero settings.</td>
             </tr>
             <tr>
-                <td><a href="StartGame.html">StartGame()</a></td>
+                <td><a href="CustomGame/StartGame.html">StartGame()</a></td>
                 <td>Starts the game from the lobby.</td>
             </tr>
             <tr>
-                <td><a href="StartGamemode.html">StartGamemode()</a></td>
+                <td><a href="CustomGame/StartGamemode.html">StartGamemode()</a></td>
                 <td>Starts the game when waiting for players.</td>
             </tr>
         </table>
@@ -221,7 +241,7 @@
                 <th>Description</th>
             </tr>
             <tr>
-                <td><a href="OnGameOver.html">OnGameOver</a></td>
+                <td><a href="CustomGame/OnGameOver.html">OnGameOver</a></td>
                 <td>Events that are executed when the game is over.</td>
             </tr>
         </table>

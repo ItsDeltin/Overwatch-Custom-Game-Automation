@@ -67,7 +67,7 @@
             <summary>
             Send message to chat.
             </summary>
-            <param name="words">Text to send.</param>
+            <param name="text">Text to send.</param>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.CG_Chat.ChatPrefix">
             <summary>
@@ -240,6 +240,11 @@
         <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueCount">
             <summary>
             Gets the number of players in the queue.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueSlots">
+            <summary>
+            Gets the slots filled in the queue.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.SpectatorCount">
@@ -679,61 +684,6 @@
             </summary>
             <param name="message">Message to display.</param>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.TotalPlayerCount">
-            <summary>
-            Number of players in custom game server.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.TotalPlayerSlots">
-            <summary>
-            Slots of every player in the custom game server.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.PlayerCount">
-            <summary>
-            Number of players in blue and red team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.PlayerSlots">
-            <summary>
-            Slots of every player in blue and red team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.BlueCount">
-            <summary>
-            Number of players in blue team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.BlueSlots">
-            <summary>
-            Slots of all players in blue team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.RedCount">
-            <summary>
-            Number of players in red team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.RedSlots">
-            <summary>
-            Slots of all players in red team.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.SpectatorCount">
-            <summary>
-            Number of players spectating.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.SpectatorSlots">
-            <summary>
-            Slots of players spectating.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.PlayerInfo.QueueCount">
-            <summary>
-            Number of players in queue.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.Map">
             <summary>
             Maps in Overwatch.
@@ -744,9 +694,9 @@
             Gamemode of the map.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Map.MapID">
+        <member name="F:Deltin.CustomGameAutomation.Map.MapName">
             <summary>
-            ID of map in alphabetical order of other maps in the gamemode.
+            Name of the map.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.Map.GameEvent">

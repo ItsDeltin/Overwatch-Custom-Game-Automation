@@ -13,6 +13,8 @@
             var page = "SetHeroSettings(SetHero[])";
 
             getSidebar(page);
+
+            getHeroSettings();
         </script>
     </div>
     <div class="content">
@@ -67,9 +69,7 @@
             </div>
         </div>
 
-        <p>Change individual hero settings.</p>
-
-        <p>Full list of settings <a href="SetHeroSettings-SettingList.html">here</a>.</p>
+        <p>Changes individual hero settings.</p>
 
         <p>The code below will set both teams' Ultimate Generation to 500%.</p>
         <pre>
@@ -187,6 +187,11 @@
     );
 }
 </pre>
+
+        <p>
+            Hero Settings:
+            <div id="heroSettingsTable">Loading hero settings...</div>
+        </p>
     </div>
 </body>
 </html>

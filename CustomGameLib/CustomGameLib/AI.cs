@@ -45,63 +45,61 @@ namespace Deltin.CustomGameAutomation
                     cg.WaitForUpdate(835, 182, 20, 2000);
                     cg.LeftClick(835, 182, 500);
 
-                    List<Keys> keypresses = new List<Keys>(); // The keypresses that need to be pressed to add the AI.
+                    List<Keys> press = new List<Keys>();
 
                     if (hero != AIHero.Recommended)
                     {
+                        press.Add(Keys.Space);
                         int heroid = (int)hero;
-
-                        // Open Hero Select menu
-                        keypresses.Add(Keys.Space);
-                        // Select the hero
                         for (int i = 0; i < heroid; i++)
-                            keypresses.Add(Keys.Down);
-                        keypresses.Add(Keys.Space);
+                            press.Add(Keys.Down);
+                        press.Add(Keys.Space);
+                        press.Add(Keys.Down);
                     }
 
-                    keypresses.Add(Keys.Down); // Select the difficulty option
+                    press.Add(Keys.Down);
+
                     if (difficulty != Difficulty.Easy)
                     {
-                        int difficultyid = (int)difficulty;
-
-                        keypresses.Add(Keys.Space); // Open difficulty menu
-                                                    // Select the difficulty
-                        for (int i = 0; i < difficultyid; i++)
-                            keypresses.Add(Keys.Down);
-                        keypresses.Add(Keys.Space);
+                        press.Add(Keys.Space);
+                        int difficultyID = (int)difficulty;
+                        for (int i = 0; i < difficultyID; i++)
+                            press.Add(Keys.Down);
+                        press.Add(Keys.Space);
+                        press.Add(Keys.Down);
+                        press.Add(Keys.Down);
                     }
 
-                    keypresses.Add(Keys.Down); keypresses.Add(Keys.Down); // Select the team option
+                    press.Add(Keys.Down);
+                    press.Add(Keys.Down);
+
                     if (team != BotTeam.Both)
                     {
-                        int teamid = (int)team + 1;
-
-                        keypresses.Add(Keys.Space); // Open team menu
-                                                    // Select team
-                        for (int i = 0; i < teamid; i++)
-                            keypresses.Add(Keys.Down);
-                        keypresses.Add(Keys.Space);
+                        press.Add(Keys.Space);
+                        int teamID = (int)team;
+                        for (int i = 0; i < teamID; i++)
+                            press.Add(Keys.Down);
+                        press.Add(Keys.Space);
+                        press.Add(Keys.Down);
+                        press.Add(Keys.Down);
+                        press.Add(Keys.Down);
+                        press.Add(Keys.Down);
                     }
 
                     if (count > 0)
                     {
-                        keypresses.Add(Keys.Up); // Select the count option
-
-                        // Set add AI count to 0
+                        press.Add(Keys.Up);
                         for (int i = 0; i < 12; i++)
-                            keypresses.Add(Keys.Left);
-                        // Set add AI count to count.
+                            press.Add(Keys.Left);
                         for (int i = 0; i < count; i++)
-                            keypresses.Add(Keys.Right);
-
-                        keypresses.Add(Keys.Down); // Select the team option
+                            press.Add(Keys.Right);
+                        press.Add(Keys.Down);
                     }
 
-                    keypresses.Add(Keys.Down); // Select the add/back option
+                    press.Add(Keys.Down);
+                    press.Add(Keys.Space);
 
-                    keypresses.Add(Keys.Space); // Add the AI.
-
-                    cg.KeyPress(keypresses.ToArray());
+                    cg.KeyPress(press.ToArray());
 
                     cg.ResetMouse();
 

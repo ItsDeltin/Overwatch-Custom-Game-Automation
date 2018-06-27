@@ -28,7 +28,7 @@ function toggleDropdown(div) {
 }
 
 function getMaps() {
-    // VERY not future proof. Update this if the map class recieves any format changes.
+    // Not future proof. Update this if the map class recieves any format changes.
 
     var req = new XMLHttpRequest();
 
@@ -65,6 +65,54 @@ function getMaps() {
     }
 
     req.open('GET', "https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/CustomGameLib/CustomGameLib/Map.cs");
+    req.send();
+}
+
+function getHeroSettings() {
+    // Not future proof. Update this if SetHeroSettings recieves any format changes.
+
+    var req = new XMLHttpRequest();
+
+    req.onload = function () {
+        var page = this.responseText;
+
+        var table = "<table style=\"height: 500px; overflow-y: scroll; display: block; \"><tr><th>Setting</th><th>Type</th><th>Object Type</th></tr>";
+
+        var parse = page.split("\n");
+
+        for (var i = 0; i < parse.length; i++) {
+            if (parse[i].length == 0)
+                continue;
+
+            if (parse[i][0] == "-") {
+                table += "<tr style=\"background-color:#c6c6c6\"><td><strong style=\"margin-top:10px;\">" + parse[i].substring(1, parse[i].length) + "</strong></td><td></td><td></td></tr>";
+            }
+            else {
+                var splitIndex = parse[i].indexOf(" ", 1);
+                var setting = parse[i].substring(0, splitIndex);
+                var type = parse[i].substring(splitIndex + 1, parse[i].length);
+
+                table += "<tr><td>" + setting + "</td><td>" + type + "</td>";
+
+                if (type == "value")
+                    table += "<td>System.Int32</td>";
+                else if (type == "toggle") {
+                    table += "<td>System.Boolean</td>";
+                }
+                else if (type == "dropdown") {
+                    table += "<td>System.Int32</td>"
+                }
+
+                table += "</tr>"
+            }
+        }
+
+        table += "</table>";
+
+        document.getElementById("heroSettingsTable").innerHTML = table;
+    }
+
+    req.open('GET', "https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt");
     req.send();
 }
 
