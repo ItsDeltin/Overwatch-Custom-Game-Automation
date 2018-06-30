@@ -496,6 +496,15 @@
             <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
             <param name="maps">Maps that should be toggled.</param>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
+            <summary>
+            Toggles maps in Overwatch.
+            </summary>
+            <param name="modesEnabled">The modes enabled in the overwatch game.</param>
+            <param name="currentOverwatchEvent">The current Overwatch event.</param>
+            <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
+            <param name="maps">Maps that should be toggled.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.MapIDFromName(System.String)">
             <summary>
             Gets map ID from map name.

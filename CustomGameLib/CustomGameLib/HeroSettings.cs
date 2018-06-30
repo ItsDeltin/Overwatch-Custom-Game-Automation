@@ -277,33 +277,14 @@ namespace Deltin.CustomGameAutomation
                             if (Settings[heroid][si].type == SettingType.toggle)
                             {
                                 // Check what the toggle setting selected is set to.
-                                Thread.Sleep(100); // Sleep to allow the scrolling animation to catch up
-                                updateScreen();
-                                for (int y = 110; y < 436; y++)
-                                    if (CompareColor(653, y, new int[] { 127, 127, 127 }, 10)
-                                        && CompareColor(649, y, CALData.WhiteColor, 10))
-                                    {
-                                        bool option = (bool)hero.SetTo[setSettingIndex];
+                                bool value = (bool)GetHighlightedSettingValue(true);
+                                bool option = (bool)hero.SetTo[setSettingIndex];
 
-                                        bool selectedOption = !CompareColor(600, y, CALData.WhiteColor, 10); // Will equal true if selected setting is ENABLED,
-                                                                                                                           // and equal false if DISABLED, OFF, or ON.
-                                        // if selected option is OFF or ON...
-                                        if (!selectedOption && CompareColor(599, y, CALData.WhiteColor, 10))
-                                        {
-                                            if (CompareColor(582, y, CALData.WhiteColor, 20) != option)
-                                            {
-                                                KeyPress(Keys.Space);
-                                                Thread.Sleep(KeyPressWait);
-                                            }
-                                        }
-                                        // else, the setting is enabled or disabled.
-                                        else if (selectedOption == option)
-                                        {
-                                            KeyPress(Keys.Space);
-                                            Thread.Sleep(KeyPressWait);
-                                        }
-                                        break;
-                                    }
+                                if (value != option)
+                                {
+                                    KeyPress(Keys.Space);
+                                    Thread.Sleep(KeyPressWait);
+                                }
                             }
                             // If the selected setting is a dropdown menu...
                             else if (Settings[heroid][si].type == SettingType.dropdown)
@@ -327,11 +308,10 @@ namespace Deltin.CustomGameAutomation
                             // If the selected setting is a numeric value...
                             else // the last possible thing Settings[heroid][si].type could be is SettingType.value
                             {
-                                string setvalue = hero.SetTo[setSettingIndex].ToString(); // The numeric value to set the setting to as a string.
-                                for (int stringset = 0; stringset < setvalue.Length; stringset++)
+                                var keys = GetNumberKeys((int)hero.SetTo[setSettingIndex]); // The numeric value to set the setting to as a string.
+                                for (int sk = 0; sk < keys.Length; sk++)
                                 {
-                                    int simulate = Int32.Parse(setvalue[stringset].ToString());
-                                    KeyDown(NumberKeys[simulate]);
+                                    KeyDown(keys[sk]);
                                     Thread.Sleep(KeyPressWait);
                                 }
                                 KeyPress(Keys.Return);

@@ -13,7 +13,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Modes enabled in custom games.
         /// </summary>
-        public ModesEnabled ModesEnabled = new ModesEnabled();
+        public ModesEnabled ModesEnabled = null;
         /// <summary>
         /// The current event occuring in Overwatch.
         /// </summary>
@@ -88,6 +88,20 @@ namespace Deltin.CustomGameAutomation
             /// <param name="maps">Maps that should be toggled.</param>
             public void ToggleMap(ToggleAction ta, params Map[] maps)
             {
+                if (cg.ModesEnabled == null)
+                    throw new ArgumentNullException("CustomGame.ModesEnabled", "The field CustomGame.ModesEnabled must be set in order to use ToggleMap.");
+                ToggleMap(cg.ModesEnabled, cg.CurrentOverwatchEvent, ta, maps);
+            }
+
+            /// <summary>
+            /// Toggles maps in Overwatch.
+            /// </summary>
+            /// <param name="modesEnabled">The modes enabled in the overwatch game.</param>
+            /// <param name="currentOverwatchEvent">The current Overwatch event.</param>
+            /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
+            /// <param name="maps">Maps that should be toggled.</param>
+            public void ToggleMap(ModesEnabled modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
+            {
                 cg.GoToSettings();
 
                 cg.LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
@@ -101,19 +115,19 @@ namespace Deltin.CustomGameAutomation
                 // Get the modes enabled state in a bool in alphabetical order.
                 bool[] enabledModes = new bool[]
                 {
-                    cg.ModesEnabled.Assault,
-                    cg.ModesEnabled.AssaultEscort,
-                    cg.ModesEnabled.CaptureTheFlag,
-                    cg.ModesEnabled.Control,
-                    cg.ModesEnabled.Deathmatch,
-                    cg.ModesEnabled.Elimination,
-                    cg.ModesEnabled.Escort,
-                    cg.ModesEnabled.JunkensteinsRevenge,
-                    cg.ModesEnabled.Lucioball,
-                    cg.ModesEnabled.MeisSnowballOffensive,
-                    cg.ModesEnabled.Skirmish,
-                    cg.ModesEnabled.TeamDeathmatch,
-                    cg.ModesEnabled.YetiHunter
+                    modesEnabled.Assault,
+                    modesEnabled.AssaultEscort,
+                    modesEnabled.CaptureTheFlag,
+                    modesEnabled.Control,
+                    modesEnabled.Deathmatch,
+                    modesEnabled.Elimination,
+                    modesEnabled.Escort,
+                    modesEnabled.JunkensteinsRevenge,
+                    modesEnabled.Lucioball,
+                    modesEnabled.MeisSnowballOffensive,
+                    modesEnabled.Skirmish,
+                    modesEnabled.TeamDeathmatch,
+                    modesEnabled.YetiHunter
                 };
 
                 List<int> selectMap = new List<int>();
@@ -123,7 +137,7 @@ namespace Deltin.CustomGameAutomation
                     if (enabledModes[i])
                     {
                         Gamemode emi = (Gamemode)i; //enabledmodesindex
-                        List<Map> allowedmaps = GetAllowedMaps(emi);
+                        List<Map> allowedmaps = GetMapsInGamemode(emi, currentOverwatchEvent);
                         // ...And for each map...
                         for (int mi = 0; mi < maps.Length; mi++)
                             // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...
@@ -160,14 +174,6 @@ namespace Deltin.CustomGameAutomation
             /// <returns>Returns map ID.</returns>
             public static Map MapIDFromName(string map)
             {
-                /*
-                FieldInfo[] fi = GetMapFieldInfo();
-                for (int i = 0; i < fi.Length; i++)
-                    if (fi[i].Name.ToLower() == map.ToLower())
-                        return MaparFromFieldInfo(fi[i]);
-                return null;
-                */
-
                 var maps = GetMaps();
                 for (int i = 0; i < maps.Count; i++)
                     if (maps[i].MapName.ToLower() == map.ToLower())
@@ -189,11 +195,6 @@ namespace Deltin.CustomGameAutomation
                 return null;
             }
 
-            public static Map[] GetMapsInGamemode(Gamemode gamemode, Event owevent)
-            {
-                return GetMaps().Where(map => map.GameMode == gamemode && (map.GameEvent == Event.None || map.GameEvent == owevent)).ToArray();
-            }
-
             private static FieldInfo[] GetMapFieldInfo()
             {
                 return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);
@@ -205,83 +206,11 @@ namespace Deltin.CustomGameAutomation
             private static List<Map> GetMaps()
             {
                 return GetMapFieldInfo().Select(v => (Map)v.GetValue(null)).ToList();
-
-                /*
-                List<Map> allmaps = new List<Map>();
-                FieldInfo[] fi = GetMapFieldInfo();
-                for (int i = 0; i < fi.Length; i++)
-                    allmaps.Add(MaparFromFieldInfo(fi[i]));
-                return allmaps;
-                */
             }
-            private List<Map> GetAllowedMaps(Gamemode gamemode)
+            private List<Map> GetMapsInGamemode(Gamemode gamemode, Event owEvent)
             {
-                return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == cg.CurrentOverwatchEvent) && v.GameMode == gamemode).ToList();
-
-                /*
-                List<Map> allmaps = GetMaps();
-
-                List<Map> selected = new List<Map>();
-                for (int i = 0; i < allmaps.Count; i++)
-                    if ((allmaps[i].GameEvent == cg.CurrentOverwatchEvent || allmaps[i].GameEvent == Event.None) && allmaps[i].GameMode == gamemode)
-                        selected.Add(allmaps[i]);
-                return selected;
-                */
+                return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && v.GameMode == gamemode).ToList();
             }
-        }
-
-        public void GetGamemodeMarkup(string saveto)
-        {
-            updateScreen();
-
-            int startX = 209;
-            int startY = 177;
-            int yLength = 6;
-            int xLength = 0;
-
-            int[] textColor = new int[] { 109, 118, 120 };
-            int textFade = 25;
-
-            // Get the width of the text
-            {
-                bool endFound = false;
-                int checkX = startX;
-                int pixelsSinceLastLetter = 0;
-
-                while (!endFound)
-                {
-                    bool found = false;
-                    for (int y = startY; y < startY + yLength; y++)
-                        if (CompareColor(checkX, y, textColor, textFade))
-                        {
-                            found = true;
-                            pixelsSinceLastLetter = 0;
-                            xLength = checkX;
-                        }
-                    if (!found)
-                        pixelsSinceLastLetter++;
-                    if (pixelsSinceLastLetter > 3)
-                        endFound = true;
-                    checkX++;
-                }
-
-                Console.WriteLine("Gamemode text length in pixels: " + xLength);
-            }
-
-            Bitmap work = BmpClone(startX, startY, xLength, yLength);
-
-            for (int x = 0; x < work.Width; x++)
-                for (int y = 0; y < work.Height; y++)
-                {
-                    if (work.CompareColor(x, y, textColor, textFade))
-                        work.SetPixel(x, y, Color.Black);
-                    else
-                        work.SetPixel(x, y, Color.White);
-                }
-
-            work.Save(saveto);
-
-            work.Dispose();
         }
     }
 

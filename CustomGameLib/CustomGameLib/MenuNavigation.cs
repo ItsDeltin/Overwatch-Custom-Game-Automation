@@ -21,21 +21,12 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         void BackToMenu()
         {
-            // Make sure the server lobby menu is not opened
-            if (!(CompareColor(835, 179, new int[] { 121, 152, 184 }, 50) // Test for blue button at top of screen
-                    && CompareColor(704, 67, new int[] { 78, 122, 158 }, 20))) // Test for invite players to group button
+            if (!IsLobbyOpened())
             {
                 Activate(OverwatchHandle);
-                if (OpenChatIsDefault)
-                    KeyPress(Keys.Escape);
-                Thread.Sleep(1000);
-                Activate(OverwatchHandle);
+                Thread.Sleep(250);
                 KeyPress(Keys.L);
-                Thread.Sleep(1000);
-                Activate(OverwatchHandle);
-
-                if (OpenChatIsDefault)
-                    Chat.OpenChat();
+                Thread.Sleep(250);
             }
 
             ResetMouse();
@@ -65,9 +56,9 @@ namespace Deltin.CustomGameAutomation
 
                     CompareColor(450, 325, new int[] { 176, 141, 89 }, 20) || // Test for "ENTERING GAME" color
 
-                    CompareColor(400, 300, new int[] { 64, 64, 64 }, 15) || // Test for black screen color
+                    CompareColor(400, 300, new int[] { 64, 64, 64 }, 15) // Test for black screen color
 
-                    CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
+                    //CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
                     )
                 {
                     sc.Reset(); // reset timer
@@ -81,6 +72,7 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(1000);
                 updateScreen();
             }
+            Thread.Sleep(1000);
             //Console.WriteLine("DONE"); // for debugging
         }
 
@@ -89,9 +81,15 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void RestartGame()
         {
+            if (OpenChatIsDefault)
+                Chat.CloseChat();
+
             LeftClick(500, 455);
             LoadStall();
             BackToMenu();
+
+            if (OpenChatIsDefault)
+                Chat.OpenChat();
         }
 
         /// <summary>
@@ -99,9 +97,15 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGame()
         {
+            if (OpenChatIsDefault)
+                Chat.CloseChat();
+
             LeftClick(451, 458, 3000);
             LoadStall();
             BackToMenu();
+
+            if (OpenChatIsDefault)
+                Chat.OpenChat();
         }
 
         /// <summary>
@@ -123,7 +127,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // go to settings
-        private void GoToSettings()
+        internal void GoToSettings()
         {
             updateScreen();
             // The "Add AI" button moves the "Settings" button, this detects if that happens.
@@ -137,20 +141,13 @@ namespace Deltin.CustomGameAutomation
         {
             updateScreen();
 
-            /* old
-            int[] addAIcolor = new int[] { 121, 152, 184 };
-            // The "Add AI" button moves the "Settings" button, this detects if that happens.
-            if (CompareColor(659, 180, addAIcolor, 50)) return true; // "Add AI" Button
-            else return false; // No "Add AI" Button
-            */
-
             return CompareColor(
                 700, 182, // Location of the "MOVE" button
                 715, 182, // Location of the "SETTINGS" button
                 20);
         }
 
-        private void GoBack(int settingpages, params int[] checkForErrorsAt)
+        internal void GoBack(int settingpages, params int[] checkForErrorsAt)
         {
             for (int i = 0; i < settingpages; i++)
             {
@@ -162,6 +159,13 @@ namespace Deltin.CustomGameAutomation
                         LeftClick(436, 318);
                 }
             }
+        }
+
+        internal bool IsLobbyOpened()
+        {
+            updateScreen();
+            return CompareColor(835, 179, new int[] { 121, 152, 184 }, 50) // Test for blue button (move/settings) at the top of the screen
+                    && CompareColor(704, 67, new int[] { 78, 122, 158 }, 30); // Test for invite players to group button
         }
     }
 }

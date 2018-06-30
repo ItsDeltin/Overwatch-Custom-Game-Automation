@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Threading;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Deltin.CustomGameAutomation
@@ -34,19 +34,28 @@ namespace Deltin.CustomGameAutomation
         const uint WM_KEYDOWN = 0x100;
         const uint WM_KEYUP = 0x0101;
 
-        Keys[] NumberKeys = new Keys[] { Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9 };
+        internal Keys[] GetNumberKeys(int value)
+        {
+            Keys[] numberKeys = new Keys[] { Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9 };
+
+            List<Keys> keys = new List<Keys>();
+
+            string get = value.ToString();
+            for (int i = 0; i < get.Length; i++)
+                if (get[i] == '-')
+                    keys.Add(Keys.Subtract);
+                else
+                    keys.Add(numberKeys[Int32.Parse(get[i].ToString())]);
+
+            return keys.ToArray();
+        }
 
         static int MakeLParam(int LoWord, int HiWord)
         {
             return (int)((HiWord << 16) | (LoWord & 0xFFFF));
         }
 
-        public void ClickTest(int x, int y)
-        {
-            LeftClick(x, y);
-        }
-
-        void LeftClick(int x, int y, int waitTime = 500)
+        internal void LeftClick(int x, int y, int waitTime = 500)
         {
             LeftClick(OverwatchHandle, x, y, waitTime);
         }
@@ -62,7 +71,7 @@ namespace Deltin.CustomGameAutomation
             Thread.Sleep(waitTime);
         }
 
-        void RightClick(int x, int y, int waitTime = 500)
+        internal void RightClick(int x, int y, int waitTime = 500)
         {
             RightClick(OverwatchHandle, x, y, waitTime);
         }
@@ -80,8 +89,8 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Cursor position
-        Point SavedCursorPosition;
-        Point Cursor
+        internal Point SavedCursorPosition;
+        internal Point Cursor
         {
             get
             {
@@ -94,7 +103,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        void MoveMouseTo(int x, int y)
+        internal void MoveMouseTo(int x, int y)
         {
             MoveMouseTo(OverwatchHandle, x, y);
         }
@@ -105,15 +114,15 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, WM_MOUSEMOVE, 0, MakeLParam(x, y));
         }
 
-        void KeyDown(params Keys[] keysToSend)
+        internal void KeyDown(params Keys[] keysToSend)
         {
             KeyDown(OverwatchHandle, keysToSend);
         }
-        void KeyUp(params Keys[] keysToSend)
+        internal void KeyUp(params Keys[] keysToSend)
         {
             KeyUp(OverwatchHandle, keysToSend);
         }
-        void KeyPress(params Keys[] keysToSend)
+        internal void KeyPress(params Keys[] keysToSend)
         {
             KeyPress(OverwatchHandle, keysToSend);
         }
@@ -143,7 +152,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        void AlternateInput(int keycode)
+        internal void AlternateInput(int keycode)
         {
             AlternateInput(OverwatchHandle, keycode);
         }
@@ -156,7 +165,7 @@ namespace Deltin.CustomGameAutomation
 
         const int WM_CHAR = 0x0102;
 
-        void TextInput(string text)
+        internal void TextInput(string text)
         {
             TextInput(OverwatchHandle, text);
         }

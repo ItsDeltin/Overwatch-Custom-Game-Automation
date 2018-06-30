@@ -397,6 +397,7 @@ namespace Deltin.CustomGameAutomation
                             for (int i = 0; i < (int)selectHero; i++)
                                 sim.Add(Keys.Down);
                             sim.Add(Keys.Space);
+                            sim.Add(Keys.Down);
                         }
                         sim.Add(Keys.Down); // Select difficulty option
                                                       // Set difficulty if setToDifficulty does not equal null.

@@ -1,11 +1,54 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        public bool? GetHighlightedSettingValue(bool waitForScrollAnimation)
+        {
+            if (waitForScrollAnimation)
+                Thread.Sleep(150);
+
+            updateScreen();
+            for (int y = 110; y < 436; y++)
+                if (CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
+                    && CompareColor(649, y, CALData.WhiteColor, 20))
+                {
+                    for (int checkY = y - 5; checkY < y + 5; checkY++)
+                    {
+                        bool? settingValue = null;
+
+                        // If the setting is set to DISABLED
+                        if (CompareColor(564, checkY, new int[] { 81, 81, 81 }, 40))
+                            settingValue = false;
+
+                        // If the setting is set to ENABLED
+                        else if (CompareColor(599, checkY, new int[] { 127, 127, 127 }, 40))
+                            settingValue = true;
+
+                        // If the setting is set to OFF
+                        else if (CompareColor(589, checkY, new int[] { 127, 127, 127 }, 40))
+                            settingValue = false;
+
+                        // If the setting is set to ON
+                        else if (CompareColor(588, checkY, new int[] { 127, 127, 127 }, 40))
+                            settingValue = true;
+
+                        if (settingValue != null)
+                        {
+                            return settingValue;
+                        }
+                    }
+                }
+
+            return null;
+        }
+
         public CG_Settings GameSettings;
         public class CG_Settings
         {
@@ -155,6 +198,13 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(150);
             }
 
+            /*
+            public void SetSettings(Settings settings)
+            {
+                settings.SetSettings(cg);
+            }
+            */
+
         }
     }
 
@@ -165,4 +215,168 @@ namespace Deltin.CustomGameAutomation
         FFA,
         Spectator
     }
+
+    /*
+
+    public class Settings
+    {
+        private Settings() { }
+
+        internal void SetSettings(CustomGame cg)
+        {
+            Navigate(cg);
+
+            object[] values = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).Select(v => v.GetValue(this)).ToArray();
+
+            int waitTime = 10;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i] != null)
+                {
+                    if (values[i] is bool)
+                    {
+                        bool option = (bool)values[i];
+                        bool value = (bool)cg.GetHighlightedSettingValue(true);
+                        if (option != value)
+                        {
+                            cg.KeyPress(Keys.Space);
+                            Thread.Sleep(waitTime);
+                        }
+                    }
+                    else if (values[i] is int)
+                    {
+                        var set = cg.GetNumberKeys((int)values[i]);
+
+                        for (int k = 0; k < set.Length; k++)
+                        {
+                            cg.KeyDown(set[k]);
+                            Thread.Sleep(waitTime);
+                        }
+                        cg.KeyDown(Keys.Enter);
+                        Thread.Sleep(waitTime);
+                    }
+                    else if (values[i] is Enum)
+                    {
+                        int set = (int)values[i];
+                        int length = Enum.GetNames(values[i].GetType()).Length;
+
+                        cg.KeyPress(Keys.Space);
+                        Thread.Sleep(waitTime);
+                        for (int a = 0; a < length; a++)
+                        {
+                            cg.KeyPress(Keys.Up);
+                            Thread.Sleep(waitTime);
+                        }
+                        for (int a = 0; a < set; a++)
+                        {
+                            cg.KeyPress(Keys.Down);
+                            Thread.Sleep(waitTime);
+                        }
+                        cg.KeyPress(Keys.Space);
+                        Thread.Sleep(waitTime);
+                    }
+                }
+
+                cg.KeyPress(Keys.Down);
+                Thread.Sleep(waitTime);
+            }
+
+            Return(cg);
+        }
+
+        internal virtual void Navigate(CustomGame cg) { throw new NotImplementedException(); }
+        internal virtual void Return(CustomGame cg) { throw new NotImplementedException(); }
+
+        public class Settings_Modes_All : Settings
+        {
+            public Settings_Modes_All(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    EnemyHealthBars = true;
+                    GameModeStart = Game_Mode_Start.All_Slots_Filled;
+                    HealthPackRespawnTimeScalar = 100;
+                    KillCam = true;
+                    KillFeed = true;
+                    Skins = true;
+                    SpawnHealthPacks = Spawn_Health_Packs.Determined_By_Mode;
+
+                    AllowHeroSwitching = true;
+                    HeroLimit = Hero_Limit.One_Per_Team;
+                    LimitRoles = Limit_Roles.Off;
+                    RespawnAsRandomHero = false;
+                    RespawnTimeScalar = 100;
+                };
+            }
+
+            // Settings
+            public bool? EnemyHealthBars = null;
+            public Game_Mode_Start? GameModeStart = null;
+            public int? HealthPackRespawnTimeScalar = null;
+            public bool? KillCam = null;
+            public bool? KillFeed = null;
+            public bool? Skins = null;
+            public Spawn_Health_Packs? SpawnHealthPacks = null;
+
+            public bool? AllowHeroSwitching = null;
+            public Hero_Limit? HeroLimit = null;
+            public Limit_Roles? LimitRoles = null;
+            public bool? RespawnAsRandomHero = null;
+            public int? RespawnTimeScalar = null;
+            // /Settings
+
+            public enum Game_Mode_Start { All_Slots_Filled, Immediately, Manual }
+            public enum Spawn_Health_Packs { Determined_By_Mode, Enabled, Disabled }
+            public enum Hero_Limit { Off, One_Per_Team, Two_Per_Team, One_Per_Game, Two_Per_Game }
+            public enum Limit_Roles { Off, Two_Of_Each_Role_Per_Team }
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.GoToSettings();
+                cg.LeftClick(494, 178);
+                cg.LeftClick(98, 177);
+                cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3);
+            }
+        }
+
+        public class Settings_Modes_Assault : Settings
+        {
+            public Settings_Modes_Assault(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = true;
+                    CaptureSpeedModifier = 100;
+                    CompetitiveRules = false;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? CaptureSpeedModifier = null;
+            public bool? CompetitiveRules = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.GoToSettings();
+                cg.LeftClick(494, 178);
+                cg.LeftClick(245, 175);
+                cg.KeyPress(Keys.Up, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+    }
+
+    */
 }
