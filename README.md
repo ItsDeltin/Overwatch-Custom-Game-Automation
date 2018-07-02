@@ -39,7 +39,7 @@ It is possible to run your application and play Overwatch at the same time by st
 ### Slots
 You can target a specific player on the server with their slot.
 
-![](https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/Tutorial/Library/Assets/slots.jpg "slots")
+![](https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/Documentation/Library/Assets/slots.jpg "slots")
 
 `CustomGame.BlueSlots`, for the example above, will return a List<int> containing only the number 0.
 
