@@ -247,13 +247,13 @@ namespace ZombieBot
             // Set the mode enabled
             if (version == 0)
             {
-                cg.ModesEnabled.Elimination = true;
+                cg.ModesEnabled = new ModesEnabled() { Elimination = true };
                 maps = ElimMaps;
                 mapsSend = ElimMapsSend;
             }
             else if (version == 1)
             {
-                cg.ModesEnabled.TeamDeathmatch = true;
+                cg.ModesEnabled = new ModesEnabled() { TeamDeathmatch = true };
                 maps = DmMaps;
                 mapsSend = DmMapsSend;
             }
