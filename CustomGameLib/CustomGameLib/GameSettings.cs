@@ -4,45 +4,48 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        public bool? GetHighlightedSettingValue(bool waitForScrollAnimation)
+        internal bool? GetHighlightedSettingValue(bool waitForScrollAnimation)
         {
             if (waitForScrollAnimation)
                 Thread.Sleep(150);
+
+            int min = 35;
+            int max = 155;
 
             updateScreen();
             for (int y = 110; y < 436; y++)
                 if (CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
                     && CompareColor(649, y, CALData.WhiteColor, 20))
                 {
-                    for (int checkY = y - 5; checkY < y + 5; checkY++)
+                    int checkY = y + 2;
+
+                    bool? settingValue = null;
+
+                    // If the setting is set to DISABLED
+                    if (CompareColor(564, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                        settingValue = false;
+
+                    // If the setting is set to ENABLED
+                    else if (CompareColor(599, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                        settingValue = true;
+
+                    // If the setting is set to OFF
+                    else if (CompareColor(589, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                        settingValue = false;
+
+                    // If the setting is set to ON
+                    else if (CompareColor(588, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                        settingValue = true;
+
+                    if (settingValue != null)
                     {
-                        bool? settingValue = null;
-
-                        // If the setting is set to DISABLED
-                        if (CompareColor(564, checkY, new int[] { 81, 81, 81 }, 40))
-                            settingValue = false;
-
-                        // If the setting is set to ENABLED
-                        else if (CompareColor(599, checkY, new int[] { 127, 127, 127 }, 40))
-                            settingValue = true;
-
-                        // If the setting is set to OFF
-                        else if (CompareColor(589, checkY, new int[] { 127, 127, 127 }, 40))
-                            settingValue = false;
-
-                        // If the setting is set to ON
-                        else if (CompareColor(588, checkY, new int[] { 127, 127, 127 }, 40))
-                            settingValue = true;
-
-                        if (settingValue != null)
-                        {
-                            return settingValue;
-                        }
+                        return settingValue;
                     }
                 }
 
@@ -204,7 +207,6 @@ namespace Deltin.CustomGameAutomation
                 settings.SetSettings(cg);
             }
             */
-
         }
     }
 
@@ -217,7 +219,6 @@ namespace Deltin.CustomGameAutomation
     }
 
     /*
-
     public class Settings
     {
         private Settings() { }
@@ -285,11 +286,33 @@ namespace Deltin.CustomGameAutomation
             Return(cg);
         }
 
+        public Settings SetSettingByName(string name, object value)
+        {
+            FieldInfo[] fis = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToArray();
+
+            bool found = false;
+
+            for (int i = 0; i < fis.Length; i++)
+                if (fis[i].Name.ToLower() == name.ToLower())
+                {
+                    fis[i].SetValue(this, value);
+
+                    found = true;
+                    break;
+                }
+
+            if (!found)
+                throw new ArgumentException("Could not find a setting by the name of " + name + " in the " + this.GetType().Name + " settings.");
+
+            return this;
+        }
+
         internal virtual void Navigate(CustomGame cg) { throw new NotImplementedException(); }
         internal virtual void Return(CustomGame cg) { throw new NotImplementedException(); }
 
         public class Settings_Modes_All : Settings
         {
+
             public Settings_Modes_All(bool initializeWithDefaults = false)
             {
                 if (initializeWithDefaults)
@@ -309,6 +332,8 @@ namespace Deltin.CustomGameAutomation
                     RespawnTimeScalar = 100;
                 };
             }
+
+            //public Setting<bool> EnemyHealth = new Setting<bool>("EnemyHealth", true);
 
             // Settings
             public bool? EnemyHealthBars = null;
@@ -333,8 +358,7 @@ namespace Deltin.CustomGameAutomation
 
             internal override void Navigate(CustomGame cg)
             {
-                cg.GoToSettings();
-                cg.LeftClick(494, 178);
+                cg.NavigateToModesMenu();
                 cg.LeftClick(98, 177);
                 cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
                 Thread.Sleep(100);
@@ -364,9 +388,10 @@ namespace Deltin.CustomGameAutomation
 
             internal override void Navigate(CustomGame cg)
             {
-                cg.GoToSettings();
-                cg.LeftClick(494, 178);
-                cg.LeftClick(245, 175);
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Assault, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+
                 cg.KeyPress(Keys.Up, Keys.Up);
                 Thread.Sleep(100);
             }
@@ -376,7 +401,334 @@ namespace Deltin.CustomGameAutomation
                 cg.GoBack(3, 0);
             }
         }
-    }
 
+        public class Settings_Modes_AssaultEscort : Settings
+        {
+            public Settings_Modes_AssaultEscort(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = true;
+                    CaptureSpeedModifier = 100;
+                    CompetitiveRules = false;
+                    PayloadSpeedModifier = 100;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? CaptureSpeedModifier = null;
+            public bool? CompetitiveRules = null;
+            public int? PayloadSpeedModifier = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.AssaultEscort, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_Control : Settings
+        {
+            public Settings_Modes_Control(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = true;
+                    CaptureSpeedModifier = 100;
+                    CompetitiveRules = false;
+                    LimitValidControlPoints = ELimitValidControlPoints.All;
+                    ScoreToWin = 2;
+                    ScoringSpeedModifier = 100;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? CaptureSpeedModifier = null;
+            public bool? CompetitiveRules = null;
+            public ELimitValidControlPoints? LimitValidControlPoints = null;
+            public int? ScoreToWin = null;
+            public int? ScoringSpeedModifier = null;
+
+            public enum ELimitValidControlPoints
+            {
+                All,
+                First,
+                Second,
+                Third
+            }
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Control, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_Escort : Settings
+        {
+            public Settings_Modes_Escort(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = true;
+                    CompetitiveRules = false;
+                    PayloadSpeedModifier = 100;
+                }
+            }
+
+            public bool? Enabled = null;
+            public bool? CompetitiveRules = null;
+            public int? PayloadSpeedModifier = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Escort, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Left);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_Deathmatch : Settings
+        {
+            public Settings_Modes_Deathmatch(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = false;
+                    GameLengthInMinutes = 10;
+                    ScoreToWin = 20;
+                    SelfInitiatedRespawn = true;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? GameLengthInMinutes = null;
+            public int? ScoreToWin = null;
+            public bool? SelfInitiatedRespawn = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Deathmatch, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_Elimination : Settings
+        {
+            public Settings_Modes_Elimination(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = false;
+                    HeroSelectionTime = 20;
+                    ScoreToWin = 3;
+                    RestrictPreviouslyUsedHeroes = ERestrictPreviouslyUsedHeroes.Off;
+                    HeroSelection = EHeroSelection.Any;
+                    LimitedChoicePool = ELimitedChoicePool.TeamSizePlus2;
+                    CaptureObjectiveTiebreaker = true;
+                    TiebreakerAfterMatchTimeElapsed = 105;
+                    TimeToCapture = 3;
+                    DrawAfterMatchTimeElapsedWithNoTiebreaker = 135;
+                    RevealHeroes = false;
+                    RevealHeroesAfterMatchTimeElapsed = 75;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? HeroSelectionTime = null;
+            public int? ScoreToWin = null;
+            public ERestrictPreviouslyUsedHeroes? RestrictPreviouslyUsedHeroes = null;
+            public EHeroSelection? HeroSelection = null;
+            public ELimitedChoicePool? LimitedChoicePool = null;
+            public bool? CaptureObjectiveTiebreaker = null;
+            public int? TiebreakerAfterMatchTimeElapsed = null;
+            public int? TimeToCapture = null;
+            public int? DrawAfterMatchTimeElapsedWithNoTiebreaker = null;
+            public bool? RevealHeroes = null;
+            public int? RevealHeroesAfterMatchTimeElapsed = null;
+
+            public enum ERestrictPreviouslyUsedHeroes { Off, AfterRoundWon, AfterRoundPlayed }
+            public enum EHeroSelection { Any, Limited, Random, RandomMirrored }
+            public enum ELimitedChoicePool { TeamSize, TeamSizePlus1, TeamSizePlus2, TeamSizePlus3 }
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Elimination, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_TeamDeathmatch : Settings
+        {
+            public Settings_Modes_TeamDeathmatch(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = false;
+                    GameLengthInMinutes = 10;
+                    MercyResurrectCounteractsKills = true;
+                    ScoreToWin = 30;
+                    SelfInitiatedRespawn = true;
+                    ImbalancedTeamScoreToWin = false;
+                    BlueScoreToWin = 30;
+                    RedScoreToWin = 30;
+                }
+            }
+
+            public bool? Enabled = null;
+            public int? GameLengthInMinutes = null;
+            public bool? MercyResurrectCounteractsKills = null;
+            public int? ScoreToWin = null;
+            public bool? SelfInitiatedRespawn = null;
+            public bool? ImbalancedTeamScoreToWin = null;
+            public int? BlueScoreToWin = null;
+            public int? RedScoreToWin = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.TeamDeathmatch, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_Skirmish : Settings
+        {
+            public Settings_Modes_Skirmish(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = true;
+                }
+            }
+
+            public bool? Enabled = null;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Skirmish, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Left);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Lobby : Settings
+        {
+            public Settings_Lobby(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    MapRotation = EMapRotation.AfterAMirrorMatch;
+                    ReturnToLobby = EReturnToLobby.AfterAMirrorMatch;
+                    TeamBalancing = ETeamBalancing.Off;
+                    SwapTeamsAfterMatch = true;
+                    BlueMaxPlayers = 6;
+                    RedMaxPlayers = 6;
+                    MaxFFAPlayers = 0;
+                    MaxSpectators = 2;
+                    MatchVoiceChat = false;
+                    PauseGameOnPlayerDisconnect = false;
+                }
+            }
+
+            public EMapRotation? MapRotation = null;
+            public EReturnToLobby? ReturnToLobby = null;
+            public ETeamBalancing? TeamBalancing = null;
+            public bool? SwapTeamsAfterMatch = null;
+            public int? BlueMaxPlayers = null;
+            public int? RedMaxPlayers = null;
+            public int? MaxFFAPlayers = null;
+            public int? MaxSpectators = null;
+            public bool? MatchVoiceChat = null;
+            public bool? PauseGameOnPlayerDisconnect = null;
+
+            public enum EMapRotation
+            {
+                AfterAMirrorMatch,
+                AfterAGame,
+                Paused,
+            }
+
+            public enum EReturnToLobby
+            {
+                Never,
+                AfterAGame,
+                AfterAMirrorMatch
+            }
+
+            public enum ETeamBalancing
+            {
+                Off,
+                AfterAGame,
+                AfterAMirrorMatch
+            }
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.GoToSettings();
+                cg.LeftClick(373, 182, 100);
+                cg.KeyPress(Keys.Down);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(2);
+            }
+        }
+    }
     */
 }

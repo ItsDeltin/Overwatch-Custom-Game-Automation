@@ -28,6 +28,14 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        bool CompareColor(int x, int y, int[] min, int[] max)
+        {
+            lock (BmpLock)
+            {
+                return bmp.CompareColor(x, y, min, max);
+            }
+        }
+
         Color GetPixelAt(int x, int y)
         {
             lock (BmpLock)

@@ -17,7 +17,7 @@ namespace Deltin.CustomGameAutomation
             public static int[] DeadPlayerColor = new int[] { 118, 74, 76 }; // Spectator UI red X
             public static int DeadPlayerFade = 15;
 
-            public static int[] HeroChosenLocations = new int[] { 91, 140, 189, 239, 288, 337, 644, 695, 744, 792, 843, 891 };
+            //public static int[] HeroChosenLocations = new int[] { 91, 140, 189, 239, 288, 337, 644, 695, 744, 792, 843, 888 };
             public static int HeroChosenY = 75;
             public static int[] HeroChosenBlue = new int[] { 83, 110, 123 };
             public static int[] HeroChosenRed = new int[] { 114, 77, 81 };

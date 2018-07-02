@@ -167,5 +167,11 @@ namespace Deltin.CustomGameAutomation
             return CompareColor(835, 179, new int[] { 121, 152, 184 }, 50) // Test for blue button (move/settings) at the top of the screen
                     && CompareColor(704, 67, new int[] { 78, 122, 158 }, 30); // Test for invite players to group button
         }
+
+        internal void NavigateToModesMenu()
+        {
+            GoToSettings();
+            LeftClick(494, 178);
+        }
     }
 }

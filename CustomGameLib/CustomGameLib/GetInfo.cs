@@ -544,7 +544,7 @@ namespace Deltin.CustomGameAutomation
             /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
             public bool IsHeroChosen(int slot)
             {
-                if (slot >= CALData.HeroChosenLocations.Length || slot < 0)
+                if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
                     throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
                 if (cg.PlayerSlots.Contains(slot) == false)
                     return false;
@@ -564,11 +564,13 @@ namespace Deltin.CustomGameAutomation
             {
                 if (slot < 6)
                 {
-                    return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                    //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenBlue, CALData.HeroChosenFade);
                 }
                 else
                 {
-                    return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                    //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenRed, CALData.HeroChosenFade);
                 }
             }
 
@@ -702,13 +704,37 @@ namespace Deltin.CustomGameAutomation
             /// <returns>Returns the hero the slot is playing.</returns>
             public Hero? GetHero(int slot)
             {
+                return GetHero(slot, out _);
+            }
+
+            /// <summary>
+            /// Gets the hero a player is playing.
+            /// </summary>
+            /// <param name="slot">Slot to check.</param>
+            /// <param name="resultInfo">Why the method returned what it did.</param>
+            /// <returns>Returns the hero the slot is playing.</returns>
+            public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
+            {
                 if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
                     throw new InvalidSlotException("Slot is out of range. Slot must be a player on blue or red team.");
 
-                if (!cg.PlayerSlots.Contains(slot)
-                    || PlayersDead(true).Contains(slot)
-                    || !_HeroChosen(slot))
+                if (!cg.PlayerSlots.Contains(slot))
+                {
+                    resultInfo = HeroResultInfo.SlotEmpty;
                     return null;
+                }
+
+                if (PlayersDead(true).Contains(slot))
+                {
+                    resultInfo = HeroResultInfo.PlayerWasDead;
+                    return null;
+                }
+
+                if (!_HeroChosen(slot))
+                {
+                    resultInfo = HeroResultInfo.NoHeroChosen;
+                    return null;
+                }
 
                 List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
 
@@ -737,13 +763,16 @@ namespace Deltin.CustomGameAutomation
 
                         double probability = (success / total) * 100;
 
-                        if (probability >= 90)
+                        if (probability >= 80)
                             results.Add(new Tuple<Hero, double>((Hero)m, probability));
                     }
                 }
 
                 if (results.Count == 0)
+                {
+                    resultInfo = HeroResultInfo.NoCompatibleHeroFound;
                     return null;
+                }
                 else
                 {
                     int highestIndex = -1;
@@ -756,6 +785,7 @@ namespace Deltin.CustomGameAutomation
                             highest = results[i].Item2;
                         }
 
+                    resultInfo = HeroResultInfo.Success;
                     return results[highestIndex].Item1;
                 }
             }
@@ -842,5 +872,32 @@ namespace Deltin.CustomGameAutomation
         Neutral,
         Blue,
         Red
+    }
+
+    /// <summary>
+    /// Result info of CG_PlayerInfo.GetHero()
+    /// </summary>
+    public enum HeroResultInfo
+    {
+        /// <summary>
+        /// The hero the player was playing was successfully found.
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Can't get the hero the player was playing because the player is dead. Try rescanning when the player is alive again.
+        /// </summary>
+        PlayerWasDead,
+        /// <summary>
+        /// The player did not choose a hero.
+        /// </summary>
+        NoHeroChosen,
+        /// <summary>
+        /// The slot was empty.
+        /// </summary>
+        SlotEmpty,
+        /// <summary>
+        /// Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
+        /// </summary>
+        NoCompatibleHeroFound
     }
 }

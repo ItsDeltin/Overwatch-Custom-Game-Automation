@@ -368,6 +368,14 @@
             <param name="slot">Slot to check.</param>
             <returns>Returns the hero the slot is playing.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHero(System.Int32,Deltin.CustomGameAutomation.HeroResultInfo@)">
+            <summary>
+            Gets the hero a player is playing.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <param name="resultInfo">Why the method returned what it did.</param>
+            <returns>Returns the hero the slot is playing.</returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayerExists(System.String)">
             <summary>
             Checks if player exists via battletag. Is case and region sensitive.
@@ -692,6 +700,36 @@
             Throws Login Failed Exception.
             </summary>
             <param name="message">Message to display.</param>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
+            <summary>
+            Result info of CG_PlayerInfo.GetHero()
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.Success">
+            <summary>
+            The hero the player was playing was successfully found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.PlayerWasDead">
+            <summary>
+            Can't get the hero the player was playing because the player is dead. Try rescanning when the player is alive again.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoHeroChosen">
+            <summary>
+            The player did not choose a hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.SlotEmpty">
+            <summary>
+            The slot was empty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoCompatibleHeroFound">
+            <summary>
+            Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Map">
             <summary>

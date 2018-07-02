@@ -106,11 +106,11 @@ namespace Deltin.CustomGameAutomation
 
                 cg.LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
 
-                // Click Disable All or Enable All in custom games if mta doesnt equal MapToggleAction.None.
+                // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
                 if (ta == ToggleAction.DisableAll)
-                    cg.LeftClick(640, 125);
+                    cg.LeftClick(640, 125, 250);
                 else if (ta == ToggleAction.EnableAll)
-                    cg.LeftClick(600, 125);
+                    cg.LeftClick(600, 125, 250);
 
                 // Get the modes enabled state in a bool in alphabetical order.
                 bool[] enabledModes = new bool[]
@@ -211,6 +211,83 @@ namespace Deltin.CustomGameAutomation
             {
                 return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && v.GameMode == gamemode).ToList();
             }
+        }
+
+        public Point GetModeLocation(Gamemode mode, Event owevent)
+        {
+            List<Gamemode> enabledGamemodes = new List<Gamemode>();
+
+            Gamemode[] gamemodeOrder = new Gamemode[]
+            {
+                // Core gamemodes
+                Gamemode.Assault,
+                Gamemode.AssaultEscort,
+                Gamemode.Control,
+                Gamemode.Escort,
+
+                // Followed by arcade gamemodes
+                //Gamemode.CaptureTheFlag,
+                Gamemode.Deathmatch,
+                Gamemode.Elimination,
+                Gamemode.JunkensteinsRevenge, // < Fix later when Junkensteins revenge is live, the position is a guess
+                Gamemode.Lucioball,           // < Fix later when lucioball is live, the position is a guess
+                Gamemode.MeisSnowballOffensive, // < Fix later when winter wonderland is live, the position is a guess
+                Gamemode.TeamDeathmatch,
+                Gamemode.YetiHunter, // < Fix later when winter wonderland is live, the position is a guess
+
+                // Followed by skirmish
+                Gamemode.Skirmish
+            };
+
+            Event[] gamemodeEvents = new Event[]
+            {
+                Event.None,             // Assault
+                Event.None,             // AssaultEscort
+                Event.None,             // Control
+                Event.None,             // Escort
+
+                //Event.None,             // CaptureTheFlag
+                Event.None,             // Deathmatch
+                Event.None,             // Elimination
+                Event.HalloweenTerror,  // JunkensteinsRevenge
+                Event.SummerGames,      // Lucioball
+                Event.WinterWonderland, // MeisSnowballOffensive
+                Event.None,             // TeamDeathmatch
+                Event.WinterWonderland, // YetiHunter
+
+                Event.None,             // Skirmish
+            };
+
+            for (int i = 0; i < gamemodeEvents.Length; i++)
+                if (gamemodeEvents[i] == Event.None || gamemodeEvents[i] == owevent)
+                    enabledGamemodes.Add(gamemodeOrder[i]);
+
+            int eventModeIndex = Array.IndexOf(enabledGamemodes.ToArray(), mode) + 1;
+
+            if (eventModeIndex == 0)
+                return Point.Empty;
+
+            int y = 129;
+            int x = -1;
+
+            int[] columns = new int[] { 83, 227, 370, 515 };
+            int rowHeight = 107;
+            
+            while (true)
+            {
+                if (eventModeIndex < 4)
+                {
+                    x = columns[eventModeIndex];
+                    break;
+                }
+                else
+                {
+                    y += rowHeight;
+                    eventModeIndex -= 4;
+                }
+            }
+
+            return new Point(x, y);
         }
     }
 

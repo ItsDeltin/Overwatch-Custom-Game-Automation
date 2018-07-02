@@ -51,6 +51,14 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
+        public static bool CompareColor(this Bitmap bmp, int x, int y, int[] min, int[] max)
+        {
+            var pixel = bmp.GetPixelAt(x, y);
+            return min[0] < pixel.R && pixel.R < max[0] &&
+                   min[1] < pixel.G && pixel.G < max[1] &&
+                   min[2] < pixel.B && pixel.B < max[2];
+        }
+
         public static int[] ToInt(this Color color)
         {
             return new int[] { color.R, color.G, color.B };
