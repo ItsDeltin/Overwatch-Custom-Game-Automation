@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Windows.Forms;
 using System.Threading;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Deltin.CustomGameAutomation
 {

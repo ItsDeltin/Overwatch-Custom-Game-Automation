@@ -609,7 +609,7 @@ namespace Deltin.CustomGameAutomation
                 // Find the moderator icon.
 
                 cg.updateScreen();
-                int fade = 20;
+                int fade = 40;
 
                 // Red and blue
                 for (int i = 0; i < 12; i++)

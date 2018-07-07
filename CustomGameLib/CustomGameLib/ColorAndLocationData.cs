@@ -23,7 +23,7 @@ namespace Deltin.CustomGameAutomation
             public static int[] HeroChosenRed = new int[] { 114, 77, 81 };
             public static int HeroChosenFade = 10;
 
-            public static int[] ModeratorIconColor = new int[] { 156, 188, 111 }; // Moderator icon aka green crown
+            public static int[] ModeratorIconColor = new int[] { 143, 155, 80 }; // Moderator icon aka green crown
             public static int[] SpectatorModeratorIconColor = new int[] { 149, 183, 89 }; // Moderator icon color for spectators.
             public static int[] ConfirmColor = new int[] { 176, 141, 89 }; // The yellow confirm color.
             public static int[] LobbyChangeColor = new int[] { 126, 158, 181 };

@@ -58,7 +58,7 @@ namespace Deltin.CustomGameAutomation
             }
 
             // Selects an option in the slot menu.
-            private bool SelectMenuOption(int x, int y)
+            internal bool SelectMenuOption(int x, int y)
             {
                 Point point = new Point(x, y);
                 cg.Cursor = point; // Select the option
@@ -100,18 +100,15 @@ namespace Deltin.CustomGameAutomation
                 else return null;
             }
 
-            public void MenuOptionMarkup(int slot, int max, int savestart = 0, string savelocation = null)
+            public void MenuOptionMarkup(int slot, int max, string savelocation, double yincrement = 11.5)
             {
-                if (slot < 0 || slot > Queueid + 5)
+                if (!cg.IsSlotValid(slot))
                     throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
 
                 Point slotlocation = FindSlotLocation(slot);
                 if (slotlocation.IsEmpty)
                     return;
                 OpenSlotMenu(slotlocation);
-
-                if (savelocation == null)
-                    savelocation = @"C:\Users\" + Environment.UserName + @"\Documents\Abyxa\Library\";
 
                 // Get direction opened menu is going.
                 Direction dir = Getmenudirection(slotlocation);
@@ -121,21 +118,18 @@ namespace Deltin.CustomGameAutomation
                     xmax = 79, // How far on the X axis to scan
                     ystart = 0, // Y position to start scanning
                     ymax = 6; // How far on the Y axis to scan.
-                double yincrement = 0; // Amount to increment to scan next option line
 
                 if (dir == Direction.RightDown)
                 {
                     ystart = slotlocation.Y + 12;
-                    yincrement = 11.5;
                 }
                 else if (dir == Direction.RightUp)
                 {
                     ystart = slotlocation.Y - 128;
-                    yincrement = -11.5;
+                    yincrement = -yincrement;
                 }
 
                 cg.updateScreen();
-                // Scan -the number of the variable max- lines.
                 for (int mi = 0, yii = ystart; mi < max; mi++, yii = ystart + (int)(yincrement * (mi))) // Mi is the line to scan, yii is the Y coordinate of line mi.
                 {
                     // Get bitmap of option
@@ -151,7 +145,7 @@ namespace Deltin.CustomGameAutomation
                             else
                                 work.SetPixel(xi, yi, Color.White);
                         }
-                    work.Save(savelocation + "markup-" + (mi + savestart).ToString() + ".png");
+                    work.Save(savelocation + "markup-" + (mi).ToString() + ".png");
                     work.Dispose();
                 }
 
@@ -170,9 +164,9 @@ namespace Deltin.CustomGameAutomation
             /// <param name="max">Maximum options to scan.</param>
             /// <returns>Returns true if the option in the markup has been found, else returns false.</returns>
             /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
-            public bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max)
+            public bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)
             {
-                if (slot < 0 || slot > Queueid + 5)
+                if (!cg.IsSlotValid(slot))
                     throw new InvalidSlotException(string.Format("Slot {0} is out of range.", slot));
 
                 Point slotlocation = FindSlotLocation(slot);
@@ -180,22 +174,37 @@ namespace Deltin.CustomGameAutomation
                     return false;
                 OpenSlotMenu(slotlocation);
 
+                Point optionLocation = MenuOptionScan(slotlocation, markup, minimumPercent, max, yincrement);
+
+                if (optionLocation.IsEmpty)
+                {
+                    cg.LeftClick(400, 500, 100);
+                    cg.LeftClick(500, 500, 100);
+                    cg.ResetMouse();
+                    return false;
+                }
+                else
+                {
+                    SelectMenuOption(optionLocation.X, optionLocation.Y);
+                    cg.ResetMouse();
+                    return true;
+                }
+
+                /*
                 Direction dir = Getmenudirection(slotlocation); // Get menu direction after opening menu.
                 int[] offset = OffsetViaDirection(dir);
 
                 int xstart = slotlocation.X + 14,  // X position to start scanning.
                     xselect = slotlocation.X + 10; // Amount to increment X when selecting the option after the option has been found.
-                double yincrement = 0; // Amount to increment Y after scanning option
                 int ystart = 0; // Y position to start scanning.
                 if (dir == Direction.RightDown)
                 {
                     ystart = slotlocation.Y + 12;
-                    yincrement = 11.5;
                 }
                 else if (dir == Direction.RightUp)
                 {
                     ystart = slotlocation.Y - 128;
-                    yincrement = -11.5;
+                    yincrement = -yincrement;
                 }
 
                 cg.updateScreen();
@@ -243,6 +252,60 @@ namespace Deltin.CustomGameAutomation
                     cg.ResetMouse();
                     return false;
                 }
+                */
+            }
+
+            internal Point MenuOptionScan(Point location, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)
+            {
+                Direction dir = Getmenudirection(location); // Get menu direction after opening menu.
+                int[] offset = OffsetViaDirection(dir);
+
+                int xstart = location.X + 14,  // X position to start scanning.
+                    xselect = location.X + 10; // Amount to increment X when selecting the option after the option has been found.
+                int ystart = 0; // Y position to start scanning.
+                if (dir == Direction.RightDown)
+                {
+                    ystart = location.Y + 12;
+                }
+                else if (dir == Direction.RightUp)
+                {
+                    ystart = location.Y - 128;
+                    yincrement = -yincrement;
+                }
+
+                cg.updateScreen();
+                List<int> percentResults = new List<int>();
+                // Scan each option and get the likelyhood in percent of the option being the markup.
+                for
+                (
+                    int mi = 0, yii = ystart;
+                    mi < max;
+                    mi++, yii = ystart + (int)(yincrement * mi)
+                ) // Mi is the line to scan, yii is the Y coordinate of line mi.
+                {
+                    int success = 0;
+                    int total = 0;
+
+                    for (int xi = 0; xi < markup.Width; xi++)
+                        for (int yi = 0; yi < markup.Height; yi++)
+                        {
+                            total++;
+
+                            bool bmpPixelIsBlack = cg.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
+                            bool markupPixelIsBlack = markup.GetPixelAt(xi, yi) == Color.FromArgb(0, 0, 0);
+
+                            if (bmpPixelIsBlack == markupPixelIsBlack)
+                                success++;
+                        }
+                    int percent = (int)((Convert.ToDouble(success) / Convert.ToDouble(total)) * 100);
+                    percentResults.Add(percent);
+                }
+
+                int maxpercent = percentResults.IndexOf(percentResults.Max());
+                if (percentResults[maxpercent] > minimumPercent)
+                    return new Point(xselect, ystart + (int)(yincrement * maxpercent));
+                else
+                    return Point.Empty;
             }
 
             static internal Bitmap RemoveFromGameMarkup = new Bitmap(Properties.Resources.remove_from_game); // Get remove from game markup

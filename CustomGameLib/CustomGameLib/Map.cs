@@ -69,11 +69,11 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Fields related to Overwatch maps.
+        /// Map selection in Overwatch.
         /// </summary>
         public CG_Maps Maps;
         /// <summary>
-        /// Fields related to Overwatch maps.
+        /// Map selection in Overwatch.
         /// </summary>
         public class CG_Maps
         {
@@ -213,7 +213,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public Point GetModeLocation(Gamemode mode, Event owevent)
+        internal Point GetModeLocation(Gamemode mode, Event owevent)
         {
             List<Gamemode> enabledGamemodes = new List<Gamemode>();
 

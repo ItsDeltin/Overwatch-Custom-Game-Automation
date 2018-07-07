@@ -264,7 +264,7 @@ namespace ZombieBot
             else
                 cg.CurrentOverwatchEvent = (Event)owevent;
 
-            cg.Command.ListenTo.Add("$VOTE", true);
+            cg.Command.ListenTo.Add(new ListenTo("$VOTE", true, false));
             cg.Command.SameExecutorCommandUpdate = true;
             cg.Chat.BlockGeneralChat = true;
 

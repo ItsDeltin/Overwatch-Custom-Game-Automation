@@ -97,10 +97,25 @@
             </summary>
             <param name="channel">Channel to rejoin.</param>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Command">
+            <summary>
+            Chat commands for Overwatch.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.Commands">
+            <summary>
+            Chat commands for Overwatch.
+            </summary>
+        </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.ListenTo">
             <summary>
             <para>Indexer: Command to listen to.</para>
             <para>Value: If true, listen to this command.</para>
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.RegisteredPlayerIdentities">
+            <summary>
+            List containing all player identities.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.ExecutedCommands">
@@ -108,20 +123,42 @@
             List of executed commands.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.RemoveExecutedCommand(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeExecutedCommand(System.Int32)">
             <summary>
             Removes an executed command from the executed commands list.
             </summary>
             <param name="index">Command to remove by index.</param>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.RemoveAllExecutedCommands">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeAllExecutedCommands">
             <summary>
             Removes all executed commands.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposePlayerIdentity(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="identity">Identity to dispose.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposePlayerIdentity(System.Int32)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="index">Index of the identity to dispose in the RegisteredPlayerIdentities list.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeAllPlayerIdentities">
+            <summary>
+            Disposes all player identities.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.Listen">
             <summary>
             Set to true to start listening to commands. Set to false to stop.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.RegisterPlayerProfiles">
+            <summary>
+            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.ListenToAllCommands">
@@ -134,20 +171,24 @@
             Allows one executor to execute more than one command.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.CommandData.command">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.SameExecutorCommandUpdate">
             <summary>
-            Command player executed.
+            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.CommandData.executor">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetSlotIdentity(System.Int32)">
             <summary>
-            Noise data of executor.
+            Gets the player identity of a slot.
             </summary>
+            <param name="slot">Slot to check.</param>
+            <returns>The player identity of the slot.</returns>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.CommandData.channel">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetSlotExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
             <summary>
-            Channel the command was executed on.
+            Gets the commands a player identity has executed.
             </summary>
+            <param name="identity">Identity to check.</param>
+            <returns>Array of commands executed.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CreateOverwatchProcess(Deltin.CustomGameAutomation.OverwatchProcessInfo)">
             <summary>
@@ -383,7 +424,7 @@
             <param name="battletag">Battletag of player to check. Is case sensitive.</param>
             <returns>Returns true if player exists, else returns false.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32,System.Double)">
             <summary>
             Scans a player menu for an option.
             </summary>
@@ -489,12 +530,12 @@
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Maps">
             <summary>
-            Fields related to Overwatch maps.
+            Map selection in Overwatch.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Maps">
             <summary>
-            Fields related to Overwatch maps.
+            Map selection in Overwatch.
             </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
@@ -613,6 +654,61 @@
             <param name="redCount">Maximum number of red players. Must be in the range of 1-6. Set to null to ignore.</param>
             <param name="ffaCount">Maximum number of FFA players. Must be in the range of 1-12. Set to null to ignore.</param>
             <param name="spectatorCount">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</param>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.ListenTo">
+            <summary>
+            Data for commands to listen to on the Commands class.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Data for commands to listen to on the Commands class.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.ListenTo.Command">
+            <summary>
+            Command to listen to.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ListenTo.Listen">
+            <summary>
+            Should this command be listened to?
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ListenTo.RegisterProfile">
+            <summary>
+            Should the player who executes this command have their profile registered?
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerIdentity">
+            <summary>
+            Contains data for identifying players who executed a command.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CommandData">
+            <summary>
+            Data of Overwatch executed chat commands.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CommandData.Command">
+            <summary>
+            Command player executed.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CommandData.Channel">
+            <summary>
+            Channel the command was executed on.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CommandData.executor">
+            <summary>
+            Noise data of executor.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CommandData.playerIdentity">
+            <summary>
+            The identity of the player that executed the command.
+            </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.OverwatchProcessInfo.Username">
             <summary>
@@ -1133,6 +1229,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.tracer_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.view_career_profile">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>

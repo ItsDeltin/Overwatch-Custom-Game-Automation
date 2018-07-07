@@ -157,13 +157,13 @@ namespace Deltin.CustomGameAutomation
                 cg.GoToSettings();
                 cg.LeftClick(297, 183, 100); // Click "lobby" option
 
-                if (blueCount < 1 || blueCount > 6)
+                if (blueCount < 0 || blueCount > 6)
                     throw new ArgumentOutOfRangeException("blueCount", blueCount, "blueCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
 
-                if (redCount < 1 || redCount > 6)
+                if (redCount < 0 || redCount > 6)
                     throw new ArgumentOutOfRangeException("redCount", redCount, "redCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
 
-                if (ffaCount < 1 || ffaCount > 12)
+                if (ffaCount < 0 || ffaCount > 12)
                     throw new ArgumentOutOfRangeException("ffaCount", ffaCount, "ffaCount is out of range. Value must be greater or equal to 1 and less than or equal to 12.");
 
                 if (spectatorCount < 0 || spectatorCount > 12)
