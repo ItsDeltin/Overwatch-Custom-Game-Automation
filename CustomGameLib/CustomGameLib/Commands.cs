@@ -612,9 +612,12 @@ namespace Deltin.CustomGameAutomation
 
             private bool CompareExecutors(Bitmap e1, Bitmap e2)
             {
+                if (e1.Width != e2.Width || e1.Height != e2.Height)
+                    return false;
+
                 int identiclecount = 0; // number of pixels that are identicle.
                 int count = 0;
-                for (int xi = 0; xi < e1.Width && xi < e2.Width; xi++)
+                for (int xi = 0; xi < e1.Width; xi++)
                     for (int yi = 0; yi < e1.Height; yi++)
                     {
                         count++;
@@ -622,7 +625,7 @@ namespace Deltin.CustomGameAutomation
                             identiclecount++;
                     }
 
-                return ((Convert.ToDouble(identiclecount) / Convert.ToDouble(count)) * 100) > 90;
+                return ((Convert.ToDouble(identiclecount) / Convert.ToDouble(count)) * 100) >= 90;
             }
 
             private Channel GetChannelFromSeed(int[] seed)
@@ -757,7 +760,7 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             /// <param name="identity">Identity to check.</param>
             /// <returns>Array of commands executed.</returns>
-            public CommandData[] GetSlotExecutedCommands(PlayerIdentity identity)
+            public CommandData[] GetIdentityExecutedCommands(PlayerIdentity identity)
             {
                 List<CommandData> executedCommands = new List<CommandData>();
 

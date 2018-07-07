@@ -183,7 +183,7 @@
             <param name="slot">Slot to check.</param>
             <returns>The player identity of the slot.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetSlotExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
             <summary>
             Gets the commands a player identity has executed.
             </summary>
