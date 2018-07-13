@@ -325,15 +325,13 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
 
-                for (int i = 0; i < 12; i++)
-                    if (IsAI(i, true))
-                        if (cg.Interact.RemoveAllBots(i))
+                var totalPlayers = cg.TotalPlayerSlots;
+
+                for (int i = 0; i < totalPlayers.Count; i++)
+                    if (IsAI(totalPlayers[i], true))
+                        if (cg.Interact.RemoveAllBots(totalPlayers[i]))
                             return true;
 
-                for (int i = Queueid; i < Queueid + 6; i++)
-                    if (IsAI(i, true))
-                        if (cg.Interact.RemoveAllBots(Queueid + i))
-                            return true;
                 return false;
             }
 
@@ -354,6 +352,10 @@ namespace Deltin.CustomGameAutomation
                 // Since AI cannot join spectator, return false if the slot is a spectator slot.
                 if (cg.IsSlotSpectator(slot))
                     return false;
+
+                // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
+                if (slot == 5)
+                    cg.Chat.CloseChat();
 
                 if (!noUpdate)
                     cg.updateScreen();
@@ -393,17 +395,24 @@ namespace Deltin.CustomGameAutomation
                     checkXLength = 163; // The length of the queue slots.
                 }
 
+                bool isAi = true;
+
                 for (int x = checkX; x < checkX + checkXLength; x++)
                     for (int yi = 0; yi < checkY.Length; yi++)
                     {
                         int y = checkY[yi];
                         // Check for the commendation icon. 91, 162, 166 is the RGB values of the color of the commendation icon.
                         if (cg.CompareColor(x, y, new int[] { 91, 162, 166 }, 30))
-                            return false; // If the commendation icon is found, the slot is a player so return false.
+                        {
+                            isAi = false;
+                            break;
+                        }
                     }
 
-                // No commendation icon was found, so return true.
-                return true;
+                if (slot == 5 && cg.OpenChatIsDefault)
+                    cg.Chat.OpenChat();
+
+                return isAi;
             }
 
             /// <summary>
