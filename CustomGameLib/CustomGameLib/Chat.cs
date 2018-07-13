@@ -7,10 +7,15 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        // Does not work if the screenshot method is ScreenshotMethods.OverwatchScreenshotFunction.
         bool OpenChatIsDefault = true;
 
+        /// <summary>
+        /// Chat for Overwatch.
+        /// </summary>
         public CG_Chat Chat;
+        /// <summary>
+        /// Chat for Overwatch.
+        /// </summary>
         public class CG_Chat
         {
             private CustomGame cg;
@@ -147,12 +152,30 @@ namespace Deltin.CustomGameAutomation
             internal static string[] ChannelJoinCommands = new string[] { "/t", "/m", "/all", "/g", "/r" }; 
         }
     }
+    /// <summary>
+    /// Chat channels for Overwatch.
+    /// </summary>
     public enum Channel
     {
+        /// <summary>
+        /// The team chat channel.
+        /// </summary>
         Team,
+        /// <summary>
+        /// The match chat channel.
+        /// </summary>
         Match,
+        /// <summary>
+        /// The general chat channel.
+        /// </summary>
         General,
+        /// <summary>
+        /// The group chat channel.
+        /// </summary>
         Group,
+        /// <summary>
+        /// The private message chat channel.
+        /// </summary>
         PrivateMessage
     }
 }

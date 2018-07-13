@@ -9,9 +9,18 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        /// <summary>
+        /// The number where the queue starts.
+        /// </summary>
         public const int Queueid = 18;
 
+        /// <summary>
+        /// Changes a player's state in Overwatch.
+        /// </summary>
         public CG_Interact Interact;
+        /// <summary>
+        /// Changes a player's state in Overwatch.
+        /// </summary>
         public class CG_Interact
         {
             private CustomGame cg;
@@ -100,6 +109,13 @@ namespace Deltin.CustomGameAutomation
                 else return null;
             }
 
+            /// <summary>
+            /// Generates a markup for a menu option in Overwatch.
+            /// </summary>
+            /// <param name="slot">Slot to generate markup from.</param>
+            /// <param name="max">Maximum markups to capture.</param>
+            /// <param name="savelocation">Location to save markups.</param>
+            /// <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
             public void MenuOptionMarkup(int slot, int max, string savelocation, double yincrement = 11.5)
             {
                 if (!cg.IsSlotValid(slot))
@@ -162,6 +178,7 @@ namespace Deltin.CustomGameAutomation
             /// <param name="markup">Bitmap markup of option to scan for.</param>
             /// <param name="minimumPercent">Minimum percent the markup has to match an option in the menu.</param>
             /// <param name="max">Maximum options to scan.</param>
+            /// <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
             /// <returns>Returns true if the option in the markup has been found, else returns false.</returns>
             /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
             public bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)

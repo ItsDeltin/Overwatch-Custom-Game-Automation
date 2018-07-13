@@ -464,7 +464,7 @@ namespace Deltin.CustomGameAutomation
                                 cg.ResetMouse();
 
                                 // If opening the career profile failed, the state of the chat could be incorrect, 
-                                // like being wrongly opened or wrongly closed because of when we pressed enter earlier.
+                                // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
                                 // This will fix it.
                                 cg.Chat.OpenChat();
                                 if (!cg.OpenChatIsDefault)
@@ -497,7 +497,7 @@ namespace Deltin.CustomGameAutomation
                     // Test if pixel color is near seed color. if it is, scan for all the letters.
                     if (bmp.CompareColor(i, y, seed, seedfade))
                     {
-                        var bestletter = checkLetter(bmp, i, y, seed, seedfade); // Scan for letter.
+                        var bestletter = CheckLetter(bmp, i, y, seed, seedfade); // Scan for letter.
 
                         // bestletter will equal null if no letters is possible.
                         if (bestletter != null)
@@ -523,7 +523,7 @@ namespace Deltin.CustomGameAutomation
             }
 
             // Checks for a chat letter at the input X and Y value.
-            LetterResult checkLetter(Bitmap bmp, int x, int y, int[] seed, int seedfade)
+            LetterResult CheckLetter(Bitmap bmp, int x, int y, int[] seed, int seedfade)
             {
                 // Possible letters
                 List<LetterResult> letterresult = new List<LetterResult>();
@@ -573,7 +573,7 @@ namespace Deltin.CustomGameAutomation
                         LetterResult connected = null;
                         // The letter L can connect to other letters. LM can be confused for U1. This checks for the letter that the L could be connected to.
                         if (letters[li].letter == 'L')
-                            connected = checkLetter(bmp, x + letters[li].length + 1, y, seed, seedfade);
+                            connected = CheckLetter(bmp, x + letters[li].length + 1, y, seed, seedfade);
                         letterresult.Add(new LetterResult(letters[li].letter, (int)percent, letters[li].pixel.GetLength(0), letters[li].length, letters[li].least, connected, optional)); // Add letter to possible letters.
                     }
                 }
@@ -626,6 +626,21 @@ namespace Deltin.CustomGameAutomation
                     }
 
                 return ((Convert.ToDouble(identiclecount) / Convert.ToDouble(count)) * 100) >= 90;
+            }
+            private double CompareCareerProfiles(Bitmap cp1, Bitmap cp2)
+            {
+                double total = 0;
+                double success = 0;
+
+                for (int x = 0; x < cp1.Width; x++)
+                    for (int y = 0; y < cp1.Height; y++)
+                    {
+                        total++;
+                        if (cp1.CompareColor(x, y, cp2.GetPixelAt(x, y).ToInt(), 50))
+                            success++;
+                    }
+
+                return (success / total) * 100;
             }
 
             private Channel GetChannelFromSeed(int[] seed)
@@ -709,28 +724,16 @@ namespace Deltin.CustomGameAutomation
 
                 lock (CommandLock)
                 {
+                    cg.updateScreen();
+
+                    Bitmap compareTo = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
+
                     for (int i = 0; i < _playerIdentities.Count; i++)
                     {
-                        double total = 0;
-                        double success = 0;
-
-                        cg.updateScreen();
-
-                        Bitmap compareTo = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
-
-                        for (int x = 0; x < compareTo.Width; x++)
-                            for (int y = 0; y < compareTo.Height; y++)
-                            {
-                                total++;
-                                if (compareTo.CompareColor(x, y, _playerIdentities[i].CareerProfileMarkup.GetPixelAt(x, y).ToInt(), 50))
-                                    success++;
-                            }
-
-                        compareTo.Dispose();
-
-                        double percentage = (success / total) * 100;
-                        percentages.Add(percentage);
+                        percentages.Add(CompareCareerProfiles(compareTo, _playerIdentities[i].CareerProfileMarkup));
                     }
+
+                    compareTo.Dispose();
                 }
 
                 cg.GoBack(1);
@@ -767,7 +770,7 @@ namespace Deltin.CustomGameAutomation
                 lock (CommandLock)
                 {
                     for (int i = 0; i < ExecutedCommands.Count; i++)
-                        if (CompareExecutors(ExecutedCommands[i].executor, identity.ChatMarkup))
+                        if (Object.ReferenceEquals(ExecutedCommands[i].playerIdentity.CareerProfileMarkup, identity.CareerProfileMarkup))
                             executedCommands.Add(ExecutedCommands[i]);
                 }
 
@@ -851,6 +854,7 @@ namespace Deltin.CustomGameAutomation
             this.command = command;
             this.executor = executor;
             this.channel = channel;
+            this.playerIdentity = playerIdentity;
         }
 
         /// <summary>

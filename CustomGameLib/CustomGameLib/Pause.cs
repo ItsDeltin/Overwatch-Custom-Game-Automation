@@ -5,14 +5,18 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        /// <summary>
+        /// Controls Overwatch's pause feature.
+        /// </summary>
         public CG_Pause Pause;
+        /// <summary>
+        /// Controls Overwatch's pause feature.
+        /// </summary>
         public class CG_Pause
         {
             private CustomGame cg;
             internal CG_Pause(CustomGame cg)
             { this.cg = cg; }
-
-            // Pause/Unpause the game
 
             /// <summary>
             /// Toggle pause.
@@ -39,9 +43,7 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             public void Pause()
             {
-                cg.updateScreen();
-                // Check if the pause text is there. If not, toggle pause.
-                if (cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10) == false)
+                if (!IsPaused())
                     TogglePause();
             }
             /// <summary>
@@ -49,10 +51,17 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             public void Unpause()
             {
-                cg.updateScreen();
-                // Check if the pause text is there. If it is, toggle pause.
-                if (cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10))
+                if (IsPaused())
                     TogglePause();
+            }
+            /// <summary>
+            /// Determines if the game is paused.
+            /// </summary>
+            public bool IsPaused()
+            {
+                cg.updateScreen();
+                // Check if the pause text is there.
+                return cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10);
             }
         }
     }

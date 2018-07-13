@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -52,7 +53,13 @@ namespace Deltin.CustomGameAutomation
             return null;
         }
 
+        /// <summary>
+        /// Setting game settings in Overwatch.
+        /// </summary>
         public CG_Settings GameSettings;
+        /// <summary>
+        /// Setting game settings in Overwatch.
+        /// </summary>
         public class CG_Settings
         {
             private CustomGame cg;
@@ -63,12 +70,52 @@ namespace Deltin.CustomGameAutomation
             /// Loads a preset saved in Overwatch, 0 being the first saved preset.
             /// </summary>
             /// <param name="preset">Preset to load.</param>
+            /// <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
             // Loads a preset in Overwatch Custom Games
-            public void LoadPreset(int preset)
+            public bool LoadPreset(int preset, int maxWaitTime = 5000)
             {
                 if (preset < 0)
                     throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be greater than 0.");
 
+                Point presetLocation = GetPresetLocation(preset);
+
+                cg.GoToSettings();
+                cg.LeftClick(103, 183, 2000); // Clicks "Preset" button
+
+                Stopwatch wait = new Stopwatch();
+                wait.Start();
+
+                while (true)
+                {
+                    cg.updateScreen();
+                    
+                    if (cg.CompareColor(presetLocation.X, presetLocation.Y, new int[] { 126, 128, 134 }, 40))
+                    {
+                        break;
+                    }
+                    else if (wait.ElapsedMilliseconds >= maxWaitTime)
+                    {
+                        cg.GoBack(2);
+                        cg.ResetMouse();
+                        return false;
+                    }
+
+                    Thread.Sleep(100);
+                }
+
+                Thread.Sleep(250);
+
+                cg.LeftClick(presetLocation.X, presetLocation.Y); // Clicks the preset
+                cg.LeftClick(480, 327); // Clicks confirm
+
+                // Go back to lobby
+                cg.GoBack(2);
+                cg.ResetMouse();
+                return true;
+            }
+
+            private Point GetPresetLocation(int preset)
+            {
                 int x = 0;
                 int y = 155;
 
@@ -76,23 +123,14 @@ namespace Deltin.CustomGameAutomation
                 while (preset > 3)
                 {
                     preset = preset - 4;
-                    y = y + 33; // Increment row by 1. Space between rows is 33 pixels.
+                    y += 33; // Increment row by 1. Space between rows is 33 pixels.
                 }
                 if (preset == 0) x = 146; // Column 1
                 else if (preset == 1) x = 294; // Column 2
                 else if (preset == 2) x = 440; // Column 3
                 else if (preset == 3) x = 590; // Column 4
 
-                cg.GoToSettings();
-                cg.LeftClick(103, 183, 2000); // Clicks "Preset" button
-
-                cg.updateScreen();
-                while (cg.CompareColor(91, 174, new int[] { 188, 143, 77 }, 10)) { cg.updateScreen(); Thread.Sleep(100); }
-                cg.LeftClick(x, y); // Clicks the preset
-                cg.LeftClick(480, 327); // Clicks confirm
-
-                // Go back to lobby
-                cg.GoBack(2);
+                return new Point(x, y);
             }
 
             /// <summary>

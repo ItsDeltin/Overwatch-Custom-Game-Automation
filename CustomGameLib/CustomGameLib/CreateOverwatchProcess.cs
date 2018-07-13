@@ -254,8 +254,24 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
+    /// <summary>
+    /// Data for creating an Overwatch process.
+    /// </summary>
     public class OverwatchProcessInfo
     {
+        /// <summary>
+        /// Data for creating an Overwatch process.
+        /// </summary>
+        /// <param name="username">Username of the account for the new Overwatch process.</param>
+        /// <param name="password">Password of the account for the new Overwatch process.</param>
+        /// <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
+        public OverwatchProcessInfo(string username, string password, string authenticator = null)
+        {
+            Username = username;
+            Password = password;
+            Authenticator = authenticator;
+        }
+
         // Required
         /// <summary>
         /// Username of the account for the new Overwatch process.
@@ -271,6 +287,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public string Authenticator;
 
+        // Optional
         /// <summary>
         /// If true, the Overwatch process will automatically create a Custom Game.
         /// </summary>
@@ -292,18 +309,5 @@ namespace Deltin.CustomGameAutomation
         /// The method that is used to take screenshots of the Overwatch window.
         /// </summary>
         public ScreenshotMethods ScreenshotMethod = ScreenshotMethods.BitBlt;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="username">Username of the account for the new Overwatch process.</param>
-        /// <param name="password">Password of the account for the new Overwatch process.</param>
-        /// <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
-        public OverwatchProcessInfo(string username, string password, string authenticator = null)
-        {
-            Username = username;
-            Password = password;
-            Authenticator = authenticator;
-        }
     }
 }

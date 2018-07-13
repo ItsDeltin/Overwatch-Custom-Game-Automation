@@ -4,6 +4,21 @@
         <name>Deltin.CustomGameAutomation</name>
     </assembly>
     <members>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame">
+            <summary>
+            Automates Overwatch's custom games.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.AI">
+            <summary>
+            AI settings for Overwatch.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_AI">
+            <summary>
+            AI settings for Overwatch.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.BotTeam,System.Int32)">
             <summary>
             Add AI to the game.
@@ -13,6 +28,13 @@
             <param name="team">Team that AI joins.</param>
             <param name="count">Amount of AI that is added. Set to -1 for max. Default is -1</param>
             <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAIDifficultyMarkup(System.Int32,System.String)">
+            <summary>
+            Obtains the markup of an AI's difficulty.
+            </summary>
+            <param name="scalar">Garanteed index of difficulty. (0 = easy, 1 = medium, 2 = hard)</param>
+            <param name="saveAt">Location to save markup at.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAIDifficulty(System.Int32,System.Boolean)">
             <summary>
@@ -31,11 +53,12 @@
             </summary>
             <returns>Returns true if successful.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.IsAI(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.IsAI(System.Int32,System.Boolean)">
             <summary>
-            Checks if input slot is AI.
+            Checks if the input slot is an AI.
             </summary>
             <param name="slot">Slot to check.</param>
+            <param name="noUpdate">Determines if the captured screen should be updated before scanning.</param>
             <returns>Returns true if slot is AI.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty)">
@@ -62,6 +85,16 @@
             <param name="slot">Slot to edit.</param>
             <param name="setToDifficulty">Difficulty to change to.</param>
             <returns>Returns true on success.</returns>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Chat">
+            <summary>
+            Chat for Overwatch.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Chat">
+            <summary>
+            Chat for Overwatch.
+            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.Chat(System.String)">
             <summary>
@@ -233,6 +266,16 @@
             To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Pause">
+            <summary>
+            Controls Overwatch's pause feature.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Pause">
+            <summary>
+            Controls Overwatch's pause feature.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.TogglePause">
             <summary>
             Toggle pause.
@@ -246,6 +289,11 @@
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.Unpause">
             <summary>
             Unpauses the game.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.IsPaused">
+            <summary>
+            Determines if the game is paused.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerCount">
@@ -424,6 +472,30 @@
             <param name="battletag">Battletag of player to check. Is case sensitive.</param>
             <returns>Returns true if player exists, else returns false.</returns>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Queueid">
+            <summary>
+            The number where the queue starts.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Interact">
+            <summary>
+            Changes a player's state in Overwatch.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Interact">
+            <summary>
+            Changes a player's state in Overwatch.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionMarkup(System.Int32,System.Int32,System.String,System.Double)">
+            <summary>
+            Generates a markup for a menu option in Overwatch.
+            </summary>
+            <param name="slot">Slot to generate markup from.</param>
+            <param name="max">Maximum markups to capture.</param>
+            <param name="savelocation">Location to save markups.</param>
+            <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32,System.Double)">
             <summary>
             Scans a player menu for an option.
@@ -432,6 +504,7 @@
             <param name="markup">Bitmap markup of option to scan for.</param>
             <param name="minimumPercent">Minimum percent the markup has to match an option in the menu.</param>
             <param name="max">Maximum options to scan.</param>
+            <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
             <returns>Returns true if the option in the markup has been found, else returns false.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
         </member>
@@ -620,11 +693,22 @@
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when a herodata's set and setto length are not equal length.</exception>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSetheroException">Thrown when any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.LoadPreset(System.Int32)">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.GameSettings">
+            <summary>
+            Setting game settings in Overwatch.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Settings">
+            <summary>
+            Setting game settings in Overwatch.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.LoadPreset(System.Int32,System.Int32)">
             <summary>
             Loads a preset saved in Overwatch, 0 being the first saved preset.
             </summary>
             <param name="preset">Preset to load.</param>
+            <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
             <summary>
@@ -654,6 +738,126 @@
             <param name="redCount">Maximum number of red players. Must be in the range of 1-6. Set to null to ignore.</param>
             <param name="ffaCount">Maximum number of FFA players. Must be in the range of 1-12. Set to null to ignore.</param>
             <param name="spectatorCount">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</param>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.AIHero">
+            <summary>
+            AI heroes.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Recommended">
+            <summary>
+            Overwatch's reccommended AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Ana">
+            <summary>
+            Ana AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Bastion">
+            <summary>
+            Bastion AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Lucio">
+            <summary>
+            Lucio AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.McCree">
+            <summary>
+            McCree AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Mei">
+            <summary>
+            Mei AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Reaper">
+            <summary>
+            Reaper AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Roadhog">
+            <summary>
+            Roadhog AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Soldier76">
+            <summary>
+            Soldier 76 AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Sombra">
+            <summary>
+            Sombra AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Torbjorn">
+            <summary>
+            Torbjorn AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Zarya">
+            <summary>
+            Zarya AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Zenyatta">
+            <summary>
+            Zenyatta AI hero.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Difficulty">
+            <summary>
+            AI difficulties.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Easy">
+            <summary>
+            Easy AI difficulty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Medium">
+            <summary>
+            Medium AI difficulty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Hard">
+            <summary>
+            Hard AI difficulty.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Channel">
+            <summary>
+            Chat channels for Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Team">
+            <summary>
+            The team chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Match">
+            <summary>
+            The match chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.General">
+            <summary>
+            The general chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Group">
+            <summary>
+            The group chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.PrivateMessage">
+            <summary>
+            The private message chat channel.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ListenTo">
             <summary>
@@ -710,6 +914,19 @@
             The identity of the player that executed the command.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.OverwatchProcessInfo">
+            <summary>
+            Data for creating an Overwatch process.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.OverwatchProcessInfo.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Data for creating an Overwatch process.
+            </summary>
+            <param name="username">Username of the account for the new Overwatch process.</param>
+            <param name="password">Password of the account for the new Overwatch process.</param>
+            <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
+        </member>
         <member name="F:Deltin.CustomGameAutomation.OverwatchProcessInfo.Username">
             <summary>
             Username of the account for the new Overwatch process.
@@ -750,13 +967,75 @@
             The method that is used to take screenshots of the Overwatch window.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.OverwatchProcessInfo.#ctor(System.String,System.String,System.String)">
+        <member name="T:Deltin.CustomGameAutomation.Join">
             <summary>
-            
+            Options for who can join the game.
             </summary>
-            <param name="username">Username of the account for the new Overwatch process.</param>
-            <param name="password">Password of the account for the new Overwatch process.</param>
-            <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Join.Everyone">
+            <summary>
+            Everyone can join the game.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Join.FriendsOnly">
+            <summary>
+            Only friends of the moderator can join the game.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Join.InviteOnly">
+            <summary>
+            Only players invited can join the game.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.GameState">
+            <summary>
+            Gets the current state of the game.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.GameState.InLobby">
+            <summary>
+            The custom game is in the lobby.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.GameState.Waiting">
+            <summary>
+            The custom game is waiting for players.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.GameState.Ingame">
+            <summary>
+            The custom game is currently ingame.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.GameState.Ending_Commend">
+            <summary>
+            The custom game is at player commendation.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.GameState.Unknown">
+            <summary>
+            Cannot recognize what state the game is on.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.ToggleAction">
+            <summary>
+            Enables/disables settings before toggling them.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ToggleAction.None">
+            <summary>
+            Do not enable/disable.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ToggleAction.DisableAll">
+            <summary>
+            Disable all options before toggling.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ToggleAction.EnableAll">
+            <summary>
+            Enable all options before toggling.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.InvalidSlotException">
             <summary>

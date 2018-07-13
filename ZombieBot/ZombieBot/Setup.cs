@@ -5,8 +5,22 @@ namespace ZombieBot
 {
     partial class Program
     {
-        public static void Setup()
+        public static void Setup(bool initial)
         {
+            if (initial)
+            {
+                cg.GameSettings.SetGameName("Zombies - Infection");
+                cg.GameSettings.SetTeamName(PlayerTeam.Blue, "Survivors");
+                cg.GameSettings.SetTeamName(PlayerTeam.Red, "Zombies");
+
+                int moderatorSlot = cg.PlayerInfo.ModeratorSlot();
+
+                if (moderatorSlot != -1 && moderatorSlot != 12)
+                {
+                    cg.Interact.Move(moderatorSlot, 12);
+                }
+            }
+
             int map = rnd.Next(maps.Length);
             Console.WriteLine("Map chosen: " + maps[map]);
             cg.Maps.ToggleMap(ToggleAction.DisableAll, CustomGame.CG_Maps.MapIDFromName(maps[map]));

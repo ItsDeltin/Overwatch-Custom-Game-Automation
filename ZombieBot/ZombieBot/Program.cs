@@ -276,7 +276,7 @@ namespace ZombieBot
                 cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
             }
 
-            Setup();
+            Setup(true);
 
             while (true)
             {
@@ -287,7 +287,7 @@ namespace ZombieBot
                 }
                 else
                 {
-                    Setup();
+                    Setup(false);
                 }
             }
         }

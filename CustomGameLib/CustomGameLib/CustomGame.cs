@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace Deltin.CustomGameAutomation
 {
+    /// <summary>
+    /// Automates Overwatch's custom games.
+    /// </summary>
     public partial class CustomGame : IDisposable
     {
         static int KeyPressWait = 50;
@@ -192,24 +195,66 @@ namespace Deltin.CustomGameAutomation
         Red,
         Spectator
     }
+    /// <summary>
+    /// Options for who can join the game.
+    /// </summary>
     public enum Join
     {
+        /// <summary>
+        /// Everyone can join the game.
+        /// </summary>
         Everyone,
+        /// <summary>
+        /// Only friends of the moderator can join the game.
+        /// </summary>
         FriendsOnly,
+        /// <summary>
+        /// Only players invited can join the game.
+        /// </summary>
         InviteOnly
     }
+    /// <summary>
+    /// Gets the current state of the game.
+    /// </summary>
     public enum GameState
     {
+        /// <summary>
+        /// The custom game is in the lobby.
+        /// </summary>
         InLobby,
+        /// <summary>
+        /// The custom game is waiting for players.
+        /// </summary>
         Waiting,
+        /// <summary>
+        /// The custom game is currently ingame.
+        /// </summary>
         Ingame,
+        /// <summary>
+        /// The custom game is at player commendation.
+        /// </summary>
         Ending_Commend,
+        /// <summary>
+        /// Cannot recognize what state the game is on.
+        /// </summary>
         Unknown
     }
+    /// <summary>
+    /// Enables/disables settings before toggling them.
+    /// </summary>
     public enum ToggleAction
     {
+        /// <summary>
+        /// Do not enable/disable.
+        /// </summary>
         None,
+        /// <summary>
+        /// Disable all options before toggling.
+        /// </summary>
         DisableAll,
+        /// <summary>
+        /// Enable all options before toggling.
+        /// </summary>
         EnableAll
     }
 }
