@@ -52,6 +52,9 @@ namespace Deltin.CustomGameAutomation
     }
 
     // For CreateOverwatchProcess.cs
+    /// <summary>
+    /// Thrown when logging into Overwatch using CreateOverwatchProcess fails.
+    /// </summary>
     public class LoginFailedException : Exception
     {
         /// <summary>

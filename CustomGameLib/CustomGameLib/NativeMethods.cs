@@ -131,6 +131,9 @@ namespace Deltin.CustomGameAutomation
             SetWindowLongPtr(hwnd, -20, GetWindowLongPtr(hwnd, -20) ^ 0x80000);
             return SetLayeredWindowAttributes(hwnd, 0, (byte)alpha, 0x2);
         }
+
+        [DllImport("user32.dll")]
+        internal static extern bool EnableWindow(IntPtr hWnd, bool bEnable);
     }
 
     internal static class Gdi32

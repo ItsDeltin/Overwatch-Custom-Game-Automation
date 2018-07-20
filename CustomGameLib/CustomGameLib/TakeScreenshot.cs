@@ -5,15 +5,26 @@ using System.Collections.Generic;
 
 namespace Deltin.CustomGameAutomation
 {
-    public enum ScreenshotMethods
+    /// <summary>
+    /// The screenshot method used to capture the Overwatch window screen.
+    /// BitBlt is faster and works even if another window is over the Overwatch window.
+    /// BitBlt does not work on all systems. If it does not work for you, use ScreenCopy.
+    /// </summary>
+    public enum ScreenshotMethod
     {
+        /// <summary>
+        /// The BitBlt method of screen capturing.
+        /// </summary>
         BitBlt,
+        /// <summary>
+        /// The ScreenCopy method of screen capturing.
+        /// </summary>
         ScreenCopy
     }
 
     partial class CustomGame
     {
-        public ScreenshotMethods ScreenshotMethod;
+        ScreenshotMethod ScreenshotMethod;
 
         object ScreenshotLock = new object();
 
@@ -45,14 +56,14 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static void Screenshot(ScreenshotMethods method, IntPtr hWnd, ref Bitmap bmp)
+        static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref Bitmap bmp)
         {
             // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
             SetupWindow(hWnd, method);
 
-            if (method == ScreenshotMethods.BitBlt)
+            if (method == ScreenshotMethod.BitBlt)
                 ScreenshotBitBlt(hWnd, ref bmp);
-            else if (method == ScreenshotMethods.ScreenCopy)
+            else if (method == ScreenshotMethod.ScreenCopy)
                 ScreenshotScreenCopy(hWnd, ref bmp);
         }
 

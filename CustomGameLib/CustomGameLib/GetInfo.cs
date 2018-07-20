@@ -439,7 +439,37 @@ namespace Deltin.CustomGameAutomation
         }
         #endregion
 
+        /// <summary>
+        /// Waits for the slots in overwatch to change.
+        /// </summary>
+        /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+        /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
+        public bool WaitForSlotUpdate(int maxtime = 1000)
+        {
+            Stopwatch time = new Stopwatch();
+            List<int> preslots = TotalPlayerSlots;
+            time.Start();
+            while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+            {
+                List<int> newslots = TotalPlayerSlots;
+                if (preslots.Count != newslots.Count)
+                    return true;
+                else
+                    for (int i = 0; i < preslots.Count; i++)
+                        if (preslots[i] != newslots[i])
+                            return true;
+                Thread.Sleep(100);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Info about players in an Overwatch custom game.
+        /// </summary>
         public CG_PlayerInfo PlayerInfo;
+        /// <summary>
+        /// Info about players in an Overwatch custom game.
+        /// </summary>
         public class CG_PlayerInfo
         {
             private CustomGame cg;
@@ -688,6 +718,11 @@ namespace Deltin.CustomGameAutomation
                 new Point(857, 75)
             };
 
+            /// <summary>
+            /// Obtains the markup of a hero icon.
+            /// </summary>
+            /// <param name="slot">Slot to get hero icon from.</param>
+            /// <param name="saveTo">Location on the file system to save it to.</param>
             public void GetHeroMarkup(int slot, string saveTo)
             {
                 cg.updateScreen();
@@ -867,10 +902,22 @@ namespace Deltin.CustomGameAutomation
         }
     }
     
+    /// <summary>
+    /// Teams on the queue.
+    /// </summary>
     public enum QueueTeam
     {
+        /// <summary>
+        /// Queueing for both blue and red.
+        /// </summary>
         Neutral,
+        /// <summary>
+        /// Queueing for blue.
+        /// </summary>
         Blue,
+        /// <summary>
+        /// Queueing for red.
+        /// </summary>
         Red
     }
 

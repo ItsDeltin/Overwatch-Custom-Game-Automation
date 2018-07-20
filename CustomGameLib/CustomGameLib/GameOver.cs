@@ -102,15 +102,25 @@ namespace Deltin.CustomGameAutomation
         public event EventHandler<GameOverArgs> OnGameOver;
     }
 
+    /// <summary>
+    /// Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
+    /// </summary>
     public class GameOverArgs : EventArgs
     {
         private PlayerTeam WinningTeam;
 
+        /// <summary>
+        /// Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
+        /// </summary>
         public GameOverArgs(PlayerTeam winningteam)
         {
             WinningTeam = winningteam;
         }
 
+        /// <summary>
+        /// Gets the team that won the Overwatch game.
+        /// </summary>
+        /// <returns></returns>
         public PlayerTeam GetWinningTeam()
         {
             return WinningTeam;

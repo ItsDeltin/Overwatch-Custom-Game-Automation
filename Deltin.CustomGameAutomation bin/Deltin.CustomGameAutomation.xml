@@ -61,6 +61,23 @@
             <param name="noUpdate">Determines if the captured screen should be updated before scanning.</param>
             <returns>Returns true if slot is AI.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAISlots">
+            <summary>
+            Gets all slots that are AI.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetNoneAISlots">
+            <summary>
+            Gets all slots that are not AI.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.CalibrateAIChecking">
+            <summary>
+            AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty)">
             <summary>
             Edits the hero an AI is playing and the difficulty of the AI.
@@ -85,6 +102,13 @@
             <param name="slot">Slot to edit.</param>
             <param name="setToDifficulty">Difficulty to change to.</param>
             <returns>Returns true on success.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.RemoveFromGameIfAI(System.Int32)">
+            <summary>
+            Safely removes a slot from the game if they are an AI.
+            </summary>
+            <param name="slot">Slot to remove from game.</param>
+            <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Chat">
             <summary>
@@ -230,7 +254,7 @@
             <param name="processInfo">The info of the process being started.</param>
             <returns>The main window handle of the Overwatch process.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(System.IntPtr,Deltin.CustomGameAutomation.ScreenshotMethods,System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(System.IntPtr,Deltin.CustomGameAutomation.ScreenshotMethod,System.Boolean)">
             <summary>
             Creates new CustomGame object using an Overwatch process.
             </summary>
@@ -238,12 +262,20 @@
             <param name="screenshotMethod">Method to take screenshots with.</param>
             <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
             <summary>
-            Waits for the slots in overwatch to change.
+            Positions the Overwatch window to be usable by the CustomGame class.
             </summary>
-            <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
-            <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput">
+            <summary>
+            Disables input for the Overwatch window to prevent accidentally hovering over it.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput">
+            <summary>
+            Enables input for the Overwatch window after disabling it with DisableOverwatchWindowInput().
+            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.GetGameState">
             <summary>
@@ -407,6 +439,23 @@
             <param name="slot">Slot to check</param>
             <returns></returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
+            <summary>
+            Waits for the slots in overwatch to change.
+            </summary>
+            <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+            <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.PlayerInfo">
+            <summary>
+            Info about players in an Overwatch custom game.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo">
+            <summary>
+            Info about players in an Overwatch custom game.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayersDead(System.Boolean)">
             <summary>
             Gets a list of players who died.
@@ -449,6 +498,13 @@
             <param name="slot">Slot to check.</param>
             <param name="noUpdate"></param>
             <returns>Returns true if player as ultimate.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHeroMarkup(System.Int32,System.String)">
+            <summary>
+            Obtains the markup of a hero icon.
+            </summary>
+            <param name="slot">Slot to get hero icon from.</param>
+            <param name="saveTo">Location on the file system to save it to.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHero(System.Int32)">
             <summary>
@@ -1070,11 +1126,52 @@
             </summary>
             <param name="message">Message to display.</param>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.LoginFailedException">
+            <summary>
+            Thrown when logging into Overwatch using CreateOverwatchProcess fails.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.LoginFailedException.#ctor(System.String)">
             <summary>
             Throws Login Failed Exception.
             </summary>
             <param name="message">Message to display.</param>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.GameOverArgs">
+            <summary>
+            Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.GameOverArgs.#ctor(Deltin.CustomGameAutomation.PlayerTeam)">
+            <summary>
+            Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.GameOverArgs.GetWinningTeam">
+            <summary>
+            Gets the team that won the Overwatch game.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.QueueTeam">
+            <summary>
+            Teams on the queue.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Neutral">
+            <summary>
+            Queueing for both blue and red.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Blue">
+            <summary>
+            Queueing for blue.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Red">
+            <summary>
+            Queueing for red.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
             <summary>
@@ -1139,6 +1236,23 @@
         <member name="T:Deltin.CustomGameAutomation.ModesEnabled">
             <summary>
             Overwatch gamemodes that are enabled.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
+            <summary>
+            The screenshot method used to capture the Overwatch window screen.
+            BitBlt is faster and works even if another window is over the Overwatch window.
+            BitBlt does not work on all systems. If it does not work for you, use ScreenCopy.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.BitBlt">
+            <summary>
+            The BitBlt method of screen capturing.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.ScreenCopy">
+            <summary>
+            The ScreenCopy method of screen capturing.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_HIDE">

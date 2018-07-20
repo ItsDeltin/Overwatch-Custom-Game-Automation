@@ -34,19 +34,19 @@ namespace Deltin.CustomGameAutomation
                 int xoffset = 0;
                 int queuecount = cg.QueueCount;
                 if (slot > 11 && slot <= Queueid) offset = cg.FindOffset(); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
-                if (slot - Queueid >= queuecount) return new Point(); // If there is no one in the queue and the slot selected is a queue value, return invalid
+                if (slot - Queueid >= queuecount) return Point.Empty; // If there is no one in the queue and the slot selected is a queue value, return invalid
                 if (slot > 11) xoffset = -100; // If there is more than 6 players in the queue, a scrollbar appears offsetting the slot's x location by a few pixels.
-                if (slot > Queueid) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at. Not 17 because that is set when returning 891, 24
+                if (slot > Queueid) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at. Not equal to Queueid because that is set when returning 891, 24
 
                 if (slot != Queueid) return new Point(playerLoc[slot, 0] + xoffset, playerLoc[slot, 1] + offset); // Blue, Red, Spectators, and all of queue except for the first slot.
                 else return new Point(playerLoc[12, 0] + xoffset, 248); // Queue 1 location
             }
 
-            private bool OpenSlotMenu(int slot)
+            internal Point OpenSlotMenu(int slot)
             {
                 Point slotlocation = FindSlotLocation(slot); // Get location of slot
                 if (slotlocation.IsEmpty)
-                    return false;
+                    return Point.Empty;
                 if (slot > 11)
                     slotlocation.X += -100; // If the slot selected is a spectator or in queue, this prevents the selected slot from sliding to the left.
                                             // Open slot menu by right clicking on slot.
@@ -54,22 +54,12 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(100);
                 cg.RightClick(cg.Cursor.X, cg.Cursor.Y);
                 cg.updateScreen();
-                return true;
-            }
-
-            private void OpenSlotMenu(Point point)
-            {
-                // Open slot menu by right clicking on slot.
-                cg.Cursor = point;
-                Thread.Sleep(100);
-                cg.RightClick(cg.Cursor.X, cg.Cursor.Y);
-                cg.updateScreen();
+                return slotlocation;
             }
 
             // Selects an option in the slot menu.
-            internal bool SelectMenuOption(int x, int y)
+            internal bool SelectMenuOption(Point point)
             {
-                Point point = new Point(x, y);
                 cg.Cursor = point; // Select the option
                 Thread.Sleep(100);
                 // <image url="$(ProjectDir)\ImageComments\Interact.cs\OptionSelect.png" scale="0.7" />
@@ -77,6 +67,7 @@ namespace Deltin.CustomGameAutomation
                 if (cg.CompareColor(point.X, point.Y, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
                 {
                     cg.LeftClick(point.X, point.Y, 0);
+                    cg.ResetMouse();
                     return true;
                 }
                 return false;
@@ -121,10 +112,7 @@ namespace Deltin.CustomGameAutomation
                 if (!cg.IsSlotValid(slot))
                     throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
 
-                Point slotlocation = FindSlotLocation(slot);
-                if (slotlocation.IsEmpty)
-                    return;
-                OpenSlotMenu(slotlocation);
+                Point slotlocation = OpenSlotMenu(slot);
 
                 // Get direction opened menu is going.
                 Direction dir = Getmenudirection(slotlocation);
@@ -186,90 +174,22 @@ namespace Deltin.CustomGameAutomation
                 if (!cg.IsSlotValid(slot))
                     throw new InvalidSlotException(string.Format("Slot {0} is out of range.", slot));
 
-                Point slotlocation = FindSlotLocation(slot);
+                Point slotlocation = OpenSlotMenu(slot);
                 if (slotlocation.IsEmpty)
                     return false;
-                OpenSlotMenu(slotlocation);
 
                 Point optionLocation = MenuOptionScan(slotlocation, markup, minimumPercent, max, yincrement);
 
                 if (optionLocation.IsEmpty)
                 {
-                    cg.LeftClick(400, 500, 100);
-                    cg.LeftClick(500, 500, 100);
-                    cg.ResetMouse();
+                    cg.CloseOptionMenu();
                     return false;
                 }
                 else
                 {
-                    SelectMenuOption(optionLocation.X, optionLocation.Y);
-                    cg.ResetMouse();
+                    SelectMenuOption(optionLocation);
                     return true;
                 }
-
-                /*
-                Direction dir = Getmenudirection(slotlocation); // Get menu direction after opening menu.
-                int[] offset = OffsetViaDirection(dir);
-
-                int xstart = slotlocation.X + 14,  // X position to start scanning.
-                    xselect = slotlocation.X + 10; // Amount to increment X when selecting the option after the option has been found.
-                int ystart = 0; // Y position to start scanning.
-                if (dir == Direction.RightDown)
-                {
-                    ystart = slotlocation.Y + 12;
-                }
-                else if (dir == Direction.RightUp)
-                {
-                    ystart = slotlocation.Y - 128;
-                    yincrement = -yincrement;
-                }
-
-                cg.updateScreen();
-                List<int> percentResults = new List<int>();
-                // Scan each option and get the likelyhood in percent of the option being the markup.
-                for 
-                (
-                    int mi = 0, yii = ystart; 
-                    mi < max; 
-                    mi++, yii = ystart + (int)(yincrement * mi)
-                ) // Mi is the line to scan, yii is the Y coordinate of line mi.
-                {
-                    int success = 0;
-                    int total = 0;
-
-                    for (int xi = 0; xi < markup.Width; xi++)
-                        for (int yi = 0; yi < markup.Height; yi++)
-                        {
-                            total++;
-
-                            bool bmpPixelIsBlack = cg.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
-                            bool markupPixelIsBlack = markup.GetPixelAt(xi, yi) == Color.FromArgb(0, 0, 0);
-
-                            if (bmpPixelIsBlack == markupPixelIsBlack)
-                                success++;
-                        }
-                    int percent = (int)((Convert.ToDouble(success) / Convert.ToDouble(total)) * 100);
-                    percentResults.Add(percent);
-                }
-
-                // Check if option has been found.
-                int maxpercent = percentResults.IndexOf(percentResults.Max());
-                if (percentResults[maxpercent] > minimumPercent)
-                {
-                    // If yes, click the option found.
-                    SelectMenuOption(xselect, ystart + (int)(yincrement * maxpercent));
-                    cg.ResetMouse();
-                    return true;
-                }
-                else
-                {
-                    // If not, close menu
-                    cg.LeftClick(400, 500, 100);
-                    cg.LeftClick(500, 500, 100);
-                    cg.ResetMouse();
-                    return false;
-                }
-                */
             }
 
             internal Point MenuOptionScan(Point location, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)

@@ -31,7 +31,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="overwatchHandle">Overwatch process handle to use. Leave at default to use the first Overwatch process found.</param>
         /// <param name="screenshotMethod">Method to take screenshots with.</param>
         /// <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
-        public CustomGame(IntPtr overwatchHandle = new IntPtr(), ScreenshotMethods screenshotMethod = ScreenshotMethods.BitBlt, bool openChatIsDefault = true)
+        public CustomGame(IntPtr overwatchHandle = new IntPtr(), ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt, bool openChatIsDefault = true)
         {
             if (overwatchHandle == IntPtr.Zero)
             {
@@ -75,7 +75,6 @@ namespace Deltin.CustomGameAutomation
 
             // Create bitmap of overwatch client screen capture.
             ScreenshotMethod = screenshotMethod; // Set the screenshot method
-            updateScreen();
 
             OpenChatIsDefault = openChatIsDefault;
             if (OpenChatIsDefault)
@@ -84,44 +83,51 @@ namespace Deltin.CustomGameAutomation
             SetupGameOverCheck();
         }
 
-        static void SetupWindow(IntPtr hWnd, ScreenshotMethods method)
+        /// <summary>
+        /// Positions the Overwatch window to be usable by the CustomGame class.
+        /// </summary>
+        public void SetupOverwatchWindow()
         {
-            if (method == ScreenshotMethods.ScreenCopy)
+            SetupWindow(OverwatchHandle, ScreenshotMethod);
+        }
+
+        static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
+        {
+            if (method == ScreenshotMethod.ScreenCopy)
                 User32.SetForegroundWindow(hWnd);
             else
                 User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
             User32.MoveWindow(hWnd, -7, 0, shotarea.Width, shotarea.Height, false);
         }
 
-        void ResetMouse()
+        /// <summary>
+        /// Disables input for the Overwatch window to prevent accidentally hovering over it.
+        /// </summary>
+        public void DisableOverwatchWindowInput()
+        {
+            User32.EnableWindow(OverwatchHandle, false);
+        }
+
+        /// <summary>
+        /// Enables input for the Overwatch window after disabling it with DisableOverwatchWindowInput().
+        /// </summary>
+        public void EnableOverwatchWindowInput()
+        {
+            User32.EnableWindow(OverwatchHandle, true);
+        }
+
+        internal void ResetMouse()
         {
             Thread.Sleep(100);
             Cursor = new Point(500, 500);
             Thread.Sleep(200);
         }
 
-        /// <summary>
-        /// Waits for the slots in overwatch to change.
-        /// </summary>
-        /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
-        /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
-        public bool WaitForSlotUpdate(int maxtime = 1000)
+        internal void CloseOptionMenu()
         {
-            Stopwatch time = new Stopwatch();
-            List<int> preslots = TotalPlayerSlots;
-            time.Start();
-            while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
-            {
-                List<int> newslots = TotalPlayerSlots;
-                if (preslots.Count != newslots.Count)
-                    return true;
-                else
-                    for (int i = 0; i < preslots.Count; i++)
-                        if (preslots[i] != newslots[i])
-                            return true;
-                Thread.Sleep(100);
-            }
-            return false;
+            LeftClick(400, 500, 100);
+            LeftClick(500, 500, 100);
+            ResetMouse();
         }
 
         /// <summary>

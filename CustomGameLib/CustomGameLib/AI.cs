@@ -401,8 +401,8 @@ namespace Deltin.CustomGameAutomation
                     for (int yi = 0; yi < checkY.Length; yi++)
                     {
                         int y = checkY[yi];
-                        // Check for the commendation icon. 91, 162, 166 is the RGB values of the color of the commendation icon.
-                        if (cg.CompareColor(x, y, new int[] { 91, 162, 166 }, 30))
+                        // Check for the commendation icon.
+                        if (cg.CompareColor(x, y, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
                         {
                             isAi = false;
                             break;
@@ -413,6 +413,52 @@ namespace Deltin.CustomGameAutomation
                     cg.Chat.OpenChat();
 
                 return isAi;
+            }
+
+            /// <summary>
+            /// Gets all slots that are AI.
+            /// </summary>
+            /// <returns></returns>
+            public List<int> GetAISlots()
+            {
+                List<int> AISlots = new List<int>();
+
+                List<int> allPlayers = cg.TotalPlayerSlots;
+
+                for (int i = 0; i < allPlayers.Count; i++)
+                    if (IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
+
+                return AISlots;
+            }
+
+            /// <summary>
+            /// Gets all slots that are not AI.
+            /// </summary>
+            /// <returns></returns>
+            public List<int> GetNoneAISlots()
+            {
+                List<int> AISlots = new List<int>();
+
+                List<int> allPlayers = cg.TotalPlayerSlots;
+
+                for (int i = 0; i < allPlayers.Count; i++)
+                    if (!IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
+
+                return AISlots;
+            }
+
+            /// <summary>
+            /// AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
+            /// </summary>
+            public void CalibrateAIChecking()
+            {
+                cg.RightClick(744, 62, 250);
+                cg.KeyPress(Keys.Enter);
+                Thread.Sleep(250);
+                cg.GoBack(1);
+                cg.ResetMouse();
             }
 
             /// <summary>
@@ -511,6 +557,38 @@ namespace Deltin.CustomGameAutomation
                 {
                     return false;
                 }
+            }
+
+            /// <summary>
+            /// Safely removes a slot from the game if they are an AI.
+            /// </summary>
+            /// <param name="slot">Slot to remove from game.</param>
+            /// <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
+            public bool RemoveFromGameIfAI(int slot)
+            {
+                if (!cg.IsSlotValid(slot))
+                    throw new InvalidSlotException(string.Format("Slot {0} is out of range of possible slots to remove from game.", slot));
+
+                Point slotLocation = cg.Interact.OpenSlotMenu(slot);
+
+                if (slotLocation.IsEmpty)
+                    return false;
+
+                if (cg.Interact.MenuOptionScan(slotLocation, CG_Interact.RemoveAllBotsMarkup, 80, 6).IsEmpty)
+                {
+                    cg.CloseOptionMenu();
+                    return false;
+                }
+
+                Point removeFromGameOptionLocation = cg.Interact.MenuOptionScan(slotLocation, CG_Interact.RemoveFromGameMarkup, 80, 6);
+
+                if (removeFromGameOptionLocation.IsEmpty)
+                {
+                    cg.CloseOptionMenu();
+                    return false;
+                }
+
+                return cg.Interact.SelectMenuOption(removeFromGameOptionLocation);
             }
         }
     }

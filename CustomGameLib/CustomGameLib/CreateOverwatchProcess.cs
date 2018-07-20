@@ -308,6 +308,6 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The method that is used to take screenshots of the Overwatch window.
         /// </summary>
-        public ScreenshotMethods ScreenshotMethod = ScreenshotMethods.BitBlt;
+        public ScreenshotMethod ScreenshotMethod = ScreenshotMethod.BitBlt;
     }
 }
