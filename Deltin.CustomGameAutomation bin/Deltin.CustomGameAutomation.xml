@@ -1242,7 +1242,7 @@
             <summary>
             The screenshot method used to capture the Overwatch window screen.
             BitBlt is faster and works even if another window is over the Overwatch window.
-            BitBlt does not work on all systems. If it does not work for you, use ScreenCopy.
+            If BitBlt does not work for you, use ScreenCopy.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.BitBlt">

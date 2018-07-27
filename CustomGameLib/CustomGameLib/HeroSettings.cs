@@ -399,6 +399,7 @@ namespace Deltin.CustomGameAutomation
         Tracer,
         Widowmaker,
         Winston,
+        WreckingBall,
         Zarya,
         Zenyatta
     }
