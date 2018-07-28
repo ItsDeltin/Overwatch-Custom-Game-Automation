@@ -63,8 +63,12 @@ namespace Deltin.CustomGameAutomation
         public class CG_Settings
         {
             private CustomGame cg;
+
+            private int numPresets;
+
             internal CG_Settings(CustomGame cg)
             { this.cg = cg; }
+            
 
             /// <summary>
             /// Loads a preset saved in Overwatch, 0 being the first saved preset.
@@ -75,7 +79,7 @@ namespace Deltin.CustomGameAutomation
             public bool LoadPreset(int preset, int maxWaitTime = 5000)
             {
                 if (preset < 0)
-                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be greater than 0.");
+                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
 
                 Point presetLocation = GetPresetLocation(preset);
 
@@ -85,22 +89,46 @@ namespace Deltin.CustomGameAutomation
                 Stopwatch wait = new Stopwatch();
                 wait.Start();
 
-                while (true)
+                if (numPresets == null)
                 {
-                    cg.updateScreen();
-                    
-                    if (cg.CompareColor(presetLocation.X, presetLocation.Y, new int[] { 126, 128, 134 }, 40))
+                    while (true)
                     {
-                        break;
-                    }
-                    else if (wait.ElapsedMilliseconds >= maxWaitTime)
-                    {
-                        cg.GoBack(2);
-                        cg.ResetMouse();
-                        return false;
-                    }
+                        cg.updateScreen();
 
-                    Thread.Sleep(100);
+                        if (cg.CompareColor(presetLocation.X, presetLocation.Y, new int[] { 126, 128, 134 }, 40))
+                        {
+                            break;
+                        }
+                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
+                        {
+                            cg.GoBack(2);
+                            cg.ResetMouse();
+                            return false;
+                        }
+
+                        Thread.Sleep(100);
+                    }
+                }
+                else
+                {
+                    Point finalPresetLocation = GetPresetLocation(numPresets);
+                    while (true)
+                    {
+                        cg.updateScreen();
+
+                        if (cg.CompareColor(finalPresetLocation.X, finalPresetLocation.Y, new int[] { 126, 128, 134 }, 40))
+                        {
+                            break;
+                        }
+                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
+                        {
+                            cg.GoBack(2);
+                            cg.ResetMouse();
+                            return false;
+                        }
+
+                        Thread.Sleep(100);
+                    }
                 }
 
                 Thread.Sleep(250);
@@ -112,6 +140,17 @@ namespace Deltin.CustomGameAutomation
                 cg.GoBack(2);
                 cg.ResetMouse();
                 return true;
+            }
+
+
+            /// <summary>
+            /// Informs library of total number of saved presets. 
+            /// May make preset loading faster or more accurate.
+            /// </summary>
+            /// <param name="num">Number of saved presets the host has.</param>
+            public void SetNumPresets(int num)
+            {
+                numPresets = num;
             }
 
             private Point GetPresetLocation(int preset)

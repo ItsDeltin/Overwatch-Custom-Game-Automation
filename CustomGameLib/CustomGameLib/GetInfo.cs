@@ -739,6 +739,7 @@ namespace Deltin.CustomGameAutomation
             /// <returns>Returns the hero the slot is playing.</returns>
             public Hero? GetHero(int slot)
             {
+                HeroResultInfo _ = new HeroResultInfo();
                 return GetHero(slot, out _);
             }
 

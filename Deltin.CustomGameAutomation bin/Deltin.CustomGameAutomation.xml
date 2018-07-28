@@ -766,6 +766,13 @@
             <param name="preset">Preset to load.</param>
             <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetNumPresets(System.Int32)">
+            <summary>
+            Informs library of total number of saved presets. 
+            May make preset loading faster or more accurate.
+            </summary>
+            <param name="num">Number of saved presets the host has.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
             <summary>
             Changes who can join.

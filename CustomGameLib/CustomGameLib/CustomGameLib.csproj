@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\..\Deltin.CustomGameAutomation bin\Deltin.CustomGameAutomation.xml</DocumentationFile>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>6</LangVersion>
     <NoWarn>
     </NoWarn>
   </PropertyGroup>
