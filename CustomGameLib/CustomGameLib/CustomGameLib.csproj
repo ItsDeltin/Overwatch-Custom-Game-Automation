@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,6 +83,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
+    <None Include="index.md" />
     <None Include="Resources\view_career_profile.png" />
     <None Include="Resources\winston_markup.png" />
     <None Include="Resources\widowmaker_markup.png" />
@@ -152,7 +155,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Resources\put_in_queue.png" />
   </ItemGroup>
   <ItemGroup>
