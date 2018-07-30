@@ -454,7 +454,7 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             public void CalibrateAIChecking()
             {
-                cg.RightClick(744, 62, 250);
+                cg.RightClick(Points.LOBBY_MY_PLAYER_ICON, 250);
                 cg.KeyPress(Keys.Enter);
                 Thread.Sleep(250);
                 cg.GoBack(1);
@@ -503,7 +503,7 @@ namespace Deltin.CustomGameAutomation
                     cg.LeftClick(slotlocation.X, slotlocation.Y);
                     // Check if Edit AI window has opened by checking if the confirm button exists.
                     cg.updateScreen();
-                    if (cg.CompareColor(447, 354, CALData.ConfirmColor, 20))
+                    if (cg.CompareColor(Points.EDIT_AI_CONFIRM, CALData.ConfirmColor, 20))
                     {
                         var sim = new List<Keys>();
                         // Set hero if setToHero does not equal null.

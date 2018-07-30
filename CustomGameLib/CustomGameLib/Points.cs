@@ -12,5 +12,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_ADD_AI = new Point(835, 182);
 
         public static readonly Point LOBBY_MY_PLAYER_ICON = new Point(744, 62);
+
+
+        public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
     }
 }
