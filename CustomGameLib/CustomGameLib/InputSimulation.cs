@@ -55,6 +55,11 @@ namespace Deltin.CustomGameAutomation
             return (int)((HiWord << 16) | (LoWord & 0xFFFF));
         }
 
+        internal void LeftClick(System.Drawing.Point point, int waitTime = 500)
+        {
+            LeftClick(point.X, point.Y, waitTime);
+        }
+
         internal void LeftClick(int x, int y, int waitTime = 500)
         {
             LeftClick(OverwatchHandle, x, y, waitTime);
@@ -70,6 +75,12 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, WM_LBUTTONUP, 0, MakeLParam(x, y));
             Thread.Sleep(waitTime);
         }
+
+        internal void RightClick(System.Drawing.Point point, int waitTime = 500)
+        {
+            LeftClick(point.X, point.Y, waitTime);
+        }
+
 
         internal void RightClick(int x, int y, int waitTime = 500)
         {
