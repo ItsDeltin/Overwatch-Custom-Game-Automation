@@ -46,9 +46,9 @@ namespace Deltin.CustomGameAutomation
                  */
                 {
                     // Open AddAI menu.
-                    cg.Cursor = new Point(835, 182);
-                    cg.WaitForUpdate(835, 182, 20, 2000);
-                    cg.LeftClick(835, 182, 500);
+                    cg.Cursor = Points.LOBBY_ADD_AI;
+                    cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
+                    cg.LeftClick(Points.LOBBY_ADD_AI, 500);
 
                     List<Keys> press = new List<Keys>();
 
@@ -94,7 +94,7 @@ namespace Deltin.CustomGameAutomation
                     if (count > 0)
                     {
                         press.Add(Keys.Up);
-                        for (int i = 0; i < 12; i++)
+                        for (int i = 0; i < 12; i++) //TODO qazz Hold 12 in a NUM_SLOTS constant somewhere.
                             press.Add(Keys.Left);
                         for (int i = 0; i < count; i++)
                             press.Add(Keys.Right);
