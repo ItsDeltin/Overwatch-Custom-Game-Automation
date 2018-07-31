@@ -52,7 +52,7 @@ namespace Deltin.CustomGameAutomation
                     CompareColor(853, 483, new int[] { 154, 157, 157 }, 15));
                 */
                 if (
-                    CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade) || // Test for "START" button color
+                    CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) || // Test for "START" button color
 
                     CompareColor(450, 325, new int[] { 176, 141, 89 }, 20) || // Test for "ENTERING GAME" color
 
@@ -99,7 +99,7 @@ namespace Deltin.CustomGameAutomation
         {
             if (OpenChatIsDefault)
                 Chat.CloseChat();
-            LeftClick(Points.LOBBY_START, 3000);
+            LeftClick(Points.LOBBY_START_GAME, 3000);
             LoadStall();
             BackToMenu();
 
@@ -113,7 +113,7 @@ namespace Deltin.CustomGameAutomation
         public void SendServerToLobby()
         {
             LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
-            WaitForColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade, 5000);
+            WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
             ResetMouse();
         }
 

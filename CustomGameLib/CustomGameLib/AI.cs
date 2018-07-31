@@ -503,7 +503,7 @@ namespace Deltin.CustomGameAutomation
                     cg.LeftClick(slotlocation.X, slotlocation.Y);
                     // Check if Edit AI window has opened by checking if the confirm button exists.
                     cg.updateScreen();
-                    if (cg.CompareColor(Points.EDIT_AI_CONFIRM, CALData.ConfirmColor, 20))
+                    if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
                     {
                         var sim = new List<Keys>();
                         // Set hero if setToHero does not equal null.

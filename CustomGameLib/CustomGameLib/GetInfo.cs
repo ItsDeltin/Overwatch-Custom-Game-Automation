@@ -643,19 +643,19 @@ namespace Deltin.CustomGameAutomation
 
                 // Red and blue
                 for (int i = 0; i < 12; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], Colors.MODERATOR_ICON, fade))
                         return i;
 
                 // Spectators
                 int offset = cg.FindOffset();
                 for (int i = 12; i < Queueid; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
                         return i;
 
                 // Queue
                 int queuecount = cg.QueueCount;
                 for (int i = 12; i < 12 + queuecount; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, Colors.SPECTATOR_MODERATOR_ICON, fade))
                         return i + 6;
 
                 return -1;

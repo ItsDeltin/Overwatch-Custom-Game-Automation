@@ -8,31 +8,24 @@ using System.Drawing.Imaging;
 
 namespace Deltin.CustomGameAutomation
 {
-    partial class CustomGame
-    {
-        private static class CALData
-        {
-
-            public static int[] ModeratorIconColor = new int[] { 143, 155, 80 }; // Moderator icon aka green crown
-            public static int[] SpectatorModeratorIconColor = new int[] { 149, 183, 89 }; // Moderator icon color for spectators.
-            public static int[] ConfirmColor = new int[] { 176, 141, 89 }; // The yellow confirm color.
-            public static int[] LobbyChangeColor = new int[] { 126, 158, 181 };
-
-            public static int[] StartGameColor = new int[] { 150, 127, 96 }; // The yellow button in the lobby that starts the game
-            public static int StartGameFade = 30;
-            public static Point StartGameLocation = new Point(426, 457);
-            public static int[] LoadablePreset = new int[] { 126, 128, 134 };
-
-        }
-    }
 
     internal class Colors
     {
         public static readonly int[] WHITE = new int[] { 191, 191, 191 };
-        public static readonly int[] DEAD_PLAYER = new int[] { 118, 74, 76 }; // Spectator UI red X
 
+        public static readonly int[] CONFIRM = new int[] { 176, 141, 89 };
+
+        public static readonly int[] LOBBY_START_GAME = new int[] { 150, 127, 96 };
+        public static readonly int[] LOBBY_CHANGE = new int[] { 126, 158, 181 };
+
+        public static readonly int[] SETTINGS_PRESETS_LOADABLE_PRESET = new int[] { 126, 128, 134 };
+
+        public static readonly int[] DEAD_PLAYER = new int[] { 118, 74, 76 }; // Spectator UI red X
         public static readonly int[] HERO_CHOSEN_BLUE = new int[] { 83, 110, 123 };
         public static readonly int[] HERO_CHOSEN_RED = new int[] { 114, 77, 81 };
+
+        public static readonly int[] MODERATOR_ICON = new int[] { 143, 155, 80 };
+        public static readonly int[] SPECTATOR_MODERATOR_ICON = new int[] { 149, 183, 89 };
 
         public static readonly int[] SETTINGS_ERROR = new int[] { 151, 119, 81 };
     }
@@ -41,6 +34,9 @@ namespace Deltin.CustomGameAutomation
     {
         public static readonly int SETTINGS_ERROR = 20;
         public static readonly int DEAD_PLAYER = 15;
+
+        public static readonly int LOBBY_START_GAME = 30;
+
 
         public static readonly int HEROES_CHOSEN = 15;
     }
@@ -71,13 +67,13 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT = new Point(717, 180);
         public static readonly Point LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT = new Point(716, 180);
         public static readonly Point LOBBY_SETTINGS_IF_ADD_BUTTON_NOT_PRESENT = new Point(774, 180);
-        public static readonly Point LOBBY_START = new Point(451, 458);
+        public static readonly Point LOBBY_START_GAME = new Point(451, 458);
         public static readonly Point LOBBY_START_FROM_WAITING_FOR_PLAYERS = new Point(570, 455);
+        public static readonly Point LOBBY_START_GAMEMODE = new Point(599, 456);
         public static readonly Point LOBBY_RESTART = new Point(500, 455);
         public static readonly Point LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT = new Point(617, 180);
         public static readonly Point LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT = new Point(678, 180);
         public static readonly Point LOBBY_MY_PLAYER_ICON = new Point(744, 62);
-        public static readonly Point LOBBY_START_GAMEMODE = new Point(599, 456);
         public static readonly Point LOBBY_BLUE_NAME = new Point(159, 229);
         public static readonly Point LOBBY_RED_NAME = new Point(458, 230);
         public static readonly Point LOBBY_PAUSED = new Point(441, 268);

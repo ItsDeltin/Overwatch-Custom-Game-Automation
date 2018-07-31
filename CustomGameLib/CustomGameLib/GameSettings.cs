@@ -116,7 +116,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         cg.updateScreen();
 
-                        if (cg.CompareColor(finalPresetLocation, CALData.LoadablePreset, 40))
+                        if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, 40))
                         {
                             break;
                         }
