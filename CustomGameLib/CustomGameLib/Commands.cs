@@ -324,7 +324,7 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
                 if (bmp != null)
                     bmp.Dispose();
-                bmp = cg.BmpClone(shotarea.X, shotarea.Y, shotarea.Width, shotarea.Height);
+                bmp = cg.BmpClone(Rectangles.ENTIRE_SCREEN);
             }
 
             bool IsEqualToAny(char op, params char[] equal)
@@ -434,7 +434,7 @@ namespace Deltin.CustomGameAutomation
                             // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
                             if (pi == null && _registerPlayerProfiles && (ltd == null || (ltd != null && ltd.RegisterProfile)))
                             {
-                                Point openMenuAt = new Point(54, shotarea.Y + y);
+                                Point openMenuAt = new Point(54, Rectangles.ENTIRE_SCREEN.Y + y);
 
                                 // Open the career profile
                                 cg.RightClick(openMenuAt, 500);
@@ -536,7 +536,7 @@ namespace Deltin.CustomGameAutomation
                         {
                             totalpixels++;
                             // check if not out of bounds of BMP
-                            if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
+                            if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.ENTIRE_SCREEN.Width && y + letters[li].pixel[pi, 1] < Rectangles.ENTIRE_SCREEN.Height)
                             {
                                 if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                                 {
@@ -545,7 +545,7 @@ namespace Deltin.CustomGameAutomation
                             }
                         }
                         // Check optional pixels
-                        else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
+                        else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.ENTIRE_SCREEN.Width && y + letters[li].pixel[pi, 1] < Rectangles.ENTIRE_SCREEN.Height)
                         {
                             if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                             {
@@ -557,7 +557,7 @@ namespace Deltin.CustomGameAutomation
                     // Check for ignore. These are pixels that shouldn't equal the seed.
                     if (letters[li].ignore != null)
                         for (int pi = 0; pi < letters[li].ignore.GetLength(0); pi++)
-                            if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < shotarea.Width && y + letters[li].ignore[pi, 1] < shotarea.Height)
+                            if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < Rectangles.ENTIRE_SCREEN.Width && y + letters[li].ignore[pi, 1] < Rectangles.ENTIRE_SCREEN.Height)
                                 if (bmp.CompareColor(x + letters[li].ignore[pi, 0], y + letters[li].ignore[pi, 1], seed, seedfade))
                                     totalpixels++;
 

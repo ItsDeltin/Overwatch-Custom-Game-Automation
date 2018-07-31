@@ -17,7 +17,6 @@ namespace Deltin.CustomGameAutomation
         static int KeyPressWait = 50;
 
         Bitmap bmp = null;
-        static Rectangle shotarea = new Rectangle(0, 0, 960, 540);
 
         bool debugmode = false;
         Form debug;
@@ -97,7 +96,7 @@ namespace Deltin.CustomGameAutomation
                 User32.SetForegroundWindow(hWnd);
             else
                 User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
-            User32.MoveWindow(hWnd, -7, 0, shotarea.Width, shotarea.Height, false);
+            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
         }
 
         /// <summary>
@@ -119,14 +118,14 @@ namespace Deltin.CustomGameAutomation
         internal void ResetMouse()
         {
             Thread.Sleep(100);
-            Cursor = new Point(500, 500);
+            Cursor = Points.RESET_POINT;
             Thread.Sleep(200);
         }
 
         internal void CloseOptionMenu()
         {
-            LeftClick(400, 500, 100);
-            LeftClick(500, 500, 100);
+            LeftClick(Points.OPTIONS_APPLY, 100);
+            LeftClick(Points.OPTIONS_BACK, 100);
             ResetMouse();
         }
 
@@ -147,13 +146,13 @@ namespace Deltin.CustomGameAutomation
                 return GameState.InLobby;
 
             // Check if waiting
-            if (CompareColor(599, 456, CALData.LobbyChangeColor, 50)) // Check if "START GAMEMODE" button exists.
+            if (CompareColor(Points.LOBBY_START_GAMEMODE, CALData.LobbyChangeColor, 50)) // Check if "START GAMEMODE" button exists.
                 return GameState.Waiting;
 
-            if (CompareColor(53, 62, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
+            if (CompareColor(Points.ENDING_COMMEND_DEFEAT, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
                 return GameState.Ending_Commend;
 
-            if (CompareColor(394, 457, CALData.LobbyChangeColor, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+            if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, CALData.LobbyChangeColor, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                 return GameState.Ingame;
 
             return GameState.Unknown;
@@ -177,22 +176,60 @@ namespace Deltin.CustomGameAutomation
 
     } // CustomGame class
 
+    /// <summary>
+    /// The team a bot will be added to.
+    /// </summary>
     public enum BotTeam
     {
+        /// <summary>
+        /// Bot will be added to the smaller team, or Blue in case of even teams.
+        /// </summary>
         Both,
+        /// <summary>
+        /// Bot will be added to Blue team.
+        /// </summary>
         Blue,
+        /// <summary>
+        /// Bot will be added to Red team.
+        /// </summary>
         Red
     }
+
+    /// <summary>
+    /// The team a player will be invited to.
+    /// </summary>
     public enum InviteTeam
     {
+        /// <summary>
+        /// The player will be invited to Blue team.
+        /// </summary>
         Blue,
+        /// <summary>
+        /// The player will be invited to Red team.
+        /// </summary>
         Red,
+        /// <summary>
+        /// The player will be invited to be a spectator.
+        /// </summary>
         Spectator,
+        /// <summary>
+        /// The player will be invited to the smaller team, or Blue in case of even teams.
+        /// </summary>
         Both
     }
+
+    /// <summary>
+    /// The team a player is on.
+    /// </summary>
     public enum PlayerTeam
     {
+        /// <summary>
+        /// The player is on Blue team.
+        /// </summary>
         Blue,
+        /// <summary>
+        /// The player is on Red team.
+        /// </summary>
         Red
     }
     public enum Team
