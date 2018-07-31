@@ -84,7 +84,7 @@ namespace Deltin.CustomGameAutomation
             if (OpenChatIsDefault)
                 Chat.CloseChat();
 
-            LeftClick(500, 455);
+            LeftClick(Points.LOBBY_RESTART);
             LoadStall();
             BackToMenu();
 
@@ -99,8 +99,7 @@ namespace Deltin.CustomGameAutomation
         {
             if (OpenChatIsDefault)
                 Chat.CloseChat();
-
-            LeftClick(451, 458, 3000);
+            LeftClick(Points.LOBBY_START, 3000);
             LoadStall();
             BackToMenu();
 
@@ -113,7 +112,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SendServerToLobby()
         {
-            LeftClick(400, 455, 750);
+            LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
             WaitForColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade, 5000);
             ResetMouse();
         }
@@ -123,40 +122,38 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGamemode()
         {
-            LeftClick(570, 455, 1000);
+            LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
         }
 
-        // go to settings
         internal void GoToSettings()
         {
             updateScreen();
-            // The "Add AI" button moves the "Settings" button, this detects if that happens.
             if (DoesAddButtonExist())
-                LeftClick(716, 180, 250); // "Add AI" Button
+            {
+                LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 250);
+            }
             else
-                LeftClick(774, 180, 250); // No "Add AI" Button
+            {
+                LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_NOT_PRESENT, 250);
+            }
         }
 
         private bool DoesAddButtonExist()
         {
             updateScreen();
-
-            return CompareColor(
-                700, 182, // Location of the "MOVE" button
-                715, 182, // Location of the "SETTINGS" button
-                20);
+            return CompareColor(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 20);
         }
 
         internal void GoBack(int settingpages, params int[] checkForErrorsAt)
         {
             for (int i = 0; i < settingpages; i++)
             {
-                LeftClick(855, 507);
+                LeftClick(855, 507); //todo, this is the back button in settings? That's saved as 500,500 in constants.
                 if (checkForErrorsAt.Contains(i))
                 {
                     updateScreen();
                     if (CompareColor(CALData.ErrorLocation.X, CALData.ErrorLocation.Y, CALData.ErrorColor, CALData.ErrorFade))
-                        LeftClick(436, 318);
+                        LeftClick(436, 318); //todo figure what this is, and add to constants.
                 }
             }
         }
@@ -171,7 +168,7 @@ namespace Deltin.CustomGameAutomation
         internal void NavigateToModesMenu()
         {
             GoToSettings();
-            LeftClick(494, 178);
+            LeftClick(Points.SETTINGS_MODES);
         }
     }
 }
