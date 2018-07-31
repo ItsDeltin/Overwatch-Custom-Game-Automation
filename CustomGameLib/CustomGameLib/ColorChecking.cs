@@ -65,6 +65,11 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        Bitmap BmpClone(Rectangle rectangle) 
+        {
+            return BmpClone(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
         Bitmap BmpClone(Point point, int width, int height)
         {
             return BmpClone(point.X, point.Y, width, height);

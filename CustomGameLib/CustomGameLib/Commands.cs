@@ -235,11 +235,6 @@ namespace Deltin.CustomGameAutomation
 
             Task ScanCommandsTask;
 
-            // Area of text
-            static Rectangle shotarea = new Rectangle(50, 461, 169, 26); // Location on screen for chat
-
-            static internal Rectangle CareerProfileShotArea = new Rectangle(46, 101, 265, 82);
-
             // Scale of debug images
             static int scale = 5;
 
@@ -251,7 +246,7 @@ namespace Deltin.CustomGameAutomation
 
             void ScanCommands()
             {
-                var bmp = new Bitmap(shotarea.Width, shotarea.Height, PixelFormat.Format32bppArgb);
+                var bmp = new Bitmap(Rectangles.LOBBY_CHATBOX.Width, Rectangles.LOBBY_CHATBOX.Height, PixelFormat.Format32bppArgb);
 
                 Stopwatch toggle = new Stopwatch();
                 if (cg.debugmode)
@@ -442,7 +437,7 @@ namespace Deltin.CustomGameAutomation
                                 Point openMenuAt = new Point(54, shotarea.Y + y);
 
                                 // Open the career profile
-                                cg.RightClick(openMenuAt.X, openMenuAt.Y, 500);
+                                cg.RightClick(openMenuAt, 500);
 
                                 // By default, the career profile option is selected and we can just press enter to open it.
                                 cg.KeyPress(Keys.Enter);
@@ -452,7 +447,8 @@ namespace Deltin.CustomGameAutomation
 
                                 // Take a screenshot of the career profile.
                                 cg.updateScreen();
-                                Bitmap careerProfileSnapshot = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
+                                //Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE.X, Rectangles.LOBBY_CAREER_PROFILE.Y, Rectangles.LOBBY_CAREER_PROFILE.Width, Rectangles.LOBBY_CAREER_PROFILE.Height);
+                                Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
 
                                 // Register the player identity.
                                 pi = new PlayerIdentity(executor, careerProfileSnapshot, PlayerIdentityIndex);
@@ -726,7 +722,7 @@ namespace Deltin.CustomGameAutomation
                 {
                     cg.updateScreen();
 
-                    Bitmap compareTo = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
+                    Bitmap compareTo = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
 
                     for (int i = 0; i < _playerIdentities.Count; i++)
                     {

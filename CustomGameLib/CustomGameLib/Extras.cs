@@ -9,6 +9,10 @@ namespace Deltin.CustomGameAutomation
     unsafe static class Extensions
     {
         // Gets a pixel color from a bitmap without locking the bitmap from other threads. Also a lot faster.
+        public static Color GetPixelAt(this Bitmap bmp, Point point)
+        {
+            return GetPixelAt(bmp, point.X, point.Y);
+        }
         public static Color GetPixelAt(this Bitmap bmp, int x, int y)
         {
             Rectangle rect = new Rectangle(x, y, 1, 1);
@@ -27,6 +31,10 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Compares colors of bitmap
+        public static bool CompareColor(this Bitmap bmp, Point point, int[] color, int fade)
+        {
+            return CompareColor(bmp, point.X, point.Y, color, fade);
+        }
         public static bool CompareColor(this Bitmap bmp, int x, int y, int[] color, int fade)
         {
             // If the color of the pixel at the input X and Y coordinates of the input bmp is at least (int fade) units or less close to the input color variable, return false.
@@ -39,6 +47,10 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
+        public static bool CompareColor(this Bitmap bmp, Point point, Point point2, int fade)
+        {
+            return CompareColor(bmp, point.X, point.Y, point2.X, point2.Y, fade);
+        }
         public static bool CompareColor(this Bitmap bmp, int x, int y, int x2, int y2, int fade)
         {
             // If the color of the pixel at the input X and Y coordinates of the input bmp is at least (int fade) units or less close to the input color variable, return false.
@@ -51,6 +63,10 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
+        public static bool CompareColor(this Bitmap bmp, Point point, int[] min, int[] max)
+        {
+            return CompareColor(bmp, point.X, point.Y, min, max);
+        }
         public static bool CompareColor(this Bitmap bmp, int x, int y, int[] min, int[] max)
         {
             var pixel = bmp.GetPixelAt(x, y);

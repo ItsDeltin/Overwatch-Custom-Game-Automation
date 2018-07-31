@@ -78,12 +78,12 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(407, 384, new int[] { 168, 168, 170 }, 10))
+                if (bmp.CompareColor(407, 384, new int[] { 168, 168, 170 }, 10)) //todo, get what point this is, and create a constant.
                 {
                     break;
                 }
                 // If the log in button is yellow, there is not a connection.
-                else if (bmp.CompareColor(419, 473, CALData.ConfirmColor, 50))
+                else if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, CALData.ConfirmColor, 50))
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {
@@ -106,7 +106,7 @@ namespace Deltin.CustomGameAutomation
             // Log in
             Thread.Sleep(50);
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-            if (bmp.CompareColor(419, 473, CALData.ConfirmColor, 50))
+            if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, CALData.ConfirmColor, 50))
                 KeyPress(OWProcess.MainWindowHandle, Keys.Enter);
             else
             {
@@ -124,7 +124,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)
+                if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)//todo, get what point this is, and create a constant.
                     break;
                 Thread.Sleep(500);
             }
@@ -133,8 +133,8 @@ namespace Deltin.CustomGameAutomation
 
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
             // Check if login failed
-            bool s0 = bmp.CompareColor(518, 482, CALData.ConfirmColor, 50);
-            bool s1 = bmp.CompareColor(605, 475, CALData.ConfirmColor, 50);
+            bool s0 = bmp.CompareColor(518, 482, CALData.ConfirmColor, 50); //todo, get what point this is, and create a constant.
+            bool s1 = bmp.CompareColor(605, 475, CALData.ConfirmColor, 50);//todo, get what point this is, and create a constant.
             if (s0 && !s1)
             {
                 if (processInfo.CloseOverwatchProcessOnFailure)
@@ -168,14 +168,14 @@ namespace Deltin.CustomGameAutomation
                 while (true)
                 {
                     Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                    if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)
+                    if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)//todo, get what point this is, and create a constant.
                         break;
                     Thread.Sleep(500);
                 }
                 Thread.Sleep(500);
 
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(518, 482, CALData.ConfirmColor, 50))
+                if (bmp.CompareColor(518, 482, CALData.ConfirmColor, 50))//todo, get what point this is, and create a constant.
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {
@@ -190,7 +190,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(53, 68, CALData.WhiteColor, 10))
+                if (bmp.CompareColor(Points.MAIN_MENU_OVERWATCH_WATERMARK, CALData.WhiteColor, 10))
                     break;
                 Thread.Sleep(500);
             }

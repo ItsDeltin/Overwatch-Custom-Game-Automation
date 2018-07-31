@@ -109,7 +109,7 @@ namespace Deltin.CustomGameAutomation
 
             internal void OpenChat()
             {
-                cg.LeftClick(105, 504, 100);
+                cg.LeftClick(Points.LOBBY_CHATBOX, 100);
             }
 
             internal void CloseChat()
@@ -131,7 +131,7 @@ namespace Deltin.CustomGameAutomation
 
             // <image url="$(ProjectDir)\ImageComments\Chat.cs\ChatLocation.png" scale="2" />
             // The color of the pixel at 50, 505 changes depending on which channel the overwatch client is in.
-            internal static Point ChatLocation = new Point(50, 505);
+            internal static Point ChatLocation = Points.LOBBY_CHAT_TYPE_INDICATOR;
             internal static int ChatFade = 20;
             internal static int[] TeamChatColor = new int[] { 65, 139, 162 };
             internal static int[] MatchChatColor = new int[] { 161, 122, 91 };
