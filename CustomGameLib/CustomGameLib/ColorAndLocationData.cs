@@ -12,8 +12,11 @@ namespace Deltin.CustomGameAutomation
     internal class Colors
     {
         public static readonly int[] WHITE = new int[] { 191, 191, 191 };
+        public static readonly int[] LOADING_BLACK = new int[] { 64, 64, 64 };
 
         public static readonly int[] CONFIRM = new int[] { 176, 141, 89 };
+
+        public static readonly int[] LOADING_ENTERING_GAME = new int[] { 176, 141, 89 };
 
         public static readonly int[] LOBBY_START_GAME = new int[] { 150, 127, 96 };
         public static readonly int[] LOBBY_CHANGE = new int[] { 126, 158, 181 };
@@ -27,6 +30,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] MODERATOR_ICON = new int[] { 143, 155, 80 };
         public static readonly int[] SPECTATOR_MODERATOR_ICON = new int[] { 149, 183, 89 };
 
+        public static readonly int[] ENDING_COMMEND_DEFEAT = new int[] { 120, 70, 74 };
+
         public static readonly int[] SETTINGS_ERROR = new int[] { 151, 119, 81 };
     }
 
@@ -35,10 +40,19 @@ namespace Deltin.CustomGameAutomation
         public static readonly int SETTINGS_ERROR = 20;
         public static readonly int DEAD_PLAYER = 15;
 
-        public static readonly int LOBBY_START_GAME = 30;
+        public static readonly int LOADING_ENTERING_GAME = 20;
 
+        public static readonly int LOBBY_START_GAME = 30;
+        public static readonly int LOBBY_CHANGE = 50;
+
+        public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 40;
+
+        public static readonly int CONFIRM = 50;
 
         public static readonly int HEROES_CHOSEN = 15;
+
+        public static readonly int ENDING_COMMEND_DEFEAT = 10;
+
     }
 
     internal class Points
@@ -52,6 +66,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point OPTIONS_APPLY = new Point(400, 500);
         public static readonly Point OPTIONS_BACK = new Point(500, 500);
 
+        public static readonly Point LOADING_ENTERING_GAME = new Point(450, 325);
+        
         public static readonly Point LOBBY_ADD_AI = new Point(835, 182);
         public static readonly Point LOBBY_BACK_TO_LOBBY = new Point(394, 457);
         public static readonly Point LOBBY_CHATBOX = new Point(105, 504);
@@ -118,10 +134,6 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_HEROES_ROSTER_DISABLE_ALL = new Point(635, 130);
         public static readonly Point SETTINGS_HEROES_ROSTER_ENABLE_ALL = new Point(597, 130);
 
-
-
-
-
         public static readonly Point ENDING_COMMEND_DEFEAT = new Point(53, 62);
     }
 
@@ -131,8 +143,6 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 461, 169, 26);
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);
-
-
     }
 
 }

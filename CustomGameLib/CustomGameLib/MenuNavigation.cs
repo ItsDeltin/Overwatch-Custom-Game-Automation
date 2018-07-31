@@ -52,12 +52,9 @@ namespace Deltin.CustomGameAutomation
                     CompareColor(853, 483, new int[] { 154, 157, 157 }, 15));
                 */
                 if (
-                    CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) || // Test for "START" button color
-
-                    CompareColor(450, 325, new int[] { 176, 141, 89 }, 20) || // Test for "ENTERING GAME" color
-
-                    CompareColor(400, 300, new int[] { 64, 64, 64 }, 15) // Test for black screen color
-
+                    CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) 
+                    || CompareColor(Points.LOADING_ENTERING_GAME, Colors.LOADING_ENTERING_GAME, Fades.LOADING_ENTERING_GAME) 
+                    || CompareColor(400, 300, Colors.LOADING_BLACK, 15) // Test for black screen color
                     //CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
                     )
                 {

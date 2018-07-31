@@ -132,7 +132,7 @@ namespace Deltin.CustomGameAutomation
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
                 // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
                 for (int i = 0; i < 6; i++)
-                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, 20))
+                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, fade))
                         inq = i + 1;
                 // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
                 // Check for the length of the scrollbar to get the number of players in the queue
@@ -142,8 +142,8 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < 4; i++)
                     {
                         int y = 304 - (i * (10 - i));
-                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, 20)
-                            || CompareColor(894, y, new int[] { 132, 126, 123 }, 20))
+                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, fade)
+                            || CompareColor(894, y, new int[] { 132, 126, 123 }, fade))
                         {
                             inq = inq + i + 1;
                             break;

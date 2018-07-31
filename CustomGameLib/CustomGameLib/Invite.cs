@@ -49,7 +49,7 @@ namespace Deltin.CustomGameAutomation
 
             updateScreen();
 
-            if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, 30))
+            if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM)) //fade was 30
             {
                 LeftClick(Points.INVITE_INVITE);
                 ResetMouse();

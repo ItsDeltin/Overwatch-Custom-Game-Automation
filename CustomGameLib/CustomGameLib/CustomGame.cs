@@ -146,13 +146,13 @@ namespace Deltin.CustomGameAutomation
                 return GameState.InLobby;
 
             // Check if waiting
-            if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, 50)) // Check if "START GAMEMODE" button exists.
+            if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
                 return GameState.Waiting;
 
-            if (CompareColor(Points.ENDING_COMMEND_DEFEAT, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
+            if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
                 return GameState.Ending_Commend;
 
-            if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+            if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                 return GameState.Ingame;
 
             return GameState.Unknown;

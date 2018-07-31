@@ -10,35 +10,6 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-#if false
-        public static IntPtr CreateOverwatchProcess()
-        {
-            Process[] processList = Process.GetProcessesByName("Overwatch");
-
-            Process battlenet = new Process();
-            battlenet.StartInfo.FileName = "battlenet://Pro";
-            battlenet.Start();
-
-            Process[] newProcessList;
-            while (processList.Length == (newProcessList = Process.GetProcessesByName("Overwatch")).Length)
-            {
-                Thread.Sleep(200);
-            }
-
-            for (int n = 0; n < newProcessList.Length; n++)
-            {
-                bool contains = false;
-                for (int o = 0; o < processList.Length; o++)
-                    if (newProcessList[n] == processList[o])
-                        contains = true;
-                if (!contains)
-                    return newProcessList[n].MainWindowHandle;
-            }
-
-            return IntPtr.Zero;
-        }
-#endif
-
         /// <summary>
         /// Creates a new Overwatch process.
         /// </summary>
@@ -83,7 +54,7 @@ namespace Deltin.CustomGameAutomation
                     break;
                 }
                 // If the log in button is yellow, there is not a connection.
-                else if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, 50))
+                else if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {
@@ -106,7 +77,7 @@ namespace Deltin.CustomGameAutomation
             // Log in
             Thread.Sleep(50);
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-            if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, 50))
+            if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, Fades.CONFIRM))
                 KeyPress(OWProcess.MainWindowHandle, Keys.Enter);
             else
             {
@@ -124,7 +95,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(469, 437, Colors.CONFIRM, 50) == false)//todo, get what point this is, and create a constant.
+                if (bmp.CompareColor(469, 437, Colors.CONFIRM, Fades.CONFIRM) == false)//todo, get what point this is, and create a constant.
                     break;
                 Thread.Sleep(500);
             }
@@ -133,8 +104,8 @@ namespace Deltin.CustomGameAutomation
 
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
             // Check if login failed
-            bool s0 = bmp.CompareColor(518, 482, Colors.CONFIRM, 50); //todo, get what point this is, and create a constant.
-            bool s1 = bmp.CompareColor(605, 475, Colors.CONFIRM, 50);//todo, get what point this is, and create a constant.
+            bool s0 = bmp.CompareColor(518, 482, Colors.CONFIRM, Fades.CONFIRM); //todo, get what point this is, and create a constant.
+            bool s1 = bmp.CompareColor(605, 475, Colors.CONFIRM, Fades.CONFIRM);//todo, get what point this is, and create a constant.
             if (s0 && !s1)
             {
                 if (processInfo.CloseOverwatchProcessOnFailure)
@@ -168,14 +139,14 @@ namespace Deltin.CustomGameAutomation
                 while (true)
                 {
                     Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                    if (bmp.CompareColor(469, 437, Colors.CONFIRM, 50) == false)//todo, get what point this is, and create a constant.
+                    if (bmp.CompareColor(469, 437, Colors.CONFIRM, Fades.CONFIRM) == false)//todo, get what point this is, and create a constant.
                         break;
                     Thread.Sleep(500);
                 }
                 Thread.Sleep(500);
 
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(518, 482, Colors.CONFIRM, 50))//todo, get what point this is, and create a constant.
+                if (bmp.CompareColor(518, 482, Colors.CONFIRM, Fades.CONFIRM))//todo, get what point this is, and create a constant.
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {

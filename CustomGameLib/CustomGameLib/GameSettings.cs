@@ -95,7 +95,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         cg.updateScreen();
 
-                        if (cg.CompareColor(presetLocation, new int[] { 126, 128, 134 }, 40))
+                        if (cg.CompareColor(presetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
                         {
                             break;
                         }
@@ -116,7 +116,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         cg.updateScreen();
 
-                        if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, 40))
+                        if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
                         {
                             break;
                         }
