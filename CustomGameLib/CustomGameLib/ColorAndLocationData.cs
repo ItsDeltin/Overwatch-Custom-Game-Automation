@@ -63,10 +63,16 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_CHATBOX = new Point(105, 504);
         public static readonly Point LOBBY_CHAT_TYPE_INDICATOR = new Point(50, 505);
         public static readonly Point LOBBY_GAME_NAME = new Point(209, 165);
+        public static readonly Point LOBBY_INVITE_IF_ADD_BUTTON_PRESENT = new Point(778, 180);
+        public static readonly Point LOBBY_INVITE_IF_ADD_BUTTON_NOT_PRESENT = new Point(835, 180);
         public static readonly Point LOBBY_JOIN_DROPDOWN = new Point(280, 198);
         public static readonly Point LOBBY_JOIN_EVERYONE = new Point(280, 220);
         public static readonly Point LOBBY_JOIN_FRIENDS = new Point(280, 240);
         public static readonly Point LOBBY_JOIN_INVITE = new Point(280, 260);
+        public static readonly Point LOBBY_MOVE_IF_ADD_BUTTON_PRESENT = new Point(661, 180);
+        public static readonly Point LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT = new Point(717, 180);
+        public static readonly Point LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT = new Point(617, 180);
+        public static readonly Point LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT = new Point(678, 180);
         public static readonly Point LOBBY_MY_PLAYER_ICON = new Point(744, 62);
         public static readonly Point LOBBY_START_GAMEMODE = new Point(599, 456);
         public static readonly Point LOBBY_BLUE_NAME = new Point(159, 229);
@@ -74,8 +80,31 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
 
+        public static readonly Point INVITE_INVITE = new Point(460, 434);
+        public static readonly Point INVITE_BACK = new Point(412, 434);
+        public static readonly Point INVITE_VIA_BATTLETAG = new Point(572, 171);
+        public static readonly Point INVITE_TEAM_DROPDOWN = new Point(475, 398);
+        public static readonly Point INVITE_TEAM_BLUE = new Point(475, 447);
+        public static readonly Point INVITE_TEAM_RED = new Point(475, 466);
+        public static readonly Point INVITE_TEAM_SPECTATOR = new Point(475, 483);
+
+        public static readonly Point SETTINGS_HEROES = new Point(351, 311);
         public static readonly Point SETTINGS_PRESETS = new Point(103, 183);
         public static readonly Point SETTINGS_LOBBY = new Point(297, 183);
+
+        public static readonly Point SETTINGS_HEROES_GENERAL = new Point(80, 146);
+        public static readonly Point SETTINGS_HEROES_ROSTER = new Point(287, 158);
+
+        public static readonly Point SETTINGS_HEROES_SETTINGS_TEAM_DROPDOWN = new Point(572, 126);
+        public static readonly Point SETTINGS_HEROES_SETTINGS_TEAM_BLUE = new Point(572, 173);
+        public static readonly Point SETTINGS_HEROES_SETTINGS_TEAM_RED = new Point(572, 192);
+
+
+        public static readonly Point SETTINGS_HEROES_ROSTER_TEAM_DROPDOWN = new Point(492, 127);
+        public static readonly Point SETTINGS_HEROES_ROSTER_TEAM_BLUE = new Point(484, 173);
+        public static readonly Point SETTINGS_HEROES_ROSTER_TEAM_RED = new Point(484, 193);
+        public static readonly Point SETTINGS_HEROES_ROSTER_DISABLE_ALL = new Point(635, 130);
+        public static readonly Point SETTINGS_HEROES_ROSTER_ENABLE_ALL = new Point(597, 130);
 
         public static readonly Point SETTINGS_LOBBY_BLUE_MAX_PLAYERS = new Point(500, 269);
         public static readonly Point SETTINGS_LOBBY_RED_MAX_PLAYERS = new Point(500, 290);
