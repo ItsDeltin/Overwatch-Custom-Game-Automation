@@ -152,7 +152,7 @@ namespace Deltin.CustomGameAutomation
                 if (checkForErrorsAt.Contains(i))
                 {
                     updateScreen();
-                    if (CompareColor(CALData.ErrorLocation.X, CALData.ErrorLocation.Y, CALData.ErrorColor, CALData.ErrorFade))
+                    if (CompareColor(Points.SETTINGS_ERROR, Colors.SETTINGS_ERROR, Fades.SETTINGS_ERROR))
                         LeftClick(436, 318); //todo figure what this is, and add to constants.
                 }
             }

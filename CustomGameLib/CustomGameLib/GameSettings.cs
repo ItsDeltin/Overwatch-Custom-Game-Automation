@@ -22,7 +22,7 @@ namespace Deltin.CustomGameAutomation
             updateScreen();
             for (int y = 110; y < 436; y++)
                 if (CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
-                    && CompareColor(649, y, CALData.WhiteColor, 20))
+                    && CompareColor(649, y, Colors.WHITE, 20))
                 {
                     int checkY = y + 2;
 

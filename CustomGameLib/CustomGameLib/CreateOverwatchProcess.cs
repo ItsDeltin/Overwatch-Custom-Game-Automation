@@ -190,7 +190,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(Points.MAIN_MENU_OVERWATCH_WATERMARK, CALData.WhiteColor, 10))
+                if (bmp.CompareColor(Points.MAIN_MENU_OVERWATCH_WATERMARK, Colors.WHITE, 10))
                     break;
                 Thread.Sleep(500);
             }

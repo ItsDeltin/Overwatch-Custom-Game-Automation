@@ -490,7 +490,7 @@ namespace Deltin.CustomGameAutomation
                     cg.updateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
-                    if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
+                    if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
                         && !HasHealthBar(i, true))
                         playersDead.Add(i);
                 return playersDead;
@@ -595,12 +595,12 @@ namespace Deltin.CustomGameAutomation
                 if (slot < 6)
                 {
                     //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
-                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, Colors.HERO_CHOSEN_BLUE, Fades.HEROES_CHOSEN);
                 }
                 else
                 {
                     //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
-                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, Colors.HERO_CHOSEN_RED, Fades.HEROES_CHOSEN);
                 }
             }
 

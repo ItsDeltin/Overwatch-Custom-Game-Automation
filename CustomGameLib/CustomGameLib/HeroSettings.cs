@@ -250,7 +250,7 @@ namespace Deltin.CustomGameAutomation
                     // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\TopOption.png" scale="0.55" />
                     updateScreen();
                     // Check if the second option is highlighted.
-                    if (CompareColor(422, 200, CALData.WhiteColor, 10))
+                    if (CompareColor(422, 200, Colors.WHITE, 10))
                     {
                         // If it is, press the up arrow.
                         KeyPress(Keys.Up);

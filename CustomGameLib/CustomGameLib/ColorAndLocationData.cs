@@ -12,39 +12,37 @@ namespace Deltin.CustomGameAutomation
     {
         private static class CALData
         {
-            public static int[] WhiteColor = new int[] { 191, 191, 191 };
-
-            public static int[] DeadPlayerColor = new int[] { 118, 74, 76 }; // Spectator UI red X
-            public static int DeadPlayerFade = 15;
-
-            //public static int[] HeroChosenLocations = new int[] { 91, 140, 189, 239, 288, 337, 644, 695, 744, 792, 843, 888 };
-            public static int HeroChosenY = 75;
-            public static int[] HeroChosenBlue = new int[] { 83, 110, 123 };
-            public static int[] HeroChosenRed = new int[] { 114, 77, 81 };
-            public static int HeroChosenFade = 10;
 
             public static int[] ModeratorIconColor = new int[] { 143, 155, 80 }; // Moderator icon aka green crown
             public static int[] SpectatorModeratorIconColor = new int[] { 149, 183, 89 }; // Moderator icon color for spectators.
             public static int[] ConfirmColor = new int[] { 176, 141, 89 }; // The yellow confirm color.
             public static int[] LobbyChangeColor = new int[] { 126, 158, 181 };
 
-            // * Start Game button
-            // <image url="$(ProjectDir)\ImageComments\ColorAndLocationData.cs\StartGame.png" scale="1" />
             public static int[] StartGameColor = new int[] { 150, 127, 96 }; // The yellow button in the lobby that starts the game
             public static int StartGameFade = 30;
             public static Point StartGameLocation = new Point(426, 457);
-            // *
-
             public static int[] LoadablePreset = new int[] { 126, 128, 134 };
 
-            // * Settings Error
-            // <image url="$(ProjectDir)\ImageComments\ColorAndLocationData.cs\Error.png" scale="1" />
-            // Works with every invalid setting occurence, for example no hero chosen, no map chosen, or no mode chosen.
-            public static Point ErrorLocation = new Point(522, 320);
-            public static int[] ErrorColor = new int[] { 151, 119, 81 };
-            public static int ErrorFade = 20;
-            // *
         }
+    }
+
+    internal class Colors
+    {
+        public static readonly int[] WHITE = new int[] { 191, 191, 191 };
+        public static readonly int[] DEAD_PLAYER = new int[] { 118, 74, 76 }; // Spectator UI red X
+
+        public static readonly int[] HERO_CHOSEN_BLUE = new int[] { 83, 110, 123 };
+        public static readonly int[] HERO_CHOSEN_RED = new int[] { 114, 77, 81 };
+
+        public static readonly int[] SETTINGS_ERROR = new int[] { 151, 119, 81 };
+    }
+
+    internal class Fades
+    {
+        public static readonly int SETTINGS_ERROR = 20;
+        public static readonly int DEAD_PLAYER = 15;
+
+        public static readonly int HEROES_CHOSEN = 15;
     }
 
     internal class Points
@@ -99,6 +97,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_MODES = new Point(494, 178);
         public static readonly Point SETTINGS_MAPS = new Point(103, 300);
         public static readonly Point SETTINGS_HEROES = new Point(351, 311);
+        public static readonly Point SETTINGS_ERROR = new Point(522, 320);
 
         public static readonly Point PRESETS_CONFIRM = new Point(480, 327);
 

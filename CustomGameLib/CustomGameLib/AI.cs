@@ -127,7 +127,7 @@ namespace Deltin.CustomGameAutomation
                 for (int x = 0; x < tmp.Width; x++)
                     for (int y = 0; y < tmp.Height; y++)
                     {
-                        if (tmp.CompareColor(x, y, CALData.WhiteColor, 25))
+                        if (tmp.CompareColor(x, y, Colors.WHITE, 25))
                             tmp.SetPixel(x, y, Color.Black);
                         else
                             tmp.SetPixel(x, y, Color.White);
@@ -179,7 +179,7 @@ namespace Deltin.CustomGameAutomation
 
                         Color cc = cg.GetPixelAt(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
                         // Check for white color of text
-                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], CALData.WhiteColor, 110)
+                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
                             && (slot > 5 || cc.B - cc.R < 20))
                         {
                             foundWhite = true;
@@ -206,7 +206,7 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), CALData.WhiteColor, 50) == tc)
+                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Colors.WHITE, 50) == tc)
                                             {
                                                 success++;
 
