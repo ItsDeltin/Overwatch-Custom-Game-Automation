@@ -89,7 +89,7 @@ namespace ZombieBot
             string region = "us"; // Default region for the Abyxa server.
             bool local = false; // Determines if the Abyxa website is on the local server.
             Event? owevent = null; // The current overwatch event
-            ScreenshotMethods screenshotMethod = ScreenshotMethods.BitBlt;
+            ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt;
 
             // Parse config file
             string[] config = null;
@@ -170,7 +170,7 @@ namespace ZombieBot
 
                             case "ScreenshotMethod":
                                 {
-                                    if (Enum.TryParse(lineSplit[1], out ScreenshotMethods set))
+                                    if (Enum.TryParse(lineSplit[1], out ScreenshotMethod set))
                                         screenshotMethod = set;
                                 }
                                 break;
