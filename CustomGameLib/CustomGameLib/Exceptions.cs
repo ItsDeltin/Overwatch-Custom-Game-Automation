@@ -11,14 +11,9 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public class InvalidSlotException : Exception
     {
-        /// <summary>
-        /// Throws invalid slot exception.
-        /// </summary>
-        /// <param name="message">Message to display.</param>
-        public InvalidSlotException(string message)
-            : base(message)
-        {
-        }
+        public InvalidSlotException(string message) : base(message) { }
+
+        public InvalidSlotException(int slot) : base(string.Format("Slot {0} is not a valid slot.", slot.ToString())) { }
     }
 
     /// <summary>

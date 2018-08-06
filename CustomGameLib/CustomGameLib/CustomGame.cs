@@ -19,9 +19,9 @@ namespace Deltin.CustomGameAutomation
         Bitmap bmp = null;
         static Rectangle shotarea = new Rectangle(0, 0, 960, 540);
 
-        bool debugmode = false;
-        Form debug;
-        Graphics g;
+        internal bool debugmode = true;
+        internal Form debug;
+        internal Graphics g;
 
         IntPtr OverwatchHandle = IntPtr.Zero;
 
@@ -31,6 +31,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="overwatchHandle">Overwatch process handle to use. Leave at default to use the first Overwatch process found.</param>
         /// <param name="screenshotMethod">Method to take screenshots with.</param>
         /// <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
+        /// <exception cref="MissingOverwatchProcessException">Thrown if no Overwatch processes were found.</exception>
         public CustomGame(IntPtr overwatchHandle = new IntPtr(), ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt, bool openChatIsDefault = true)
         {
             if (overwatchHandle == IntPtr.Zero)
@@ -64,14 +65,13 @@ namespace Deltin.CustomGameAutomation
                     Application.Run(debug);
                 }).Start();
 
-            Command = new Commands(this);
-            AI = new CG_AI(this);
-            Maps = new CG_Maps(this);
-            Chat = new CG_Chat(this);
-            Pause = new CG_Pause(this);
-            PlayerInfo = new CG_PlayerInfo(this);
-            Interact = new CG_Interact(this);
-            GameSettings = new CG_Settings(this);
+            Commands = new Commands(this);
+            AI = new AI(this);
+            Chat = new Chat(this);
+            Pause = new Pause(this);
+            PlayerInfo = new PlayerInfo(this);
+            Interact = new Interact(this);
+            Settings = new Settings(this);
 
             // Create bitmap of overwatch client screen capture.
             ScreenshotMethod = screenshotMethod; // Set the screenshot method
@@ -101,16 +101,21 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Disables input for the Overwatch window to prevent accidentally hovering over it.
+        /// Disables input for the Overwatch window.
         /// </summary>
+        /// <remarks>
+        /// Input must be re-enabled with <see cref="EnableOverwatchWindowInput"/>.
+        /// </remarks>
+        /// <seealso cref="EnableOverwatchWindowInput"/>
         public void DisableOverwatchWindowInput()
         {
             User32.EnableWindow(OverwatchHandle, false);
         }
 
         /// <summary>
-        /// Enables input for the Overwatch window after disabling it with DisableOverwatchWindowInput().
+        /// Enables input for the Overwatch window after disabling it with <see cref="DisableOverwatchWindowInput"/>.
         /// </summary>
+        /// <seealso cref="DisableOverwatchWindowInput"/>
         public void EnableOverwatchWindowInput()
         {
             User32.EnableWindow(OverwatchHandle, true);
@@ -167,15 +172,33 @@ namespace Deltin.CustomGameAutomation
         {
             Disposed = true;
             // Stop scanning commands
-            Command.StopScanning();
+            Commands.StopScanning();
             // Remove data of all executed commands.
-            Command.DisposeAllExecutedCommands();
+            Commands.DisposeAllExecutedCommands();
             if (bmp != null)
                 bmp.Dispose();
             DisposeGameOverCheck();
         }
 
     } // CustomGame class
+
+    /// <summary>
+    /// Base type for CustomGame interaction members.
+    /// </summary>
+    public class CustomGameBase
+    {
+        /// <summary>
+        /// Base type for CustomGame interaction members.
+        /// </summary>
+        protected CustomGameBase(CustomGame cg)
+        {
+            this.cg = cg;
+        }
+        /// <summary>
+        /// The <see cref="CustomGame"/> object to use.
+        /// </summary>
+        protected CustomGame cg;
+    }
 
     public enum BotTeam
     {

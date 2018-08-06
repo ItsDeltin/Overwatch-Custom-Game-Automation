@@ -137,7 +137,7 @@ namespace Deltin.CustomGameAutomation
                 LeftClick(774, 180, 250); // No "Add AI" Button
         }
 
-        private bool DoesAddButtonExist()
+        internal bool DoesAddButtonExist()
         {
             updateScreen();
 

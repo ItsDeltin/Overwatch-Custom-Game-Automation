@@ -202,39 +202,6 @@ namespace Deltin.CustomGameAutomation.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #This file includes a list of all possible map variants in Overwatch.
-        ///
-        ///-Assault
-        ///A_Hanamura
-        ///A_Hanamura_Winter:WinterWonderland
-        ///A_HorizonLunarColony
-        ///A_TempleOfAnubis
-        ///A_VolskayaIndustries
-        ///
-        ///-AssaultEscort
-        ///AE_Eichenwalde
-        ///AE_Eichenwalde_Halloween:HalloweenTerror
-        ///AE_Hollywood
-        ///AE_Hollywood_Halloween:HalloweenTerror
-        ///AE_KingsRow
-        ///AE_KingsRow_Winter:WinterWonderland
-        ///AE_Numbani
-        ///
-        ///-CaptureTheFlag
-        ///CTF_Ilios_Lighthouse
-        ///CTF_Ilios_Ruins
-        ///CTF_Ilios_Well
-        ///CTF_Lijiang_ControlCenter
-        ///CTF_Lijiang_Garden
-        ///CTF_Li [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string maplist {
-            get {
-                return ResourceManager.GetString("maplist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap mccree_markup {

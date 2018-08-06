@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>PlayersDead([bool]) - Custom Game Automation</title>
+    <link href="../Library.css" rel="stylesheet" type="text/css"/>
+    <link href="../vs.css" rel="stylesheet" type="text/css"/>
+    <script src="../Library.js"></script>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <script>
+               var page = "PlayerInfo/PlayersDead(bool)";
+               getSidebar(page);
+            </script>
+       </div>
+        <div class="content">
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="PlayerInfo/PlayerInfo.html"><span class="type">PlayerInfo</span></a>.<a href="PlayerInfo/PlayersDead(bool).html">PlayersDead</a>([<span class="blue">bool</span> noUpdate]) Method</strong></div><div class="section">Gets a list of players who died.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-noUpdate">noUpdate</div></td><td><span class="blue">bool</span></td><td></td></tr></table></div><div class="section"><strong>Returns</strong><br />Type: <span class="type">List</span><<span class="blue">int</span>><br />List of players who are dead.</div><div class="section"></div><div class="section"><strong>Examples</strong></div><div class="section">The code below will award a point to a team if they get a kill.
+<pre><code class="lang-csharp">using System;
+using System.Collections.Generic;
+using System.Threading;
+using Deltin.CustomGameAutomation;
+            
+public class PlayersDeadExample
+{
+    public static void AwardTeamOnKill(CustomGame cg)
+    {
+        bool[] awarded = new bool[12];
+        
+        int redpoints = 0;
+        int bluepoints = 0;
+        
+        while (true)
+        {
+            List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
+            for (int i = 0; i &lt; 12; i++)
+            {
+                if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)
+                {
+                    if (cg.IsSlotBlue(i))
+                    {
+                        redpoints++;
+                        Console.WriteLine("Red points: {0}", redpoints);
+                    }
+                    else if (cg.IsSlotRed(i))
+                    {
+                        bluepoints++;
+                        Console.WriteLine("Blue points: {0}", bluepoints);
+                    }
+                    awarded[i] = true;
+                }
+                else if (playersdead.Contains(i) == false &amp;&amp; awarded[i])
+                {
+                    awarded[i] = false;
+                }
+            }
+            Thread.Sleep(500);
+        }
+    }
+}
+</code></pre></div>
+        </div>
+    </div>
+</body>
+</html>

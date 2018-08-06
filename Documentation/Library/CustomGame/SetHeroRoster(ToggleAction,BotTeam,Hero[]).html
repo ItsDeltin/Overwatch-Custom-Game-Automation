@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>SetHeroRoster(ToggleAction, BotTeam, Hero[]) - Custom Game Automation</title>
+    <link href="../Library.css" rel="stylesheet" type="text/css"/>
+    <link href="../vs.css" rel="stylesheet" type="text/css"/>
+    <script src="../Library.js"></script>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <script>
+               var page = "CustomGame/SetHeroRoster(ToggleAction,BotTeam,Hero[])";
+               getSidebar(page);
+            </script>
+       </div>
+        <div class="content">
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/SetHeroRoster(ToggleAction,BotTeam,Hero[]).html">SetHeroRoster</a>(<a href="ToggleAction.html"><span class="type">ToggleAction</span></a> ta, <a href="BotTeam.html"><span class="type">BotTeam</span></a> team, <a href="Hero.html"><span class="type">Hero</span></a>[] heroes) Method</strong></div><div class="section">Toggles what heroes can be selected.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-ta">ta</div></td><td><a href="ToggleAction.html"><span class="type">ToggleAction</span></a></td><td>Determines if all heroes should be enabled, disabled or neither before toggling</td></tr><tr><td><div id="param-team">team</div></td><td><a href="BotTeam.html"><span class="type">BotTeam</span></a></td><td>Team to change roster for.</td></tr><tr><td><div id="param-heroes">heroes</div></td><td><a href="Hero.html"><span class="type">Hero</span></a>[]</td><td>Heroes to toggle.</td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><strong>Examples</strong></div><div class="section">The example below will enable random heroes for a team.
+<pre><code class="lang-csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using Deltin.CustomGameAutomation;
+            
+public class SetHeroRosterExample
+{
+    public static void ChooseRandomHeroes(CustomGame cg, BotTeam team, int randomHeroCount)
+    {
+        Random rnd = new Random();
+        int heroCount = Enum.GetNames(typeof(MyEnum)).Length - 1;
+        
+        List&lt;Hero&gt; chooseHeroes = new List&lt;Hero&gt;();
+        while (chooseHeroes.Count &lt; randomHeroCount)
+        {
+            int heroID = rnd.Next(heroCount);
+            if (chooseHeroes.Select(v =&gt; v as int).Contains(heroID))
+                continue;
+            chooseHeroes.Add(heroID as Hero);
+        }
+        
+        cg.SetHeroRoster(ToggleAction.DisableAll, team, chooseHeroes.ToArray());
+    }
+}
+</code></pre></div>
+        </div>
+    </div>
+</body>
+</html>

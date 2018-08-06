@@ -86,9 +86,9 @@ namespace ZombieBot
                 if (playerslots.Count - loading > prevPlayerCount)
                 {
                     int wait = minimumPlayers - playerslots.Count;
-                    if (wait > 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more players. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
-                    if (wait == 1) cg.Chat.Chat("Welcome to Zombies! Waiting for " + wait + " more player. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
-                    if (wait < 0) cg.Chat.Chat("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    if (wait > 1) cg.Chat.SendChatMessage("Welcome to Zombies! Waiting for " + wait + " more players. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    if (wait == 1) cg.Chat.SendChatMessage("Welcome to Zombies! Waiting for " + wait + " more player. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
+                    if (wait < 0) cg.Chat.SendChatMessage("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     Thread.Sleep(500);
                 }
                 prevPlayerCount = playerslots.Count - loading;
@@ -111,7 +111,7 @@ namespace ZombieBot
                     && (playercount < 7 && (queue.Length > 0 || cg.SpectatorCount > 1)) == false // 3
                     )
                 {
-                    cg.Chat.Chat("Enough players have joined, starting game in 15 seconds.");
+                    cg.Chat.SendChatMessage("Enough players have joined, starting game in 15 seconds.");
                     pregame.Start();
                     Thread.Sleep(500);
                 }
@@ -119,20 +119,20 @@ namespace ZombieBot
                 // if too many players leave, cancel the countdown.
                 if (pregame.IsRunning == true && playercount < minimumPlayers)
                 {
-                    cg.Chat.Chat("Players left, waiting for " + (minimumPlayers - playercount) + " more players, please wait.");
+                    cg.Chat.SendChatMessage("Players left, waiting for " + (minimumPlayers - playercount) + " more players, please wait.");
                     pregame.Reset();
                 }
 
                 if (Join == JoinType.ServerBrowser && MatchIsPublic == true && cg.TotalPlayerCount >= 7)
                 {
                     MatchIsPublic = false;
-                    cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                 }
 
                 else if (Join == JoinType.ServerBrowser && MatchIsPublic == false && cg.TotalPlayerCount < 7)
                 {
                     MatchIsPublic = true;
-                    cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
+                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
                 }
 
                 // if the amount of players equals 7 or the queue list is empty and there is enough players,
@@ -152,7 +152,7 @@ namespace ZombieBot
                     pregame.Reset();
                     prevPlayerCount = 0;
 
-                    if (Join == JoinType.ServerBrowser) cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+                    if (Join == JoinType.ServerBrowser) cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                     MatchIsPublic = false;
 
                     cg.SendServerToLobby();
@@ -198,14 +198,14 @@ namespace ZombieBot
                         votemap[i] = choose;
                     }
                     string type = "Vote for map! (15 seconds)                                      " + mapsSend[votemap[0]] + " - $VOTE 1                               " + mapsSend[votemap[1]] + " - $VOTE 2                               " + mapsSend[votemap[2]] + " - $VOTE 3";
-                    cg.Chat.Chat(type);
+                    cg.Chat.SendChatMessage(type);
                     // Listen for chat commands for 15 seconds.
-                    cg.Command.Listen = true;
+                    cg.Commands.Listen = true;
                     Thread.Sleep(15000);
-                    cg.Command.Listen = false;
+                    cg.Commands.Listen = false;
                     // Get results
                     int[] results = new int[3];
-                    var commands = cg.Command.ExecutedCommands;
+                    var commands = cg.Commands.ExecutedCommands;
                     for (int i = 0; i < commands.Count; i++)
                     {
                         string[] commandSplit = commands[i].Command.Split(' ');
@@ -218,11 +218,11 @@ namespace ZombieBot
                             }
                     }
                     int winningmap = votemap[results.ToList().IndexOf(results.Max())];
-                    cg.Command.DisposeAllExecutedCommands();
-                    cg.Chat.Chat(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", mapsSend[votemap[0]], results[0], mapsSend[votemap[1]], results[1], mapsSend[votemap[2]], results[2]));
-                    cg.Chat.Chat("Next map: " + mapsSend[winningmap]);
-                    Map mapid = CustomGame.CG_Maps.MapIDFromName(maps[winningmap]);
-                    cg.Maps.ToggleMap(ToggleAction.DisableAll, mapid);
+                    cg.Commands.DisposeAllExecutedCommands();
+                    cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", mapsSend[votemap[0]], results[0], mapsSend[votemap[1]], results[1], mapsSend[votemap[2]], results[2]));
+                    cg.Chat.SendChatMessage("Next map: " + mapsSend[winningmap]);
+                    Map mapid = Map.MapIDFromName(maps[winningmap]);
+                    cg.ToggleMap(ToggleAction.DisableAll, mapid);
                     // Update map on website if jointype is Abyxa.
                     if (Join == JoinType.Abyxa)
                         a.SetMap(mapsSend[winningmap].ToLower());
@@ -265,14 +265,14 @@ namespace ZombieBot
                         }
                     }
 
-                    cg.Chat.Chat("If you can't move, you are a zombie. You will be able to move when the preperation phase is over.");
+                    cg.Chat.SendChatMessage("If you can't move, you are a zombie. You will be able to move when the preperation phase is over.");
                     Thread.Sleep(5000);
-                    cg.Chat.Chat("Survivors win when time runs out. Survivors are converted to zombies when they die. Zombies win when all survivors are converted.");
+                    cg.Chat.SendChatMessage("Survivors win when time runs out. Survivors are converted to zombies when they die. Zombies win when all survivors are converted.");
                     Thread.Sleep(5000);
-                    cg.Chat.Chat("Zombies will be released when preperation phase is over.");
+                    cg.Chat.SendChatMessage("Zombies will be released when preperation phase is over.");
 
                     // Start game
-                    cg.Chat.Chat("Starting game...");
+                    cg.Chat.SendChatMessage("Starting game...");
 
                     cg.StartGame();
 
@@ -283,7 +283,7 @@ namespace ZombieBot
                         a.SetPlayerCount(cg.PlayerCount + cg.QueueCount - 6);
                     }
 
-                    cg.Chat.Chat("Zombies will be released in 30 seconds.");
+                    cg.Chat.SendChatMessage("Zombies will be released in 30 seconds.");
 
                     return true;
                 }

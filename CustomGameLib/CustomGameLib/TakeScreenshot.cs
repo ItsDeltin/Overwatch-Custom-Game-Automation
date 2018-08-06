@@ -29,7 +29,7 @@ namespace Deltin.CustomGameAutomation
         object ScreenshotLock = new object();
 
         // This grabs a screenshot of the Overwatch handle
-        void updateScreen()
+        internal void updateScreen()
         {
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");

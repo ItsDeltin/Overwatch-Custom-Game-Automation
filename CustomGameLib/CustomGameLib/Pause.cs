@@ -8,61 +8,62 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Controls Overwatch's pause feature.
         /// </summary>
-        public CG_Pause Pause;
+        public Pause Pause;
+    }
+    /// <summary>
+    /// Controls Overwatch's pause feature.
+    /// </summary>
+    /// <remarks>
+    /// The Pause class is accessed in a CustomGame object on the <see cref="CustomGame.Pause"/> field.
+    /// </remarks>
+    public class Pause : CustomGameBase
+    {
+        internal Pause(CustomGame cg) : base(cg) { }
+
         /// <summary>
-        /// Controls Overwatch's pause feature.
+        /// Toggle pause.
         /// </summary>
-        public class CG_Pause
+        public void TogglePause()
         {
-            private CustomGame cg;
-            internal CG_Pause(CustomGame cg)
-            { this.cg = cg; }
+            if (cg.OpenChatIsDefault)
+            {
+                cg.Chat.CloseChat();
+                Thread.Sleep(250);
+            }
 
-            /// <summary>
-            /// Toggle pause.
-            /// </summary>
-            public void TogglePause()
-            {
-                if (cg.OpenChatIsDefault)
-                {
-                    cg.Chat.CloseChat();
-                    Thread.Sleep(250);
-                }
+            cg.KeyDown(Keys.Control);
+            cg.KeyDown(Keys.Shift);
+            cg.AlternateInput(0xBB);
+            cg.KeyUp(Keys.Shift);
+            cg.KeyUp(Keys.Control);
 
-                cg.KeyDown(Keys.Control);
-                cg.KeyDown(Keys.Shift);
-                cg.AlternateInput(0xBB);
-                cg.KeyUp(Keys.Shift);
-                cg.KeyUp(Keys.Control);
-
-                if (cg.OpenChatIsDefault)
-                    cg.Chat.OpenChat();
-            }
-            /// <summary>
-            /// Pauses the game.
-            /// </summary>
-            public void Pause()
-            {
-                if (!IsPaused())
-                    TogglePause();
-            }
-            /// <summary>
-            /// Unpauses the game.
-            /// </summary>
-            public void Unpause()
-            {
-                if (IsPaused())
-                    TogglePause();
-            }
-            /// <summary>
-            /// Determines if the game is paused.
-            /// </summary>
-            public bool IsPaused()
-            {
-                cg.updateScreen();
-                // Check if the pause text is there.
-                return cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10);
-            }
+            if (cg.OpenChatIsDefault)
+                cg.Chat.OpenChat();
+        }
+        /// <summary>
+        /// Pauses the game.
+        /// </summary>
+        public void PauseGame()
+        {
+            if (!IsPaused())
+                TogglePause();
+        }
+        /// <summary>
+        /// Unpauses the game.
+        /// </summary>
+        public void UnpauseGame()
+        {
+            if (IsPaused())
+                TogglePause();
+        }
+        /// <summary>
+        /// Determines if the game is paused.
+        /// </summary>
+        public bool IsPaused()
+        {
+            cg.updateScreen();
+            // Check if the pause text is there.
+            return cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10);
         }
     }
 }

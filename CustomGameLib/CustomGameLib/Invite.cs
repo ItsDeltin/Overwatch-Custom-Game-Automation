@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -9,9 +10,13 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="playerName">Battletag of the player to invite. Is case sensitive. Ex: Tracer#1818</param>
         /// <param name="team">Team that the invited player joins.</param>
-        /// <returns></returns>
+        /// <returns>Returns true if <paramref name="playerName"/> is a valid battletag.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         public bool InvitePlayer(string playerName, InviteTeam team = InviteTeam.Both)
         {
+            if (playerName == null)
+                throw new ArgumentNullException("playerTeam");
+
             updateScreen();
             // check if the add AI button is there.
             // because the invite button gets moved if it is/isnt there.

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Commands - Custom Game Automation</title>
+    <link href="../Library.css" rel="stylesheet" type="text/css"/>
+    <link href="../vs.css" rel="stylesheet" type="text/css"/>
+    <script src="../Library.js"></script>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <script>
+               var page = "Commands";
+               getSidebar(page);
+            </script>
+       </div>
+        <div class="content">
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="Commands/Commands.html"><span class="type">Commands</span></a> Class</strong></div><div class="section">Chat commands for Overwatch.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="Commands/DisposeAllExecutedCommands().html">DisposeAllExecutedCommands</a>()</td><td></td><td>
+            Removes all executed commands.
+            </td></tr><tr><td><a href="Commands/DisposeAllPlayerIdentities().html">DisposeAllPlayerIdentities</a>()</td><td></td><td>
+            Disposes all player identities.
+            </td></tr><tr><td><a href="Commands/DisposeExecutedCommand(int).html">DisposeExecutedCommand</a>(<span class="blue">int</span> index)</td><td></td><td>
+            Removes an executed command from the executed commands list.
+            </td></tr><tr><td><a href="Commands/DisposePlayerIdentity(PlayerIdentity).html">DisposePlayerIdentity</a>(<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a> identity)</td><td></td><td>
+            Disposes of a player identity.
+            </td></tr><tr><td><a href="Commands/DisposePlayerIdentity(int).html">DisposePlayerIdentity</a>(<span class="blue">int</span> index)</td><td></td><td>
+            Disposes of a player identity.
+            </td></tr><tr><td><a href="Commands/GetIdentityExecutedCommands(PlayerIdentity).html">GetIdentityExecutedCommands</a>(<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a> identity)</td><td><a href="CommandData/CommandData.html"><span class="type">CommandData</span></a>[]</td><td>
+            Gets the commands a player identity has executed.
+            </td></tr><tr><td><a href="Commands/GetSlotIdentity(int).html">GetSlotIdentity</a>(<span class="blue">int</span> slot)</td><td><a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></td><td>
+            Gets the player identity of a slot.
+            </td></tr></table></div><div class="section"><table><tr><th>Property</th><th>Type</th><th>Description</th></tr><tr><td><a href="Commands/ExecutedCommands.html">ExecutedCommands</a></td><td><span class="type">ReadOnlyCollection</span>&lt;<a href="CommandData/CommandData.html"><span class="type">CommandData</span></a>&gt;</td><td>
+            List of executed commands.
+            </td></tr><tr><td><a href="Commands/RegisteredPlayerIdentities.html">RegisteredPlayerIdentities</a></td><td><span class="type">ReadOnlyCollection</span>&lt;<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a>&gt;</td><td>
+            List containing all player identities.
+            </td></tr><tr><td><a href="Commands/RegisterPlayerProfiles.html">RegisterPlayerProfiles</a></td><td><span class="blue">bool</span></td><td>
+            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
+            </td></tr></table></div><div class="section"><table><tr><th>Field</th><th>Type</th><th>Description</th></tr><tr><td><a href="Commands/AllowMultipleCommandExecutions.html">AllowMultipleCommandExecutions</a></td><td><span class="blue">bool</span></td><td>
+            Allows one executor to execute more than one command.
+            </td></tr><tr><td><a href="Commands/Listen.html">Listen</a></td><td><span class="blue">bool</span></td><td>
+            Set to true to start listening to commands. Set to false to stop.
+            </td></tr><tr><td><a href="Commands/ListenTo.html">ListenTo</a></td><td><span class="type">List</span>&lt;<a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a>&gt;</td><td>
+            Commands to listen to.
+            </td></tr><tr><td><a href="Commands/ListenToAllCommands.html">ListenToAllCommands</a></td><td><span class="blue">bool</span></td><td>
+            Listens to all commands rather than just the commands in the ListenTo dictionary.
+            </td></tr><tr><td><a href="Commands/SameExecutorCommandUpdate.html">SameExecutorCommandUpdate</a></td><td><span class="blue">bool</span></td><td>
+            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
+            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><strong>Remarks</strong></div><div class="section">The Commands class is accessed in a CustomGame object on the <a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/Commands.html">Commands</a> field.</div><div class="section"><strong>Examples</strong></div><div class="section">The code below will allow the players in the server to vote for a map.
+
+<pre><code class="lang-csharp">using System;
+using System.Linq;
+using System.Threading;
+using Deltin.CustomGameAutomation;
+
+public class MapVoting
+{
+    private static Map[] Maps = new Map[]
+    {
+        Map.TDM_Antarctica,
+        Map.TDM_Dorado,
+        Map.TDM_Lijiang_Garden,
+        Map.TDM_Petra,
+        Map.TDM_Nepal_Shrine,
+        Map.TDM_Hanamura
+    };
+    private static string[] MapNames = new string[]
+    {
+        "Antarctica",
+        "Dorado",
+        "Lijiang Garden",
+        "Petra",
+        "Nepal Shrine",
+        "Hanamura"
+    };
+
+    public static void VoteForMap(CustomGame cg)
+    {
+        Random rnd = new Random();
+        int[] votemap = new int[3]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
+        for (int i = 0; i &lt; votemap.Length; i++)
+        {
+            int choose;
+            while (true)
+            {
+                // Make sure there are no duplicates when choosing the next map to be added to the votemap array
+                choose = rnd.Next(Maps.Length);
+                if (votemap.Contains(choose))
+                    continue;
+                break;
+            }
+            votemap[i] = choose;
+        }
+        string type = "Vote for map! (15 seconds)                                      " + MapNames[votemap[0]] + " - $VOTE 1                               " + MapNames[votemap[1]] + " - $VOTE 2                               " + MapNames[votemap[2]] + " - $VOTE 3";
+        cg.Chat.SendChatMessage(type);
+
+        // Start listening to the "$VOTE" command.
+        cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+        // Listen for chat commands for 15 seconds.
+        cg.Commands.Listen = true;
+        Thread.Sleep(15000);
+        cg.Commands.Listen = false;
+        // Get results
+        int[] results = new int[3];
+        var commands = cg.Commands.ExecutedCommands;
+        for (int i = 0; i &lt; commands.Count; i++)
+        {
+            string[] commandSplit = commands[i].Command.Split(' ');
+            if (commandSplit.Length &gt;= 2 &amp;&amp; commandSplit[0] == "$VOTE")
+            {
+                int votefor = Int32.Parse(commands[i].Command.Split(' ')[1]) - 1;
+                if (votefor &gt;= 0 &amp;&amp; votefor &lt; results.Length)
+                    results[votefor]++;
+            }
+        }
+        int winningmap = votemap[results.ToList().IndexOf(results.Max())];
+        cg.Commands.DisposeAllExecutedCommands();
+        // Print the results to the chat
+        cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", MapNames[votemap[0]], results[0], MapNames[votemap[1]], results[1], MapNames[votemap[2]], results[2]));
+        cg.Chat.SendChatMessage("Next map: " + MapNames[winningmap]);
+        cg.ToggleMap(ToggleAction.DisableAll, Maps[winningmap]);
+    }
+}
+</code></pre></div><div class="section"><strong>See Also</strong></div><div class="section"><span class="vsfield"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/Commands.html">Commands</a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CommandData/CommandData.html"><span class="type">CommandData</span></a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></span></div>
+        </div>
+    </div>
+</body>
+</html>

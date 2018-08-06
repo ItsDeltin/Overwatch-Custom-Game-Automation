@@ -89,7 +89,7 @@ namespace ZombieBot
             string region = "us"; // Default region for the Abyxa server.
             bool local = false; // Determines if the Abyxa website is on the local server.
             Event? owevent = null; // The current overwatch event
-            ScreenshotMethods screenshotMethod = ScreenshotMethods.BitBlt;
+            ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt;
 
             // Parse config file
             string[] config = null;
@@ -170,7 +170,7 @@ namespace ZombieBot
 
                             case "ScreenshotMethod":
                                 {
-                                    if (Enum.TryParse(lineSplit[1], out ScreenshotMethods set))
+                                    if (Enum.TryParse(lineSplit[1], out ScreenshotMethod set))
                                         screenshotMethod = set;
                                 }
                                 break;
@@ -264,16 +264,15 @@ namespace ZombieBot
             else
                 cg.CurrentOverwatchEvent = (Event)owevent;
 
-            cg.Command.ListenTo.Add(new ListenTo("$VOTE", true, false));
-            cg.Command.SameExecutorCommandUpdate = true;
-            cg.Chat.BlockGeneralChat = true;
+            cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+            cg.Commands.SameExecutorCommandUpdate = true;
 
             a = null;
             if (Join == JoinType.Abyxa)
             {
                 a = new Abyxa(name, region, local);
                 a.SetMinimumPlayerCount(minimumPlayers);
-                cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+                cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
             }
 
             Setup(true);

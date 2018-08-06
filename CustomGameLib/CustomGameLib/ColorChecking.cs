@@ -12,7 +12,7 @@ namespace Deltin.CustomGameAutomation
     partial class CustomGame
     {
         object BmpLock = new object();
-        bool CompareColor(int x, int y, int[] color, int fade)
+        internal bool CompareColor(int x, int y, int[] color, int fade)
         {
             lock (BmpLock)
             {
@@ -20,7 +20,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        bool CompareColor(int x, int y, int x2, int y2, int fade)
+        internal bool CompareColor(int x, int y, int x2, int y2, int fade)
         {
             lock (BmpLock)
             {
@@ -28,7 +28,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        bool CompareColor(int x, int y, int[] min, int[] max)
+        internal bool CompareColor(int x, int y, int[] min, int[] max)
         {
             lock (BmpLock)
             {
@@ -36,7 +36,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        Color GetPixelAt(int x, int y)
+        internal Color GetPixelAt(int x, int y)
         {
             lock (BmpLock)
             {
@@ -44,7 +44,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        Bitmap BmpClone(int x, int y, int width, int height)
+        internal Bitmap BmpClone(int x, int y, int width, int height)
         {
             lock (BmpLock)
             {
@@ -52,7 +52,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        Bitmap BmpClone()
+        internal Bitmap BmpClone()
         {
             lock (BmpLock)
             {
@@ -60,7 +60,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        bool WaitForColor(int x, int y, int[] color, int fade, int maxtime)
+        internal bool WaitForColor(int x, int y, int[] color, int fade, int maxtime)
         {
             Stopwatch wait = new Stopwatch();
             wait.Start();
@@ -74,7 +74,7 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
-        bool WaitForUpdate(int x, int y, int fade, int maxtime)
+        internal bool WaitForUpdate(int x, int y, int fade, int maxtime)
         {
             Stopwatch wait = new Stopwatch();
             wait.Start();

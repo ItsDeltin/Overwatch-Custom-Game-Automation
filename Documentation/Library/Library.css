@@ -1,6 +1,9 @@
 ﻿body {
     background-color: #313245;
     font-family: Helvetica;
+}
+
+.container {
     white-space: nowrap;
 }
 
@@ -8,34 +11,45 @@
     background-color: #444675;
     border: 2px solid #C2C2C2;
     color: white;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 0.5%;
     display: inline-block;
-    width: 300px;
+    width: 20%;
+    margin-bottom: 0.5%;
+    white-space: nowrap;
 }
     .sidebar a {
         color: white;
-        display: block;
+        display: inline-block;
         margin-bottom: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
-    .sidebar a strong {
-        color: #E9FFB4;
+        .sidebar a:hover {
+            color: #E9FFB4;
+        }
+    .selected {
+        color: #E9FFB4 !important;
+        font-weight: bold;
     }
-
+.element {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.childrenToggle {
+    display: inline-block;
+    text-align: center;
+    line-height: 0px;
+    font-weight: bolder;
+    cursor: pointer;
+    width: 10px;
+    margin-right: 5px;
+}
 .sidebarSection {
     border-left: 2px solid #6f7191;
-    padding: 5px;
+    padding-left: 5px;
     margin-left: 5px;
+    margin-bottom: 5px;
 }
 .sidebarSection:hover {
     border-left-color: #c6c6c6;
-}
-
-.vsclass {
-    margin-top: 10px;
 }
 .vsclass::before {
     content: url('Assets/vs/Class.png');
@@ -52,18 +66,46 @@
 .vsproperty::before {
     content: url('Assets/vs/Property.png');
 }
+.vsenum::before {
+    content: url('Assets/vs/Enumerator.png');
+}
+.vsfield::before {
+    content: url('Assets/vs/Field.png');
+}
+.vsconstant::before {
+    content: url('Assets/vs/Constant.png');
+}
 
 .content {
     background-color: white;
     padding: 10px;
     border: 2px solid #C2C2C2;
-    display: inline-block;
-    vertical-align: top;
-    width: 1500px;
-    white-space: normal;
-    overflow: auto;
     margin-left: 5px;
+    display: inline-block;
+    width: 75%;
+    overflow-wrap: normal;
+    text-wrap: normal;
+    white-space: normal;
+    vertical-align: top;
 }
+.content img {
+    width: 100%;
+}
+.content pre {
+    padding: 5px;
+    border: 1px solid gray;
+    overflow-x: auto;
+}
+
+.section {
+    margin-top: 15px;
+}
+    .section:first-child {
+        margin-top: 0 !important;
+    }
+    .section:empty {
+        margin-top: 0 !important;
+    }
 
 /*
     &#9654; for arrow
@@ -88,13 +130,6 @@
         margin-left: 40px;
     }
 
-pre {
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid gray;
-    overflow-x: auto;
-}
-
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -103,7 +138,6 @@ td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
-    min-width: 300px;
 }
 tr:nth-child(even) {
     background: #F2F2F2;
@@ -113,11 +147,6 @@ tr:nth-child(even) {
     width: 20px;
     float: right;
     margin-left: 5px;
-}
-
-.content hr {
-    margin-top: 30px;
-    margin-bottom: 30px;
 }
 
 /* Parameter info */

@@ -9,9 +9,9 @@ namespace ZombieBot
         {
             if (initial)
             {
-                cg.GameSettings.SetGameName("Zombies - Infection");
-                cg.GameSettings.SetTeamName(PlayerTeam.Blue, "Survivors");
-                cg.GameSettings.SetTeamName(PlayerTeam.Red, "Zombies");
+                cg.Settings.SetGameName("Zombies - Infection");
+                cg.Settings.SetTeamName(PlayerTeam.Blue, "Survivors");
+                cg.Settings.SetTeamName(PlayerTeam.Red, "Zombies");
 
                 int moderatorSlot = cg.PlayerInfo.ModeratorSlot();
 
@@ -23,7 +23,7 @@ namespace ZombieBot
 
             int map = rnd.Next(maps.Length);
             Console.WriteLine("Map chosen: " + maps[map]);
-            cg.Maps.ToggleMap(ToggleAction.DisableAll, CustomGame.CG_Maps.MapIDFromName(maps[map]));
+            cg.ToggleMap(ToggleAction.DisableAll, Map.MapIDFromName(maps[map]));
 
             // Update map on website if jointype is abyxa.
             if (Join == JoinType.Abyxa)
@@ -34,12 +34,12 @@ namespace ZombieBot
             {
                 if (cg.TotalPlayerCount < 7)
                 {
-                    cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
+                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
                     MatchIsPublic = true;
                 }
                 else
                 {
-                    cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                     MatchIsPublic = false;
                 }
             }

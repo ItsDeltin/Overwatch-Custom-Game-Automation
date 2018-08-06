@@ -1,118 +1,94 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Custom Game Bot Library</title>
-    <link href="library.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8"/>
+    <title>Deltin.CustomGameAutomation - Custom Game Automation</title>
+    <link href="Library.css" rel="stylesheet" type="text/css"/>
+    <link href="vs.css" rel="stylesheet" type="text/css"/>
     <script src="Library.js"></script>
+    <script src="highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
-    <div class="sidebar">
-        <script>
-            var page = "Deltin.CustomGameAutomation";
-
-            getSidebar(page);
-        </script>
-    </div>
-    <div class="content">
-        <p><strong>Deltin.CustomGameAutomation namespace</strong></p>
-
-        <table style="margin-left: 10px;">
-            <tr>
-                <th>Class</th>
-            </tr>
-            <tr>
-                <td><a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a></td>
-            </tr>
-            <tr>
-                <td><a href="CustomGame/OnGameOver.html"><span class="type">GameOverArgs</span></a></td>
-            </tr>
-            <tr>
-                <td><a href="Map.html"><span class="type">Map</span></a></td>
-            </tr>
-            <tr>
-                <td><span class="type">ModesEnabled</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">OverwatchProcessInfo</span></td>
-            </tr>
-            <tr>
-                <td><a href="CustomGame/SetHeroSettings.html"><span class="type">SetHero</span></a></td>
-            </tr>
-        </table>
-
-        <table style="margin-left: 10px; margin-top: 20px;">
-            <tr>
-                <th>Enum</th>
-            </tr>
-            <tr>
-                <td><span class="type">AIHero</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">BotTeam</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Channel</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Difficulty</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Event</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Gamemode</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Gamestate</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Hero</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">InviteTeam</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Join</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">LobbyTeam</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">PlayerTeam</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">QueueTeam</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">ScreenshotMethods</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">Team</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">ToggleAction</span></td>
-            </tr>
-        </table>
-
-        <table style="margin-left: 10px; margin-top: 20px;">
-            <tr>
-                <th>Exception</th>
-            </tr>
-            <tr>
-                <td><span class="type">InvalidSetheroException</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">InvalidSlotException</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">LoginFailedException</span></td>
-            </tr>
-            <tr>
-                <td><span class="type">MissingOverwatchProcessException</span></td>
-            </tr>
-        </table>
+    <div class="container">
+        <div class="sidebar">
+            <script>
+               var page = "Deltin.CustomGameAutomation";
+               getSidebar(page);
+            </script>
+       </div>
+        <div class="content">
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a> Namespace</strong></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Class</th><th>Description</th></tr><tr><td><a href="AI/AI.html"><span class="type">AI</span></a></td><td>
+            AI settings for Overwatch.
+            </td></tr><tr><td><a href="Chat/Chat.html"><span class="type">Chat</span></a></td><td>
+            Chat for Overwatch.
+            </td></tr><tr><td><a href="CommandData/CommandData.html"><span class="type">CommandData</span></a></td><td>
+            Data of Overwatch executed chat commands.
+            </td></tr><tr><td><a href="Commands/Commands.html"><span class="type">Commands</span></a></td><td>
+            Chat commands for Overwatch.
+            </td></tr><tr><td><a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a></td><td>
+            Automates Overwatch's custom games.
+            </td></tr><tr><td><a href="CustomGameBase/CustomGameBase.html"><span class="type">CustomGameBase</span></a></td><td>
+            Base type for CustomGame interaction members.
+            </td></tr><tr><td><a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a></td><td>
+            Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
+            </td></tr><tr><td><a href="Interact/Interact.html"><span class="type">Interact</span></a></td><td>
+            Changes a player's state in Overwatch.
+            </td></tr><tr><td><a href="InvalidSetheroException/InvalidSetheroException.html"><span class="type">InvalidSetheroException</span></a></td><td>
+            Exception for invalid SetHero values.
+            </td></tr><tr><td><a href="InvalidSlotException/InvalidSlotException.html"><span class="type">InvalidSlotException</span></a></td><td>
+            Thrown when slot is invalid or out of range.
+            </td></tr><tr><td><a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a></td><td>
+            Data for commands to listen to on the Commands class.
+            </td></tr><tr><td><a href="LoginFailedException/LoginFailedException.html"><span class="type">LoginFailedException</span></a></td><td>
+            Thrown when logging into Overwatch using CreateOverwatchProcess fails.
+            </td></tr><tr><td><a href="Map/Map.html"><span class="type">Map</span></a></td><td>
+            Maps in Overwatch.
+            </td></tr><tr><td><a href="MissingOverwatchProcessException/MissingOverwatchProcessException.html"><span class="type">MissingOverwatchProcessException</span></a></td><td>
+            Thrown if an Overwatch process is not found.
+            </td></tr><tr><td><a href="ModesEnabled/ModesEnabled.html"><span class="type">ModesEnabled</span></a></td><td>
+            Overwatch gamemodes that are enabled.
+            </td></tr><tr><td><a href="ObjectiveInfo/ObjectiveInfo.html"><span class="type">ObjectiveInfo</span></a></td><td></td></tr><tr><td><a href="OverwatchProcessInfo/OverwatchProcessInfo.html"><span class="type">OverwatchProcessInfo</span></a></td><td>
+            Data for creating an Overwatch process.
+            </td></tr><tr><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
+            Controls Overwatch's pause feature.
+            </td></tr><tr><td><a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></td><td>
+            Contains data for identifying players who executed a command.
+            </td></tr><tr><td><a href="PlayerInfo/PlayerInfo.html"><span class="type">PlayerInfo</span></a></td><td>
+            Info about players in an Overwatch custom game.
+            </td></tr><tr><td><a href="SetHero/SetHero.html"><span class="type">SetHero</span></a></td><td>
+            Data to change hero settings.
+            </td></tr><tr><td><a href="Settings/Settings.html"><span class="type">Settings</span></a></td><td>
+            Custom Game settings in Overwatch.
+            </td></tr></table></div><div class="section"><table><tr><th>Enum</th><th>Description</th></tr><tr><td><a href="AIHero.html"><span class="type">AIHero</span></a></td><td>
+            AI heroes.
+            </td></tr><tr><td><a href="BotTeam.html"><span class="type">BotTeam</span></a></td><td></td></tr><tr><td><a href="Channel.html"><span class="type">Channel</span></a></td><td>
+            Chat channels for Overwatch.
+            </td></tr><tr><td><a href="Difficulty.html"><span class="type">Difficulty</span></a></td><td>
+            AI difficulties.
+            </td></tr><tr><td><a href="Event.html"><span class="type">Event</span></a></td><td>
+            Overwatch's limited time events.
+            </td></tr><tr><td><a href="Gamemode.html"><span class="type">Gamemode</span></a></td><td>
+            Overwatch's gamemodes.
+            </td></tr><tr><td><a href="GameState.html"><span class="type">GameState</span></a></td><td>
+            Gets the current state of the game.
+            </td></tr><tr><td><a href="Hero.html"><span class="type">Hero</span></a></td><td>
+            All heroes in Overwatch.
+            </td></tr><tr><td><a href="HeroResultInfo.html"><span class="type">HeroResultInfo</span></a></td><td>
+            Result info of CG_PlayerInfo.GetHero()
+            </td></tr><tr><td><a href="InviteTeam.html"><span class="type">InviteTeam</span></a></td><td></td></tr><tr><td><a href="Join.html"><span class="type">Join</span></a></td><td>
+            Options for who can join the game.
+            </td></tr><tr><td><a href="LobbyTeam.html"><span class="type">LobbyTeam</span></a></td><td></td></tr><tr><td><a href="PlayerTeam.html"><span class="type">PlayerTeam</span></a></td><td></td></tr><tr><td><a href="QueueTeam.html"><span class="type">QueueTeam</span></a></td><td>
+            Teams on the queue.
+            </td></tr><tr><td><a href="ScreenshotMethod.html"><span class="type">ScreenshotMethod</span></a></td><td>
+            The screenshot method used to capture the Overwatch window screen.
+            BitBlt is faster and works even if another window is over the Overwatch window.
+            If BitBlt does not work for you, use ScreenCopy.
+            </td></tr><tr><td><a href="Team.html"><span class="type">Team</span></a></td><td></td></tr><tr><td><a href="ToggleAction.html"><span class="type">ToggleAction</span></a></td><td>
+            Enables/disables settings before toggling them.
+            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div>
+        </div>
     </div>
 </body>
 </html>

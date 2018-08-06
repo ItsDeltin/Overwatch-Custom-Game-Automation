@@ -312,9 +312,9 @@ namespace Deltin.CustomGameAutomation
                 if (playersConnected.Contains(i) // If the player slot index is filled,
                     && pd.Contains(i) == false // The player is not dead,
                     && PlayerInfo.IsUltimateReady(i, true) == false // And the player's ultimate is not ready...
-                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo1.png" scale="1.3" />
-                    // And if the color isnt there...
-                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo2.png" scale="1.3" />
+                                                                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo1.png" scale="1.3" />
+                                                                    // And if the color isnt there...
+                                                                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo2.png" scale="1.3" />
                     && !(CompareColor(InvitedMarkerLocations[i], 81, color, 20) || (CompareColor(InvitedMarkerLocations[i], 83, deadcolor, 20) && !CompareColor(InvitedMarkerLocations[i], 81, deadcolor, 20))))
                     // If everything above is false, the player is invited but not ingame.
                     invited.Add(i);
@@ -365,7 +365,7 @@ namespace Deltin.CustomGameAutomation
                 List<int> slots = new List<int>();
                 slots.AddRange(PlayerSlots);
                 slots.AddRange(SpectatorSlots);
-                
+
                 int queuecount = QueueCount;
                 for (int i = 0; i < queuecount; i++)
                     slots.Add(Queueid + i);
@@ -466,439 +466,499 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Info about players in an Overwatch custom game.
         /// </summary>
-        public CG_PlayerInfo PlayerInfo;
+        public PlayerInfo PlayerInfo;
+    }
+
+    /// <summary>
+    /// Info about players in an Overwatch custom game.
+    /// </summary>
+    /// <remarks>
+    /// The PlayerInfo class is accessed in a CustomGame object on the <see cref="CustomGame.PlayerInfo"/> field.
+    /// </remarks>
+    public class PlayerInfo : CustomGameBase
+    {
+        internal PlayerInfo(CustomGame cg) : base(cg) { }
+
         /// <summary>
-        /// Info about players in an Overwatch custom game.
+        /// Gets a list of players who died.
         /// </summary>
-        public class CG_PlayerInfo
+        /// <param name="noUpdate"></param>
+        /// <returns>List of players who are dead.</returns>
+        /// <example>
+        /// The code below will award a point to a team if they get a kill.
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using System.Threading;
+        /// using Deltin.CustomGameAutomation;
+        /// 
+        /// public class PlayersDeadExample
+        /// {
+        ///     public static void AwardTeamOnKill(CustomGame cg)
+        ///     {
+        ///         bool[] awarded = new bool[12];
+        ///         
+        ///         int redpoints = 0;
+        ///         int bluepoints = 0;
+        ///         
+        ///         while (true)
+        ///         {
+        ///             List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
+        ///             for (int i = 0; i &lt; 12; i++)
+        ///             {
+        ///                 if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)
+        ///                 {
+        ///                     if (cg.IsSlotBlue(i))
+        ///                     {
+        ///                         redpoints++;
+        ///                         Console.WriteLine("Red points: {0}", redpoints);
+        ///                     }
+        ///                     else if (cg.IsSlotRed(i))
+        ///                     {
+        ///                         bluepoints++;
+        ///                         Console.WriteLine("Blue points: {0}", bluepoints);
+        ///                     }
+        ///                     awarded[i] = true;
+        ///                 }
+        ///                 else if (playersdead.Contains(i) == false &amp;&amp; awarded[i])
+        ///                 {
+        ///                     awarded[i] = false;
+        ///                 }
+        ///             }
+        ///             Thread.Sleep(500);
+        ///         }
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public List<int> PlayersDead(bool noUpdate = false)
         {
-            private CustomGame cg;
-            internal CG_PlayerInfo(CustomGame cg)
-            { this.cg = cg; }
+            // Returns which players that are dead by checking the killed marker locations for a red 'X'.
+            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
 
-            /// <summary>
-            /// Gets a list of players who died.
-            /// </summary>
-            /// <param name="noUpdate"></param>
-            /// <returns>List of players who are dead.</returns>
-            public List<int> PlayersDead(bool noUpdate = false)
+            if (!noUpdate)
+                cg.updateScreen();
+            List<int> playersDead = new List<int>();
+            for (int i = 0; i < 12; i++)
+                if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
+                    && !HasHealthBar(i, true))
+                    playersDead.Add(i);
+            return playersDead;
+        }
+        private static int[] KilledPlayerMarkerLocations = new int[]
+        {
+            66, // slot 0
+            115, // slot 1
+            164, // slot 2
+            214, // slot 3
+            263, // slot 4
+            312, // slot 5
+
+            633, // slot 6
+            682, // slot 7
+            731, // slot 8
+            780, // slot 9
+            830, // slot 10
+            879, // slot 11
+        };
+
+        bool HasHealthBar(int slot, bool noUpdate = false)
+        {
+            int[] healthBarLocations = new int[]
             {
-                // Returns which players that are dead by checking the killed marker locations for a red 'X'.
-                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
-
-                if (!noUpdate)
-                    cg.updateScreen();
-                List<int> playersDead = new List<int>();
-                for (int i = 0; i < 12; i++)
-                    if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
-                        && !HasHealthBar(i, true))
-                        playersDead.Add(i);
-                return playersDead;
-            }
-            private static int[] KilledPlayerMarkerLocations = new int[]
-            {
-                66, // slot 0
-                115, // slot 1
-                164, // slot 2
-                214, // slot 3
-                263, // slot 4
-                312, // slot 5
-
-                633, // slot 6
-                682, // slot 7
-                731, // slot 8
-                780, // slot 9
-                830, // slot 10
-                879, // slot 11
+                // Blue
+                45,
+                94,
+                143,
+                192,
+                242,
+                291,
+                // Red
+                610,
+                660,
+                709,
+                758,
+                808,
+                856,
             };
+            int xLength = 43;
+            int y = 96;
 
-            bool HasHealthBar(int slot, bool noUpdate = false)
-            {
-                int[] healthBarLocations = new int[]
-                {
-                    // Blue
-                    45,
-                    94,
-                    143,
-                    192,
-                    242,
-                    291,
-                    // Red
-                    610,
-                    660,
-                    709,
-                    758,
-                    808,
-                    856,
-                };
-                int xLength = 43;
-                int y = 96;
-
-                if (!noUpdate)
-                    cg.updateScreen();
-
-                for (int x = healthBarLocations[slot]; x < healthBarLocations[slot] + xLength; x++)
-                    if (cg.CompareColor(x, y, new int[] { 110, 110, 110 }, 10))
-                        return true;
-                return false;
-            }
-
-            /// <summary>
-            /// Get max player count for both teams.
-            /// </summary>
-            /// <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
-            public int[] MaxPlayerCount()
-            {
-                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
-                cg.updateScreen();
-                int[] result = new int[2];
-                // Blue: X = 613
-                // Red: X = 752
-                int[] searchArea = new int[] { 250, 275, 310, 340, 370, 400 };
-                int[] blueColor = new int[] { 148, 202, 224 };
-                int[] redColor = new int[] { 167, 76, 86 };
-                for (int i = 0; i < searchArea.Length; i++)
-                    if (cg.CompareColor(302, searchArea[i], blueColor, 50))
-                        result[0]++;
-                for (int i = 0; i < searchArea.Length; i++)
-                    if (cg.CompareColor(370, searchArea[i], redColor, 50))
-                        result[1]++;
-                return result;
-            }
-
-            /// <summary>
-            /// Test if input slot has chosen a hero.
-            /// </summary>
-            /// <param name="slot">Slot to check</param>
-            /// <returns>True if hero is chosen</returns>
-            /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
-            public bool IsHeroChosen(int slot)
-            {
-                if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
-                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
-                if (cg.PlayerSlots.Contains(slot) == false)
-                    return false;
-
+            if (!noUpdate)
                 cg.updateScreen();
 
-                if (PlayersDead(true).Contains(slot))
+            for (int x = healthBarLocations[slot]; x < healthBarLocations[slot] + xLength; x++)
+                if (cg.CompareColor(x, y, new int[] { 110, 110, 110 }, 10))
                     return true;
+            return false;
+        }
 
-                return _HeroChosen(slot);
+        /// <summary>
+        /// Get max player count for both teams.
+        /// </summary>
+        /// <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
+        public int[] MaxPlayerCount()
+        {
+            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
+            cg.updateScreen();
+            int[] result = new int[2];
+            // Blue: X = 613
+            // Red: X = 752
+            int[] searchArea = new int[] { 250, 275, 310, 340, 370, 400 };
+            int[] blueColor = new int[] { 148, 202, 224 };
+            int[] redColor = new int[] { 167, 76, 86 };
+            for (int i = 0; i < searchArea.Length; i++)
+                if (cg.CompareColor(302, searchArea[i], blueColor, 50))
+                    result[0]++;
+            for (int i = 0; i < searchArea.Length; i++)
+                if (cg.CompareColor(370, searchArea[i], redColor, 50))
+                    result[1]++;
+            return result;
+        }
+
+        /// <summary>
+        /// Test if input slot has chosen a hero.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns>Returns true if a hero is chosen.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public bool IsHeroChosen(int slot)
+        {
+            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+                throw new InvalidSlotException(slot);
+            if (cg.PlayerSlots.Contains(slot) == false)
+                return false;
+
+            cg.updateScreen();
+
+            if (PlayersDead(true).Contains(slot))
+                return true;
+
+            return _HeroChosen(slot);
+        }
+
+        // Private method to check if a hero is chosen.
+        // The screen is not updated, run updateScreen() beforehand.
+        // There is no argument checking.
+        bool _HeroChosen(int slot)
+        {
+            if (slot < 6)
+            {
+                //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenBlue, CALData.HeroChosenFade);
             }
-
-            // Private method to check if a hero is chosen.
-            // The screen is not updated, run updateScreen() beforehand.
-            // There is no argument checking.
-            bool _HeroChosen(int slot)
+            else
             {
-                if (slot < 6)
-                {
-                    //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
-                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenBlue, CALData.HeroChosenFade);
-                }
-                else
-                {
-                    //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
-                    return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenRed, CALData.HeroChosenFade);
-                }
+                //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenRed, CALData.HeroChosenFade);
             }
+        }
 
-            // These are the locations the moderator icon is (green crown)
-            int[,] ModeratorLocations = new int[,]
-            {
-                // blue
-                { 65, 257 },
-                { 65, 286 },
-                { 65, 315 },
-                { 65, 343 },
-                { 65, 372 },
-                { 65, 400 },
-                // red
-                { 607, 257 },
-                { 607, 286 },
-                { 607, 315 },
-                { 607, 343 },
-                { 607, 372 },
-                { 607, 400 },
-                // spectator
-                { 885, 252 },
-                { 885, 265 },
-                { 885, 279 },
-                { 885, 292 },
-                { 885, 305 },
-                { 885, 318 }
-            };
-            /// <summary>
-            /// Gets the slot the moderator is on.
-            /// </summary>
-            /// <returns>Slot the moderator is on.</returns>
-            public int ModeratorSlot()
-            {
-                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
-                // Find the moderator icon.
+        // These are the locations the moderator icon is (green crown)
+        int[,] ModeratorLocations = new int[,]
+        {
+            // blue
+            { 65, 257 },
+            { 65, 286 },
+            { 65, 315 },
+            { 65, 343 },
+            { 65, 372 },
+            { 65, 400 },
+            // red
+            { 607, 257 },
+            { 607, 286 },
+            { 607, 315 },
+            { 607, 343 },
+            { 607, 372 },
+            { 607, 400 },
+            // spectator
+            { 885, 252 },
+            { 885, 265 },
+            { 885, 279 },
+            { 885, 292 },
+            { 885, 305 },
+            { 885, 318 }
+        };
+        /// <summary>
+        /// Gets the slot the moderator is on.
+        /// </summary>
+        /// <returns>Slot the moderator is on.</returns>
+        public int ModeratorSlot()
+        {
+            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
+            // Find the moderator icon.
 
+            cg.updateScreen();
+            int fade = 40;
+
+            // Red and blue
+            for (int i = 0; i < 12; i++)
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
+                    return i;
+
+            // Spectators
+            int offset = cg.FindOffset();
+            for (int i = 12; i < CustomGame.Queueid; i++)
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
+                    return i;
+
+            // Queue
+            int queuecount = cg.QueueCount;
+            for (int i = 12; i < 12 + queuecount; i++)
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
+                    return i + 6;
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Gets the team a player in the queue is queueing for.
+        /// </summary>
+        /// <param name="slot">Slot to check.</param>
+        /// <returns>Team that the player is queueing for.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public QueueTeam GetQueueTeam(int slot)
+        {
+            if (slot < CustomGame.Queueid || slot > CustomGame.Queueid + 5)
+                throw new InvalidSlotException(slot);
+            Point check = cg.Interact.FindSlotLocation(slot);
+            check.X -= 25;
+            cg.updateScreen();
+            Color color = cg.GetPixelAt(check.X, check.Y);
+
+            // If the blue color is greater than the red color, the queue slot is on blue team.
+            if (color.B > color.R)
+                return QueueTeam.Blue;
+            // If the green color is less than 90, the queue slot is on the red team.
+            else if (color.G < 90)
+                return QueueTeam.Red;
+            // Else, the queue slot is on neutral team.
+            else
+                return QueueTeam.Neutral;
+        }
+
+        /// <summary>
+        /// Checks if the input slot has their ultimate.
+        /// </summary>
+        /// <param name="slot">Slot to check.</param>
+        /// <param name="noUpdate"></param>
+        /// <returns>Returns true if player as ultimate.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public bool IsUltimateReady(int slot, bool noUpdate = false)
+        {
+            if (slot >= UltimateCheckLocations.Length || slot < 0)
+                throw new InvalidSlotException(slot);
+            if (!noUpdate)
                 cg.updateScreen();
-                int fade = 40;
+            return /* GetLoadSlots(new int[] { slot }.ToList()).Contains(slot) == false && */ cg.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
+        }
+        Point[] UltimateCheckLocations = new Point[]
+        {
+            new Point(59, 72),
+            new Point(108, 72),
+            new Point(157, 72),
+            new Point(207, 72),
+            new Point(255, 72),
+            new Point(305, 72),
 
-                // Red and blue
-                for (int i = 0; i < 12; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
-                        return i;
+            new Point(612, 72),
+            new Point(661, 72),
+            new Point(710, 75),
+            new Point(759, 75),
+            new Point(808, 75),
+            new Point(857, 75)
+        };
 
-                // Spectators
-                int offset = cg.FindOffset();
-                for (int i = 12; i < Queueid; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
-                        return i;
+        /// <summary>
+        /// Obtains the markup of a hero icon.
+        /// </summary>
+        /// <param name="slot">Slot to get hero icon from.</param>
+        /// <param name="saveTo">Location on the file system to save it to.</param>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public void GetHeroMarkup(int slot, string saveTo)
+        {
+            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+                throw new InvalidSlotException(slot);
 
-                // Queue
-                int queuecount = cg.QueueCount;
-                for (int i = 12; i < 12 + queuecount; i++)
-                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
-                        return i + 6;
+            cg.updateScreen();
 
-                return -1;
+            Bitmap save = cg.BmpClone(HeroCheckLocations[slot], HeroCheckY, 20, 9);
+
+            save.Save(saveTo);
+        }
+
+        /// <summary>
+        /// Gets the hero a player is playing.
+        /// </summary>
+        /// <param name="slot">Slot to check.</param>
+        /// <returns>Returns the hero the slot is playing.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public Hero? GetHero(int slot)
+        {
+            return GetHero(slot, out _);
+        }
+
+        /// <summary>
+        /// Gets the hero a player is playing.
+        /// </summary>
+        /// <param name="slot">Slot to check.</param>
+        /// <param name="resultInfo">Info about the returned value.</param>
+        /// <returns>Returns the hero the slot is playing.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
+        {
+            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+                throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));
+
+            if (!cg.PlayerSlots.Contains(slot))
+            {
+                resultInfo = HeroResultInfo.SlotEmpty;
+                return null;
             }
 
-            /// <summary>
-            /// Gets the team a player in the queue is queueing for.
-            /// </summary>
-            /// <param name="slot">Slot to check.</param>
-            /// <returns>Team that the player is queueing for.</returns>
-            /// <exception cref="InvalidSlotException">Thrown if slot argument is out of range.</exception>
-            public QueueTeam GetQueueTeam(int slot)
+            if (PlayersDead(true).Contains(slot))
             {
-                if (slot < Queueid || slot > Queueid + 5)
-                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
-                Point check = cg.Interact.FindSlotLocation(slot);
-                check.X -= 25;
-                cg.updateScreen();
-                Color color = cg.GetPixelAt(check.X, check.Y);
-
-                // If the blue color is greater than the red color, the queue slot is on blue team.
-                if (color.B > color.R)
-                    return QueueTeam.Blue;
-                // If the green color is less than 90, the queue slot is on the red team.
-                else if (color.G < 90)
-                    return QueueTeam.Red;
-                // Else, the queue slot is on neutral team.
-                else
-                    return QueueTeam.Neutral;
+                resultInfo = HeroResultInfo.PlayerWasDead;
+                return null;
             }
 
-            /// <summary>
-            /// Checks if the input slot has their ultimate.
-            /// </summary>
-            /// <param name="slot">Slot to check.</param>
-            /// <param name="noUpdate"></param>
-            /// <returns>Returns true if player as ultimate.</returns>
-            public bool IsUltimateReady(int slot, bool noUpdate = false)
+            if (!_HeroChosen(slot))
             {
-                if (slot >= UltimateCheckLocations.Length || slot < 0)
-                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
-                if (!noUpdate)
-                    cg.updateScreen();
-                return /* GetLoadSlots(new int[] { slot }.ToList()).Contains(slot) == false && */ cg.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
-            }
-            Point[] UltimateCheckLocations = new Point[]
-            {
-                new Point(59, 72),
-                new Point(108, 72),
-                new Point(157, 72),
-                new Point(207, 72),
-                new Point(255, 72),
-                new Point(305, 72),
-
-                new Point(612, 72),
-                new Point(661, 72),
-                new Point(710, 75),
-                new Point(759, 75),
-                new Point(808, 75),
-                new Point(857, 75)
-            };
-
-            /// <summary>
-            /// Obtains the markup of a hero icon.
-            /// </summary>
-            /// <param name="slot">Slot to get hero icon from.</param>
-            /// <param name="saveTo">Location on the file system to save it to.</param>
-            public void GetHeroMarkup(int slot, string saveTo)
-            {
-                cg.updateScreen();
-
-                Bitmap save = cg.BmpClone(HeroCheckLocations[slot], HeroCheckY, 20, 9);
-
-                save.Save(saveTo);
+                resultInfo = HeroResultInfo.NoHeroChosen;
+                return null;
             }
 
-            /// <summary>
-            /// Gets the hero a player is playing.
-            /// </summary>
-            /// <param name="slot">Slot to check.</param>
-            /// <returns>Returns the hero the slot is playing.</returns>
-            public Hero? GetHero(int slot)
+            List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
+
+            for (int m = 0; m < HeroMarkups.Length; m++)
             {
-                return GetHero(slot, out _);
-            }
-
-            /// <summary>
-            /// Gets the hero a player is playing.
-            /// </summary>
-            /// <param name="slot">Slot to check.</param>
-            /// <param name="resultInfo">Why the method returned what it did.</param>
-            /// <returns>Returns the hero the slot is playing.</returns>
-            public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
-            {
-                if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
-                    throw new InvalidSlotException("Slot is out of range. Slot must be a player on blue or red team.");
-
-                if (!cg.PlayerSlots.Contains(slot))
+                if (HeroMarkups[m] != null)
                 {
-                    resultInfo = HeroResultInfo.SlotEmpty;
-                    return null;
-                }
+                    double total = 0;
+                    double success = 0;
 
-                if (PlayersDead(true).Contains(slot))
-                {
-                    resultInfo = HeroResultInfo.PlayerWasDead;
-                    return null;
-                }
-
-                if (!_HeroChosen(slot))
-                {
-                    resultInfo = HeroResultInfo.NoHeroChosen;
-                    return null;
-                }
-
-                List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
-
-                for (int m = 0; m < HeroMarkups.Length; m++)
-                {
-                    if (HeroMarkups[m] != null)
-                    {
-                        double total = 0;
-                        double success = 0;
-
-                        for (int x = 0; x < HeroMarkups[m].Width; x++)
-                            for (int y = 0; y < HeroMarkups[m].Height; y++)
-                            {
-                                int bmpX = HeroCheckLocations[slot] + x;
-                                int bmpY = HeroCheckY + y;
-
-                                int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
-
-                                if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
-                                {
-                                    total++;
-                                    if (cg.CompareColor(bmpX, bmpY, markupColor, 20))
-                                        success++;
-                                }
-                            }
-
-                        double probability = (success / total) * 100;
-
-                        if (probability >= 80)
-                            results.Add(new Tuple<Hero, double>((Hero)m, probability));
-                    }
-                }
-
-                if (results.Count == 0)
-                {
-                    resultInfo = HeroResultInfo.NoCompatibleHeroFound;
-                    return null;
-                }
-                else
-                {
-                    int highestIndex = -1;
-                    double highest = 0;
-
-                    for (int i = 0; i < results.Count; i++)
-                        if (results[i].Item2 > highest)
+                    for (int x = 0; x < HeroMarkups[m].Width; x++)
+                        for (int y = 0; y < HeroMarkups[m].Height; y++)
                         {
-                            highestIndex = i;
-                            highest = results[i].Item2;
+                            int bmpX = HeroCheckLocations[slot] + x;
+                            int bmpY = HeroCheckY + y;
+
+                            int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
+
+                            if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
+                            {
+                                total++;
+                                if (cg.CompareColor(bmpX, bmpY, markupColor, 20))
+                                    success++;
+                            }
                         }
 
-                    resultInfo = HeroResultInfo.Success;
-                    return results[highestIndex].Item1;
+                    double probability = (success / total) * 100;
+
+                    if (probability >= 80)
+                        results.Add(new Tuple<Hero, double>((Hero)m, probability));
                 }
             }
-            static Bitmap[] HeroMarkups = new Bitmap[]
-            {
-                Properties.Resources.ana_markup, // Ana
-                Properties.Resources.bastion_markup, // Bastion
-                Properties.Resources.brigitte_markup, // Brigitte
-                Properties.Resources.dva_markup, // Dva
-                Properties.Resources.doomfist_markup, // Doomfist
-                Properties.Resources.gengi_markup, // Genji
-                Properties.Resources.hanzo_markup, // Hanzo
-                Properties.Resources.junkrat_markup, // Junkrat
-                Properties.Resources.lucio_markup, // Lucio
-                Properties.Resources.mccree_markup, // McCree
-                Properties.Resources.mei_markup, // Mei
-                Properties.Resources.mercy_markup, // Mercy
-                Properties.Resources.moira_markup, // Moira
-                Properties.Resources.orisa_markup, // Orisa
-                Properties.Resources.pharah_markup, // Pharah
-                Properties.Resources.reaper_markup, // Reaper
-                Properties.Resources.reinhardt_markup, // Reinhardt
-                Properties.Resources.roadhog_markup, // Roadhog
-                Properties.Resources.soldier_markup, // Soldier: 76
-                Properties.Resources.sombra_markup, // Sombra
-                Properties.Resources.symmetra_markup, // Symmetra
-                Properties.Resources.torbjorn_markup, // Torbjorn
-                Properties.Resources.tracer_markup, // Tracer
-                Properties.Resources.widowmaker_markup, // Widowmaker
-                Properties.Resources.winston_markup, // Winston
-                Properties.Resources.zarya_markup, // Zarya
-                Properties.Resources.zenyatta_markup // Zenyatta
-            };
-            int[] HeroCheckLocations = new int[]
-            {
-                76,
-                125,
-                175,
-                224,
-                273,
-                322,
 
-                629,
-                678,
-                727,
-                777,
-                826,
-                875
-            };
-            int HeroCheckY = 73;
-
-            /// <summary>
-            /// Checks if player exists via battletag. Is case and region sensitive.
-            /// </summary>
-            /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
-            /// <returns>Returns true if player exists, else returns false.</returns>
-            public static bool PlayerExists(string battletag)
+            if (results.Count == 0)
             {
-                // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
-                try
-                {
-                    string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
+                resultInfo = HeroResultInfo.NoCompatibleHeroFound;
+                return null;
+            }
+            else
+            {
+                int highestIndex = -1;
+                double highest = 0;
 
-                    using (WebClient wc = new WebClient())
+                for (int i = 0; i < results.Count; i++)
+                    if (results[i].Item2 > highest)
                     {
-                        string pageinfo = wc.DownloadString(playerprofile);
-                        wc.Dispose();
-
-                        // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
-                        // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
-                        if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
-                            return true;
+                        highestIndex = i;
+                        highest = results[i].Item2;
                     }
-                }
-                catch (WebException) { }
 
-                return false;
+                resultInfo = HeroResultInfo.Success;
+                return results[highestIndex].Item1;
             }
+        }
+        static Bitmap[] HeroMarkups = new Bitmap[]
+        {
+            Properties.Resources.ana_markup, // Ana
+            Properties.Resources.bastion_markup, // Bastion
+            Properties.Resources.brigitte_markup, // Brigitte
+            Properties.Resources.dva_markup, // Dva
+            Properties.Resources.doomfist_markup, // Doomfist
+            Properties.Resources.gengi_markup, // Genji
+            Properties.Resources.hanzo_markup, // Hanzo
+            Properties.Resources.junkrat_markup, // Junkrat
+            Properties.Resources.lucio_markup, // Lucio
+            Properties.Resources.mccree_markup, // McCree
+            Properties.Resources.mei_markup, // Mei
+            Properties.Resources.mercy_markup, // Mercy
+            Properties.Resources.moira_markup, // Moira
+            Properties.Resources.orisa_markup, // Orisa
+            Properties.Resources.pharah_markup, // Pharah
+            Properties.Resources.reaper_markup, // Reaper
+            Properties.Resources.reinhardt_markup, // Reinhardt
+            Properties.Resources.roadhog_markup, // Roadhog
+            Properties.Resources.soldier_markup, // Soldier: 76
+            Properties.Resources.sombra_markup, // Sombra
+            Properties.Resources.symmetra_markup, // Symmetra
+            Properties.Resources.torbjorn_markup, // Torbjorn
+            Properties.Resources.tracer_markup, // Tracer
+            Properties.Resources.widowmaker_markup, // Widowmaker
+            Properties.Resources.winston_markup, // Winston
+            Properties.Resources.zarya_markup, // Zarya
+            Properties.Resources.zenyatta_markup // Zenyatta
+        };
+        int[] HeroCheckLocations = new int[]
+        {
+            76,
+            125,
+            175,
+            224,
+            273,
+            322,
+
+            629,
+            678,
+            727,
+            777,
+            826,
+            875
+        };
+        int HeroCheckY = 73;
+
+        /// <summary>
+        /// Checks if a player account exists via battletag. Is case sensitive.
+        /// </summary>
+        /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
+        /// <returns>Returns true if player exists, else returns false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
+        public static bool PlayerExists(string battletag)
+        {
+            if (battletag == null)
+                throw new ArgumentNullException("battletag", "Battletag was null.");
+
+            // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
+            try
+            {
+                string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
+
+                using (WebClient wc = new WebClient())
+                {
+                    string pageinfo = wc.DownloadString(playerprofile);
+                    wc.Dispose();
+
+                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
+                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
+                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
+                        return true;
+                }
+            }
+            catch (WebException) { }
+
+            return false;
         }
     }
     

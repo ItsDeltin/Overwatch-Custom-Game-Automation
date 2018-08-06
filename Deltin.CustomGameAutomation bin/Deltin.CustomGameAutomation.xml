@@ -14,238 +14,15 @@
             AI settings for Overwatch.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_AI">
-            <summary>
-            AI settings for Overwatch.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.BotTeam,System.Int32)">
-            <summary>
-            Add AI to the game.
-            </summary>
-            <param name="hero">Hero type to add.</param>
-            <param name="difficulty">Difficulty of hero.</param>
-            <param name="team">Team that AI joins.</param>
-            <param name="count">Amount of AI that is added. Set to -1 for max. Default is -1</param>
-            <returns></returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAIDifficultyMarkup(System.Int32,System.String)">
-            <summary>
-            Obtains the markup of an AI's difficulty.
-            </summary>
-            <param name="scalar">Garanteed index of difficulty. (0 = easy, 1 = medium, 2 = hard)</param>
-            <param name="saveAt">Location to save markup at.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAIDifficulty(System.Int32,System.Boolean)">
-            <summary>
-            Gets the difficulty of the AI in the input slot.
-            <para>If the input slot is not an AI, returns null.
-            If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.</para>
-            </summary>
-            <param name="slot">Slot to check</param>
-            <param name="noUpdate"></param>
-            <returns>Returns a value in the Difficulty enum if the difficulty is found. Returns null if the input slot is not an AI.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown when slot is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.RemoveAllBotsAuto">
-            <summary>
-            Removes all AI from the game.
-            </summary>
-            <returns>Returns true if successful.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.IsAI(System.Int32,System.Boolean)">
-            <summary>
-            Checks if the input slot is an AI.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <param name="noUpdate">Determines if the captured screen should be updated before scanning.</param>
-            <returns>Returns true if slot is AI.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetAISlots">
-            <summary>
-            Gets all slots that are AI.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.GetNoneAISlots">
-            <summary>
-            Gets all slots that are not AI.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.CalibrateAIChecking">
-            <summary>
-            AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty)">
-            <summary>
-            Edits the hero an AI is playing and the difficulty of the AI.
-            </summary>
-            <param name="slot">Slot to edit.</param>
-            <param name="setToHero">Hero to change to.</param>
-            <param name="setToDifficulty">Difficulty to change to.</param>
-            <returns>Returns true on success.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero)">
-            <summary>
-            Edits the hero an AI is playing.
-            </summary>
-            <param name="slot">Slot to edit.</param>
-            <param name="setToHero">Hero to change to.</param>
-            <returns>Returns true on success.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.EditAI(System.Int32,Deltin.CustomGameAutomation.Difficulty)">
-            <summary>
-            Edits the difficulty of an AI.
-            </summary>
-            <param name="slot">Slot to edit.</param>
-            <param name="setToDifficulty">Difficulty to change to.</param>
-            <returns>Returns true on success.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_AI.RemoveFromGameIfAI(System.Int32)">
-            <summary>
-            Safely removes a slot from the game if they are an AI.
-            </summary>
-            <param name="slot">Slot to remove from game.</param>
-            <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
-        </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Chat">
             <summary>
             Chat for Overwatch.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Chat">
-            <summary>
-            Chat for Overwatch.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.Chat(System.String)">
-            <summary>
-            Send message to chat.
-            </summary>
-            <param name="text">Text to send.</param>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.CG_Chat.ChatPrefix">
-            <summary>
-            Prefix to CustomGame.Chat() messages.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.CG_Chat.BlockGeneralChat">
-            <summary>
-            Prevents chat messages from being sent to the general channel.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.SwapChannel(Deltin.CustomGameAutomation.Channel)">
-            <summary>
-            Swaps to a chat channel.
-            </summary>
-            <param name="channel">Channel to join</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.LeaveChannel(Deltin.CustomGameAutomation.Channel)">
-            <summary>
-            Leaves a channel so no chat messages can be sent or recieved on that channel.
-            </summary>
-            <param name="channel">Channel to leave.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Chat.JoinChannel(Deltin.CustomGameAutomation.Channel)">
-            <summary>
-            Joins a channel after leaving it with LeaveChannel.
-            </summary>
-            <param name="channel">Channel to rejoin.</param>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Command">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands">
             <summary>
             Chat commands for Overwatch.
             </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.Commands">
-            <summary>
-            Chat commands for Overwatch.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.ListenTo">
-            <summary>
-            <para>Indexer: Command to listen to.</para>
-            <para>Value: If true, listen to this command.</para>
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.RegisteredPlayerIdentities">
-            <summary>
-            List containing all player identities.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.ExecutedCommands">
-            <summary>
-            List of executed commands.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeExecutedCommand(System.Int32)">
-            <summary>
-            Removes an executed command from the executed commands list.
-            </summary>
-            <param name="index">Command to remove by index.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeAllExecutedCommands">
-            <summary>
-            Removes all executed commands.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposePlayerIdentity(Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Disposes of a player identity.
-            </summary>
-            <param name="identity">Identity to dispose.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposePlayerIdentity(System.Int32)">
-            <summary>
-            Disposes of a player identity.
-            </summary>
-            <param name="index">Index of the identity to dispose in the RegisteredPlayerIdentities list.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.DisposeAllPlayerIdentities">
-            <summary>
-            Disposes all player identities.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.Listen">
-            <summary>
-            Set to true to start listening to commands. Set to false to stop.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands.RegisterPlayerProfiles">
-            <summary>
-            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.ListenToAllCommands">
-            <summary>
-            Listens to all commands rather than just the commands in the ListenTo dictionary.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.AllowMultipleCommandExecutions">
-            <summary>
-            Allows one executor to execute more than one command.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands.SameExecutorCommandUpdate">
-            <summary>
-            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetSlotIdentity(System.Int32)">
-            <summary>
-            Gets the player identity of a slot.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <returns>The player identity of the slot.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Gets the commands a player identity has executed.
-            </summary>
-            <param name="identity">Identity to check.</param>
-            <returns>Array of commands executed.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.CreateOverwatchProcess(Deltin.CustomGameAutomation.OverwatchProcessInfo)">
             <summary>
@@ -261,6 +38,7 @@
             <param name="overwatchHandle">Overwatch process handle to use. Leave at default to use the first Overwatch process found.</param>
             <param name="screenshotMethod">Method to take screenshots with.</param>
             <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
+            <exception cref="T:Deltin.CustomGameAutomation.MissingOverwatchProcessException">Thrown if no Overwatch processes were found.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
             <summary>
@@ -269,13 +47,18 @@
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput">
             <summary>
-            Disables input for the Overwatch window to prevent accidentally hovering over it.
+            Disables input for the Overwatch window.
             </summary>
+            <remarks>
+            Input must be re-enabled with <see cref="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput"/>.
+            </remarks>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput">
             <summary>
-            Enables input for the Overwatch window after disabling it with DisableOverwatchWindowInput().
+            Enables input for the Overwatch window after disabling it with <see cref="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput"/>.
             </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.GetGameState">
             <summary>
@@ -297,35 +80,33 @@
             Events that are executed when the game is over.
             To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.
             </summary>
+            <example>
+            The example below will send a message to chat when the game is over.
+            <code>
+            using Deltin.CustomGameAutomation;
+            
+            public class OnGameOverExample
+            {
+                public static void SendMessageToChatWhenGameIsOver(CustomGame cg)
+                {
+                    cg.GameSettings.SetTeamName(PlayerTeam.Blue, "\ Blue Team");
+                    cg.GameSettings.SetTeamName(PlayerTeam.Red, "* Red Team");
+                    cg.OnGameOver += Cg_OnGameOver;
+                }
+                
+                private static void Cg_OnGameOver(object sender, GameOverArgs e)
+                {
+                    PlayerTeam winningTeam = e.GetWinningTeam();
+                    (sender as CustomGame).Chat.Chat(string.Format("The game is over, Team {0} has won!", winningTeam.ToString()));
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="M:Deltin.CustomGameAutomation.GameOverArgs.GetWinningTeam"/>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Pause">
             <summary>
             Controls Overwatch's pause feature.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Pause">
-            <summary>
-            Controls Overwatch's pause feature.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.TogglePause">
-            <summary>
-            Toggle pause.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.Pause">
-            <summary>
-            Pauses the game.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.Unpause">
-            <summary>
-            Unpauses the game.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Pause.IsPaused">
-            <summary>
-            Determines if the game is paused.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerCount">
@@ -451,83 +232,6 @@
             Info about players in an Overwatch custom game.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo">
-            <summary>
-            Info about players in an Overwatch custom game.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayersDead(System.Boolean)">
-            <summary>
-            Gets a list of players who died.
-            </summary>
-            <param name="noUpdate"></param>
-            <returns>List of players who are dead.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.MaxPlayerCount">
-            <summary>
-            Get max player count for both teams.
-            </summary>
-            <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.IsHeroChosen(System.Int32)">
-            <summary>
-            Test if input slot has chosen a hero.
-            </summary>
-            <param name="slot">Slot to check</param>
-            <returns>True if hero is chosen</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.ModeratorSlot">
-            <summary>
-            Gets the slot the moderator is on.
-            </summary>
-            <returns>Slot the moderator is on.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetQueueTeam(System.Int32)">
-            <summary>
-            Gets the team a player in the queue is queueing for.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <returns>Team that the player is queueing for.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.IsUltimateReady(System.Int32,System.Boolean)">
-            <summary>
-            Checks if the input slot has their ultimate.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <param name="noUpdate"></param>
-            <returns>Returns true if player as ultimate.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHeroMarkup(System.Int32,System.String)">
-            <summary>
-            Obtains the markup of a hero icon.
-            </summary>
-            <param name="slot">Slot to get hero icon from.</param>
-            <param name="saveTo">Location on the file system to save it to.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHero(System.Int32)">
-            <summary>
-            Gets the hero a player is playing.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <returns>Returns the hero the slot is playing.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.GetHero(System.Int32,Deltin.CustomGameAutomation.HeroResultInfo@)">
-            <summary>
-            Gets the hero a player is playing.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <param name="resultInfo">Why the method returned what it did.</param>
-            <returns>Returns the hero the slot is playing.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_PlayerInfo.PlayerExists(System.String)">
-            <summary>
-            Checks if player exists via battletag. Is case and region sensitive.
-            </summary>
-            <param name="battletag">Battletag of player to check. Is case sensitive.</param>
-            <returns>Returns true if player exists, else returns false.</returns>
-        </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.Queueid">
             <summary>
             The number where the queue starts.
@@ -538,108 +242,14 @@
             Changes a player's state in Overwatch.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Interact">
-            <summary>
-            Changes a player's state in Overwatch.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionMarkup(System.Int32,System.Int32,System.String,System.Double)">
-            <summary>
-            Generates a markup for a menu option in Overwatch.
-            </summary>
-            <param name="slot">Slot to generate markup from.</param>
-            <param name="max">Maximum markups to capture.</param>
-            <param name="savelocation">Location to save markups.</param>
-            <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32,System.Double)">
-            <summary>
-            Scans a player menu for an option.
-            </summary>
-            <param name="slot">Slot's menu to scan.</param>
-            <param name="markup">Bitmap markup of option to scan for.</param>
-            <param name="minimumPercent">Minimum percent the markup has to match an option in the menu.</param>
-            <param name="max">Maximum options to scan.</param>
-            <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
-            <returns>Returns true if the option in the markup has been found, else returns false.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.RemoveFromGame(System.Int32)">
-            <summary>
-            Removes player from the game
-            </summary>
-            <param name="slot">Slot to remove from game.</param>
-            <returns>Returns true if removing from game was successful</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapToRed(System.Int32)">
-            <summary>
-            Swaps player to red team.
-            </summary>
-            <param name="slot">Slot to swap to red team.</param>
-            <returns>Returns true when swapping player to red team is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapToBlue(System.Int32)">
-            <summary>
-            Swaps player to blue team.
-            </summary>
-            <param name="slot">Slot to swap to blue team.</param>
-            <returns>Returns true when swapping player to blue team is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapTeam(System.Int32)">
-            <summary>
-            Swaps the team of a player.
-            </summary>
-            <param name="slot">Slot to swap team.</param>
-            <returns>Returns true if swapping team is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapToSpectators(System.Int32)">
-            <summary>
-            Swaps player to spectator.
-            </summary>
-            <param name="slot">Slot to swap to spectator.</param>
-            <returns>Returns true if swapping to spectators is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapToNeutral(System.Int32)">
-            <summary>
-            Swaps player in queue to the neutral team.
-            </summary>
-            <param name="slot">Slot to swap to neutral.</param>
-            <returns>Returns true if swapping player to neutral is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.RemoveAllBots(System.Int32)">
-            <summary>
-            Removes all AI from the game. Input slot must be an AI.
-            </summary>
-            <param name="slot">Slot of an AI.</param>
-            <returns>Returns true if removing all AI is successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if slot argument is out of range.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.Move(System.Int32,System.Int32)">
-            <summary>
-            Swap 2 slots with eachother.
-            </summary>
-            <param name="slot1">Target 1</param>
-            <param name="slot2">Target 2</param>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if the slot1 or slot2 argument is out of range of possible slots to move.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Interact.SwapAll">
-            <summary>
-            Swaps players on both teams.
-            </summary>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.InvitePlayer(System.String,Deltin.CustomGameAutomation.InviteTeam)">
             <summary>
             Invites a player to the game via battletag.
             </summary>
             <param name="playerName">Battletag of the player to invite. Is case sensitive. Ex: Tracer#1818</param>
             <param name="team">Team that the invited player joins.</param>
-            <returns></returns>
+            <returns>Returns true if <paramref name="playerName"/> is a valid battletag.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled">
             <summary>
@@ -657,24 +267,47 @@
             </summary>
             <returns>The current Overwatch event as the Event enum.</returns>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Maps">
-            <summary>
-            Map selection in Overwatch.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Maps">
-            <summary>
-            Map selection in Overwatch.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
             <summary>
             Toggles maps in Overwatch.
             </summary>
             <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
             <param name="maps">Maps that should be toggled.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <see cref="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled" /> is null.</exception>
+            <remarks>
+            <see cref="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled" /> must be set to use this method. <see cref="F:Deltin.CustomGameAutomation.CustomGame.CurrentOverwatchEvent" /> must be set if a seasonal Overwatch event is on.
+            <getMaps>
+    All maps:
+    <div id="mapList" />
+    <script>getMaps();</script>
+  </getMaps>
+            </remarks>
+            <example>
+            The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+            <code>
+            using Deltin.CustomGameAutomation;
+            
+            public class ToggleMapExample
+            {
+                public static void SetEnabledMaps(CustomGame cg) 
+                {
+                    cg.ModesEnabled = new ModesEnabled()
+                    {
+                        Assault = true,
+                        AssaultEscort = true,
+                        Control = true,
+                        Escort = true
+                    }
+                    cg.CurrentOverwatchEvent = Event.None;
+                    cg.ToggleMap(ToggleAction.DisableAll, Map.A_Hanamura, E_Gibraltar, C_Ilios);
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:Deltin.CustomGameAutomation.Map" />
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
             <summary>
             Toggles maps in Overwatch.
             </summary>
@@ -682,20 +315,40 @@
             <param name="currentOverwatchEvent">The current Overwatch event.</param>
             <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
             <param name="maps">Maps that should be toggled.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.MapIDFromName(System.String)">
-            <summary>
-            Gets map ID from map name.
-            </summary>
-            <param name="map">Map name.</param>
-            <returns>Returns map ID.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Maps.MapNameFromID(Deltin.CustomGameAutomation.Map)">
-            <summary>
-            Gets map name from map ID.
-            </summary>
-            <param name="map">Map ID.</param>
-            <returns>Returns map name.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="modesEnabled" /> is null.</exception>
+            <remarks>
+            <getMaps>
+    All maps:
+    <div id="mapList" />
+    <script>getMaps();</script>
+  </getMaps>
+            </remarks>
+            <example>
+            The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+            <code>
+            using Deltin.CustomGameAutomation;
+            
+            public class ToggleMapExample
+            {
+                public static void SetEnabledMaps(CustomGame cg) 
+                {
+                    cg.ToggleMap(
+                        new ModesEnabled() 
+                        {
+                            Assault = true,
+                            AssaultEscort = true,
+                            Control = true,
+                            Escort = true
+                        },
+                        Event.None,
+                        ToggleAction.DisableAll, 
+                        Map.A_Hanamura, E_Gibraltar, C_Ilios);
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:Deltin.CustomGameAutomation.Map" />
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>
@@ -740,60 +393,266 @@
             <param name="ta">Determines if all heroes should be enabled, disabled or neither before toggling</param>
             <param name="team">Team to change roster for.</param>
             <param name="heroes">Heroes to toggle.</param>
+            <example>
+            The example below will enable random heroes for a team.
+            <code>
+            using System;
+            using System.Collections.Generic;
+            using System.Linq;
+            using Deltin.CustomGameAutomation;
+            
+            public class SetHeroRosterExample
+            {
+                public static void ChooseRandomHeroes(CustomGame cg, BotTeam team, int randomHeroCount)
+                {
+                    Random rnd = new Random();
+                    int heroCount = Enum.GetNames(typeof(MyEnum)).Length - 1;
+                    
+                    List&lt;Hero&gt; chooseHeroes = new List&lt;Hero&gt;();
+                    while (chooseHeroes.Count &lt; randomHeroCount)
+                    {
+                        int heroID = rnd.Next(heroCount);
+                        if (chooseHeroes.Select(v => v as int).Contains(heroID))
+                            continue;
+                        chooseHeroes.Add(heroID as Hero);
+                    }
+                    
+                    cg.SetHeroRoster(ToggleAction.DisableAll, team, chooseHeroes.ToArray());
+                }
+            }
+            </code>
+            </example>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SetHeroSettings(Deltin.CustomGameAutomation.SetHero[])">
             <summary>
             Change individual hero settings.
             </summary>
             <param name="herodata">Settings of the heroes you want to change.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when a herodata's set and setto length are not equal length.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when a <paramref name="herodata"/>'s set and setto length are not equal length.</exception>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSetheroException">Thrown when any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
+            <remarks>
+            The complete list of settings can be found <a href="https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/blob/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt" content="here."/>
+            Toggle settings require a boolean. Value and dropdown settings require an integer.
+            </remarks>
+            <example>
+            The code below will make blue spawn with ultimates and have infinite ultimate duration, and give red 200% movement speed and 50% movement gravity.
+            <code>
+            using Deltin.CustomGameAutomation;
+            
+            public class SetHeroSettingsExample
+            {
+                public void SetHeroValues(CustomGame cg)
+                {
+                    cg.SetHeroSettings
+                    (
+                        // Make blue spawn with ultimates and have infinite ultimate duration.
+                        new SetHero(
+                            null, // General is null
+                            BotTeam.Blue,
+                            new string[] { "spawn_with_ultimate_ready", "infinite_ultimate_duration" },
+                            new object[] { true,                         true }
+                        )
+                        // Give red 200% movement speed and 50% movement gravity.
+                        , new SetHero(
+                            null,
+                            BotTeam.Red,
+                            new string[] { "movement_speed", "movement_gravity" },
+                            new object[] { 200,              50 }
+                        )
+                    );
+                }
+            }
+            </code>
+            The code below will make torbjorn on either team use hammer only and mercy on red use her staff.
+            <code>
+            using Deltin.CustomGameAutomation;
+            
+            public class SetHeroSettingsExample
+            {
+                public void SetHeroValues(CustomGame cg)
+                {
+                    cg.SetHeroSettings
+                    (
+                        // Make torbjorn only allowed to use his hammer.
+                        new SetHero(
+                            Hero.Torbjorn, // Torbjorn
+                            BotTeam.Both, // On both teams
+                            new string[] { "weapons_enabled" },
+                            new object[] { 2 } // 0 = All, 1 = Rivet gun only, 2 = Forge hammer only.
+                        )
+                        // Make mercy on red only allowed to use her staff.
+                        , new SetHero(
+                            Hero.Mercy, // Mercy
+                            BotTeam.Red, // On red
+                            new string[] { "weapons_enabled" },
+                            new object[] { 1 } // 0 = All, 1 = Caduceus staff only, 2 = Caduceus blaster only
+                        )
+                    );
+                }
+            }
+            </code>
+            </example>
+            <seealso cref="T:Deltin.CustomGameAutomation.SetHero"/>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.GameSettings">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.Settings">
             <summary>
-            Setting game settings in Overwatch.
+            Custom Game settings in Overwatch.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.CustomGame.CG_Settings">
+        <member name="T:Deltin.CustomGameAutomation.AI">
             <summary>
-            Setting game settings in Overwatch.
+            AI settings for Overwatch.
+            </summary>
+            <remarks>
+            The AI class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.AI"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.BotTeam,System.Int32)">
+            <summary>
+            Add AI to the game.
+            </summary>
+            <param name="hero">Hero type to add.</param>
+            <param name="difficulty">Difficulty of hero.</param>
+            <param name="team">Team that AI joins.</param>
+            <param name="count">Amount of AI that is added. Set to -1 for max. Default is -1</param>
+            <returns>Returns false if no AI can be added.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if count is less than -1.</exception>
+            <example>
+      The code below will even out the teams with AI if the teams are unbalanced.
+      <code>
+      using Deltin.CustomGameAutomation;
+      using System;
+      using System.Linq;
+
+      public class AddAIExample
+      {
+          const int PlayerCountDifference = 1;
+
+          public static void EvenPlayerTeams(CustomGame cg)
+          {
+              cg.AI.CalibrateAIChecking();
+
+              int dif = cg.BlueCount - cg.RedCount; // Will be positive if blue has more players and negative if red has more players.
+
+              if (Math.Abs(dif) &lt; PlayerCountDifference)
+                  return;
+
+              if (dif &lt; 0) // Red has more players  
+              {
+                  // Remove extra AI from red
+                  int[] redAI = cg.AI.GetAISlots().Where(aiSlot =&gt; cg.IsSlotRed(aiSlot)).ToArray();
+                  for (int i = 0; i &lt; redAI.Length &amp;&amp; i &lt; -dif; i++)
+                      if (cg.AI.RemoveFromGameIfAI(redAI[i]))
+                          dif++;
+
+                  if (dif != 0)
+                      cg.AI.AddAI(AIHero.Recommended, Difficulty.Hard, BotTeam.Blue, -dif);
+              }
+              else if (dif &gt; 0) // Blue has more players
+              {
+                  // Remove extra AI from blue
+                  int[] blueAI = cg.AI.GetAISlots().Where(aiSlot =&gt; cg.IsSlotBlue(aiSlot)).ToArray();
+                  for (int i = 0; i &lt; blueAI.Length &amp;&amp; i &lt; dif; i++)
+                      if (cg.AI.RemoveFromGameIfAI(blueAI[i]))
+                          dif--;
+
+                  if (dif != 0)
+                      cg.AI.AddAI(AIHero.Recommended, Difficulty.Hard, BotTeam.Red, dif);
+              }
+          }
+      }
+      </code>
+    </example>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAIDifficultyMarkup(System.Int32,System.String)">
+            <summary>
+            Obtains the markup of an AI's difficulty.
+            </summary>
+            <param name="scalar">Garanteed index of difficulty. (0 = easy, 1 = medium, 2 = hard)</param>
+            <param name="saveAt">Location to save markup at.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAIDifficulty(System.Int32,System.Boolean)">
+            <summary>
+            Gets the difficulty of the AI in the input slot.
+            <para>If the input slot is not an AI, returns null.
+            If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.</para>
+            </summary>
+            <param name="slot">Slot to check</param>
+            <param name="noUpdate" />
+            <returns>Returns the if the difficulty is found. Returns null if the input slot is not an AI.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto">
+            <summary>
+            Removes all AI from the game.
+            </summary>
+            <returns>Returns true if successful.</returns>
+            <seealso cref="M:Deltin.CustomGameAutomation.Interact.RemoveAllBots(System.Int32)"/>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)"/>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.IsAI(System.Int32,System.Boolean)">
+            <summary>
+            Checks if the input slot is an AI.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <param name="noUpdate">Determines if the captured screen should be updated before scanning.</param>
+            <returns>Returns true if slot is AI.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots">
+            <summary>
+            Gets all slots that are AI.
+            </summary>
+            <returns>All AI slots.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots">
+            <summary>
+            Gets all slots that are not AI.
+            </summary>
+            <returns>All player slots.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.CalibrateAIChecking">
+            <summary>
+            AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.LoadPreset(System.Int32,System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty)">
             <summary>
-            Loads a preset saved in Overwatch, 0 being the first saved preset.
+            Edits the hero an AI is playing and the difficulty of the AI.
             </summary>
-            <param name="preset">Preset to load.</param>
-            <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
+            <param name="slot">Slot to edit.</param>
+            <param name="setToHero">Hero to change to.</param>
+            <param name="setToDifficulty">Difficulty to change to.</param>
+            <returns>Returns true on success.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
+        <member name="M:Deltin.CustomGameAutomation.AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero)">
             <summary>
-            Changes who can join.
+            Edits the hero an AI is playing.
             </summary>
-            <param name="setting">Join setting to select.</param>
+            <param name="slot">Slot to edit.</param>
+            <param name="setToHero">Hero to change to.</param>
+            <returns>Returns true on success.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetGameName(System.String)">
+        <member name="M:Deltin.CustomGameAutomation.AI.EditAI(System.Int32,Deltin.CustomGameAutomation.Difficulty)">
             <summary>
-            Changes the custom game's name.
+            Edits the difficulty of an AI.
             </summary>
-            <param name="name">Name to change game name to.</param>
+            <param name="slot">Slot to edit.</param>
+            <param name="setToDifficulty">Difficulty to change to.</param>
+            <returns>Returns true on success.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetTeamName(Deltin.CustomGameAutomation.PlayerTeam,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)">
             <summary>
-            Changes a team's name.
+            Safely removes a slot from the game if they are an AI.
             </summary>
-            <param name="team">Team to change name.</param>
-            <param name="name">Name to change to.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.CG_Settings.SetMaxPlayers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
-            <summary>
-            Sets the max player count for blue team, red team, free for all, or spectators.
-            </summary>
-            <param name="blueCount">Maximum number of blue players. Must be in the range of 1-6. Set to null to ignore.</param>
-            <param name="redCount">Maximum number of red players. Must be in the range of 1-6. Set to null to ignore.</param>
-            <param name="ffaCount">Maximum number of FFA players. Must be in the range of 1-12. Set to null to ignore.</param>
-            <param name="spectatorCount">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</param>
+            <param name="slot">Slot to remove from game.</param>
+            <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto" />
+            <seealso cref="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)" />
         </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">
             <summary>
@@ -885,6 +744,71 @@
             Hard AI difficulty.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.Chat">
+            <summary>
+            Chat for Overwatch.
+            </summary>
+            <remarks>
+            The Chat class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Chat"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Chat.SendChatMessage(System.String)">
+            <summary>
+            Send message to chat.
+            </summary>
+            <param name="text">Text to send.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="text"/> is null.</exception>
+            <example>
+            The code below will send a message to the chat when a player joins.
+            <code>
+            using System.Threading;
+            using Deltin.CustomGameAutomation;
+            
+            class ChatExample
+            {
+                public static void SendMessageWhenPlayerJoins(CustomGame cg)
+                {
+                    int previousPlayerCount = cg.TotalPlayerCount;
+                    while (true)
+                    {
+                        // If the last recorded player count does not equal the current player count, send a message to the chat.
+                        int playerCount = cg.TotalPlayerCount;
+                        if (playerCount != previousPlayerCount)
+                        {
+                            cg.Chat.Chat("Welcome to my custom game!");
+                            previousPlayerCount = playerCount;
+                        }
+                        
+                        Thread.Sleep(100);
+                    }
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Chat.BlockGeneralChat">
+            <summary>
+            Prevents chat messages from being sent to the general channel.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Chat.SwapChannel(Deltin.CustomGameAutomation.Channel)">
+            <summary>
+            Swaps to a chat channel.
+            </summary>
+            <param name="channel">Channel to join</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Chat.LeaveChannel(Deltin.CustomGameAutomation.Channel)">
+            <summary>
+            Leaves a channel so no chat messages can be sent or recieved on that channel.
+            </summary>
+            <param name="channel">Channel to leave.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Chat.JoinChannel(Deltin.CustomGameAutomation.Channel)">
+            <summary>
+            Joins a channel after leaving it with LeaveChannel.
+            </summary>
+            <param name="channel">Channel to rejoin.</param>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.Channel">
             <summary>
             Chat channels for Overwatch.
@@ -915,15 +839,192 @@
             The private message chat channel.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.Commands">
+            <summary>
+            Chat commands for Overwatch.
+            </summary>
+            <remarks>
+            The Commands class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" /> field.
+            </remarks>
+            <example>
+      The code below will allow the players in the server to vote for a map.
+
+      <code>
+      using System;
+      using System.Linq;
+      using System.Threading;
+      using Deltin.CustomGameAutomation;
+
+      public class MapVoting
+      {
+          private static Map[] Maps = new Map[]
+          {
+              Map.TDM_Antarctica,
+              Map.TDM_Dorado,
+              Map.TDM_Lijiang_Garden,
+              Map.TDM_Petra,
+              Map.TDM_Nepal_Shrine,
+              Map.TDM_Hanamura
+          };
+          private static string[] MapNames = new string[]
+          {
+              "Antarctica",
+              "Dorado",
+              "Lijiang Garden",
+              "Petra",
+              "Nepal Shrine",
+              "Hanamura"
+          };
+
+          public static void VoteForMap(CustomGame cg)
+          {
+              Random rnd = new Random();
+              int[] votemap = new int[3]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
+              for (int i = 0; i &lt; votemap.Length; i++)
+              {
+                  int choose;
+                  while (true)
+                  {
+                      // Make sure there are no duplicates when choosing the next map to be added to the votemap array
+                      choose = rnd.Next(Maps.Length);
+                      if (votemap.Contains(choose))
+                          continue;
+                      break;
+                  }
+                  votemap[i] = choose;
+              }
+              string type = "Vote for map! (15 seconds)                                      " + MapNames[votemap[0]] + " - $VOTE 1                               " + MapNames[votemap[1]] + " - $VOTE 2                               " + MapNames[votemap[2]] + " - $VOTE 3";
+              cg.Chat.SendChatMessage(type);
+
+              // Start listening to the "$VOTE" command.
+              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+              // Listen for chat commands for 15 seconds.
+              cg.Commands.Listen = true;
+              Thread.Sleep(15000);
+              cg.Commands.Listen = false;
+              // Get results
+              int[] results = new int[3];
+              var commands = cg.Commands.ExecutedCommands;
+              for (int i = 0; i &lt; commands.Count; i++)
+              {
+                  string[] commandSplit = commands[i].Command.Split(' ');
+                  if (commandSplit.Length &gt;= 2 &amp;&amp; commandSplit[0] == "$VOTE")
+                  {
+                      int votefor = Int32.Parse(commands[i].Command.Split(' ')[1]) - 1;
+                      if (votefor &gt;= 0 &amp;&amp; votefor &lt; results.Length)
+                          results[votefor]++;
+                  }
+              }
+              int winningmap = votemap[results.ToList().IndexOf(results.Max())];
+              cg.Commands.DisposeAllExecutedCommands();
+              // Print the results to the chat
+              cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", MapNames[votemap[0]], results[0], MapNames[votemap[1]], results[1], MapNames[votemap[2]], results[2]));
+              cg.Chat.SendChatMessage("Next map: " + MapNames[winningmap]);
+              cg.ToggleMap(ToggleAction.DisableAll, Maps[winningmap]);
+          }
+      }
+      </code>
+    </example>
+            <seealso cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" />
+            <seealso cref="T:Deltin.CustomGameAutomation.ListenTo" />
+            <seealso cref="T:Deltin.CustomGameAutomation.CommandData" />
+            <seealso cref="T:Deltin.CustomGameAutomation.PlayerIdentity" />
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.ListenTo">
+            <summary>
+            Commands to listen to.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.RegisteredPlayerIdentities">
+            <summary>
+            List containing all player identities.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.ExecutedCommands">
+            <summary>
+            List of executed commands.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeExecutedCommand(System.Int32)">
+            <summary>
+            Removes an executed command from the executed commands list.
+            </summary>
+            <param name="index">Command to remove by index.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeAllExecutedCommands">
+            <summary>
+            Removes all executed commands.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposePlayerIdentity(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="identity">Identity to dispose.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposePlayerIdentity(System.Int32)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="index">Index of the identity to dispose in the RegisteredPlayerIdentities list.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeAllPlayerIdentities">
+            <summary>
+            Disposes all player identities.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.Listen">
+            <summary>
+            Set to true to start listening to commands. Set to false to stop.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.RegisterPlayerProfiles">
+            <summary>
+            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.ListenToAllCommands">
+            <summary>
+            Listens to all commands rather than just the commands in the ListenTo dictionary.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.AllowMultipleCommandExecutions">
+            <summary>
+            Allows one executor to execute more than one command.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.SameExecutorCommandUpdate">
+            <summary>
+            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.GetSlotIdentity(System.Int32)">
+            <summary>
+            Gets the player identity of a slot.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <returns>The player identity of the slot.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Gets the commands a player identity has executed.
+            </summary>
+            <param name="identity">Identity to check.</param>
+            <returns>Array of commands executed.</returns>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.ListenTo">
             <summary>
             Data for commands to listen to on the Commands class.
             </summary>
+            <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean)">
             <summary>
             Data for commands to listen to on the Commands class.
             </summary>
+            <param name="command">Command to listen to.</param>
+            <param name="listen">Should this command be listened to?</param>
+            <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
         </member>
         <member name="P:Deltin.CustomGameAutomation.ListenTo.Command">
             <summary>
@@ -949,6 +1050,7 @@
             <summary>
             Data of Overwatch executed chat commands.
             </summary>
+            <seealso cref="T:Deltin.CustomGameAutomation.ListenTo"/>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.Command">
             <summary>
@@ -1021,6 +1123,21 @@
         <member name="F:Deltin.CustomGameAutomation.OverwatchProcessInfo.ScreenshotMethod">
             <summary>
             The method that is used to take screenshots of the Overwatch window.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGameBase">
+            <summary>
+            Base type for CustomGame interaction members.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGameBase.#ctor(Deltin.CustomGameAutomation.CustomGame)">
+            <summary>
+            Base type for CustomGame interaction members.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBase.cg">
+            <summary>
+            The <see cref="T:Deltin.CustomGameAutomation.CustomGame"/> object to use.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Join">
@@ -1098,12 +1215,6 @@
             Thrown when slot is invalid or out of range.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.InvalidSlotException.#ctor(System.String)">
-            <summary>
-            Throws invalid slot exception.
-            </summary>
-            <param name="message">Message to display.</param>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.MissingOverwatchProcessException">
             <summary>
             Thrown if an Overwatch process is not found.
@@ -1141,6 +1252,7 @@
             <summary>
             Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
             </summary>
+            <seealso cref="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.GameOverArgs.#ctor(Deltin.CustomGameAutomation.PlayerTeam)">
             <summary>
@@ -1151,7 +1263,168 @@
             <summary>
             Gets the team that won the Overwatch game.
             </summary>
-            <returns></returns>
+            <returns>Returns the team that won the game.</returns>
+            <seealso cref="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver"/>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Pause">
+            <summary>
+            Controls Overwatch's pause feature.
+            </summary>
+            <remarks>
+            The Pause class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Pause"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Pause.TogglePause">
+            <summary>
+            Toggle pause.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Pause.PauseGame">
+            <summary>
+            Pauses the game.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Pause.UnpauseGame">
+            <summary>
+            Unpauses the game.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Pause.IsPaused">
+            <summary>
+            Determines if the game is paused.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerInfo">
+            <summary>
+            Info about players in an Overwatch custom game.
+            </summary>
+            <remarks>
+            The PlayerInfo class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayersDead(System.Boolean)">
+            <summary>
+            Gets a list of players who died.
+            </summary>
+            <param name="noUpdate"></param>
+            <returns>List of players who are dead.</returns>
+            <example>
+            The code below will award a point to a team if they get a kill.
+            <code>
+            using System;
+            using System.Collections.Generic;
+            using System.Threading;
+            using Deltin.CustomGameAutomation;
+            
+            public class PlayersDeadExample
+            {
+                public static void AwardTeamOnKill(CustomGame cg)
+                {
+                    bool[] awarded = new bool[12];
+                    
+                    int redpoints = 0;
+                    int bluepoints = 0;
+                    
+                    while (true)
+                    {
+                        List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
+                        for (int i = 0; i &lt; 12; i++)
+                        {
+                            if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)
+                            {
+                                if (cg.IsSlotBlue(i))
+                                {
+                                    redpoints++;
+                                    Console.WriteLine("Red points: {0}", redpoints);
+                                }
+                                else if (cg.IsSlotRed(i))
+                                {
+                                    bluepoints++;
+                                    Console.WriteLine("Blue points: {0}", bluepoints);
+                                }
+                                awarded[i] = true;
+                            }
+                            else if (playersdead.Contains(i) == false &amp;&amp; awarded[i])
+                            {
+                                awarded[i] = false;
+                            }
+                        }
+                        Thread.Sleep(500);
+                    }
+                }
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.MaxPlayerCount">
+            <summary>
+            Get max player count for both teams.
+            </summary>
+            <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.IsHeroChosen(System.Int32)">
+            <summary>
+            Test if input slot has chosen a hero.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns>Returns true if a hero is chosen.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.ModeratorSlot">
+            <summary>
+            Gets the slot the moderator is on.
+            </summary>
+            <returns>Slot the moderator is on.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetQueueTeam(System.Int32)">
+            <summary>
+            Gets the team a player in the queue is queueing for.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <returns>Team that the player is queueing for.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.IsUltimateReady(System.Int32,System.Boolean)">
+            <summary>
+            Checks if the input slot has their ultimate.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <param name="noUpdate" />
+            <returns>Returns true if player as ultimate.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHeroMarkup(System.Int32,System.String)">
+            <summary>
+            Obtains the markup of a hero icon.
+            </summary>
+            <param name="slot">Slot to get hero icon from.</param>
+            <param name="saveTo">Location on the file system to save it to.</param>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHero(System.Int32)">
+            <summary>
+            Gets the hero a player is playing.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <returns>Returns the hero the slot is playing.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHero(System.Int32,Deltin.CustomGameAutomation.HeroResultInfo@)">
+            <summary>
+            Gets the hero a player is playing.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <param name="resultInfo">Info about the returned value.</param>
+            <returns>Returns the hero the slot is playing.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayerExists(System.String)">
+            <summary>
+            Checks if a player account exists via battletag. Is case sensitive.
+            </summary>
+            <param name="battletag">Battletag of player to check. Is case sensitive.</param>
+            <returns>Returns true if player exists, else returns false.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
         </member>
         <member name="T:Deltin.CustomGameAutomation.QueueTeam">
             <summary>
@@ -1203,6 +1476,109 @@
             Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.Interact">
+            <summary>
+            Changes a player's state in Overwatch.
+            </summary>
+            <remarks>
+            The Interact class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionMarkup(System.Int32,System.Int32,System.String,System.Double)">
+            <summary>
+            Generates a markup for a menu option in Overwatch.
+            </summary>
+            <param name="slot">Slot to generate markup from.</param>
+            <param name="max">Maximum markups to capture.</param>
+            <param name="savelocation">Location to save markups.</param>
+            <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32,System.Double)">
+            <summary>
+            Scans a player menu for an option.
+            </summary>
+            <param name="slot">Slot's menu to scan.</param>
+            <param name="markup">Bitmap markup of option to scan for.</param>
+            <param name="minimumPercent">Minimum percent the markup has to match an option in the menu.</param>
+            <param name="max">Maximum options to scan.</param>
+            <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
+            <returns>Returns true if the option in the markup has been found, else returns false.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)">
+            <summary>
+            Removes player from the game
+            </summary>
+            <param name="slot">Slot to remove from game.</param>
+            <returns>Returns true if removing from game was successful</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)" />
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapToRed(System.Int32)">
+            <summary>
+            Swaps player to red team.
+            </summary>
+            <param name="slot">Slot to swap to red team.</param>
+            <returns>Returns true when swapping player to red team is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapToBlue(System.Int32)">
+            <summary>
+            Swaps player to blue team.
+            </summary>
+            <param name="slot">Slot to swap to blue team.</param>
+            <returns>Returns true when swapping player to blue team is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapTeam(System.Int32)">
+            <summary>
+            Swaps the team of a player.
+            </summary>
+            <param name="slot">Slot to swap team.</param>
+            <returns>Returns true if swapping team is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapToSpectators(System.Int32)">
+            <summary>
+            Swaps player to spectator.
+            </summary>
+            <param name="slot">Slot to swap to spectator.</param>
+            <returns>Returns true if swapping to spectators is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapToNeutral(System.Int32)">
+            <summary>
+            Swaps player in queue to the neutral team.
+            </summary>
+            <param name="slot">Slot to swap to neutral.</param>
+            <returns>Returns true if swapping player to neutral is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.RemoveAllBots(System.Int32)">
+            <summary>
+            Removes all AI from the game. Input slot must be an AI.
+            </summary>
+            <param name="slot">Slot of an AI.</param>
+            <returns>Returns true if removing all AI is successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+            <remarks>
+            <paramref name="slot" /> must be the slot of an AI. If you do not know if the slot will be an AI, use <see cref="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto" />.
+            </remarks>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto" />
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.Move(System.Int32,System.Int32)">
+            <summary>
+            Swap 2 slots with eachother.
+            </summary>
+            <param name="slot1">Target 1</param>
+            <param name="slot2">Target 2</param>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if the <paramref name="slot1"/> or <paramref name="slot2"/> argument is out of range of possible slots to move.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.SwapAll">
+            <summary>
+            Swaps players on both teams.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.Map">
             <summary>
             Maps in Overwatch.
@@ -1222,6 +1598,34 @@
             <summary>
             The Overwatch event the map is on.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Map.MapIDFromName(System.String)">
+            <summary>
+            Gets map ID from map name.
+            </summary>
+            <param name="map">Map name.</param>
+            <returns>Returns the map ID.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Map.MapNameFromID(Deltin.CustomGameAutomation.Map)">
+            <summary>
+            Gets map name from map ID.
+            </summary>
+            <param name="map">Map ID.</param>
+            <returns>Returns map name.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Map.GetMaps">
+            <summary>
+            Gets all maps.
+            </summary>
+            <returns>Returns all maps.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Map.GetMapsInGamemode(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.Event)">
+            <summary>
+            Gets all maps in a gamemode.
+            </summary>
+            <param name="gamemode">The gamemode to get the maps from.</param>
+            <param name="owEvent">Filter by Overwatch event.</param>
+            <returns>An array of maps in the <paramref name="gamemode"/>.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Event">
             <summary>
@@ -1472,35 +1876,6 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.maplist">
-             <summary>
-               Looks up a localized string similar to #This file includes a list of all possible map variants in Overwatch.
-            
-            -Assault
-            A_Hanamura
-            A_Hanamura_Winter:WinterWonderland
-            A_HorizonLunarColony
-            A_TempleOfAnubis
-            A_VolskayaIndustries
-            
-            -AssaultEscort
-            AE_Eichenwalde
-            AE_Eichenwalde_Halloween:HalloweenTerror
-            AE_Hollywood
-            AE_Hollywood_Halloween:HalloweenTerror
-            AE_KingsRow
-            AE_KingsRow_Winter:WinterWonderland
-            AE_Numbani
-            
-            -CaptureTheFlag
-            CTF_Ilios_Lighthouse
-            CTF_Ilios_Ruins
-            CTF_Ilios_Well
-            CTF_Lijiang_ControlCenter
-            CTF_Lijiang_Garden
-            CTF_Li [rest of string was truncated]&quot;;.
-             </summary>
-        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.mccree_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
@@ -1655,6 +2030,7 @@
             <summary>
             Data to change hero settings.
             </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.SetHeroSettings(Deltin.CustomGameAutomation.SetHero[])"/>
         </member>
         <member name="F:Deltin.CustomGameAutomation.SetHero.Hero">
             <summary>
@@ -1689,6 +2065,54 @@
             <summary>
             All heroes in Overwatch.
             </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Settings">
+            <summary>
+            Custom Game settings in Overwatch.
+            </summary>
+            <remarks>
+            The Settings class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Settings"/> field.
+            </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32,System.Int32)">
+            <summary>
+            Loads a preset saved in Overwatch.
+            </summary>
+            <param name="preset">Preset to load. 0 is the first preset</param>
+            <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
+            <returns>Returns true if selecting the preset was successful.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
+            <summary>
+            Changes who can join.
+            </summary>
+            <param name="setting">Join setting to select.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetGameName(System.String)">
+            <summary>
+            Changes the custom game's name.
+            </summary>
+            <param name="name">Name to change game name to.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 3 characters or greater than 64 characters.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetTeamName(Deltin.CustomGameAutomation.PlayerTeam,System.String)">
+            <summary>
+            Changes a team's name.
+            </summary>
+            <param name="team">Team to change name.</param>
+            <param name="name">Name to change team's name to.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetMaxPlayers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Sets the max player count for blue team, red team, free for all, or spectators.
+            </summary>
+            <param name="blueCount">Maximum number of blue players. Must be in the range of 1-6. Set to null to ignore.</param>
+            <param name="redCount">Maximum number of red players. Must be in the range of 1-6. Set to null to ignore.</param>
+            <param name="ffaCount">Maximum number of FFA players. Must be in the range of 1-12. Set to null to ignore.</param>
+            <param name="spectatorCount">Maximum number of spectators. Must be in the range of 0-12. Set to null to ignore.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="blueCount"/>, <paramref name="redCount"/>, <paramref name="ffaCount"/>, or <paramref name="spectatorCount"/> is less than 0 or greater than their max values.</exception>
         </member>
     </members>
 </doc>

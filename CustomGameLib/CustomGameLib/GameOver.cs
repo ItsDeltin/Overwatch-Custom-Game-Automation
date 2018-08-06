@@ -99,12 +99,36 @@ namespace Deltin.CustomGameAutomation
         /// Events that are executed when the game is over.
         /// To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.
         /// </summary>
+        /// <example>
+        /// The example below will send a message to chat when the game is over.
+        /// <code>
+        /// using Deltin.CustomGameAutomation;
+        /// 
+        /// public class OnGameOverExample
+        /// {
+        ///     public static void SendMessageToChatWhenGameIsOver(CustomGame cg)
+        ///     {
+        ///         cg.GameSettings.SetTeamName(PlayerTeam.Blue, "\ Blue Team");
+        ///         cg.GameSettings.SetTeamName(PlayerTeam.Red, "* Red Team");
+        ///         cg.OnGameOver += Cg_OnGameOver;
+        ///     }
+        ///     
+        ///     private static void Cg_OnGameOver(object sender, GameOverArgs e)
+        ///     {
+        ///         PlayerTeam winningTeam = e.GetWinningTeam();
+        ///         (sender as CustomGame).Chat.Chat(string.Format("The game is over, Team {0} has won!", winningTeam.ToString()));
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="GameOverArgs.GetWinningTeam"/>
         public event EventHandler<GameOverArgs> OnGameOver;
     }
 
     /// <summary>
     /// Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
     /// </summary>
+    /// <seealso cref="CustomGame.OnGameOver"/>
     public class GameOverArgs : EventArgs
     {
         private PlayerTeam WinningTeam;
@@ -112,7 +136,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
         /// </summary>
-        public GameOverArgs(PlayerTeam winningteam)
+        internal GameOverArgs(PlayerTeam winningteam)
         {
             WinningTeam = winningteam;
         }
@@ -120,7 +144,8 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Gets the team that won the Overwatch game.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the team that won the game.</returns>
+        /// <seealso cref="CustomGame.OnGameOver"/>
         public PlayerTeam GetWinningTeam()
         {
             return WinningTeam;

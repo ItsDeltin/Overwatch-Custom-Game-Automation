@@ -69,148 +69,151 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Map selection in Overwatch.
+        /// Toggles maps in Overwatch.
         /// </summary>
-        public CG_Maps Maps;
-        /// <summary>
-        /// Map selection in Overwatch.
-        /// </summary>
-        public class CG_Maps
+        /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
+        /// <param name="maps">Maps that should be toggled.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="ModesEnabled"/> is null.</exception>
+        /// <remarks>
+        /// <see cref="ModesEnabled"/> must be set to use this method. <see cref="CurrentOverwatchEvent"/> must be set if a seasonal Overwatch event is on.
+        /// <include file="docs.xml" path="doc/getMaps" />
+        /// </remarks>
+        /// <example>
+        /// The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+        /// <code>
+        /// using Deltin.CustomGameAutomation;
+        /// 
+        /// public class ToggleMapExample
+        /// {
+        ///     public static void SetEnabledMaps(CustomGame cg) 
+        ///     {
+        ///         cg.ModesEnabled = new ModesEnabled()
+        ///         {
+        ///             Assault = true,
+        ///             AssaultEscort = true,
+        ///             Control = true,
+        ///             Escort = true
+        ///         }
+        ///         cg.CurrentOverwatchEvent = Event.None;
+        ///         cg.ToggleMap(ToggleAction.DisableAll, Map.A_Hanamura, E_Gibraltar, C_Ilios);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="Map"/>
+        /// <seealso cref="ToggleMap(ModesEnabled, Event, ToggleAction, Map[])"/>
+        public void ToggleMap(ToggleAction ta, params Map[] maps)
         {
-            private CustomGame cg;
-            internal CG_Maps(CustomGame cg)
-            { this.cg = cg; }
+            if (ModesEnabled == null)
+                throw new ArgumentNullException("CustomGame.ModesEnabled", "The field CustomGame.ModesEnabled must be set in order to use ToggleMap.");
+            ToggleMap(ModesEnabled, CurrentOverwatchEvent, ta, maps);
+        }
 
-            /// <summary>
-            /// Toggles maps in Overwatch.
-            /// </summary>
-            /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
-            /// <param name="maps">Maps that should be toggled.</param>
-            public void ToggleMap(ToggleAction ta, params Map[] maps)
+        /// <summary>
+        /// Toggles maps in Overwatch.
+        /// </summary>
+        /// <param name="modesEnabled">The modes enabled in the overwatch game.</param>
+        /// <param name="currentOverwatchEvent">The current Overwatch event.</param>
+        /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
+        /// <param name="maps">Maps that should be toggled.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="modesEnabled"/> is null.</exception>
+        /// <remarks>
+        /// <include file="docs.xml" path="doc/getMaps" />
+        /// </remarks>
+        /// <example>
+        /// The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+        /// <code>
+        /// using Deltin.CustomGameAutomation;
+        /// 
+        /// public class ToggleMapExample
+        /// {
+        ///     public static void SetEnabledMaps(CustomGame cg) 
+        ///     {
+        ///         cg.ToggleMap(
+        ///             new ModesEnabled() 
+        ///             {
+        ///                 Assault = true,
+        ///                 AssaultEscort = true,
+        ///                 Control = true,
+        ///                 Escort = true
+        ///             },
+        ///             Event.None,
+        ///             ToggleAction.DisableAll, 
+        ///             Map.A_Hanamura, E_Gibraltar, C_Ilios);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        /// <seealso cref="Map"/>
+        /// <seealso cref="ToggleMap(ToggleAction, Map[])"/>
+        public void ToggleMap(ModesEnabled modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
+        {
+            if (modesEnabled == null)
+                throw new ArgumentNullException("modesEnabled");
+
+            GoToSettings();
+
+            LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
+
+            // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
+            if (ta == ToggleAction.DisableAll)
+                LeftClick(640, 125, 250);
+            else if (ta == ToggleAction.EnableAll)
+                LeftClick(600, 125, 250);
+
+            // Get the modes enabled state in a bool in alphabetical order.
+            bool[] enabledModes = new bool[]
             {
-                if (cg.ModesEnabled == null)
-                    throw new ArgumentNullException("CustomGame.ModesEnabled", "The field CustomGame.ModesEnabled must be set in order to use ToggleMap.");
-                ToggleMap(cg.ModesEnabled, cg.CurrentOverwatchEvent, ta, maps);
-            }
+                modesEnabled.Assault,
+                modesEnabled.AssaultEscort,
+                modesEnabled.CaptureTheFlag,
+                modesEnabled.Control,
+                modesEnabled.Deathmatch,
+                modesEnabled.Elimination,
+                modesEnabled.Escort,
+                modesEnabled.JunkensteinsRevenge,
+                modesEnabled.Lucioball,
+                modesEnabled.MeisSnowballOffensive,
+                modesEnabled.Skirmish,
+                modesEnabled.TeamDeathmatch,
+                modesEnabled.YetiHunter
+            };
 
-            /// <summary>
-            /// Toggles maps in Overwatch.
-            /// </summary>
-            /// <param name="modesEnabled">The modes enabled in the overwatch game.</param>
-            /// <param name="currentOverwatchEvent">The current Overwatch event.</param>
-            /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
-            /// <param name="maps">Maps that should be toggled.</param>
-            public void ToggleMap(ModesEnabled modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
-            {
-                cg.GoToSettings();
-
-                cg.LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
-
-                // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
-                if (ta == ToggleAction.DisableAll)
-                    cg.LeftClick(640, 125, 250);
-                else if (ta == ToggleAction.EnableAll)
-                    cg.LeftClick(600, 125, 250);
-
-                // Get the modes enabled state in a bool in alphabetical order.
-                bool[] enabledModes = new bool[]
+            List<int> selectMap = new List<int>();
+            int mapcount = 0;
+            // For each enabled mode...
+            for (int i = 0; i < enabledModes.Length; i++)
+                if (enabledModes[i])
                 {
-                    modesEnabled.Assault,
-                    modesEnabled.AssaultEscort,
-                    modesEnabled.CaptureTheFlag,
-                    modesEnabled.Control,
-                    modesEnabled.Deathmatch,
-                    modesEnabled.Elimination,
-                    modesEnabled.Escort,
-                    modesEnabled.JunkensteinsRevenge,
-                    modesEnabled.Lucioball,
-                    modesEnabled.MeisSnowballOffensive,
-                    modesEnabled.Skirmish,
-                    modesEnabled.TeamDeathmatch,
-                    modesEnabled.YetiHunter
-                };
-
-                List<int> selectMap = new List<int>();
-                int mapcount = 0;
-                // For each enabled mode...
-                for (int i = 0; i < enabledModes.Length; i++)
-                    if (enabledModes[i])
-                    {
-                        Gamemode emi = (Gamemode)i; //enabledmodesindex
-                        List<Map> allowedmaps = GetMapsInGamemode(emi, currentOverwatchEvent);
-                        // ...And for each map...
-                        for (int mi = 0; mi < maps.Length; mi++)
-                            // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...
-                            if (maps[mi].GameMode == emi && allowedmaps.Contains(maps[mi]))
-                            {
-                                // ...then add the map index to the selectmap list. 1, 5, 10 will toggle the first map in overwatch, the fifth, then the tenth...
-                                selectMap.Add(mapcount + allowedmaps.IndexOf(maps[mi]) + 1);
-                            }
-                        // ...then finally add the number of maps in the mode to the mapcount.
-                        mapcount += allowedmaps.Count;
-                    }
-                mapcount++;
-
-                // Toggle maps
-                for (int i = 0; i < mapcount; i++)
-                {
-                    for (int mi = 0; mi < selectMap.Count; mi++)
-                        if (selectMap[mi] == i)
+                    Gamemode emi = (Gamemode)i; //enabledmodesindex
+                    List<Map> allowedmaps = Map.GetMapsInGamemode(emi, currentOverwatchEvent).ToList();
+                    // ...And for each map...
+                    for (int mi = 0; mi < maps.Length; mi++)
+                        // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...
+                        if (maps[mi].GameMode == emi && allowedmaps.Contains(maps[mi]))
                         {
-                            cg.KeyPress(Keys.Space);
-                            Thread.Sleep(1);
+                            // ...then add the map index to the selectmap list. 1, 5, 10 will toggle the first map in overwatch, the fifth, then the tenth...
+                            selectMap.Add(mapcount + allowedmaps.IndexOf(maps[mi]) + 1);
                         }
-                    cg.KeyPress(Keys.Down);
-                    Thread.Sleep(1);
+                    // ...then finally add the number of maps in the mode to the mapcount.
+                    mapcount += allowedmaps.Count;
                 }
+            mapcount++;
 
-                cg.GoBack(2, 0);
-            }
-
-            /// <summary>
-            /// Gets map ID from map name.
-            /// </summary>
-            /// <param name="map">Map name.</param>
-            /// <returns>Returns map ID.</returns>
-            public static Map MapIDFromName(string map)
+            // Toggle maps
+            for (int i = 0; i < mapcount; i++)
             {
-                var maps = GetMaps();
-                for (int i = 0; i < maps.Count; i++)
-                    if (maps[i].MapName.ToLower() == map.ToLower())
-                        return maps[i];
-                return null;
+                for (int mi = 0; mi < selectMap.Count; mi++)
+                    if (selectMap[mi] == i)
+                    {
+                        KeyPress(Keys.Space);
+                        Thread.Sleep(1);
+                    }
+                KeyPress(Keys.Down);
+                Thread.Sleep(1);
             }
 
-            /// <summary>
-            /// Gets map name from map ID.
-            /// </summary>
-            /// <param name="map">Map ID.</param>
-            /// <returns>Returns map name.</returns>
-            public static string MapNameFromID(Map map)
-            {
-                FieldInfo[] fi = GetMapFieldInfo();
-                for (int i = 0; i < fi.Length; i++)
-                    if (MaparFromFieldInfo(fi[i]) == map)
-                        return fi[i].Name;
-                return null;
-            }
-
-            private static FieldInfo[] GetMapFieldInfo()
-            {
-                return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);
-            }
-            private static Map MaparFromFieldInfo(FieldInfo fi)
-            {
-                return (Map)fi.GetValue(null);
-            }
-            private static List<Map> GetMaps()
-            {
-                return GetMapFieldInfo().Select(v => (Map)v.GetValue(null)).ToList();
-            }
-            private List<Map> GetMapsInGamemode(Gamemode gamemode, Event owEvent)
-            {
-                return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && v.GameMode == gamemode).ToList();
-            }
+            GoBack(2, 0);
         }
 
         internal Point GetModeLocation(Gamemode mode, Event owevent)
@@ -297,6 +300,7 @@ namespace Deltin.CustomGameAutomation
     public class Map : IEquatable<Map>
     {
         // This is all possible map variants that can be selected in custom games. All static fields must be a Map value.
+        #region Maps
 #pragma warning disable CS1591
         // Assault
         public static Map A_Hanamura                       = new Map(Gamemode.Assault,               "A_Hanamura",                       Event.None);
@@ -484,6 +488,7 @@ namespace Deltin.CustomGameAutomation
         // Yeti Hunter
         public static Map YH_Nepal_Village                 = new Map(Gamemode.YetiHunter,            "YH_Nepal_Village",                 Event.WinterWonderland);
 #pragma warning restore CS1591
+        #endregion
 
         /// <summary>
         /// Gamemode of the map.
@@ -509,6 +514,61 @@ namespace Deltin.CustomGameAutomation
             return MapName == other.MapName 
                 && GameMode == other.GameMode 
                 && GameEvent == other.GameEvent;
+        }
+
+        /// <summary>
+        /// Gets map ID from map name.
+        /// </summary>
+        /// <param name="map">Map name.</param>
+        /// <returns>Returns the map ID.</returns>
+        public static Map MapIDFromName(string map)
+        {
+            var maps = GetMaps();
+            for (int i = 0; i < maps.Length; i++)
+                if (maps[i].MapName.ToLower() == map.ToLower())
+                    return maps[i];
+            return null;
+        }
+
+        /// <summary>
+        /// Gets map name from map ID.
+        /// </summary>
+        /// <param name="map">Map ID.</param>
+        /// <returns>Returns map name.</returns>
+        public static string MapNameFromID(Map map)
+        {
+            FieldInfo[] fi = GetMapFieldInfo();
+            for (int i = 0; i < fi.Length; i++)
+                if (MaparFromFieldInfo(fi[i]) == map)
+                    return fi[i].Name;
+            return null;
+        }
+
+        private static FieldInfo[] GetMapFieldInfo()
+        {
+            return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);
+        }
+        private static Map MaparFromFieldInfo(FieldInfo fi)
+        {
+            return (Map)fi.GetValue(null);
+        }
+        /// <summary>
+        /// Gets all maps.
+        /// </summary>
+        /// <returns>Returns all maps.</returns>
+        public static Map[] GetMaps()
+        {
+            return GetMapFieldInfo().Select(v => (Map)v.GetValue(null)).ToArray();
+        }
+        /// <summary>
+        /// Gets all maps in a gamemode.
+        /// </summary>
+        /// <param name="gamemode">The gamemode to get the maps from.</param>
+        /// <param name="owEvent">Filter by Overwatch event.</param>
+        /// <returns>An array of maps in the <paramref name="gamemode"/>.</returns>
+        public static Map[] GetMapsInGamemode(Gamemode gamemode, Event owEvent = Event.None)
+        {
+            return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && v.GameMode == gamemode).ToArray();
         }
     }
 

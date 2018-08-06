@@ -32,19 +32,19 @@ namespace ZombieBot
                 bool endgame = false;
                 if (game.ElapsedMilliseconds >= 330 * 1000) // if time runs out, survivors win
                 {
-                    cg.Chat.Chat("The survivors defend long enough for help to arrive. Survivors win.");
+                    cg.Chat.SendChatMessage("The survivors defend long enough for help to arrive. Survivors win.");
                     endgame = true;
                     Thread.Sleep(2000);
                 }
                 if (cg.BlueCount == 0) // blue is empty, zombies win
                 {
-                    cg.Chat.Chat("The infection makes its way to the last human. Zombies win.");
+                    cg.Chat.SendChatMessage("The infection makes its way to the last human. Zombies win.");
                     endgame = true;
                     Thread.Sleep(2000);
                 }
                 if (endgame == true)
                 {
-                    cg.Chat.Chat("Resetting, please wait...");
+                    cg.Chat.SendChatMessage("Resetting, please wait...");
 
                     game.Reset();
 
@@ -62,7 +62,7 @@ namespace ZombieBot
                     if (cg.TotalPlayerCount < 7 && Join == JoinType.ServerBrowser)
                     {
                         MatchIsPublic = true;
-                        cg.GameSettings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
+                        cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
                     }
                     else
                         MatchIsPublic = false;
@@ -79,15 +79,15 @@ namespace ZombieBot
                 {
                     if (game.ElapsedMilliseconds >= Extra.SquashArray(timeStamps, ti) * 1000)
                     {
-                        if (messageStamps[ti] > 60) cg.Chat.Chat((messageStamps[ti] / 60) + " minutes remaining.");
-                        if (messageStamps[ti] == 60) cg.Chat.Chat("1 minute remaining.");
-                        if (messageStamps[ti] < 60) cg.Chat.Chat(messageStamps[ti] + " seconds remaining.");
+                        if (messageStamps[ti] > 60) cg.Chat.SendChatMessage((messageStamps[ti] / 60) + " minutes remaining.");
+                        if (messageStamps[ti] == 60) cg.Chat.SendChatMessage("1 minute remaining.");
+                        if (messageStamps[ti] < 60) cg.Chat.SendChatMessage(messageStamps[ti] + " seconds remaining.");
                         ti++;
                         if (ti == 1)
                         {
                             // remove bots
                             cg.AI.RemoveAllBotsAuto();
-                            cg.Chat.Chat("Zombies have been released. Good luck.");
+                            cg.Chat.SendChatMessage("Zombies have been released. Good luck.");
 
                             // Swap blue players who didn't choose a hero to red if the version is TDM.
                             if (version == 1)
