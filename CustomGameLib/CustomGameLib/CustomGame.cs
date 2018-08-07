@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
         Bitmap bmp = null;
         static Rectangle shotarea = new Rectangle(0, 0, 960, 540);
 
-        internal bool debugmode = true;
+        internal readonly bool debugmode = false;
         internal Form debug;
         internal Graphics g;
 
