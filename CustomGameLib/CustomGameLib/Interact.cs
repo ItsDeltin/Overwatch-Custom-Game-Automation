@@ -54,7 +54,7 @@ namespace Deltin.CustomGameAutomation
                                         // Open slot menu by right clicking on slot.
             cg.Cursor = slotlocation;
             Thread.Sleep(100);
-            cg.RightClick(cg.Cursor.X, cg.Cursor.Y);
+            cg.RightClick(cg.Cursor);
             cg.updateScreen();
             return slotlocation;
         }
@@ -66,9 +66,9 @@ namespace Deltin.CustomGameAutomation
             Thread.Sleep(100);
             // <image url="$(ProjectDir)\ImageComments\Interact.cs\OptionSelect.png" scale="0.7" />
             cg.updateScreen();
-            if (cg.CompareColor(point.X, point.Y, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
+            if (cg.CompareColor(point, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
             {
-                cg.LeftClick(point.X, point.Y, 0);
+                cg.LeftClick(point, 0);
                 cg.ResetMouse();
                 return true;
             }
@@ -156,8 +156,8 @@ namespace Deltin.CustomGameAutomation
             }
 
             // Close the menu.
-            cg.LeftClick(400, 500, 100);
-            cg.LeftClick(500, 500, 100);
+            cg.LeftClick(Points.OPTIONS_APPLY, 100);
+            cg.LeftClick(Points.OPTIONS_BACK, 100);
             cg.ResetMouse();
         }
 
@@ -351,26 +351,32 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Swap 2 slots with eachother.
         /// </summary>
-        /// <param name="slot1">Target 1</param>
-        /// <param name="slot2">Target 2</param>
-        /// <exception cref="InvalidSlotException">Thrown if the <paramref name="slot1"/> or <paramref name="slot2"/> argument is out of range of possible slots to move.</exception>
-        public void Move(int slot1, int slot2)
+        /// <param name="targetSlot">Target 1</param>
+        /// <param name="destinationSlot">Target 2</param>
+        /// <exception cref="InvalidSlotException">Thrown if the <paramref name="targetSlot"/> or <paramref name="destinationSlot"/> argument is out of range of possible slots to move.</exception>
+        public void Move(int targetSlot, int destinationSlot)
         {
-            if (!cg.IsSlotValid(slot1))
-                throw new InvalidSlotException(string.Format("slot1 argument '{0}' is out of range.", slot1));
-            if (!cg.IsSlotValid(slot2))
-                throw new InvalidSlotException(string.Format("slot2 argument '{0}' is out of range.", slot2));
+            if (!cg.IsSlotValid(targetSlot))
+                throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
+            if (!cg.IsSlotValid(destinationSlot))
+                throw new InvalidSlotException(string.Format("destinationSlot argument '{0}' is out of range.", destinationSlot));
 
             cg.ResetMouse();
 
             cg.updateScreen();
-            if (cg.DoesAddButtonExist()) cg.LeftClick(661, 180, 25);
-            else cg.LeftClick(717, 180, 25);
+            if (cg.DoesAddButtonExist())
+            {
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
+            }
+            else
+            {
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
+            }
 
-            Point slot1loc = FindSlotLocation(slot1); // Get the location of the target
-            Point slot2loc = FindSlotLocation(slot2); // Get the location of the destination
-            cg.LeftClick(slot1loc.X, slot1loc.Y, 25); // Click the target
-            cg.LeftClick(slot2loc.X, slot2loc.Y, 25); // Click the destination
+            Point targetSlotLoc = FindSlotLocation(targetSlot);
+            Point destinationSlotLoc = FindSlotLocation(destinationSlot);
+            cg.LeftClick(targetSlotLoc, 25);
+            cg.LeftClick(destinationSlotLoc, 25);
 
             Thread.Sleep(200);
 
@@ -385,12 +391,24 @@ namespace Deltin.CustomGameAutomation
             bool aistatus = cg.DoesAddButtonExist();
 
             // click move
-            if (aistatus) cg.LeftClick(661, 180, 25); // with add AI button
-            else cg.LeftClick(717, 180, 25); // without add AI button
+            if (aistatus)
+            {
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
+            }
+            else
+            {
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
+            }
 
             // click swap all
-            if (aistatus) cg.LeftClick(617, 180, 25); // with add AI button
-            else cg.LeftClick(678, 180, 25); // without add AI button
+            if (aistatus)
+            {
+                cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT, 25);
+            }
+            else
+            {
+                cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT, 25);
+            }
 
             ExitMoveMenu();
         }
@@ -398,16 +416,14 @@ namespace Deltin.CustomGameAutomation
         private void ExitMoveMenu()
         {
             cg.updateScreen();
-            /*
-            if (cg.CompareColor(717, 180, new int[] { 160, 124, 80 }, 30)) cg.LeftClick(717, 183, 25); // with add AI button
-            else cg.LeftClick(660, 180, 25); // without add AI button
-            */
+
+            // Can't use DoesAddButtonExist here because the color of the buttons change
 
             Color color = cg.GetPixelAt(661, 175);
             if (color.R - color.B > 40)
-                cg.LeftClick(660, 175, 25);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
             else
-                cg.LeftClick(717, 175, 25);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
 
             cg.ResetMouse();
         }

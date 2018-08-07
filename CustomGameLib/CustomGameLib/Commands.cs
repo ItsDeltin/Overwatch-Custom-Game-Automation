@@ -241,9 +241,6 @@ namespace Deltin.CustomGameAutomation
 
         Task ScanCommandsTask;
 
-        // Area of text
-        static Rectangle shotarea = new Rectangle(50, 461, 169, 26); // Location on screen for chat
-
         static internal Rectangle CareerProfileShotArea = new Rectangle(46, 101, 265, 82);
 
         // Scale of debug images
@@ -257,7 +254,7 @@ namespace Deltin.CustomGameAutomation
 
         void ScanCommands()
         {
-            var bmp = new Bitmap(shotarea.Width, shotarea.Height, PixelFormat.Format32bppArgb);
+            var bmp = new Bitmap(Rectangles.LOBBY_CHATBOX.Width, Rectangles.LOBBY_CHATBOX.Height, PixelFormat.Format32bppArgb);
 
             Stopwatch toggle = new Stopwatch();
             if (cg.debugmode)
@@ -335,7 +332,7 @@ namespace Deltin.CustomGameAutomation
             cg.updateScreen();
             if (bmp != null)
                 bmp.Dispose();
-            bmp = cg.BmpClone(shotarea.X, shotarea.Y, shotarea.Width, shotarea.Height);
+            bmp = cg.BmpClone(Rectangles.LOBBY_CHATBOX);
         }
 
         bool IsEqualToAny(char op, params char[] equal)
@@ -445,10 +442,10 @@ namespace Deltin.CustomGameAutomation
                         // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
                         if (pi == null && _registerPlayerProfiles && (ltd == null || (ltd != null && ltd.RegisterProfile)))
                         {
-                            Point openMenuAt = new Point(54, shotarea.Y + y);
+                            Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
 
                             // Open the career profile
-                            cg.RightClick(openMenuAt.X, openMenuAt.Y, 500);
+                            cg.RightClick(openMenuAt, 500);
 
                             // By default, the career profile option is selected and we can just press enter to open it.
                             cg.KeyPress(Keys.Enter);
@@ -458,7 +455,7 @@ namespace Deltin.CustomGameAutomation
 
                             // Take a screenshot of the career profile.
                             cg.updateScreen();
-                            Bitmap careerProfileSnapshot = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
+                            Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
 
                             // Register the player identity.
                             pi = new PlayerIdentity(executor, careerProfileSnapshot, PlayerIdentityIndex);
@@ -546,7 +543,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         totalpixels++;
                         // check if not out of bounds of BMP
-                        if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
+                        if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].pixel[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
                         {
                             if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                             {
@@ -555,7 +552,7 @@ namespace Deltin.CustomGameAutomation
                         }
                     }
                     // Check optional pixels
-                    else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < shotarea.Width && y + letters[li].pixel[pi, 1] < shotarea.Height)
+                    else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].pixel[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
                     {
                         if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
                         {
@@ -567,7 +564,7 @@ namespace Deltin.CustomGameAutomation
                 // Check for ignore. These are pixels that shouldn't equal the seed.
                 if (letters[li].ignore != null)
                     for (int pi = 0; pi < letters[li].ignore.GetLength(0); pi++)
-                        if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < shotarea.Width && y + letters[li].ignore[pi, 1] < shotarea.Height)
+                        if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].ignore[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
                             if (bmp.CompareColor(x + letters[li].ignore[pi, 0], y + letters[li].ignore[pi, 1], seed, seedfade))
                                 totalpixels++;
 
@@ -732,7 +729,7 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
 
-                Bitmap compareTo = cg.BmpClone(CareerProfileShotArea.X, CareerProfileShotArea.Y, CareerProfileShotArea.Width, CareerProfileShotArea.Height);
+                Bitmap compareTo = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
 
                 for (int i = 0; i < _playerIdentities.Count; i++)
                 {

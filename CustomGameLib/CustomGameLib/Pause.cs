@@ -63,7 +63,7 @@ namespace Deltin.CustomGameAutomation
         {
             cg.updateScreen();
             // Check if the pause text is there.
-            return cg.CompareColor(441, 268, new int[] { 187, 138, 79 }, 10);
+            return cg.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
         }
     }
 }

@@ -17,9 +17,8 @@ namespace Deltin.CustomGameAutomation
         static int KeyPressWait = 50;
 
         Bitmap bmp = null;
-        static Rectangle shotarea = new Rectangle(0, 0, 960, 540);
 
-        internal bool debugmode = true;
+        internal bool debugmode = false;
         internal Form debug;
         internal Graphics g;
 
@@ -97,7 +96,7 @@ namespace Deltin.CustomGameAutomation
                 User32.SetForegroundWindow(hWnd);
             else
                 User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
-            User32.MoveWindow(hWnd, -7, 0, shotarea.Width, shotarea.Height, false);
+            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
         }
 
         /// <summary>
@@ -123,8 +122,11 @@ namespace Deltin.CustomGameAutomation
 
         internal void ResetMouse()
         {
+            // There is an Overwatch glitch where exiting some menues will cause the first slot to become highlighted.
+            // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
+            // to tell the process where the cursor is. This will make the first slot become unhighlighted.
             Thread.Sleep(100);
-            Cursor = new Point(500, 500);
+            Cursor = Points.RESET_POINT;
             Thread.Sleep(200);
         }
 
@@ -148,17 +150,17 @@ namespace Deltin.CustomGameAutomation
             updateScreen();
 
             // Check if in lobby
-            if (CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade)) // Get "START GAME" color
+            if (CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
                 return GameState.InLobby;
 
             // Check if waiting
-            if (CompareColor(599, 456, CALData.LobbyChangeColor, 50)) // Check if "START GAMEMODE" button exists.
+            if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
                 return GameState.Waiting;
 
-            if (CompareColor(53, 62, new int[] { 120, 70, 74 }, 10)) // Check if commending by testing red color of defeat at top left corner
+            if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
                 return GameState.Ending_Commend;
 
-            if (CompareColor(394, 457, CALData.LobbyChangeColor, 50)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+            if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                 return GameState.Ingame;
 
             return GameState.Unknown;

@@ -43,21 +43,10 @@ namespace Deltin.CustomGameAutomation
             sw.Start();
             while (true)
             {
-                /*
-                // for debugging
-                Console.WriteLine("Start color: {0}\nEntering Game color: {1}\nBlack Screen: {2}\nLoading logo: {3}",
-                    CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade),
-                    CompareColor(450, 325, new int[] { 176, 141, 89 }, 20),
-                    CompareColor(400, 300, new int[] { 64, 64, 64 }, 15),
-                    CompareColor(853, 483, new int[] { 154, 157, 157 }, 15));
-                */
                 if (
-                    CompareColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade) || // Test for "START" button color
-
-                    CompareColor(450, 325, new int[] { 176, 141, 89 }, 20) || // Test for "ENTERING GAME" color
-
-                    CompareColor(400, 300, new int[] { 64, 64, 64 }, 15) // Test for black screen color
-
+                    CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) || // Test for "START" button color
+                    CompareColor(Points.LOADING_ENTERING_GAME, Colors.LOADING_ENTERING_GAME, Fades.LOADING_ENTERING_GAME) || // Test for "ENTERING GAME" color
+                    CompareColor(400, 300, Colors.LOADING_BLACK, 15) // Test for black screen color
                     //CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
                     )
                 {
@@ -84,7 +73,7 @@ namespace Deltin.CustomGameAutomation
             if (OpenChatIsDefault)
                 Chat.CloseChat();
 
-            LeftClick(500, 455);
+            LeftClick(Points.LOBBY_RESTART);
             LoadStall();
             BackToMenu();
 
@@ -100,7 +89,7 @@ namespace Deltin.CustomGameAutomation
             if (OpenChatIsDefault)
                 Chat.CloseChat();
 
-            LeftClick(451, 458, 3000);
+            LeftClick(Points.LOBBY_START_GAME, 3000);
             LoadStall();
             BackToMenu();
 
@@ -113,8 +102,8 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SendServerToLobby()
         {
-            LeftClick(400, 455, 750);
-            WaitForColor(CALData.StartGameLocation.X, CALData.StartGameLocation.Y, CALData.StartGameColor, CALData.StartGameFade, 5000);
+            LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
+            WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
             ResetMouse();
         }
 
@@ -123,18 +112,20 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGamemode()
         {
-            LeftClick(570, 455, 1000);
+            LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
         }
 
-        // go to settings
         internal void GoToSettings()
         {
             updateScreen();
-            // The "Add AI" button moves the "Settings" button, this detects if that happens.
             if (DoesAddButtonExist())
-                LeftClick(716, 180, 250); // "Add AI" Button
+            {
+                LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 250);
+            }
             else
-                LeftClick(774, 180, 250); // No "Add AI" Button
+                {
+                LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_NOT_PRESENT, 250);
+            }
         }
 
         internal bool DoesAddButtonExist()
@@ -151,12 +142,12 @@ namespace Deltin.CustomGameAutomation
         {
             for (int i = 0; i < settingpages; i++)
             {
-                LeftClick(855, 507);
+                LeftClick(Points.SETTINGS_BACK); // Clicks the back button
                 if (checkForErrorsAt.Contains(i))
                 {
                     updateScreen();
-                    if (CompareColor(CALData.ErrorLocation.X, CALData.ErrorLocation.Y, CALData.ErrorColor, CALData.ErrorFade))
-                        LeftClick(436, 318);
+                    if (CompareColor(Points.SETTINGS_ERROR, Colors.SETTINGS_ERROR, Fades.SETTINGS_ERROR))
+                        LeftClick(Points.SETTINGS_DISCARD);
                 }
             }
         }
@@ -171,7 +162,7 @@ namespace Deltin.CustomGameAutomation
         internal void NavigateToModesMenu()
         {
             GoToSettings();
-            LeftClick(494, 178);
+            LeftClick(Points.SETTINGS_MODES);
         }
     }
 }

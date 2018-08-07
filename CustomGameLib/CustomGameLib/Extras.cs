@@ -38,6 +38,10 @@ namespace Deltin.CustomGameAutomation
             }
             return false;
         }
+        public static bool CompareColor(this Bitmap bmp, Point point, int[] color, int fade)
+        {
+            return CompareColor(bmp, point.X, point.Y, color, fade);
+        }
 
         public static bool CompareColor(this Bitmap bmp, int x, int y, int x2, int y2, int fade)
         {

@@ -59,6 +59,10 @@ namespace Deltin.CustomGameAutomation
         {
             LeftClick(OverwatchHandle, x, y, waitTime);
         }
+        internal void LeftClick(Point point, int waitTime = 500)
+        {
+            LeftClick(point.X, point.Y, waitTime);
+        }
 
         static void LeftClick(IntPtr hWnd, int x, int y, int waitTime = 500)
         {
@@ -74,6 +78,10 @@ namespace Deltin.CustomGameAutomation
         internal void RightClick(int x, int y, int waitTime = 500)
         {
             RightClick(OverwatchHandle, x, y, waitTime);
+        }
+        internal void RightClick(Point point, int waitTime = 500)
+        {
+            RightClick(point.X, point.Y, waitTime);
         }
 
         static void RightClick(IntPtr hWnd, int x, int y, int waitTime = 500)

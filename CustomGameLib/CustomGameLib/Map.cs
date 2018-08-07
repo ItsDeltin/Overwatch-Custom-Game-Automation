@@ -153,13 +153,13 @@ namespace Deltin.CustomGameAutomation
 
             GoToSettings();
 
-            LeftClick(103, 300, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
+            LeftClick(Points.SETTINGS_MAPS, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
 
             // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
             if (ta == ToggleAction.DisableAll)
-                LeftClick(640, 125, 250);
+                LeftClick(Points.SETTINGS_MAPS_DISABLE_ALL, 250);
             else if (ta == ToggleAction.EnableAll)
-                LeftClick(600, 125, 250);
+                LeftClick(Points.SETTINGS_MAPS_ENABLE_ALL, 250);
 
             // Get the modes enabled state in a bool in alphabetical order.
             bool[] enabledModes = new bool[]

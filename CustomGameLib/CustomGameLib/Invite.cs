@@ -22,38 +22,47 @@ namespace Deltin.CustomGameAutomation
             // because the invite button gets moved if it is/isnt there.
             if (DoesAddButtonExist())
             {
-                LeftClick(778, 180, 250); // click invite
+                LeftClick(Points.LOBBY_INVITE_IF_ADD_BUTTON_PRESENT, 250); // click invite
             }
             else
             {
-                LeftClick(835, 180, 250); // click invite
+                LeftClick(Points.LOBBY_INVITE_IF_ADD_BUTTON_NOT_PRESENT, 250); // click invite
             }
 
-            LeftClick(572, 171, 100); // click via battletag
+            LeftClick(Points.INVITE_VIA_BATTLETAG, 100); // click via battletag
 
-            TextInput(playerName); // type the playername
+            TextInput(playerName);
 
             if (team != InviteTeam.Both)
             {
-                LeftClick(475, 398);
-                if (team == InviteTeam.Blue) LeftClick(475, 447); // click team1
-                if (team == InviteTeam.Red) LeftClick(475, 466); // click team2
-                if (team == InviteTeam.Spectator) LeftClick(475, 483); // click spectator
+                LeftClick(Points.INVITE_TEAM_DROPDOWN);
+                if (team == InviteTeam.Blue)
+                {
+                    LeftClick(Points.INVITE_TEAM_BLUE);
+                }
+                else if (team == InviteTeam.Red)
+                {
+                    LeftClick(Points.INVITE_TEAM_RED);
+                }
+                else if (team == InviteTeam.Spectator)
+                {
+                    LeftClick(Points.INVITE_TEAM_SPECTATOR);
+                }
             }
 
             Thread.Sleep(200);
 
             updateScreen();
 
-            if (CompareColor(460, 434, CALData.ConfirmColor, 30))
+            if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
             {
-                LeftClick(460, 434); // invite player
+                LeftClick(Points.INVITE_INVITE); // invite player
                 ResetMouse();
                 return true;
             }
             else
             {
-                LeftClick(412, 434); // click back
+                LeftClick(Points.INVITE_BACK); // click back
                 ResetMouse();
                 return false;
             }

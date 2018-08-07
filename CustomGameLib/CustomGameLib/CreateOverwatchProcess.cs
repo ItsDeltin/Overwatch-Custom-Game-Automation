@@ -11,6 +11,7 @@ namespace Deltin.CustomGameAutomation
     partial class CustomGame
     {
 #if false
+        // WIP way to create overwatch process without username and password.
         public static IntPtr CreateOverwatchProcess()
         {
             Process[] processList = Process.GetProcessesByName("Overwatch");
@@ -78,12 +79,13 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
+                // If the text input for the log in info is found, break out of the loop.
                 if (bmp.CompareColor(407, 384, new int[] { 168, 168, 170 }, 10))
                 {
                     break;
                 }
                 // If the log in button is yellow, there is not a connection.
-                else if (bmp.CompareColor(419, 473, CALData.ConfirmColor, 50))
+                else if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {
@@ -106,7 +108,7 @@ namespace Deltin.CustomGameAutomation
             // Log in
             Thread.Sleep(50);
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-            if (bmp.CompareColor(419, 473, CALData.ConfirmColor, 50))
+            if (bmp.CompareColor(Points.PRE_MAIN_MENU_LOGIN, Colors.CONFIRM, Fades.CONFIRM))
                 KeyPress(OWProcess.MainWindowHandle, Keys.Enter);
             else
             {
@@ -124,7 +126,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)
+                if (bmp.CompareColor(469, 437, Colors.CONFIRM, Fades.CONFIRM) == false)
                     break;
                 Thread.Sleep(500);
             }
@@ -133,8 +135,9 @@ namespace Deltin.CustomGameAutomation
 
             Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
             // Check if login failed
-            bool s0 = bmp.CompareColor(518, 482, CALData.ConfirmColor, 50);
-            bool s1 = bmp.CompareColor(605, 475, CALData.ConfirmColor, 50);
+            // s0 will equal true and s1 will equal false if the login failed. s0 and s1 will equal true if an authenticator is required.
+            bool s0 = bmp.CompareColor(518, 482, Colors.CONFIRM, Fades.CONFIRM); // "Cancel" button
+            bool s1 = bmp.CompareColor(605, 475, Colors.CONFIRM, Fades.CONFIRM); // "Authenticate" button.
             if (s0 && !s1)
             {
                 if (processInfo.CloseOverwatchProcessOnFailure)
@@ -168,14 +171,14 @@ namespace Deltin.CustomGameAutomation
                 while (true)
                 {
                     Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                    if (bmp.CompareColor(469, 437, CALData.ConfirmColor, 50) == false)
+                    if (bmp.CompareColor(469, 437, Colors.CONFIRM, Fades.CONFIRM) == false)
                         break;
                     Thread.Sleep(500);
                 }
                 Thread.Sleep(500);
 
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(518, 482, CALData.ConfirmColor, 50))
+                if (bmp.CompareColor(518, 482, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     if (processInfo.CloseOverwatchProcessOnFailure)
                     {
@@ -190,7 +193,7 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 Screenshot(processInfo.ScreenshotMethod, OWProcess.MainWindowHandle, ref bmp);
-                if (bmp.CompareColor(53, 68, CALData.WhiteColor, 10))
+                if (bmp.CompareColor(Points.MAIN_MENU_OVERWATCH_WATERMARK, Colors.WHITE, 10))
                     break;
                 Thread.Sleep(500);
             }

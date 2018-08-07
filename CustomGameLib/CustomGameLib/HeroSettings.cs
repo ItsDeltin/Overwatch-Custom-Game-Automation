@@ -46,25 +46,25 @@ namespace Deltin.CustomGameAutomation
         public void SetHeroRoster(ToggleAction ta, BotTeam team, params Hero[] heroes)
         {
             GoToSettings();
-            LeftClick(351, 311); // click heroes
-            LeftClick(287, 158); // click hero roster
+            LeftClick(Points.SETTINGS_HEROES); // click heroes
+            LeftClick(Points.SETTINGS_HEROES_ROSTER); // click hero roster
             // If team doesn't equal both, click a team to change hero roster for.
             if (team == BotTeam.Blue)
             {
-                LeftClick(492, 127, 250);
-                LeftClick(484, 173, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_DROPDOWN, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_BLUE, 250);
             }
             if (team == BotTeam.Red)
             {
-                LeftClick(492, 127, 250);
-                LeftClick(484, 193, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_DROPDOWN, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_RED, 250);
             }
             // If the toggle action is disable all, disable all heroes before toggling.
             if (ta == ToggleAction.DisableAll)
-                LeftClick(635, 130, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_DISABLE_ALL, 250);
             // If the toggle action is enable all, enable all heroes before toggling.
             else if (ta == ToggleAction.EnableAll)
-                LeftClick(597, 130, 250);
+                LeftClick(Points.SETTINGS_HEROES_ROSTER_ENABLE_ALL, 250);
 
             if (OpenChatIsDefault)
             {
@@ -269,7 +269,7 @@ namespace Deltin.CustomGameAutomation
             if (OpenChatIsDefault)
                 Chat.CloseChat();
             GoToSettings(); // Open settings (SETTINGS/)
-            LeftClick(351, 311); // click heroes (SETTINGS/HEROES/)
+            LeftClick(Points.SETTINGS_HEROES); // click heroes (SETTINGS/HEROES/)
             // For each hero to change settings for
             foreach (SetHero hero in herodata)
             {
@@ -278,7 +278,7 @@ namespace Deltin.CustomGameAutomation
                 if (hero.Hero == null)
                 {
                     // *General
-                    LeftClick(80, 146); // Open general settings
+                    LeftClick(Points.SETTINGS_HEROES_GENERAL); // Open general settings
                 }
                 else
                 {
@@ -321,13 +321,13 @@ namespace Deltin.CustomGameAutomation
                     // Click team to change settings for.
                     if (hero.Team == BotTeam.Blue)
                     {
-                        LeftClick(572, 126); // click team menu
-                        LeftClick(572, 173); // click blue
+                        LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_DROPDOWN); // click team menu
+                        LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_BLUE); // click blue
                     }
                     if (hero.Team == BotTeam.Red)
                     {
-                        LeftClick(572, 126); // click team menu
-                        LeftClick(572, 192); // click red
+                        LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_DROPDOWN); // click team menu
+                        LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_RED); // click red
                     }
                     // Make topmost option highlighted
                     KeyPress(Keys.Down);
@@ -341,7 +341,7 @@ namespace Deltin.CustomGameAutomation
                     // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\TopOption.png" scale="0.55" />
                     updateScreen();
                     // Check if the second option is highlighted.
-                    if (CompareColor(422, 200, CALData.WhiteColor, 10))
+                    if (CompareColor(422, 200, Colors.WHITE, 10))
                     {
                         // If it is, press the up arrow.
                         KeyPress(Keys.Up);

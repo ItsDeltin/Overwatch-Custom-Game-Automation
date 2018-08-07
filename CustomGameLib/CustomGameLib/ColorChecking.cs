@@ -12,6 +12,8 @@ namespace Deltin.CustomGameAutomation
     partial class CustomGame
     {
         object BmpLock = new object();
+
+        // Tests if a pixel is within a certain color.
         internal bool CompareColor(int x, int y, int[] color, int fade)
         {
             lock (BmpLock)
@@ -19,7 +21,12 @@ namespace Deltin.CustomGameAutomation
                 return bmp.CompareColor(x, y, color, fade);
             }
         }
+        internal bool CompareColor(Point point, int[] color, int fade)
+        {
+            return CompareColor(point.X, point.Y, color, fade);
+        }
 
+        // Tests if a pixel's color is within another pixel's color.
         internal bool CompareColor(int x, int y, int x2, int y2, int fade)
         {
             lock (BmpLock)
@@ -27,7 +34,12 @@ namespace Deltin.CustomGameAutomation
                 return bmp.CompareColor(x, y, x2, y2, fade);
             }
         }
+        internal bool CompareColor(Point point, Point point2, int fade)
+        {
+            return CompareColor(point.X, point.Y, point2.X, point2.Y, fade);
+        }
 
+        // Tests if a pixel's color is above the min value and below the max value.
         internal bool CompareColor(int x, int y, int[] min, int[] max)
         {
             lock (BmpLock)
@@ -35,7 +47,12 @@ namespace Deltin.CustomGameAutomation
                 return bmp.CompareColor(x, y, min, max);
             }
         }
+        internal bool CompareColor(Point point, int[] min, int[] max)
+        {
+            return CompareColor(point.X, point.Y, min, max);
+        }
 
+        // Gets a pixel
         internal Color GetPixelAt(int x, int y)
         {
             lock (BmpLock)
@@ -44,6 +61,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        // Clones the bitmap.
         internal Bitmap BmpClone(int x, int y, int width, int height)
         {
             lock (BmpLock)
@@ -51,7 +69,10 @@ namespace Deltin.CustomGameAutomation
                 return bmp.Clone(new Rectangle(x, y, width, height), bmp.PixelFormat);
             }
         }
-
+        internal Bitmap BmpClone(Rectangle rectangle)
+        {
+            return BmpClone(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
         internal Bitmap BmpClone()
         {
             lock (BmpLock)
@@ -60,6 +81,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        // Waits for a pixel to change its color to another color.
         internal bool WaitForColor(int x, int y, int[] color, int fade, int maxtime)
         {
             Stopwatch wait = new Stopwatch();
@@ -73,7 +95,12 @@ namespace Deltin.CustomGameAutomation
             }
             return false;
         }
+        internal bool WaitForColor(Point point, int[] color, int fade, int maxtime)
+        {
+            return WaitForColor(point.X, point.Y, color, fade, maxtime);
+        }
 
+        // Waits for a pixel to change its color.
         internal bool WaitForUpdate(int x, int y, int fade, int maxtime)
         {
             Stopwatch wait = new Stopwatch();
@@ -94,6 +121,10 @@ namespace Deltin.CustomGameAutomation
             }
 
             return false;
+        }
+        internal bool WaitForUpdate(Point point, int fade, int maxtime)
+        {
+            return WaitForUpdate(point.X, point.Y, fade, maxtime);
         }
     }
 }

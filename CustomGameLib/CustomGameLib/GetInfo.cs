@@ -132,7 +132,7 @@ namespace Deltin.CustomGameAutomation
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
                 // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
                 for (int i = 0; i < 6; i++)
-                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, 20))
+                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, fade))
                         inq = i + 1;
                 // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
                 // Check for the length of the scrollbar to get the number of players in the queue
@@ -142,8 +142,8 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < 4; i++)
                     {
                         int y = 304 - (i * (10 - i));
-                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, 20)
-                            || CompareColor(894, y, new int[] { 132, 126, 123 }, 20))
+                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, fade)
+                            || CompareColor(894, y, new int[] { 132, 126, 123 }, fade))
                         {
                             inq = inq + i + 1;
                             break;
@@ -540,7 +540,7 @@ namespace Deltin.CustomGameAutomation
                 cg.updateScreen();
             List<int> playersDead = new List<int>();
             for (int i = 0; i < 12; i++)
-                if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, CALData.DeadPlayerColor, CALData.DeadPlayerFade)
+                if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
                     && !HasHealthBar(i, true))
                     playersDead.Add(i);
             return playersDead;
@@ -642,15 +642,14 @@ namespace Deltin.CustomGameAutomation
         // There is no argument checking.
         bool _HeroChosen(int slot)
         {
-            if (slot < 6)
+            if (cg.IsSlotBlue(slot))
             {
-                //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenBlue, CALData.HeroChosenFade);
-                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenBlue, CALData.HeroChosenFade);
+                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, Colors.HERO_CHOSEN_BLUE, Fades.HEROES_CHOSEN);
             }
             else
             {
                 //return !cg.CompareColor(CALData.HeroChosenLocations[slot], CALData.HeroChosenY, CALData.HeroChosenRed, CALData.HeroChosenFade);
-                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, CALData.HeroChosenRed, CALData.HeroChosenFade);
+                return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, Colors.HERO_CHOSEN_RED, Fades.HEROES_CHOSEN);
             }
         }
 
@@ -693,19 +692,19 @@ namespace Deltin.CustomGameAutomation
 
             // Red and blue
             for (int i = 0; i < 12; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], CALData.ModeratorIconColor, fade))
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], Colors.MODERATOR_ICON, fade))
                     return i;
 
             // Spectators
             int offset = cg.FindOffset();
             for (int i = 12; i < CustomGame.Queueid; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, CALData.SpectatorModeratorIconColor, fade))
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
                     return i;
 
             // Queue
             int queuecount = cg.QueueCount;
             for (int i = 12; i < 12 + queuecount; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, CALData.SpectatorModeratorIconColor, fade))
+                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, Colors.SPECTATOR_MODERATOR_ICON, fade))
                     return i + 6;
 
             return -1;
@@ -795,6 +794,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Hero? GetHero(int slot)
         {
+            HeroResultInfo _;
             return GetHero(slot, out _);
         }
 

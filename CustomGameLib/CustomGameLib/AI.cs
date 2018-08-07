@@ -52,9 +52,9 @@ namespace Deltin.CustomGameAutomation
              */
             {
                 // Open AddAI menu.
-                cg.Cursor = new Point(835, 182);
-                cg.WaitForUpdate(835, 182, 20, 2000);
-                cg.LeftClick(835, 182, 500);
+                cg.Cursor = Points.LOBBY_ADD_AI;
+                cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
+                cg.LeftClick(Points.LOBBY_ADD_AI, 500);
 
                 List<Keys> press = new List<Keys>();
 
@@ -133,7 +133,7 @@ namespace Deltin.CustomGameAutomation
             for (int x = 0; x < tmp.Width; x++)
                 for (int y = 0; y < tmp.Height; y++)
                 {
-                    if (tmp.CompareColor(x, y, CALData.WhiteColor, 25))
+                    if (tmp.CompareColor(x, y, Colors.WHITE, 25))
                         tmp.SetPixel(x, y, Color.Black);
                     else
                         tmp.SetPixel(x, y, Color.White);
@@ -185,7 +185,7 @@ namespace Deltin.CustomGameAutomation
 
                     Color cc = cg.GetPixelAt(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
                     // Check for white color of text
-                    if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], CALData.WhiteColor, 110)
+                    if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
                         && (slot > 5 || cc.B - cc.R < 20))
                     {
                         foundWhite = true;
@@ -212,7 +212,7 @@ namespace Deltin.CustomGameAutomation
 
                                         total++; // Indent the total
                                                  // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), CALData.WhiteColor, 50) == tc)
+                                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Colors.WHITE, 50) == tc)
                                         {
                                             success++;
 
@@ -463,7 +463,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void CalibrateAIChecking()
         {
-            cg.RightClick(744, 62, 250);
+            cg.RightClick(Points.LOBBY_MY_PLAYER_ICON, 250);
             cg.KeyPress(Keys.Enter);
             Thread.Sleep(250);
             cg.GoBack(1);
@@ -518,7 +518,7 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(slotlocation.X, slotlocation.Y);
                 // Check if Edit AI window has opened by checking if the confirm button exists.
                 cg.updateScreen();
-                if (cg.CompareColor(447, 354, CALData.ConfirmColor, 20))
+                if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.WHITE, 20))
                 {
                     var sim = new List<Keys>();
                     // Set hero if setToHero does not equal null.

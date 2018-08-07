@@ -1570,9 +1570,9 @@
             <summary>
             Swap 2 slots with eachother.
             </summary>
-            <param name="slot1">Target 1</param>
-            <param name="slot2">Target 2</param>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if the <paramref name="slot1"/> or <paramref name="slot2"/> argument is out of range of possible slots to move.</exception>
+            <param name="targetSlot">Target 1</param>
+            <param name="destinationSlot">Target 2</param>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if the <paramref name="targetSlot"/> or <paramref name="destinationSlot"/> argument is out of range of possible slots to move.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Interact.SwapAll">
             <summary>
@@ -2083,6 +2083,13 @@
             <returns>Returns true if selecting the preset was successful.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetNumPresets(System.Int32)">
+            <summary>
+            Informs library of total number of saved presets. 
+            May make preset loading faster or more accurate.
+            </summary>
+            <param name="num">Number of saved presets the host has.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
             <summary>
             Changes who can join.
@@ -2095,6 +2102,7 @@
             </summary>
             <param name="name">Name to change game name to.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 3 characters or greater than 64 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.SetTeamName(Deltin.CustomGameAutomation.PlayerTeam,System.String)">
             <summary>
@@ -2103,6 +2111,7 @@
             <param name="team">Team to change name.</param>
             <param name="name">Name to change team's name to.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters.</exception>
+            <exception cref="T:System.ArgumentException">Thown if <paramref name="name"/> has the text "admin" in it.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.SetMaxPlayers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
