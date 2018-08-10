@@ -458,9 +458,8 @@ namespace Deltin.CustomGameAutomation
                             Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
 
                             // Register the player identity.
-                            pi = new PlayerIdentity(executor, careerProfileSnapshot, PlayerIdentityIndex);
+                            pi = new PlayerIdentity(executor, careerProfileSnapshot);
                             _playerIdentities.Add(pi);
-                            PlayerIdentityIndex++;
 
                             // Go back to the lobby.
                             cg.GoBack(1);
@@ -484,8 +483,6 @@ namespace Deltin.CustomGameAutomation
                 }
             } // checks if command is being listened to
         }
-
-        int PlayerIdentityIndex = 0;
 
         // Scans a chat line.
         LineScanResult ScanLine(Bitmap bmp, int y, int[] seed, int seedfade)
@@ -723,6 +720,17 @@ namespace Deltin.CustomGameAutomation
 
             WaitForCareerProfileToLoad();
 
+            cg.updateScreen();
+
+            Bitmap careerProfile = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
+
+            cg.GoBack(1);
+
+            cg.ResetMouse();
+
+            return new PlayerIdentity(null, careerProfile);
+
+            /*
             List<double> percentages = new List<double>();
 
             lock (CommandLock)
@@ -752,8 +760,20 @@ namespace Deltin.CustomGameAutomation
                 return _playerIdentities[highestIndex];
             else
                 return null;
+            */
         }
         static Bitmap view_career_profile_markup = Properties.Resources.view_career_profile;
+
+        /// <summary>
+        /// Returns true if the 2 player identities are identicle.
+        /// </summary>
+        /// <param name="pi1">First player identity</param>
+        /// <param name="pi2">Second player identity</param>
+        /// <returns>Returns true if the player identities are identicle.</returns>
+        public bool ComparePlayerIdentities(PlayerIdentity pi1, PlayerIdentity pi2)
+        {
+            return CompareCareerProfiles(pi1.CareerProfileMarkup, pi2.CareerProfileMarkup) >= 90;
+        }
 
         internal void WaitForCareerProfileToLoad()
         {
@@ -773,7 +793,8 @@ namespace Deltin.CustomGameAutomation
             lock (CommandLock)
             {
                 for (int i = 0; i < ExecutedCommands.Count; i++)
-                    if (Object.ReferenceEquals(ExecutedCommands[i].playerIdentity.CareerProfileMarkup, identity.CareerProfileMarkup))
+                    if (ReferenceEquals(ExecutedCommands[i].playerIdentity.CareerProfileMarkup, identity.CareerProfileMarkup)
+                        || ComparePlayerIdentities(ExecutedCommands[i].playerIdentity, identity))
                         executedCommands.Add(ExecutedCommands[i]);
             }
 
@@ -831,23 +852,16 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Contains data for identifying players who executed a command.
     /// </summary>
-    public class PlayerIdentity : IEquatable<PlayerIdentity>
+    public class PlayerIdentity
     {
-        internal PlayerIdentity(Bitmap chatMarkup, Bitmap careerProfileMarkup, int id)
+        internal PlayerIdentity(Bitmap chatMarkup, Bitmap careerProfileMarkup)
         {
             ChatMarkup = chatMarkup;
             CareerProfileMarkup = careerProfileMarkup;
-            ID = id;
-        }
-
-        public bool Equals(PlayerIdentity other)
-        {
-            return ID == other.ID;
         }
 
         internal Bitmap ChatMarkup;
         internal Bitmap CareerProfileMarkup;
-        internal int ID;
     }
 
     /// <summary>

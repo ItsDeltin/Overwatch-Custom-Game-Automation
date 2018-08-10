@@ -65,7 +65,7 @@ namespace Deltin.CustomGameAutomation
             OpenChat();
             cg.updateScreen();
             // To prevent abuse, make sure that the channel is not general.
-            if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, 20) || !BlockGeneralChat)
+            if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
             {
                 cg.TextInput(text);
             }
@@ -138,7 +138,23 @@ namespace Deltin.CustomGameAutomation
 
         internal void OpenChat()
         {
-            cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+            // Pressing Enter in the chatbox will close it. If the key is Enter, check if a channel is found.
+            if (cg.DefaultKeys.OpenChat == Keys.Enter && GetCurrentChannel() != null)
+                return;
+
+            //cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+            cg.Activate();
+            cg.KeyPress(cg.DefaultKeys.OpenChat);
+            Thread.Sleep(100);
+        }
+
+        internal Channel? GetCurrentChannel()
+        {
+            cg.updateScreen();
+            for (int i = 0; i < ChatColors.Length; i++)
+                if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
+                    return (Channel)i;
+            return null;
         }
 
         internal void CloseChat()

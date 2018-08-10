@@ -65,7 +65,6 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < heroid; i++)
                         press.Add(Keys.Down);
                     press.Add(Keys.Space);
-                    press.Add(Keys.Down);
                 }
 
                 press.Add(Keys.Down);
@@ -77,8 +76,6 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < difficultyID; i++)
                         press.Add(Keys.Down);
                     press.Add(Keys.Space);
-                    press.Add(Keys.Down);
-                    press.Add(Keys.Down);
                 }
 
                 press.Add(Keys.Down);
@@ -91,10 +88,6 @@ namespace Deltin.CustomGameAutomation
                     for (int i = 0; i < teamID; i++)
                         press.Add(Keys.Down);
                     press.Add(Keys.Space);
-                    press.Add(Keys.Down);
-                    press.Add(Keys.Down);
-                    press.Add(Keys.Down);
-                    press.Add(Keys.Down);
                 }
 
                 if (count > 0)
@@ -518,7 +511,7 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(slotlocation.X, slotlocation.Y);
                 // Check if Edit AI window has opened by checking if the confirm button exists.
                 cg.updateScreen();
-                if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.WHITE, 20))
+                if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
                 {
                     var sim = new List<Keys>();
                     // Set hero if setToHero does not equal null.
@@ -534,7 +527,6 @@ namespace Deltin.CustomGameAutomation
                         for (int i = 0; i < (int)setToHero; i++)
                             sim.Add(Keys.Down);
                         sim.Add(Keys.Space);
-                        sim.Add(Keys.Down);
                     }
                     sim.Add(Keys.Down); // Select difficulty option
                                         // Set difficulty if setToDifficulty does not equal null.

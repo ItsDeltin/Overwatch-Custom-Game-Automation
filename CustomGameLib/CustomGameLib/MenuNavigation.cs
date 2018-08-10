@@ -8,14 +8,6 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-
-        static void Activate(IntPtr hWnd)
-        {
-            User32.PostMessage(hWnd, 0x0006, 2, 0);
-            User32.PostMessage(hWnd, 0x0086, 1, 0);
-            User32.PostMessage(hWnd, 0x0007, 0, 0);
-        }
-
         /// <summary>
         /// Go back to executing position.
         /// </summary>
@@ -23,9 +15,9 @@ namespace Deltin.CustomGameAutomation
         {
             if (!IsLobbyOpened())
             {
-                Activate(OverwatchHandle);
+                Activate();
                 Thread.Sleep(250);
-                KeyPress(Keys.L);
+                KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
                 Thread.Sleep(250);
             }
 

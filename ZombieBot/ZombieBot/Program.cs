@@ -242,7 +242,7 @@ namespace ZombieBot
             Console.ReadLine();
             Console.WriteLine("Starting...");
 
-            cg = new CustomGame(useHwnd, screenshotMethod);
+            cg = new CustomGame(new CustomGameBuilder() { OverwatchHandle = useHwnd, ScreenshotMethod = screenshotMethod });
 
             // Set the mode enabled
             if (version == 0)

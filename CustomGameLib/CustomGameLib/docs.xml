@@ -12,7 +12,6 @@
   <commands>
     <example>
       The code below will allow the players in the server to vote for a map.
-
       <code>
       using System;
       using System.Linq;
@@ -88,6 +87,7 @@
           }
       }
       </code>
+      The code below will allow a player to volunteer to be a boss.
     </example>
   </commands>
   <AddAI>

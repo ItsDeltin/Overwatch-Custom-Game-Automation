@@ -31,14 +31,10 @@
             <param name="processInfo">The info of the process being started.</param>
             <returns>The main window handle of the Overwatch process.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(System.IntPtr,Deltin.CustomGameAutomation.ScreenshotMethod,System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(Deltin.CustomGameAutomation.CustomGameBuilder)">
             <summary>
-            Creates new CustomGame object using an Overwatch process.
+            Creates new CustomGame object.
             </summary>
-            <param name="overwatchHandle">Overwatch process handle to use. Leave at default to use the first Overwatch process found.</param>
-            <param name="screenshotMethod">Method to take screenshots with.</param>
-            <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
-            <exception cref="T:Deltin.CustomGameAutomation.MissingOverwatchProcessException">Thrown if no Overwatch processes were found.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
             <summary>
@@ -848,7 +844,6 @@
             </remarks>
             <example>
       The code below will allow the players in the server to vote for a map.
-
       <code>
       using System;
       using System.Linq;
@@ -924,6 +919,7 @@
           }
       }
       </code>
+      The code below will allow a player to volunteer to be a boss.
     </example>
             <seealso cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" />
             <seealso cref="T:Deltin.CustomGameAutomation.ListenTo" />
@@ -1004,6 +1000,14 @@
             </summary>
             <param name="slot">Slot to check.</param>
             <returns>The player identity of the slot.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity,Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Returns true if the 2 player identities are identicle.
+            </summary>
+            <param name="pi1">First player identity</param>
+            <param name="pi2">Second player identity</param>
+            <returns>Returns true if the player identities are identicle.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
             <summary>
@@ -1138,6 +1142,46 @@
         <member name="F:Deltin.CustomGameAutomation.CustomGameBase.cg">
             <summary>
             The <see cref="T:Deltin.CustomGameAutomation.CustomGame"/> object to use.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.DefaultKeys">
+            <summary>
+            Overwatch's keybinds.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenCustomGameLobbyKey">
+            <summary>
+            The key used to open the Custom Game lobby. Is Keys.L by default.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenChat">
+            <summary>
+            The key used to open the chat. The default in Overwatch is Enter, but we recommend using Delete. Is Keys.Delete by default.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CustomGameBuilder">
+            <summary>
+            CustomGame object builder.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.OverwatchHandle">
+            <summary>
+            The handle of the Overwatch process to use. Leave at default to use the first Overwatch process found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.ScreenshotMethod">
+            <summary>
+            The screenshot method the CustomGame class will use.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.OpenChatIsDefault">
+            <summary>
+            Determines if the chat should always be opened. Command scanning is more reliable if true.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DefaultKeys">
+            <summary>
+            The default keys set in Overwatch's settings.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Join">

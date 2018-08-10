@@ -23,17 +23,17 @@ namespace Deltin.CustomGameAutomation
         internal Graphics g;
 
         IntPtr OverwatchHandle = IntPtr.Zero;
+        internal DefaultKeys DefaultKeys;
 
         /// <summary>
-        /// Creates new CustomGame object using an Overwatch process.
+        /// Creates new CustomGame object.
         /// </summary>
-        /// <param name="overwatchHandle">Overwatch process handle to use. Leave at default to use the first Overwatch process found.</param>
-        /// <param name="screenshotMethod">Method to take screenshots with.</param>
-        /// <param name="openChatIsDefault">Determines if the chat should be opened at all times. Command scanning is more reliable if true.</param>
-        /// <exception cref="MissingOverwatchProcessException">Thrown if no Overwatch processes were found.</exception>
-        public CustomGame(IntPtr overwatchHandle = new IntPtr(), ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt, bool openChatIsDefault = true)
+        public CustomGame(CustomGameBuilder customGameBuilder = default)
         {
-            if (overwatchHandle == IntPtr.Zero)
+            if (customGameBuilder == null)
+                customGameBuilder = new CustomGameBuilder();
+
+            if (customGameBuilder.OverwatchHandle == IntPtr.Zero)
             {
                 // Get the overwatch process
                 Process[] overwatchProcesses = Process.GetProcessesByName("Overwatch");
@@ -43,7 +43,7 @@ namespace Deltin.CustomGameAutomation
                 }
             }
             else
-                OverwatchHandle = overwatchHandle;
+                OverwatchHandle = customGameBuilder.OverwatchHandle;
 
             if (OverwatchHandle == IntPtr.Zero)
                 throw new MissingOverwatchProcessException("Could not find any Overwatch processes running.");
@@ -72,10 +72,10 @@ namespace Deltin.CustomGameAutomation
             Interact = new Interact(this);
             Settings = new Settings(this);
 
-            // Create bitmap of overwatch client screen capture.
-            ScreenshotMethod = screenshotMethod; // Set the screenshot method
+            ScreenshotMethod = customGameBuilder.ScreenshotMethod;
+            OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
+            DefaultKeys = customGameBuilder.DefaultKeys;
 
-            OpenChatIsDefault = openChatIsDefault;
             if (OpenChatIsDefault)
                 Chat.OpenChat();
 
@@ -200,6 +200,44 @@ namespace Deltin.CustomGameAutomation
         /// The <see cref="CustomGame"/> object to use.
         /// </summary>
         protected CustomGame cg;
+    }
+
+    /// <summary>
+    /// Overwatch's keybinds.
+    /// </summary>
+    public class DefaultKeys
+    {
+        /// <summary>
+        /// The key used to open the Custom Game lobby. Is Keys.L by default.
+        /// </summary>
+        public Keys OpenCustomGameLobbyKey = Keys.L;
+        /// <summary>
+        /// The key used to open the chat. The default in Overwatch is Enter, but we recommend using Delete. Is Keys.Delete by default.
+        /// </summary>
+        public Keys OpenChat = Keys.Delete;
+    }
+
+    /// <summary>
+    /// CustomGame object builder.
+    /// </summary>
+    public class CustomGameBuilder
+    {
+        /// <summary>
+        /// The handle of the Overwatch process to use. Leave at default to use the first Overwatch process found.
+        /// </summary>
+        public IntPtr OverwatchHandle = default;
+        /// <summary>
+        /// The screenshot method the CustomGame class will use.
+        /// </summary>
+        public ScreenshotMethod ScreenshotMethod = ScreenshotMethod.BitBlt;
+        /// <summary>
+        /// Determines if the chat should always be opened. Command scanning is more reliable if true.
+        /// </summary>
+        public bool OpenChatIsDefault = true;
+        /// <summary>
+        /// The default keys set in Overwatch's settings.
+        /// </summary>
+        public DefaultKeys DefaultKeys = new DefaultKeys();
     }
 
     public enum BotTeam
