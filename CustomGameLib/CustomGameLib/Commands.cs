@@ -76,7 +76,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="index">Command to remove by index.</param>
         public void DisposeExecutedCommand(int index)
         {
-            if (_executedCommands[index].playerIdentity != null)
+            if (_executedCommands[index].PlayerIdentity != null)
                 _executedCommands[index].executor.Dispose();
             _executedCommands.RemoveAt(index);
         }
@@ -87,7 +87,7 @@ namespace Deltin.CustomGameAutomation
         public void DisposeAllExecutedCommands()
         {
             for (int i = 0; i < _executedCommands.Count; i++)
-                if (_executedCommands[i].playerIdentity != null)
+                if (_executedCommands[i].PlayerIdentity != null)
                     _executedCommands[i].executor.Dispose();
             _executedCommands = new List<CommandData>();
         }
@@ -166,11 +166,6 @@ namespace Deltin.CustomGameAutomation
         /// Allows one executor to execute more than one command.
         /// </summary>
         public bool AllowMultipleCommandExecutions = false;
-
-        /// <summary>
-        /// If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
-        /// </summary>
-        public bool SameExecutorCommandUpdate = false;
 
         #region Letters
         /*  Sorry to anyone who maintains this monstrocity in the future :)
@@ -335,14 +330,6 @@ namespace Deltin.CustomGameAutomation
             bmp = cg.BmpClone(Rectangles.LOBBY_CHATBOX);
         }
 
-        bool IsEqualToAny(char op, params char[] equal)
-        {
-            for (int i = 0; i < equal.Length; i++)
-                if (op == equal[i])
-                    return true;
-            return false;
-        }
-
         void ShowScan(ref Bitmap bmp, int y, int[] seed, int seedfade)
         {
             // Show valid seed pixels in debug mode
@@ -415,12 +402,6 @@ namespace Deltin.CustomGameAutomation
                             if (_executedCommands[ei].Command == word || !AllowMultipleCommandExecutions) // check if command is the same
                             {
                                 add = false;
-                                // If SameExecutorCommandUpdate equals true, then update the already-executed command.
-                                if (SameExecutorCommandUpdate)
-                                {
-                                    _executedCommands[ei].Command = word;
-                                    _executedCommands[ei].Channel = GetChannelFromSeed(seed);
-                                }
                                 break;
                             }
                         }
@@ -443,6 +424,9 @@ namespace Deltin.CustomGameAutomation
                         if (pi == null && _registerPlayerProfiles && (ltd == null || (ltd != null && ltd.RegisterProfile)))
                         {
                             Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
+
+                            // Open the chat
+                            cg.Chat.OpenChat();
 
                             // Open the career profile
                             cg.RightClick(openMenuAt, 500);
@@ -473,7 +457,11 @@ namespace Deltin.CustomGameAutomation
                                 cg.KeyPress(Keys.Enter);
                         }
 
-                        _executedCommands.Add(new CommandData(word, GetChannelFromSeed(seed), executor, pi));
+                        CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), executor, pi);
+                        _executedCommands.Add(commandData);
+                        if (ltd?.Callback != null)
+                            ltd.Callback.Invoke(commandData);
+
                         System.Threading.Thread.Sleep(50);
                     }
                     else
@@ -594,7 +582,7 @@ namespace Deltin.CustomGameAutomation
                     if (bestletter.connected != null)
                     {
                         // The letters L can connect to.
-                        if ((bestletter.letter == 'L' && letterresult[bi].letter == 'U' && IsEqualToAny(bestletter.connected.letter, 'M', 'N', 'X', 'L', 'U')) == false)
+                        if ((bestletter.letter == 'L' && letterresult[bi].letter == 'U' && new char[] { 'M', 'N', 'X', 'L', 'U' }.Contains(bestletter.connected.letter)) == false)
                             bestletter = letterresult[bi];
                     }
                     else
@@ -626,21 +614,6 @@ namespace Deltin.CustomGameAutomation
                 }
 
             return ((Convert.ToDouble(identiclecount) / Convert.ToDouble(count)) * 100) >= 90;
-        }
-        private double CompareCareerProfiles(Bitmap cp1, Bitmap cp2)
-        {
-            double total = 0;
-            double success = 0;
-
-            for (int x = 0; x < cp1.Width; x++)
-                for (int y = 0; y < cp1.Height; y++)
-                {
-                    total++;
-                    if (cp1.CompareColor(x, y, cp2.GetPixelAt(x, y).ToInt(), 50))
-                        success++;
-                }
-
-            return (success / total) * 100;
         }
 
         private Channel GetChannelFromSeed(int[] seed)
@@ -675,7 +648,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        class LetterResult
+        private class LetterResult
         {
             public char letter;
             public int percent;
@@ -696,7 +669,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        class LineScanResult
+        private class LineScanResult
         {
             public string Word;
             public int NameLength;
@@ -764,20 +737,9 @@ namespace Deltin.CustomGameAutomation
         }
         static Bitmap view_career_profile_markup = Properties.Resources.view_career_profile;
 
-        /// <summary>
-        /// Returns true if the 2 player identities are identicle.
-        /// </summary>
-        /// <param name="pi1">First player identity</param>
-        /// <param name="pi2">Second player identity</param>
-        /// <returns>Returns true if the player identities are identicle.</returns>
-        public bool ComparePlayerIdentities(PlayerIdentity pi1, PlayerIdentity pi2)
-        {
-            return CompareCareerProfiles(pi1.CareerProfileMarkup, pi2.CareerProfileMarkup) >= 90;
-        }
-
         internal void WaitForCareerProfileToLoad()
         {
-            cg.WaitForColor(423, 164, new int[] { 85, 90, 107 }, 10, 3000);
+            cg.WaitForColor(423, 164, new int[] { 85, 90, 107 }, 10, 5000);
             System.Threading.Thread.Sleep(250);
         }
 
@@ -793,8 +755,8 @@ namespace Deltin.CustomGameAutomation
             lock (CommandLock)
             {
                 for (int i = 0; i < ExecutedCommands.Count; i++)
-                    if (ReferenceEquals(ExecutedCommands[i].playerIdentity.CareerProfileMarkup, identity.CareerProfileMarkup)
-                        || ComparePlayerIdentities(ExecutedCommands[i].playerIdentity, identity))
+                    if (ReferenceEquals(ExecutedCommands[i].PlayerIdentity.CareerProfileMarkup, identity.CareerProfileMarkup)
+                        || PlayerIdentity.ComparePlayerIdentities(ExecutedCommands[i].PlayerIdentity, identity))
                         executedCommands.Add(ExecutedCommands[i]);
             }
 
@@ -814,7 +776,8 @@ namespace Deltin.CustomGameAutomation
         /// <param name="command">Command to listen to.</param>
         /// <param name="listen">Should this command be listened to?</param>
         /// <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
-        public ListenTo(string command, bool listen, bool registerProfile)
+        /// <param name="callback">Method to be executed when the command is executed.</param>
+        public ListenTo(string command, bool listen, bool registerProfile, CommandExecuted callback)
         {
             for (int c = 0; c < command.Length; c++)
             {
@@ -832,6 +795,7 @@ namespace Deltin.CustomGameAutomation
             _command = command;
             Listen = listen;
             RegisterProfile = registerProfile;
+            Callback = callback;
         }
 
         string _command;
@@ -847,6 +811,10 @@ namespace Deltin.CustomGameAutomation
         /// Should the player who executes this command have their profile registered?
         /// </summary>
         public bool RegisterProfile;
+        /// <summary>
+        /// Method to be executed when the command is executed.
+        /// </summary>
+        public CommandExecuted Callback;
     }
 
     /// <summary>
@@ -862,6 +830,38 @@ namespace Deltin.CustomGameAutomation
 
         internal Bitmap ChatMarkup;
         internal Bitmap CareerProfileMarkup;
+
+        /// <summary>
+        /// Returns true if the 2 player identities are identicle.
+        /// </summary>
+        /// <param name="pi1">First player identity</param>
+        /// <param name="pi2">Second player identity</param>
+        /// <returns>Returns true if the player identities are identicle.</returns>
+        public static bool ComparePlayerIdentities(PlayerIdentity pi1, PlayerIdentity pi2)
+        {
+            double total = 0;
+            double success = 0;
+
+            for (int x = 0; x < pi1.CareerProfileMarkup.Width; x++)
+                for (int y = 0; y < pi1.CareerProfileMarkup.Height; y++)
+                {
+                    total++;
+                    if (pi1.CareerProfileMarkup.CompareColor(x, y, pi2.CareerProfileMarkup.GetPixelAt(x, y).ToInt(), 50))
+                        success++;
+                }
+
+            return (success / total) * 100 >= 90;
+        }
+        /// <summary>
+        /// Returns true if the 2 player identities are identicle.
+        /// </summary>
+        /// <param name="other">The other PlayerIdentity to compare to.</param>
+        /// <returns>Returns true if the player identities are identicle.</returns>
+        public bool ComparePlayerIdentities(PlayerIdentity other)
+        {
+            return ComparePlayerIdentities(this, other);
+        }
+
     }
 
     /// <summary>
@@ -875,7 +875,7 @@ namespace Deltin.CustomGameAutomation
             this.command = command;
             this.executor = executor;
             this.channel = channel;
-            this.playerIdentity = playerIdentity;
+            PlayerIdentity = playerIdentity;
         }
 
         /// <summary>
@@ -897,6 +897,12 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The identity of the player that executed the command.
         /// </summary>
-        internal PlayerIdentity playerIdentity;
+        public PlayerIdentity PlayerIdentity;
     }
+
+    /// <summary>
+    /// Method to be executed when the command is executed.
+    /// </summary>
+    /// <param name="data">Data of the command executed.</param>
+    public delegate void CommandExecuted(CommandData data);
 }

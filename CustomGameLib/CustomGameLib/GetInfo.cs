@@ -265,30 +265,19 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Gets the number of players who were invited but are not ingame.
         /// </summary>
-        /// <param name="playersConnected">List of slots that are occupied.</param>
         /// <returns>Number of players who are not ingame.</returns>
-        /// <exception cref="InvalidSlotException">Thrown if there is an invalid slot in the playersConnected list.</exception>
-        public int GetInvitedCount(List<int> playersConnected)
+        public int GetInvitedCount()
         {
-            return GetInvitedSlots(playersConnected).Count;
+            return GetInvitedSlots().Count;
         }
         /// <summary>
         /// Gets a list of players who were invited but are not ingame.
         /// </summary>
-        /// <param name="playersConnected">List of slots that are occupied.</param>
         /// <returns>Integer list of players who are not ingame.</returns>
-        /// <exception cref="InvalidSlotException">Thrown if there is an invalid slot in the playersConnected list.</exception>
-        public List<int> GetInvitedSlots(List<int> playersConnected)
+        public List<int> GetInvitedSlots()
         {
             // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo.png" scale="1" />
 
-            if (playersConnected.Count > 0)
-            {
-                if (playersConnected.Min() < 0)
-                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", playersConnected.Min()));
-                else if (playersConnected.Max() >= InvitedMarkerLocations.Length)
-                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", playersConnected.Max()));
-            }
             updateScreen();
             List<int> invited = new List<int>();
             List<int> pd = PlayerInfo.PlayersDead(true);
@@ -301,6 +290,8 @@ namespace Deltin.CustomGameAutomation
 
             int[] color = bluecolor;
             int[] deadcolor = deadbluecolor;
+
+            List<int> playersConnected = PlayerSlots;
 
             for (int i = 0; i < InvitedMarkerLocations.Length; i++)
             {
@@ -397,7 +388,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
-        public bool IsSlotValid(int slot)
+        public static bool IsSlotValid(int slot)
         {
             return slot >= 0 && slot < Queueid + 6;
         }
@@ -406,7 +397,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
-        public bool IsSlotBlue(int slot)
+        public static bool IsSlotBlue(int slot)
         {
             return slot >= 0 && slot <= 5;
         }
@@ -415,7 +406,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
-        public bool IsSlotRed(int slot)
+        public static bool IsSlotRed(int slot)
         {
             return slot >= 6 && slot <= 11;
         }
@@ -424,7 +415,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
-        public bool IsSlotSpectator(int slot)
+        public static bool IsSlotSpectator(int slot)
         {
             return slot >= 12 && slot < Queueid;
         }
@@ -433,11 +424,61 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check</param>
         /// <returns></returns>
-        public bool IsSlotInQueue(int slot)
+        public static bool IsSlotInQueue(int slot)
         {
             return slot >= Queueid && slot < Queueid + 6;
         }
         #endregion
+
+        /// <summary>
+        /// Gets slots in the game.
+        /// </summary>
+        /// <param name="flags">Flags for obtaining slots.</param>
+        /// <returns>Returns a list of slots following <paramref name="flags"/>.</returns>
+        public List<int> GetSlots(SlotFlags flags)
+        {
+            List<int> slots = new List<int>();
+
+            if (flags.HasFlag(SlotFlags.BlueTeam))
+                slots.AddRange(BlueSlots);
+
+            if (flags.HasFlag(SlotFlags.RedTeam))
+                slots.AddRange(RedSlots);
+
+            if (flags.HasFlag(SlotFlags.Spectators))
+                slots.AddRange(SpectatorSlots);
+
+            if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
+            {
+                slots.AddRange(QueueSlots.Where((slot) =>
+                {
+                    if (!IsSlotInQueue(slot))
+                        return false;
+
+                    QueueTeam team = PlayerInfo.GetQueueTeam(slot);
+
+                    if ((team == QueueTeam.Neutral && !flags.HasFlag(SlotFlags.NeutralQueue))
+                        || (team == QueueTeam.Blue && !flags.HasFlag(SlotFlags.BlueQueue))
+                        || (team == QueueTeam.Red && !flags.HasFlag(SlotFlags.RedQueue)))
+                        return false;
+
+                    return true;
+                }));
+            }
+
+            if (flags.HasFlag(SlotFlags.NoPlayers) || flags.HasFlag(SlotFlags.NoAI))
+            {
+                List<int> aiSlots = AI.GetAISlots();
+
+                if (flags.HasFlag(SlotFlags.NoAI))
+                    slots = slots.Where(slot => aiSlots.Contains(slot) == false).ToList();
+
+                if (flags.HasFlag(SlotFlags.NoPlayers))
+                    slots = slots.Where(slot => aiSlots.Contains(slot)).ToList();
+            }
+
+            return slots;
+        }
 
         /// <summary>
         /// Waits for the slots in overwatch to change.
@@ -624,7 +665,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsHeroChosen(int slot)
         {
-            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                 throw new InvalidSlotException(slot);
             if (cg.PlayerSlots.Contains(slot) == false)
                 return false;
@@ -642,7 +683,7 @@ namespace Deltin.CustomGameAutomation
         // There is no argument checking.
         bool _HeroChosen(int slot)
         {
-            if (cg.IsSlotBlue(slot))
+            if (CustomGame.IsSlotBlue(slot))
             {
                 return !cg.CompareColor(HeroCheckLocations[slot] + 6, HeroCheckY + 3, Colors.HERO_CHOSEN_BLUE, Fades.HEROES_CHOSEN);
             }
@@ -718,7 +759,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public QueueTeam GetQueueTeam(int slot)
         {
-            if (slot < CustomGame.Queueid || slot > CustomGame.Queueid + 5)
+            if (!CustomGame.IsSlotInQueue(slot))
                 throw new InvalidSlotException(slot);
             Point check = cg.Interact.FindSlotLocation(slot);
             check.X -= 25;
@@ -776,7 +817,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public void GetHeroMarkup(int slot, string saveTo)
         {
-            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                 throw new InvalidSlotException(slot);
 
             cg.updateScreen();
@@ -807,7 +848,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
         {
-            if (!(cg.IsSlotBlue(slot) || cg.IsSlotRed(slot)))
+            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                 throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));
 
             if (!cg.PlayerSlots.Contains(slot))
@@ -1006,5 +1047,51 @@ namespace Deltin.CustomGameAutomation
         /// Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
         /// </summary>
         NoCompatibleHeroFound
+    }
+
+
+    /// <summary>
+    /// Flags for obtaining slots.
+    /// </summary>
+    /// <seealso cref="CustomGame.GetSlots(SlotFlags)"/>
+    [Flags]
+    public enum SlotFlags
+    {
+        /// <summary>
+        /// Get blue slots.
+        /// </summary>
+        BlueTeam = 1 << 0,
+        /// <summary>
+        /// Get red slots.
+        /// </summary>
+        RedTeam = 1 << 1,
+        /// <summary>
+        /// Get spectator slots.
+        /// </summary>
+        Spectators = 1 << 2,
+        /// <summary>
+        /// Get neutral queue slots.
+        /// </summary>
+        NeutralQueue = 1 << 3,
+        /// <summary>
+        /// Get red queue slots
+        /// </summary>
+        RedQueue = 1 << 4,
+        /// <summary>
+        /// Get blue queue slots
+        /// </summary>
+        BlueQueue = 1 << 5,
+        /// <summary>
+        /// Get queue slots
+        /// </summary>
+        Queue = NeutralQueue | RedQueue | BlueQueue,
+        /// <summary>
+        /// No players, only AI.
+        /// </summary>
+        NoPlayers = 1 << 6,
+        /// <summary>
+        /// No AI, only players.
+        /// </summary>
+        NoAI = 1 << 7,
     }
 }

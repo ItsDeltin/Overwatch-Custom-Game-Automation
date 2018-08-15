@@ -155,21 +155,17 @@
             Gets the slots filled in spectator excluding the first slot.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetInvitedCount(System.Collections.Generic.List{System.Int32})">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetInvitedCount">
             <summary>
             Gets the number of players who were invited but are not ingame.
             </summary>
-            <param name="playersConnected">List of slots that are occupied.</param>
             <returns>Number of players who are not ingame.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if there is an invalid slot in the playersConnected list.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetInvitedSlots(System.Collections.Generic.List{System.Int32})">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetInvitedSlots">
             <summary>
             Gets a list of players who were invited but are not ingame.
             </summary>
-            <param name="playersConnected">List of slots that are occupied.</param>
             <returns>Integer list of players who are not ingame.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if there is an invalid slot in the playersConnected list.</exception>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.TotalPlayerCount">
             <summary>
@@ -215,6 +211,13 @@
             </summary>
             <param name="slot">Slot to check</param>
             <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags)">
+            <summary>
+            Gets slots in the game.
+            </summary>
+            <param name="flags">Flags for obtaining slots.</param>
+            <returns>Returns a list of slots following <paramref name="flags"/>.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
             <summary>
@@ -892,7 +895,7 @@
               cg.Chat.SendChatMessage(type);
 
               // Start listening to the "$VOTE" command.
-              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, null));
               // Listen for chat commands for 15 seconds.
               cg.Commands.Listen = true;
               Thread.Sleep(15000);
@@ -919,7 +922,79 @@
           }
       }
       </code>
-      The code below will allow a player to volunteer to be a boss.
+      The code below will allow a player to volunteer for a team
+      <code>
+      using System;
+      using System.Collections.Generic;
+      using Deltin.CustomGameAutomation;
+
+      public class Volunteer
+      {
+          public static void VolunteerForTeam(CustomGame cg, PlayerTeam team)
+          {
+              CG = cg;
+              Team = team;
+              // Get the player identities.
+              Players = GetPlayers(cg);
+
+              cg.Chat.SendChatMessage("Teams are unbalanced, type \"$VOLUNTEER\" (case sensitive) to join the " + Team.ToString() + " team.");
+
+              // Add the $VOLUNTEER command
+              cg.Commands.ListenTo.Add(new ListenTo(
+                  command:"$VOLUNTEER", 
+                  listen:true, 
+                  registerProfile:true, 
+                  callback:OnVolunteer));
+
+              cg.Commands.RegisterPlayerProfiles = true;
+              cg.Commands.Listen = true;
+
+              Console.WriteLine("Now listening for volunteers. Press enter to exit.");
+              Console.ReadLine();
+          }
+
+          private static void OnVolunteer(CommandData commandData)
+          {
+              for (int i = 0; i &lt; Players.Length; i++)
+                  // If the executor is found
+                  if (PlayerIdentity.ComparePlayerIdentities(Players[i].Identity, commandData.PlayerIdentity)
+                      &amp;&amp; ((Team == PlayerTeam.Blue &amp;&amp; !CustomGame.IsSlotBlue(Players[i].Slot)) || (Team == PlayerTeam.Red &amp;&amp; !CustomGame.IsSlotRed(Players[i].Slot)))
+                      )
+                  {
+                      if (Team == PlayerTeam.Blue)
+                          CG.Interact.SwapToBlue(Players[i].Slot);
+                      else if (Team == PlayerTeam.Red)
+                          CG.Interact.SwapToRed(Players[i].Slot);
+                  }
+          }
+
+          private static Player[] GetPlayers(CustomGame cg)
+          {
+              List&lt;int&gt; slotsToGet = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.NoAI);
+              List&lt;Player&gt; players = new List&lt;Player&gt;();
+
+              for (int i = 0; i &lt; slotsToGet.Count; i++)
+                  players.Add(new Player(slotsToGet[i], cg.Commands.GetSlotIdentity(slotsToGet[i])));
+
+              return players.ToArray();
+          }
+
+          static CustomGame CG;
+          static Player[] Players;
+          static PlayerTeam Team;
+      }
+
+      class Player
+      {
+          public Player(int slot, PlayerIdentity identity)
+          {
+              Slot = slot;
+              Identity = identity;
+          }
+          public int Slot;
+          public PlayerIdentity Identity;
+      }
+      </code>
     </example>
             <seealso cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" />
             <seealso cref="T:Deltin.CustomGameAutomation.ListenTo" />
@@ -989,25 +1064,12 @@
             Allows one executor to execute more than one command.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Commands.SameExecutorCommandUpdate">
-            <summary>
-            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
-            </summary>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.Commands.GetSlotIdentity(System.Int32)">
             <summary>
             Gets the player identity of a slot.
             </summary>
             <param name="slot">Slot to check.</param>
             <returns>The player identity of the slot.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.Commands.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity,Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="pi1">First player identity</param>
-            <param name="pi2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
             <summary>
@@ -1022,13 +1084,14 @@
             </summary>
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean,Deltin.CustomGameAutomation.CommandExecuted)">
             <summary>
             Data for commands to listen to on the Commands class.
             </summary>
             <param name="command">Command to listen to.</param>
             <param name="listen">Should this command be listened to?</param>
             <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
+            <param name="callback">Method to be executed when the command is executed.</param>
         </member>
         <member name="P:Deltin.CustomGameAutomation.ListenTo.Command">
             <summary>
@@ -1045,10 +1108,30 @@
             Should the player who executes this command have their profile registered?
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.ListenTo.Callback">
+            <summary>
+            Method to be executed when the command is executed.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.PlayerIdentity">
             <summary>
             Contains data for identifying players who executed a command.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity,Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Returns true if the 2 player identities are identicle.
+            </summary>
+            <param name="pi1">First player identity</param>
+            <param name="pi2">Second player identity</param>
+            <returns>Returns true if the player identities are identicle.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Returns true if the 2 player identities are identicle.
+            </summary>
+            <param name="other">The other PlayerIdentity to compare to.</param>
+            <returns>Returns true if the player identities are identicle.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
@@ -1071,10 +1154,16 @@
             Noise data of executor.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CommandData.playerIdentity">
+        <member name="F:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
             <summary>
             The identity of the player that executed the command.
             </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.CommandExecuted">
+            <summary>
+            Method to be executed when the command is executed.
+            </summary>
+            <param name="data">Data of the command executed.</param>
         </member>
         <member name="T:Deltin.CustomGameAutomation.OverwatchProcessInfo">
             <summary>
@@ -1518,6 +1607,57 @@
         <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoCompatibleHeroFound">
             <summary>
             Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.SlotFlags">
+            <summary>
+            Flags for obtaining slots.
+            </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags)"/>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeam">
+            <summary>
+            Get blue slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedTeam">
+            <summary>
+            Get red slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Spectators">
+            <summary>
+            Get spectator slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NeutralQueue">
+            <summary>
+            Get neutral queue slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedQueue">
+            <summary>
+            Get red queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueQueue">
+            <summary>
+            Get blue queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Queue">
+            <summary>
+            Get queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoPlayers">
+            <summary>
+            No players, only AI.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoAI">
+            <summary>
+            No AI, only players.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Interact">

@@ -264,8 +264,7 @@ namespace ZombieBot
             else
                 cg.CurrentOverwatchEvent = (Event)owevent;
 
-            cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
-            cg.Commands.SameExecutorCommandUpdate = true;
+            cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, null));
 
             a = null;
             if (Join == JoinType.Abyxa)

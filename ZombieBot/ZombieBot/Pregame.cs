@@ -35,7 +35,7 @@ namespace ZombieBot
                 // update server
                 if (Join == JoinType.Abyxa)
                 {
-                    int invitedcount = cg.GetInvitedCount(cg.PlayerSlots);
+                    int invitedcount = cg.GetInvitedCount();
                     a.SetMode(0);
                     a.SetPlayerCount(totalPlayerCount - invitedcount);
                     a.SetInviteCount(invitedcount);
@@ -82,7 +82,7 @@ namespace ZombieBot
 
                 // Send a message when someone joins
                 var playerslots = cg.PlayerSlots;
-                int loading = cg.GetInvitedCount(playerslots);
+                int loading = cg.GetInvitedCount();
                 if (playerslots.Count - loading > prevPlayerCount)
                 {
                     int wait = minimumPlayers - playerslots.Count;
@@ -139,7 +139,7 @@ namespace ZombieBot
                 // and the pregame timer elapsed 15 seconds,
                 // and there is no one invited and loading,
                 // start the game.
-                if ((playercount >= 7 || (queue.Length == 0 && playercount >= minimumPlayers)) && pregame.ElapsedMilliseconds >= 15 * 1000 && cg.GetInvitedCount(cg.PlayerSlots) == 0)
+                if ((playercount >= 7 || (queue.Length == 0 && playercount >= minimumPlayers)) && pregame.ElapsedMilliseconds >= 15 * 1000 && cg.GetInvitedCount() == 0)
                 {
                     if (Join == JoinType.Abyxa)
                     {

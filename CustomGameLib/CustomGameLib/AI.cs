@@ -151,7 +151,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Difficulty? GetAIDifficulty(int slot, bool noUpdate = false)
         {
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
             if (slot == 5 && cg.OpenChatIsDefault)
@@ -160,7 +160,7 @@ namespace Deltin.CustomGameAutomation
             if (!noUpdate)
                 cg.updateScreen();
 
-            if (cg.IsSlotBlue(slot) || cg.IsSlotRed(slot))
+            if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
             {
                 bool draw = cg.debugmode; // For debug mode
 
@@ -348,11 +348,11 @@ namespace Deltin.CustomGameAutomation
             // Look for the commendation icon for the slot chosen.
 
             // If the slot is not valid, throw an exception.
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
             // Since AI cannot join spectator, return false if the slot is a spectator slot.
-            if (cg.IsSlotSpectator(slot))
+            if (CustomGame.IsSlotSpectator(slot))
                 return false;
 
             // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
@@ -366,10 +366,10 @@ namespace Deltin.CustomGameAutomation
             int checkX = 0; // Where to start scanning on the X axis for the commendation icon
             int checkXLength = 0; // How many pixels to scan on the X axis for the commendation icon
 
-            if (cg.IsSlotBlue(slot) || cg.IsSlotRed(slot))
+            if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
             {
                 int checkslot = slot;
-                if (cg.IsSlotRed(checkslot))
+                if (CustomGame.IsSlotRed(checkslot))
                     checkslot -= 6;
 
                 // Find the potential Y locations of the commendation icon.
@@ -378,14 +378,14 @@ namespace Deltin.CustomGameAutomation
                     y2 = y1 + 9; // The second potential Y location is 9 pixels under the first potential spot.
                 checkY = new int[] { y1, y2 };
 
-                if (cg.IsSlotBlue(slot))
+                if (CustomGame.IsSlotBlue(slot))
                     checkX = 74; // The start of the blue slots on the X axis
-                else if (cg.IsSlotRed(slot))
+                else if (CustomGame.IsSlotRed(slot))
                     checkX = 399; // The start of the red slots on the X axis
 
                 checkXLength = 195; // The length of the slots.
             }
-            else if (cg.IsSlotInQueue(slot))
+            else if (CustomGame.IsSlotInQueue(slot))
             {
                 int checkslot = slot - CustomGame.Queueid;
 
@@ -500,7 +500,7 @@ namespace Deltin.CustomGameAutomation
 
         bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty, bool x)
         {
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
             // Make sure there is a player or AI in selected slot, or if they are a valid slot to select in queue.
@@ -574,7 +574,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="Interact.RemoveFromGame(int)"/>
         public bool RemoveFromGameIfAI(int slot)
         {
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
             Point slotLocation = cg.Interact.OpenSlotMenu(slot);

@@ -12,10 +12,9 @@ namespace Deltin.CustomGameAutomation
         // The known instances are Opening chat and going to lobby after starting/restarting a game.
         static internal void Activate(IntPtr hWnd)
         {
-            // Todo: get what the Msg and wParam stands for.
-            User32.PostMessage(hWnd, 0x0006, 2, 0);
-            User32.PostMessage(hWnd, 0x0086, 1, 0);
-            User32.PostMessage(hWnd, 0x0007, 0, 0);
+            User32.PostMessage(hWnd, 0x0006, 2, 0); // 0x0006 = WM_ACTIVATE 2 = WA_CLICKACTIVE
+            User32.PostMessage(hWnd, 0x0086, 1, 0); // 0x0086 = WM_NCACTIVATE
+            User32.PostMessage(hWnd, 0x0007, 0, 0); // 0x0007 = WM_DEVICECHANGE
         }
         internal void Activate()
         {
@@ -211,7 +210,6 @@ namespace Deltin.CustomGameAutomation
         {
             AlternateInput(OverwatchHandle, keycode);
         }
-
         static void AlternateInput(IntPtr hWnd, int keycode)
         {
             User32.PostMessage(hWnd, WM_KEYDOWN, keycode, 0);
@@ -224,7 +222,6 @@ namespace Deltin.CustomGameAutomation
         {
             TextInput(OverwatchHandle, text);
         }
-
         static void TextInput(IntPtr hWnd, string text)
         {
             for(int i = 0; i < text.Length; i++)

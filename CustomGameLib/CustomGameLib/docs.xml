@@ -60,7 +60,7 @@
               cg.Chat.SendChatMessage(type);
 
               // Start listening to the "$VOTE" command.
-              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, null));
               // Listen for chat commands for 15 seconds.
               cg.Commands.Listen = true;
               Thread.Sleep(15000);
@@ -87,7 +87,79 @@
           }
       }
       </code>
-      The code below will allow a player to volunteer to be a boss.
+      The code below will allow a player to volunteer for a team
+      <code>
+      using System;
+      using System.Collections.Generic;
+      using Deltin.CustomGameAutomation;
+
+      public class Volunteer
+      {
+          public static void VolunteerForTeam(CustomGame cg, PlayerTeam team)
+          {
+              CG = cg;
+              Team = team;
+              // Get the player identities.
+              Players = GetPlayers(cg);
+
+              cg.Chat.SendChatMessage("Teams are unbalanced, type \"$VOLUNTEER\" (case sensitive) to join the " + Team.ToString() + " team.");
+
+              // Add the $VOLUNTEER command
+              cg.Commands.ListenTo.Add(new ListenTo(
+                  command:"$VOLUNTEER", 
+                  listen:true, 
+                  registerProfile:true, 
+                  callback:OnVolunteer));
+
+              cg.Commands.RegisterPlayerProfiles = true;
+              cg.Commands.Listen = true;
+
+              Console.WriteLine("Now listening for volunteers. Press enter to exit.");
+              Console.ReadLine();
+          }
+
+          private static void OnVolunteer(CommandData commandData)
+          {
+              for (int i = 0; i &lt; Players.Length; i++)
+                  // If the executor is found
+                  if (PlayerIdentity.ComparePlayerIdentities(Players[i].Identity, commandData.PlayerIdentity)
+                      &amp;&amp; ((Team == PlayerTeam.Blue &amp;&amp; !CustomGame.IsSlotBlue(Players[i].Slot)) || (Team == PlayerTeam.Red &amp;&amp; !CustomGame.IsSlotRed(Players[i].Slot)))
+                      )
+                  {
+                      if (Team == PlayerTeam.Blue)
+                          CG.Interact.SwapToBlue(Players[i].Slot);
+                      else if (Team == PlayerTeam.Red)
+                          CG.Interact.SwapToRed(Players[i].Slot);
+                  }
+          }
+
+          private static Player[] GetPlayers(CustomGame cg)
+          {
+              List&lt;int&gt; slotsToGet = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.NoAI);
+              List&lt;Player&gt; players = new List&lt;Player&gt;();
+
+              for (int i = 0; i &lt; slotsToGet.Count; i++)
+                  players.Add(new Player(slotsToGet[i], cg.Commands.GetSlotIdentity(slotsToGet[i])));
+
+              return players.ToArray();
+          }
+
+          static CustomGame CG;
+          static Player[] Players;
+          static PlayerTeam Team;
+      }
+
+      class Player
+      {
+          public Player(int slot, PlayerIdentity identity)
+          {
+              Slot = slot;
+              Identity = identity;
+          }
+          public int Slot;
+          public PlayerIdentity Identity;
+      }
+      </code>
     </example>
   </commands>
   <AddAI>

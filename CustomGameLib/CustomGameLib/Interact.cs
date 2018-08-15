@@ -111,7 +111,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
         public void MenuOptionMarkup(int slot, int max, string savelocation, double yincrement = 11.5)
         {
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
 
             Point slotlocation = OpenSlotMenu(slot);
@@ -173,7 +173,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)
         {
-            if (!cg.IsSlotValid(slot))
+            if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
             Point slotlocation = OpenSlotMenu(slot);
@@ -356,9 +356,9 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="InvalidSlotException">Thrown if the <paramref name="targetSlot"/> or <paramref name="destinationSlot"/> argument is out of range of possible slots to move.</exception>
         public void Move(int targetSlot, int destinationSlot)
         {
-            if (!cg.IsSlotValid(targetSlot))
+            if (!CustomGame.IsSlotValid(targetSlot))
                 throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
-            if (!cg.IsSlotValid(destinationSlot))
+            if (!CustomGame.IsSlotValid(destinationSlot))
                 throw new InvalidSlotException(string.Format("destinationSlot argument '{0}' is out of range.", destinationSlot));
 
             cg.ResetMouse();
