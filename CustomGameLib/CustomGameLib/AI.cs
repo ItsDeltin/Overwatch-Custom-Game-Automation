@@ -351,8 +351,8 @@ namespace Deltin.CustomGameAutomation
             if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
-            // Since AI cannot join spectator, return false if the slot is a spectator slot.
-            if (CustomGame.IsSlotSpectator(slot))
+            if (CustomGame.IsSlotSpectator(slot) // Since AI cannot join spectator, return false if the slot is a spectator slot.
+                || !cg.TotalPlayerSlots.Contains(slot)) // Return false if the slot is empty.
                 return false;
 
             // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
@@ -418,18 +418,55 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
+        /// Checks if the input slot is an AI.
+        /// </summary>
+        /// <remarks>
+        /// IsAI() is faster but requires calling CalibrateAIChecking() beforehand. However this is more accurate and does not require calling CalibrateAIChecking().
+        /// </remarks>
+        /// <param name="slot">Slot to check.</param>
+        /// <returns>Returns true if slot is AI.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        /// <seealso cref="IsAI(int, bool)"/>
+        public bool AccurateIsAI(int slot)
+        {
+            if (!CustomGame.IsSlotValid(slot))
+                throw new InvalidSlotException(slot);
+
+            Point slotLocation = cg.Interact.OpenSlotMenu(slot);
+
+            if (slotLocation.IsEmpty)
+                return false;
+
+            bool removeAllBotsFound = !cg.Interact.MenuOptionScan(slotLocation, Interact.RemoveAllBotsMarkup, 80, 6).IsEmpty;
+
+            cg.CloseOptionMenu();
+
+            return removeAllBotsFound;
+        }
+
+        /// <summary>
         /// Gets all slots that are AI.
         /// </summary>
         /// <returns>All AI slots.</returns>
-        public List<int> GetAISlots()
+        public List<int> GetAISlots(bool accurate = false)
         {
             List<int> AISlots = new List<int>();
 
             List<int> allPlayers = cg.TotalPlayerSlots;
 
             for (int i = 0; i < allPlayers.Count; i++)
-                if (IsAI(allPlayers[i], true))
-                    AISlots.Add(allPlayers[i]);
+            {
+                if (!accurate)
+                {
+                    if (IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
+                }
+                else
+                {
+                    if (AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
+            }
 
             return AISlots;
         }
@@ -438,15 +475,25 @@ namespace Deltin.CustomGameAutomation
         /// Gets all slots that are not AI.
         /// </summary>
         /// <returns>All player slots.</returns>
-        public List<int> GetPlayerSlots()
+        public List<int> GetPlayerSlots(bool accurate = false)
         {
             List<int> AISlots = new List<int>();
 
             List<int> allPlayers = cg.TotalPlayerSlots;
 
             for (int i = 0; i < allPlayers.Count; i++)
-                if (!IsAI(allPlayers[i], true))
-                    AISlots.Add(allPlayers[i]);
+            {
+                if (!accurate)
+                {
+                    if (!IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
+                }
+                else
+                {
+                    if (!AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
+            }
 
             return AISlots;
         }

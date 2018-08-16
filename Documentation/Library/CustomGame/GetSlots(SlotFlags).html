@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>GetSlots(SlotFlags) - Custom Game Automation</title>
+    <link href="../Library.css" rel="stylesheet" type="text/css"/>
+    <link href="../vs.css" rel="stylesheet" type="text/css"/>
+    <script src="../Library.js"></script>
+    <script src="../highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <script>
+               var page = "CustomGame/GetSlots(SlotFlags)";
+               getSidebar(page);
+            </script>
+       </div>
+        <div class="content">
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/GetSlots(SlotFlags).html">GetSlots</a>(<a href="SlotFlags.html"><span class="type">SlotFlags</span></a> flags) Method</strong></div><div class="section">Gets slots in the game.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-flags">flags</div></td><td><a href="SlotFlags.html"><span class="type">SlotFlags</span></a></td><td>Flags for obtaining slots.</td></tr></table></div><div class="section"><strong>Returns</strong><br />Type: <span class="type">List</span><<span class="blue">int</span>><br />Returns a list of slots following <a href="CustomGame/GetSlots(SlotFlags).html#param-flags">flags</a>.</div><div class="section"></div><div class="section"><strong>Examples</strong></div><div class="section">The code below will write all blue players that are not AI to the console.
+<pre><code class="lang-csharp">CustomGame cg = new CustomGame();
+            
+List&lt;int&gt; bluePlayerSlots = cg.GetSlots(SlotFlags.Blue | SlotFlags.NoAI);
+            
+Console.WriteLine(string.Join(", ", bluePlayerSlots));
+</code></pre>
+The code below will write all AI queueing for red to the console.
+<pre><code class="lang-csharp">CustomGame cg = new CustomGame();
+            
+List&lt;int&gt; redQueueAISlots = cg.GetSlots(SlotFlags.NoPlayers | SlotFlags.RedQueue);
+            
+Console.WriteLine(string.Join(", ", redQueueAISlots));
+</code></pre></div><div class="section"><strong>See Also</strong></div><div class="section"><span class="vsenum"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="SlotFlags.html"><span class="type">SlotFlags</span></a></span></div>
+        </div>
+    </div>
+</body>
+</html>

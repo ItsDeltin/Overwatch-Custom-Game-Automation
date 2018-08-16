@@ -19,7 +19,9 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="AI/AI.html"><span class="type">AI</span></a> Class</strong></div><div class="section">AI settings for Overwatch.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="AI/AddAI(AIHero,Difficulty,BotTeam,int).html">AddAI</a>(<a href="AIHero.html"><span class="type">AIHero</span></a> hero, <a href="Difficulty.html"><span class="type">Difficulty</span></a> difficulty, <a href="BotTeam.html"><span class="type">BotTeam</span></a> team, [<span class="blue">int</span> count])</td><td><span class="blue">bool</span></td><td>
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="AI/AI.html"><span class="type">AI</span></a> Class</strong></div><div class="section">AI settings for Overwatch.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="AI/AccurateIsAI(int).html">AccurateIsAI</a>(<span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
+            Checks if the input slot is an AI.
+            </td></tr><tr><td><a href="AI/AddAI(AIHero,Difficulty,BotTeam,int).html">AddAI</a>(<a href="AIHero.html"><span class="type">AIHero</span></a> hero, <a href="Difficulty.html"><span class="type">Difficulty</span></a> difficulty, <a href="BotTeam.html"><span class="type">BotTeam</span></a> team, [<span class="blue">int</span> count])</td><td><span class="blue">bool</span></td><td>
             Add AI to the game.
             </td></tr><tr><td><a href="AI/CalibrateAIChecking().html">CalibrateAIChecking</a>()</td><td></td><td>
             AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
@@ -34,9 +36,9 @@
             If the input slot is not an AI, returns null.
             If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.</td></tr><tr><td><a href="AI/GetAIDifficultyMarkup(int,string).html">GetAIDifficultyMarkup</a>(<span class="blue">int</span> scalar, <span class="blue">string</span> saveAt)</td><td></td><td>
             Obtains the markup of an AI's difficulty.
-            </td></tr><tr><td><a href="AI/GetAISlots().html">GetAISlots</a>()</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
+            </td></tr><tr><td><a href="AI/GetAISlots(bool).html">GetAISlots</a>([<span class="blue">bool</span> accurate])</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets all slots that are AI.
-            </td></tr><tr><td><a href="AI/GetPlayerSlots().html">GetPlayerSlots</a>()</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
+            </td></tr><tr><td><a href="AI/GetPlayerSlots(bool).html">GetPlayerSlots</a>([<span class="blue">bool</span> accurate])</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets all slots that are not AI.
             </td></tr><tr><td><a href="AI/IsAI(int,bool).html">IsAI</a>(<span class="blue">int</span> slot, [<span class="blue">bool</span> noUpdate])</td><td><span class="blue">bool</span></td><td>
             Checks if the input slot is an AI.

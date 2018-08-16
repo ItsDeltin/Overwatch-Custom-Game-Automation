@@ -19,8 +19,8 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a> Class</strong></div><div class="section">Automates Overwatch's custom games.</div><div class="section"><table><tr><th>Constructor</th><th>Description</th></tr><tr><td><a href="CustomGame/(IntPtr,ScreenshotMethod,bool).html">CustomGame</a>([<span class="type">IntPtr</span> overwatchHandle], [<a href="ScreenshotMethod.html"><span class="type">ScreenshotMethod</span></a> screenshotMethod], [<span class="blue">bool</span> openChatIsDefault])</td><td>
-            Creates new CustomGame object using an Overwatch process.
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a> Class</strong></div><div class="section">Automates Overwatch's custom games.</div><div class="section"><table><tr><th>Constructor</th><th>Description</th></tr><tr><td><a href="CustomGame/(CustomGameBuilder).html">CustomGame</a>([<a href="CustomGameBuilder/CustomGameBuilder.html"><span class="type">CustomGameBuilder</span></a> customGameBuilder])</td><td>
+            Creates new CustomGame object.
             </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="CustomGame/CreateOverwatchProcess(OverwatchProcessInfo).html">CreateOverwatchProcess</a>(<a href="OverwatchProcessInfo/OverwatchProcessInfo.html"><span class="type">OverwatchProcessInfo</span></a> processInfo)</td><td><span class="type">IntPtr</span></td><td>
             Creates a new Overwatch process.
             </td></tr><tr><td><a href="CustomGame/DisableOverwatchWindowInput().html">DisableOverwatchWindowInput</a>()</td><td></td><td>
@@ -33,10 +33,12 @@
             Gets the current Overwatch event. This compares the current date with past event's start and end times, so specific time may be a little off.
             </td></tr><tr><td><a href="CustomGame/GetGameState().html">GetGameState</a>()</td><td><a href="GameState.html"><span class="type">GameState</span></a></td><td>
             Returns the state of the game.
-            In lobby: GameState.InLobbyWaiting for players: GameState.WaitingIngame: GameState.IngameCommending players: GameState.Ending_Commend</td></tr><tr><td><a href="CustomGame/GetInvitedCount(List{int}).html">GetInvitedCount</a>(<span class="type">List</span>&lt;<span class="blue">int</span>&gt; playersConnected)</td><td><span class="blue">int</span></td><td>
+            In lobby: GameState.InLobbyWaiting for players: GameState.WaitingIngame: GameState.IngameCommending players: GameState.Ending_Commend</td></tr><tr><td><a href="CustomGame/GetInvitedCount().html">GetInvitedCount</a>()</td><td><span class="blue">int</span></td><td>
             Gets the number of players who were invited but are not ingame.
-            </td></tr><tr><td><a href="CustomGame/GetInvitedSlots(List{int}).html">GetInvitedSlots</a>(<span class="type">List</span>&lt;<span class="blue">int</span>&gt; playersConnected)</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
+            </td></tr><tr><td><a href="CustomGame/GetInvitedSlots().html">GetInvitedSlots</a>()</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets a list of players who were invited but are not ingame.
+            </td></tr><tr><td><a href="CustomGame/GetSlots(SlotFlags).html">GetSlots</a>(<a href="SlotFlags.html"><span class="type">SlotFlags</span></a> flags)</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
+            Gets slots in the game.
             </td></tr><tr><td><a href="CustomGame/InvitePlayer(string,InviteTeam).html">InvitePlayer</a>(<span class="blue">string</span> playerName, [<a href="InviteTeam.html"><span class="type">InviteTeam</span></a> team])</td><td><span class="blue">bool</span></td><td>
             Invites a player to the game via battletag.
             </td></tr><tr><td><a href="CustomGame/IsSlotBlue(int).html">IsSlotBlue</a>(<span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
@@ -107,7 +109,7 @@
             Changes a player's state in Overwatch.
             </td></tr><tr><td><a href="CustomGame/ModesEnabled.html">ModesEnabled</a></td><td><a href="ModesEnabled/ModesEnabled.html"><span class="type">ModesEnabled</span></a></td><td>
             Modes enabled in custom games.
-            </td></tr><tr><td>ObjectiveInfo</td><td><a href="ObjectiveInfo/ObjectiveInfo.html"><span class="type">ObjectiveInfo</span></a></td><td></td></tr><tr><td><a href="CustomGame/Pause.html">Pause</a></td><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
+            </td></tr><tr><td><a href="CustomGame/Pause.html">Pause</a></td><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
             Controls Overwatch's pause feature.
             </td></tr><tr><td><a href="CustomGame/PlayerInfo.html">PlayerInfo</a></td><td><a href="PlayerInfo/PlayerInfo.html"><span class="type">PlayerInfo</span></a></td><td>
             Info about players in an Overwatch custom game.

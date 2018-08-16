@@ -218,6 +218,25 @@
             </summary>
             <param name="flags">Flags for obtaining slots.</param>
             <returns>Returns a list of slots following <paramref name="flags"/>.</returns>
+            <example>
+            The code below will write all blue players that are not AI to the console.
+            <code>
+            CustomGame cg = new CustomGame();
+            
+            List&lt;int&gt; bluePlayerSlots = cg.GetSlots(SlotFlags.Blue | SlotFlags.NoAI);
+            
+            Console.WriteLine(string.Join(", ", bluePlayerSlots));
+            </code>
+            The code below will write all AI queueing for red to the console.
+            <code>
+            CustomGame cg = new CustomGame();
+            
+            List&lt;int&gt; redQueueAISlots = cg.GetSlots(SlotFlags.NoPlayers | SlotFlags.RedQueue);
+            
+            Console.WriteLine(string.Join(", ", redQueueAISlots));
+            </code>
+            </example>
+            <seealso cref="T:Deltin.CustomGameAutomation.SlotFlags"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
             <summary>
@@ -598,13 +617,25 @@
             <returns>Returns true if slot is AI.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots">
+        <member name="M:Deltin.CustomGameAutomation.AI.AccurateIsAI(System.Int32)">
+            <summary>
+            Checks if the input slot is an AI.
+            </summary>
+            <remarks>
+            IsAI() is faster but requires calling CalibrateAIChecking() beforehand. However this is more accurate and does not require calling CalibrateAIChecking().
+            </remarks>
+            <param name="slot">Slot to check.</param>
+            <returns>Returns true if slot is AI.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.IsAI(System.Int32,System.Boolean)" />
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots(System.Boolean)">
             <summary>
             Gets all slots that are AI.
             </summary>
             <returns>All AI slots.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots">
+        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots(System.Boolean)">
             <summary>
             Gets all slots that are not AI.
             </summary>
@@ -851,6 +882,7 @@
       using System;
       using System.Linq;
       using System.Threading;
+      using System.Collections.Generic;
       using Deltin.CustomGameAutomation;
 
       public class MapVoting
@@ -874,10 +906,10 @@
               "Hanamura"
           };
 
-          public static void VoteForMap(CustomGame cg)
+          public static void VoteForMap(CustomGame cg, ModesEnabled modesEnabled, Event overwatchEvent)
           {
               Random rnd = new Random();
-              int[] votemap = new int[3]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
+              int[] votemap = new int[VoteCount]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
               for (int i = 0; i &lt; votemap.Length; i++)
               {
                   int choose;
@@ -891,34 +923,87 @@
                   }
                   votemap[i] = choose;
               }
-              string type = "Vote for map! (15 seconds)                                      " + MapNames[votemap[0]] + " - $VOTE 1                               " + MapNames[votemap[1]] + " - $VOTE 2                               " + MapNames[votemap[2]] + " - $VOTE 3";
+
+              string type = FormatMessage(
+                  "Vote for map! (15 seconds)",
+                  MapNames[votemap[0]] + " - $VOTE 1",
+                  MapNames[votemap[1]] + " - $VOTE 2",
+                  MapNames[votemap[2]] + " - $VOTE 3");
               cg.Chat.SendChatMessage(type);
 
               // Start listening to the "$VOTE" command.
-              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, null));
+              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, OnVote));
               // Listen for chat commands for 15 seconds.
               cg.Commands.Listen = true;
               Thread.Sleep(15000);
               cg.Commands.Listen = false;
               // Get results
-              int[] results = new int[3];
-              var commands = cg.Commands.ExecutedCommands;
-              for (int i = 0; i &lt; commands.Count; i++)
+              int[] results = new int[VoteCount]
               {
-                  string[] commandSplit = commands[i].Command.Split(' ');
-                  if (commandSplit.Length &gt;= 2 &amp;&amp; commandSplit[0] == "$VOTE")
-                  {
-                      int votefor = Int32.Parse(commands[i].Command.Split(' ')[1]) - 1;
-                      if (votefor &gt;= 0 &amp;&amp; votefor &lt; results.Length)
-                          results[votefor]++;
-                  }
-              }
-              int winningmap = votemap[results.ToList().IndexOf(results.Max())];
-              cg.Commands.DisposeAllExecutedCommands();
+                  VoteResults.Count(vr =&gt; vr.VotingFor == 1),
+                  VoteResults.Count(vr =&gt; vr.VotingFor == 2),
+                  VoteResults.Count(vr =&gt; vr.VotingFor == 3),
+              };
+
+              int winningmap = votemap[Array.IndexOf(results, results.Max())];
+
+              // Dispose all chat identities.
+              foreach (Vote voteResult in VoteResults) voteResult.ChatIdentity.Dispose();
+              VoteResults = new List&lt;Vote&gt;();
+
               // Print the results to the chat
               cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", MapNames[votemap[0]], results[0], MapNames[votemap[1]], results[1], MapNames[votemap[2]], results[2]));
               cg.Chat.SendChatMessage("Next map: " + MapNames[winningmap]);
-              cg.ToggleMap(ToggleAction.DisableAll, Maps[winningmap]);
+              cg.ToggleMap(modesEnabled, overwatchEvent, ToggleAction.DisableAll, Maps[winningmap]);
+          }
+
+          private static void OnVote(CommandData commandData)
+          {
+              // converts a string like "$VOTE 2" to an integer 2.
+              if (int.TryParse(commandData.Command.Split(' ').ElementAtOrDefault(1), out int voteFor)
+                  &amp;&amp; 1 &lt;= voteFor &amp;&amp; voteFor &lt;= VoteCount)
+              {
+                  for (int i = 0; i &lt; VoteResults.Count; i++)
+                      if (ChatIdentity.CompareChatIdentities(commandData.ChatIdentity, VoteResults[i].ChatIdentity))
+                      {
+                          Console.WriteLine(string.Format("Player #{0} changing their vote to: {1}", i, voteFor));
+                          VoteResults[i].VotingFor = voteFor;
+                          return;
+                      }
+
+                  Console.WriteLine(string.Format("New vote from player #{0}: {1}", VoteResults.Count, voteFor));
+                  VoteResults.Add(new Vote(voteFor, commandData.ChatIdentity));
+              }
+          }
+
+          private const int VoteCount = 3;
+          private static List&lt;Vote&gt; VoteResults = new List&lt;Vote&gt;();
+          private class Vote
+          {
+              public Vote(int votingFor, ChatIdentity chatIdentity)
+              {
+                  VotingFor = votingFor;
+                  ChatIdentity = chatIdentity;
+              }
+
+              public int VotingFor = -1;
+              public ChatIdentity ChatIdentity;
+          }
+
+          private static string FormatMessage(params string[] text)
+          {
+              string newLine = string.Concat(Enumerable.Repeat("\u3000", 30));
+
+              string result = "";
+              for (int i = 0; i &lt; text.Length; i++)
+              {
+                  if (i &lt; text.Length - 1)
+                      result += text[i] + " " + (text[i].Length * 0.80 &lt; newLine.Length ? newLine.Substring((int)(text[i].Length * 0.80)) : "");
+                  else
+                      result += text[i];
+              }
+
+              return result;
           }
       }
       </code>
@@ -946,7 +1031,6 @@
                   registerProfile:true, 
                   callback:OnVolunteer));
 
-              cg.Commands.RegisterPlayerProfiles = true;
               cg.Commands.Listen = true;
 
               Console.WriteLine("Now listening for volunteers. Press enter to exit.");
@@ -1077,6 +1161,11 @@
             </summary>
             <param name="other">The other PlayerIdentity to compare to.</param>
             <returns>Returns true if the player identities are identicle.</returns>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
+            <summary>
+            Contains data for identifying players who executed a command.
+            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity,Deltin.CustomGameAutomation.ChatIdentity)">
             <summary>
@@ -1613,6 +1702,11 @@
         <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoAI">
             <summary>
             No AI, only players.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AccurateGetAI">
+            <summary>
+            Reliably gets the (non)AI, however is a lot slower.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Interact">

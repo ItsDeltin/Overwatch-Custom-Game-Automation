@@ -435,19 +435,42 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="flags">Flags for obtaining slots.</param>
         /// <returns>Returns a list of slots following <paramref name="flags"/>.</returns>
+        /// <example>
+        /// The code below will write all blue players that are not AI to the console.
+        /// <code>
+        /// CustomGame cg = new CustomGame();
+        /// 
+        /// List&lt;int&gt; bluePlayerSlots = cg.GetSlots(SlotFlags.Blue | SlotFlags.NoAI);
+        /// 
+        /// Console.WriteLine(string.Join(", ", bluePlayerSlots));
+        /// </code>
+        /// The code below will write all AI queueing for red to the console.
+        /// <code>
+        /// CustomGame cg = new CustomGame();
+        /// 
+        /// List&lt;int&gt; redQueueAISlots = cg.GetSlots(SlotFlags.NoPlayers | SlotFlags.RedQueue);
+        /// 
+        /// Console.WriteLine(string.Join(", ", redQueueAISlots));
+        /// </code>
+        /// </example>
+        /// <seealso cref="SlotFlags"/>
         public List<int> GetSlots(SlotFlags flags)
         {
             List<int> slots = new List<int>();
 
+            // Add the blue slots
             if (flags.HasFlag(SlotFlags.BlueTeam))
                 slots.AddRange(BlueSlots);
 
+            // Add the red slots
             if (flags.HasFlag(SlotFlags.RedTeam))
                 slots.AddRange(RedSlots);
 
+            // Add the spectator slots
             if (flags.HasFlag(SlotFlags.Spectators))
                 slots.AddRange(SpectatorSlots);
 
+            // Add the queue slots
             if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
             {
                 slots.AddRange(QueueSlots.Where((slot) =>
@@ -468,7 +491,7 @@ namespace Deltin.CustomGameAutomation
 
             if (flags.HasFlag(SlotFlags.NoPlayers) || flags.HasFlag(SlotFlags.NoAI))
             {
-                List<int> aiSlots = AI.GetAISlots();
+                List<int> aiSlots = AI.GetAISlots(flags.HasFlag(SlotFlags.AccurateGetAI));
 
                 if (flags.HasFlag(SlotFlags.NoAI))
                     slots = slots.Where(slot => aiSlots.Contains(slot) == false).ToList();
@@ -1093,5 +1116,9 @@ namespace Deltin.CustomGameAutomation
         /// No AI, only players.
         /// </summary>
         NoAI = 1 << 7,
+        /// <summary>
+        /// Reliably gets the (non)AI, however is a lot slower.
+        /// </summary>
+        AccurateGetAI = 1 << 8
     }
 }

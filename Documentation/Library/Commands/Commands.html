@@ -19,41 +19,17 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="Commands/Commands.html"><span class="type">Commands</span></a> Class</strong></div><div class="section">Chat commands for Overwatch.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="Commands/DisposeAllExecutedCommands().html">DisposeAllExecutedCommands</a>()</td><td></td><td>
-            Removes all executed commands.
-            </td></tr><tr><td><a href="Commands/DisposeAllPlayerIdentities().html">DisposeAllPlayerIdentities</a>()</td><td></td><td>
-            Disposes all player identities.
-            </td></tr><tr><td><a href="Commands/DisposeExecutedCommand(int).html">DisposeExecutedCommand</a>(<span class="blue">int</span> index)</td><td></td><td>
-            Removes an executed command from the executed commands list.
-            </td></tr><tr><td><a href="Commands/DisposePlayerIdentity(PlayerIdentity).html">DisposePlayerIdentity</a>(<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a> identity)</td><td></td><td>
-            Disposes of a player identity.
-            </td></tr><tr><td><a href="Commands/DisposePlayerIdentity(int).html">DisposePlayerIdentity</a>(<span class="blue">int</span> index)</td><td></td><td>
-            Disposes of a player identity.
-            </td></tr><tr><td><a href="Commands/GetIdentityExecutedCommands(PlayerIdentity).html">GetIdentityExecutedCommands</a>(<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a> identity)</td><td><a href="CommandData/CommandData.html"><span class="type">CommandData</span></a>[]</td><td>
-            Gets the commands a player identity has executed.
-            </td></tr><tr><td><a href="Commands/GetSlotIdentity(int).html">GetSlotIdentity</a>(<span class="blue">int</span> slot)</td><td><a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></td><td>
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="Commands/Commands.html"><span class="type">Commands</span></a> Class</strong></div><div class="section">Chat commands for Overwatch.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="Commands/GetSlotIdentity(int).html">GetSlotIdentity</a>(<span class="blue">int</span> slot)</td><td><a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></td><td>
             Gets the player identity of a slot.
-            </td></tr></table></div><div class="section"><table><tr><th>Property</th><th>Type</th><th>Description</th></tr><tr><td><a href="Commands/ExecutedCommands.html">ExecutedCommands</a></td><td><span class="type">ReadOnlyCollection</span>&lt;<a href="CommandData/CommandData.html"><span class="type">CommandData</span></a>&gt;</td><td>
-            List of executed commands.
-            </td></tr><tr><td><a href="Commands/RegisteredPlayerIdentities.html">RegisteredPlayerIdentities</a></td><td><span class="type">ReadOnlyCollection</span>&lt;<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a>&gt;</td><td>
-            List containing all player identities.
-            </td></tr><tr><td><a href="Commands/RegisterPlayerProfiles.html">RegisterPlayerProfiles</a></td><td><span class="blue">bool</span></td><td>
-            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
-            </td></tr></table></div><div class="section"><table><tr><th>Field</th><th>Type</th><th>Description</th></tr><tr><td><a href="Commands/AllowMultipleCommandExecutions.html">AllowMultipleCommandExecutions</a></td><td><span class="blue">bool</span></td><td>
-            Allows one executor to execute more than one command.
-            </td></tr><tr><td><a href="Commands/Listen.html">Listen</a></td><td><span class="blue">bool</span></td><td>
+            </td></tr></table></div><div class="section"></div><div class="section"><table><tr><th>Field</th><th>Type</th><th>Description</th></tr><tr><td><a href="Commands/Listen.html">Listen</a></td><td><span class="blue">bool</span></td><td>
             Set to true to start listening to commands. Set to false to stop.
             </td></tr><tr><td><a href="Commands/ListenTo.html">ListenTo</a></td><td><span class="type">List</span>&lt;<a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a>&gt;</td><td>
             Commands to listen to.
-            </td></tr><tr><td><a href="Commands/ListenToAllCommands.html">ListenToAllCommands</a></td><td><span class="blue">bool</span></td><td>
-            Listens to all commands rather than just the commands in the ListenTo dictionary.
-            </td></tr><tr><td><a href="Commands/SameExecutorCommandUpdate.html">SameExecutorCommandUpdate</a></td><td><span class="blue">bool</span></td><td>
-            If a player who already has a command registered in ExecutedCommands executes another command, their old command gets updated to the new one.
             </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><strong>Remarks</strong></div><div class="section">The Commands class is accessed in a CustomGame object on the <a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/Commands.html">Commands</a> field.</div><div class="section"><strong>Examples</strong></div><div class="section">The code below will allow the players in the server to vote for a map.
-
 <pre><code class="lang-csharp">using System;
 using System.Linq;
 using System.Threading;
+using System.Collections.Generic;
 using Deltin.CustomGameAutomation;
 
 public class MapVoting
@@ -77,10 +53,10 @@ public class MapVoting
         "Hanamura"
     };
 
-    public static void VoteForMap(CustomGame cg)
+    public static void VoteForMap(CustomGame cg, ModesEnabled modesEnabled, Event overwatchEvent)
     {
         Random rnd = new Random();
-        int[] votemap = new int[3]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
+        int[] votemap = new int[VoteCount]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
         for (int i = 0; i &lt; votemap.Length; i++)
         {
             int choose;
@@ -94,35 +70,159 @@ public class MapVoting
             }
             votemap[i] = choose;
         }
-        string type = "Vote for map! (15 seconds)                                      " + MapNames[votemap[0]] + " - $VOTE 1                               " + MapNames[votemap[1]] + " - $VOTE 2                               " + MapNames[votemap[2]] + " - $VOTE 3";
+
+        string type = FormatMessage(
+            "Vote for map! (15 seconds)",
+            MapNames[votemap[0]] + " - $VOTE 1",
+            MapNames[votemap[1]] + " - $VOTE 2",
+            MapNames[votemap[2]] + " - $VOTE 3");
         cg.Chat.SendChatMessage(type);
 
         // Start listening to the "$VOTE" command.
-        cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false));
+        cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, OnVote));
         // Listen for chat commands for 15 seconds.
         cg.Commands.Listen = true;
         Thread.Sleep(15000);
         cg.Commands.Listen = false;
         // Get results
-        int[] results = new int[3];
-        var commands = cg.Commands.ExecutedCommands;
-        for (int i = 0; i &lt; commands.Count; i++)
+        int[] results = new int[VoteCount]
         {
-            string[] commandSplit = commands[i].Command.Split(' ');
-            if (commandSplit.Length &gt;= 2 &amp;&amp; commandSplit[0] == "$VOTE")
-            {
-                int votefor = Int32.Parse(commands[i].Command.Split(' ')[1]) - 1;
-                if (votefor &gt;= 0 &amp;&amp; votefor &lt; results.Length)
-                    results[votefor]++;
-            }
-        }
-        int winningmap = votemap[results.ToList().IndexOf(results.Max())];
-        cg.Commands.DisposeAllExecutedCommands();
+            VoteResults.Count(vr =&gt; vr.VotingFor == 1),
+            VoteResults.Count(vr =&gt; vr.VotingFor == 2),
+            VoteResults.Count(vr =&gt; vr.VotingFor == 3),
+        };
+
+        int winningmap = votemap[Array.IndexOf(results, results.Max())];
+
+        // Dispose all chat identities.
+        foreach (Vote voteResult in VoteResults) voteResult.ChatIdentity.Dispose();
+        VoteResults = new List&lt;Vote&gt;();
+
         // Print the results to the chat
         cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", MapNames[votemap[0]], results[0], MapNames[votemap[1]], results[1], MapNames[votemap[2]], results[2]));
         cg.Chat.SendChatMessage("Next map: " + MapNames[winningmap]);
-        cg.ToggleMap(ToggleAction.DisableAll, Maps[winningmap]);
+        cg.ToggleMap(modesEnabled, overwatchEvent, ToggleAction.DisableAll, Maps[winningmap]);
     }
+
+    private static void OnVote(CommandData commandData)
+    {
+        // converts a string like "$VOTE 2" to an integer 2.
+        if (int.TryParse(commandData.Command.Split(' ').ElementAtOrDefault(1), out int voteFor)
+            &amp;&amp; 1 &lt;= voteFor &amp;&amp; voteFor &lt;= VoteCount)
+        {
+            for (int i = 0; i &lt; VoteResults.Count; i++)
+                if (ChatIdentity.CompareChatIdentities(commandData.ChatIdentity, VoteResults[i].ChatIdentity))
+                {
+                    Console.WriteLine(string.Format("Player #{0} changing their vote to: {1}", i, voteFor));
+                    VoteResults[i].VotingFor = voteFor;
+                    return;
+                }
+
+            Console.WriteLine(string.Format("New vote from player #{0}: {1}", VoteResults.Count, voteFor));
+            VoteResults.Add(new Vote(voteFor, commandData.ChatIdentity));
+        }
+    }
+
+    private const int VoteCount = 3;
+    private static List&lt;Vote&gt; VoteResults = new List&lt;Vote&gt;();
+    private class Vote
+    {
+        public Vote(int votingFor, ChatIdentity chatIdentity)
+        {
+            VotingFor = votingFor;
+            ChatIdentity = chatIdentity;
+        }
+
+        public int VotingFor = -1;
+        public ChatIdentity ChatIdentity;
+    }
+
+    private static string FormatMessage(params string[] text)
+    {
+        string newLine = string.Concat(Enumerable.Repeat("\u3000", 30));
+
+        string result = "";
+        for (int i = 0; i &lt; text.Length; i++)
+        {
+            if (i &lt; text.Length - 1)
+                result += text[i] + " " + (text[i].Length * 0.80 &lt; newLine.Length ? newLine.Substring((int)(text[i].Length * 0.80)) : "");
+            else
+                result += text[i];
+        }
+
+        return result;
+    }
+}
+</code></pre>
+The code below will allow a player to volunteer for a team
+<pre><code class="lang-csharp">using System;
+using System.Collections.Generic;
+using Deltin.CustomGameAutomation;
+
+public class Volunteer
+{
+    public static void VolunteerForTeam(CustomGame cg, PlayerTeam team)
+    {
+        CG = cg;
+        Team = team;
+        // Get the player identities.
+        Players = GetPlayers(cg);
+
+        cg.Chat.SendChatMessage("Teams are unbalanced, type \"$VOLUNTEER\" (case sensitive) to join the " + Team.ToString() + " team.");
+
+        // Add the $VOLUNTEER command
+        cg.Commands.ListenTo.Add(new ListenTo(
+            command:"$VOLUNTEER", 
+            listen:true, 
+            registerProfile:true, 
+            callback:OnVolunteer));
+
+        cg.Commands.Listen = true;
+
+        Console.WriteLine("Now listening for volunteers. Press enter to exit.");
+        Console.ReadLine();
+    }
+
+    private static void OnVolunteer(CommandData commandData)
+    {
+        for (int i = 0; i &lt; Players.Length; i++)
+            // If the executor is found
+            if (PlayerIdentity.ComparePlayerIdentities(Players[i].Identity, commandData.PlayerIdentity)
+                &amp;&amp; ((Team == PlayerTeam.Blue &amp;&amp; !CustomGame.IsSlotBlue(Players[i].Slot)) || (Team == PlayerTeam.Red &amp;&amp; !CustomGame.IsSlotRed(Players[i].Slot)))
+                )
+            {
+                if (Team == PlayerTeam.Blue)
+                    CG.Interact.SwapToBlue(Players[i].Slot);
+                else if (Team == PlayerTeam.Red)
+                    CG.Interact.SwapToRed(Players[i].Slot);
+            }
+    }
+
+    private static Player[] GetPlayers(CustomGame cg)
+    {
+        List&lt;int&gt; slotsToGet = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.NoAI);
+        List&lt;Player&gt; players = new List&lt;Player&gt;();
+
+        for (int i = 0; i &lt; slotsToGet.Count; i++)
+            players.Add(new Player(slotsToGet[i], cg.Commands.GetSlotIdentity(slotsToGet[i])));
+
+        return players.ToArray();
+    }
+
+    static CustomGame CG;
+    static Player[] Players;
+    static PlayerTeam Team;
+}
+
+class Player
+{
+    public Player(int slot, PlayerIdentity identity)
+    {
+        Slot = slot;
+        Identity = identity;
+    }
+    public int Slot;
+    public PlayerIdentity Identity;
 }
 </code></pre></div><div class="section"><strong>See Also</strong></div><div class="section"><span class="vsfield"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/Commands.html">Commands</a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CommandData/CommandData.html"><span class="type">CommandData</span></a></span><br /><span class="vsclass"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></span></div>
         </div>

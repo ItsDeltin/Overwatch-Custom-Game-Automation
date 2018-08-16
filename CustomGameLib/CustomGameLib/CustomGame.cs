@@ -127,7 +127,7 @@ namespace Deltin.CustomGameAutomation
             // to tell the process where the cursor is. This will make the first slot become unhighlighted.
             Thread.Sleep(100);
             Cursor = Points.RESET_POINT;
-            Thread.Sleep(200);
+            Thread.Sleep(100);
         }
 
         internal void CloseOptionMenu()

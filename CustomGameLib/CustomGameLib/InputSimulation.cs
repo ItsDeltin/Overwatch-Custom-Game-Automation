@@ -217,6 +217,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         const int WM_CHAR = 0x0102;
+        const int WM_UNICHAR = 0x0109;
 
         internal void TextInput(string text)
         {
@@ -227,7 +228,7 @@ namespace Deltin.CustomGameAutomation
             for(int i = 0; i < text.Length; i++)
             {
                 char letter = text[i];
-                User32.PostMessage(hWnd, WM_CHAR, (int)letter, 0);
+                User32.PostMessage(hWnd, WM_UNICHAR, (int)letter, 0);
             }
         }
     }

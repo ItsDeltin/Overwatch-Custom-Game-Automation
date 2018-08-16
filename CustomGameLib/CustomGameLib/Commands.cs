@@ -309,7 +309,22 @@ namespace Deltin.CustomGameAutomation
                             cg.KeyPress(Keys.Enter);
                     }
 
-                    CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi);
+                    // Store executor noise data in a bitmap.
+                    var executorscan = new Rectangle(0, y - 4, namelength, 6);
+                    Bitmap executor = bmp.Clone(executorscan, bmp.PixelFormat);
+                    // Set name pixels to black and everything else to white
+                    for (int xi = 0; xi < executor.Width; xi++)
+                        for (int yi = 0; yi < executor.Height; yi++)
+                        {
+                            if (executor.CompareColor(xi, yi, seed, seedfade))
+                                executor.SetPixel(xi, yi, Color.Black);
+                            else
+                                executor.SetPixel(xi, yi, Color.White);
+                        }
+
+                    ChatIdentity ci = new ChatIdentity(executor);
+
+                    CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci);
                     if (ltd?.Callback != null)
                         ltd.Callback.Invoke(commandData);
 
@@ -709,11 +724,12 @@ namespace Deltin.CustomGameAutomation
     /// <seealso cref="ListenTo"/>
     public class CommandData
     {
-        internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity)
+        internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity, ChatIdentity chatIdentity)
         {
             this.command = command;
             this.channel = channel;
             PlayerIdentity = playerIdentity;
+            ChatIdentity = chatIdentity;
         }
 
         /// <summary>
@@ -732,6 +748,8 @@ namespace Deltin.CustomGameAutomation
         /// The identity of the player that executed the command.
         /// </summary>
         public PlayerIdentity PlayerIdentity;
+
+        public ChatIdentity ChatIdentity;
     }
 
     /// <summary>
