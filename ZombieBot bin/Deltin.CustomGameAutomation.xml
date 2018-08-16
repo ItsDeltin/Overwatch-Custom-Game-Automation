@@ -1006,9 +1006,62 @@
             Commands to listen to.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.RegisteredPlayerIdentities">
+            <summary>
+            List containing all player identities.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.ExecutedCommands">
+            <summary>
+            List of executed commands.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeExecutedCommand(System.Int32)">
+            <summary>
+            Removes an executed command from the executed commands list.
+            </summary>
+            <param name="index">Command to remove by index.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeAllExecutedCommands">
+            <summary>
+            Removes all executed commands.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposePlayerIdentity(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="identity">Identity to dispose.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposePlayerIdentity(System.Int32)">
+            <summary>
+            Disposes of a player identity.
+            </summary>
+            <param name="index">Index of the identity to dispose in the RegisteredPlayerIdentities list.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.DisposeAllPlayerIdentities">
+            <summary>
+            Disposes all player identities.
+            </summary>
+        </member>
         <member name="F:Deltin.CustomGameAutomation.Commands.Listen">
             <summary>
             Set to true to start listening to commands. Set to false to stop.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Commands.RegisterPlayerProfiles">
+            <summary>
+            Set to true to save player identities. Please note that there is a 250-1000 millisecond delay when a player executes a command for the first time.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.ListenToAllCommands">
+            <summary>
+            Listens to all commands rather than just the commands in the ListenTo dictionary.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Commands.AllowMultipleCommandExecutions">
+            <summary>
+            Allows one executor to execute more than one command.
             </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Commands.GetSlotIdentity(System.Int32)">
@@ -1017,6 +1070,13 @@
             </summary>
             <param name="slot">Slot to check.</param>
             <returns>The player identity of the slot.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Commands.GetIdentityExecutedCommands(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Gets the commands a player identity has executed.
+            </summary>
+            <param name="identity">Identity to check.</param>
+            <returns>Array of commands executed.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ListenTo">
             <summary>
@@ -1053,11 +1113,6 @@
             Method to be executed when the command is executed.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Identity.Dispose">
-            <summary>
-            Disposes data used by the Identity object.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.PlayerIdentity">
             <summary>
             Contains data for identifying players who executed a command.
@@ -1078,21 +1133,6 @@
             <param name="other">The other PlayerIdentity to compare to.</param>
             <returns>Returns true if the player identities are identicle.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity,Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="ci1">First player identity</param>
-            <param name="ci2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
             Data of Overwatch executed chat commands.
@@ -1107,6 +1147,11 @@
         <member name="P:Deltin.CustomGameAutomation.CommandData.Channel">
             <summary>
             Channel the command was executed on.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CommandData.executor">
+            <summary>
+            Noise data of executor.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">

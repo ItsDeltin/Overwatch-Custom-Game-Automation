@@ -205,8 +205,20 @@ namespace ZombieBot
                     cg.Commands.Listen = false;
                     // Get results
                     int[] results = new int[3];
-
+                    var commands = cg.Commands.ExecutedCommands;
+                    for (int i = 0; i < commands.Count; i++)
+                    {
+                        string[] commandSplit = commands[i].Command.Split(' ');
+                        if (commandSplit.Length >= 2)
+                            if (commandSplit[0] == "$VOTE")
+                            {
+                                int votefor = Int32.Parse(commands[i].Command.Split(' ')[1]) - 1;
+                                if (votefor >= 0 && votefor < results.Length)
+                                    results[votefor]++;
+                            }
+                    }
                     int winningmap = votemap[results.ToList().IndexOf(results.Max())];
+                    cg.Commands.DisposeAllExecutedCommands();
                     cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", mapsSend[votemap[0]], results[0], mapsSend[votemap[1]], results[1], mapsSend[votemap[2]], results[2]));
                     cg.Chat.SendChatMessage("Next map: " + mapsSend[winningmap]);
                     Map mapid = Map.MapIDFromName(maps[winningmap]);

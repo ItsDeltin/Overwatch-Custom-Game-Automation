@@ -176,6 +176,7 @@ namespace Deltin.CustomGameAutomation
             // Stop scanning commands
             Commands.StopScanning();
             // Remove data of all executed commands.
+            Commands.DisposeAllExecutedCommands();
             if (bmp != null)
                 bmp.Dispose();
             DisposeGameOverCheck();
