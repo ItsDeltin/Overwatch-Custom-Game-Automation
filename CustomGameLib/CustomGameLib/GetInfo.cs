@@ -972,6 +972,7 @@ namespace Deltin.CustomGameAutomation
             Properties.Resources.tracer_markup, // Tracer
             Properties.Resources.widowmaker_markup, // Widowmaker
             Properties.Resources.winston_markup, // Winston
+            Properties.Resources.wreckingball_markup, // Wrecking Ball
             Properties.Resources.zarya_markup, // Zarya
             Properties.Resources.zenyatta_markup // Zenyatta
         };

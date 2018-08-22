@@ -484,6 +484,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap wreckingball_markup {
+            get {
+                object obj = ResourceManager.GetObject("wreckingball_markup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap zarya_markup {
             get {
                 object obj = ResourceManager.GetObject("zarya_markup", resourceCulture);

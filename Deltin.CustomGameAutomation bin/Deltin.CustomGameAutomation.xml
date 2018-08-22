@@ -2249,6 +2249,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.wreckingball_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.zarya_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.

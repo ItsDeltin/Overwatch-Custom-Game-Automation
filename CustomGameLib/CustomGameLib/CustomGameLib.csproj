@@ -83,6 +83,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
+    <None Include="Resources\wreckingball_markup.png" />
     <None Include="Resources\view_career_profile.png" />
     <None Include="Resources\winston_markup.png" />
     <None Include="Resources\widowmaker_markup.png" />

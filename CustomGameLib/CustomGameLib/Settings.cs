@@ -285,12 +285,10 @@ namespace Deltin.CustomGameAutomation
             Thread.Sleep(150);
         }
 
-        /*
-        public void SetSettings(Settings settings)
+        public void SetSettings(GameSettings settings)
         {
             settings.SetSettings(cg);
         }
-        */
     }
 
     public enum LobbyTeam
@@ -301,10 +299,10 @@ namespace Deltin.CustomGameAutomation
         Spectator
     }
 
-    /*
-    public class Settings
+#pragma warning disable CS1591
+    public abstract class GameSettings
     {
-        private Settings() { }
+        private GameSettings() { }
 
         internal void SetSettings(CustomGame cg)
         {
@@ -369,7 +367,7 @@ namespace Deltin.CustomGameAutomation
             Return(cg);
         }
 
-        public Settings SetSettingByName(string name, object value)
+        public GameSettings SetSettingByName(string name, object value)
         {
             FieldInfo[] fis = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance).ToArray();
 
@@ -390,10 +388,10 @@ namespace Deltin.CustomGameAutomation
             return this;
         }
 
-        internal virtual void Navigate(CustomGame cg) { throw new NotImplementedException(); }
-        internal virtual void Return(CustomGame cg) { throw new NotImplementedException(); }
+        internal abstract void Navigate(CustomGame cg);
+        internal abstract void Return(CustomGame cg);
 
-        public class Settings_Modes_All : Settings
+        public class Settings_Modes_All : GameSettings
         {
 
             public Settings_Modes_All(bool initializeWithDefaults = false)
@@ -419,19 +417,19 @@ namespace Deltin.CustomGameAutomation
             //public Setting<bool> EnemyHealth = new Setting<bool>("EnemyHealth", true);
 
             // Settings
-            public bool? EnemyHealthBars = null;
-            public Game_Mode_Start? GameModeStart = null;
-            public int? HealthPackRespawnTimeScalar = null;
-            public bool? KillCam = null;
-            public bool? KillFeed = null;
-            public bool? Skins = null;
-            public Spawn_Health_Packs? SpawnHealthPacks = null;
+            public bool? EnemyHealthBars;
+            public Game_Mode_Start? GameModeStart;
+            public int? HealthPackRespawnTimeScalar;
+            public bool? KillCam;
+            public bool? KillFeed;
+            public bool? Skins;
+            public Spawn_Health_Packs? SpawnHealthPacks;
 
-            public bool? AllowHeroSwitching = null;
-            public Hero_Limit? HeroLimit = null;
-            public Limit_Roles? LimitRoles = null;
-            public bool? RespawnAsRandomHero = null;
-            public int? RespawnTimeScalar = null;
+            public bool? AllowHeroSwitching;
+            public Hero_Limit? HeroLimit;
+            public Limit_Roles? LimitRoles;
+            public bool? RespawnAsRandomHero;
+            public int? RespawnTimeScalar;
             // /Settings
 
             public enum Game_Mode_Start { All_Slots_Filled, Immediately, Manual }
@@ -453,7 +451,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Assault : Settings
+        public class Settings_Modes_Assault : GameSettings
         {
             public Settings_Modes_Assault(bool initializeWithDefaults = false)
             {
@@ -465,9 +463,9 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public int? CaptureSpeedModifier = null;
-            public bool? CompetitiveRules = null;
+            public bool? Enabled;
+            public int? CaptureSpeedModifier;
+            public bool? CompetitiveRules;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -485,7 +483,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_AssaultEscort : Settings
+        public class Settings_Modes_AssaultEscort : GameSettings
         {
             public Settings_Modes_AssaultEscort(bool initializeWithDefaults = false)
             {
@@ -498,10 +496,10 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public int? CaptureSpeedModifier = null;
-            public bool? CompetitiveRules = null;
-            public int? PayloadSpeedModifier = null;
+            public bool? Enabled;
+            public int? CaptureSpeedModifier;
+            public bool? CompetitiveRules;
+            public int? PayloadSpeedModifier;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -518,7 +516,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Control : Settings
+        public class Settings_Modes_Control : GameSettings
         {
             public Settings_Modes_Control(bool initializeWithDefaults = false)
             {
@@ -527,20 +525,20 @@ namespace Deltin.CustomGameAutomation
                     Enabled = true;
                     CaptureSpeedModifier = 100;
                     CompetitiveRules = false;
-                    LimitValidControlPoints = ELimitValidControlPoints.All;
+                    LimitValidControlPoints = Limit_Valid_Control_Points.All;
                     ScoreToWin = 2;
                     ScoringSpeedModifier = 100;
                 }
             }
 
-            public bool? Enabled = null;
-            public int? CaptureSpeedModifier = null;
-            public bool? CompetitiveRules = null;
-            public ELimitValidControlPoints? LimitValidControlPoints = null;
-            public int? ScoreToWin = null;
-            public int? ScoringSpeedModifier = null;
+            public bool? Enabled;
+            public int? CaptureSpeedModifier;
+            public bool? CompetitiveRules;
+            public Limit_Valid_Control_Points? LimitValidControlPoints;
+            public int? ScoreToWin;
+            public int? ScoringSpeedModifier;
 
-            public enum ELimitValidControlPoints
+            public enum Limit_Valid_Control_Points
             {
                 All,
                 First,
@@ -563,7 +561,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Escort : Settings
+        public class Settings_Modes_Escort : GameSettings
         {
             public Settings_Modes_Escort(bool initializeWithDefaults = false)
             {
@@ -575,9 +573,9 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public bool? CompetitiveRules = null;
-            public int? PayloadSpeedModifier = null;
+            public bool? Enabled;
+            public bool? CompetitiveRules;
+            public int? PayloadSpeedModifier;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -594,7 +592,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Deathmatch : Settings
+        public class Settings_Modes_Deathmatch : GameSettings
         {
             public Settings_Modes_Deathmatch(bool initializeWithDefaults = false)
             {
@@ -607,10 +605,10 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public int? GameLengthInMinutes = null;
-            public int? ScoreToWin = null;
-            public bool? SelfInitiatedRespawn = null;
+            public bool? Enabled;
+            public int? GameLengthInMinutes;
+            public int? ScoreToWin;
+            public bool? SelfInitiatedRespawn;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -627,7 +625,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Elimination : Settings
+        public class Settings_Modes_Elimination : GameSettings
         {
             public Settings_Modes_Elimination(bool initializeWithDefaults = false)
             {
@@ -636,9 +634,9 @@ namespace Deltin.CustomGameAutomation
                     Enabled = false;
                     HeroSelectionTime = 20;
                     ScoreToWin = 3;
-                    RestrictPreviouslyUsedHeroes = ERestrictPreviouslyUsedHeroes.Off;
-                    HeroSelection = EHeroSelection.Any;
-                    LimitedChoicePool = ELimitedChoicePool.TeamSizePlus2;
+                    RestrictPreviouslyUsedHeroes = Restrict_Previously_Used_Heroes.Off;
+                    HeroSelection = Hero_Selection.Any;
+                    LimitedChoicePool = Limited_Choice_Pool.TeamSizePlus2;
                     CaptureObjectiveTiebreaker = true;
                     TiebreakerAfterMatchTimeElapsed = 105;
                     TimeToCapture = 3;
@@ -648,22 +646,22 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public int? HeroSelectionTime = null;
-            public int? ScoreToWin = null;
-            public ERestrictPreviouslyUsedHeroes? RestrictPreviouslyUsedHeroes = null;
-            public EHeroSelection? HeroSelection = null;
-            public ELimitedChoicePool? LimitedChoicePool = null;
-            public bool? CaptureObjectiveTiebreaker = null;
-            public int? TiebreakerAfterMatchTimeElapsed = null;
-            public int? TimeToCapture = null;
-            public int? DrawAfterMatchTimeElapsedWithNoTiebreaker = null;
-            public bool? RevealHeroes = null;
-            public int? RevealHeroesAfterMatchTimeElapsed = null;
+            public bool? Enabled;
+            public int? HeroSelectionTime;
+            public int? ScoreToWin;
+            public Restrict_Previously_Used_Heroes? RestrictPreviouslyUsedHeroes;
+            public Hero_Selection? HeroSelection;
+            public Limited_Choice_Pool? LimitedChoicePool;
+            public bool? CaptureObjectiveTiebreaker;
+            public int? TiebreakerAfterMatchTimeElapsed;
+            public int? TimeToCapture;
+            public int? DrawAfterMatchTimeElapsedWithNoTiebreaker;
+            public bool? RevealHeroes;
+            public int? RevealHeroesAfterMatchTimeElapsed;
 
-            public enum ERestrictPreviouslyUsedHeroes { Off, AfterRoundWon, AfterRoundPlayed }
-            public enum EHeroSelection { Any, Limited, Random, RandomMirrored }
-            public enum ELimitedChoicePool { TeamSize, TeamSizePlus1, TeamSizePlus2, TeamSizePlus3 }
+            public enum Restrict_Previously_Used_Heroes { Off, AfterRoundWon, AfterRoundPlayed }
+            public enum Hero_Selection { Any, Limited, Random, RandomMirrored }
+            public enum Limited_Choice_Pool { TeamSize, TeamSizePlus1, TeamSizePlus2, TeamSizePlus3 }
 
             internal override void Navigate(CustomGame cg)
             {
@@ -680,7 +678,44 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_TeamDeathmatch : Settings
+        public class Settings_Modes_Lucioball : GameSettings
+        {
+            public Settings_Modes_Lucioball(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = false;
+                    GameLength = 240;
+                    SoccerBallKnockbackScalar = 100;
+                    TeamWinsUponScoringEnoughGoals = false;
+                    GoalsNeededToWin = 3;
+                    ResetPlayersAfterGoalScored = true;
+                }
+            }
+
+            public bool? Enabled;
+            public int? GameLength;
+            public int? SoccerBallKnockbackScalar;
+            public bool? TeamWinsUponScoringEnoughGoals;
+            public int? GoalsNeededToWin;
+            public bool? ResetPlayersAfterGoalScored;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.Lucioball, cg.CurrentOverwatchEvent);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
+                Thread.Sleep(100);
+            }
+
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
+
+        public class Settings_Modes_TeamDeathmatch : GameSettings
         {
             public Settings_Modes_TeamDeathmatch(bool initializeWithDefaults = false)
             {
@@ -697,14 +732,14 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
-            public int? GameLengthInMinutes = null;
-            public bool? MercyResurrectCounteractsKills = null;
-            public int? ScoreToWin = null;
-            public bool? SelfInitiatedRespawn = null;
-            public bool? ImbalancedTeamScoreToWin = null;
-            public int? BlueScoreToWin = null;
-            public int? RedScoreToWin = null;
+            public bool? Enabled;
+            public int? GameLengthInMinutes;
+            public bool? MercyResurrectCounteractsKills;
+            public int? ScoreToWin;
+            public bool? SelfInitiatedRespawn;
+            public bool? ImbalancedTeamScoreToWin;
+            public int? BlueScoreToWin;
+            public int? RedScoreToWin;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -721,7 +756,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Modes_Skirmish : Settings
+        public class Settings_Modes_Skirmish : GameSettings
         {
             public Settings_Modes_Skirmish(bool initializeWithDefaults = false)
             {
@@ -731,7 +766,7 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public bool? Enabled = null;
+            public bool? Enabled;
 
             internal override void Navigate(CustomGame cg)
             {
@@ -748,15 +783,15 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        public class Settings_Lobby : Settings
+        public class Settings_Lobby : GameSettings
         {
             public Settings_Lobby(bool initializeWithDefaults = false)
             {
                 if (initializeWithDefaults)
                 {
-                    MapRotation = EMapRotation.AfterAMirrorMatch;
-                    ReturnToLobby = EReturnToLobby.AfterAMirrorMatch;
-                    TeamBalancing = ETeamBalancing.Off;
+                    MapRotation = Map_Rotation.AfterAMirrorMatch;
+                    ReturnToLobby = Return_To_Lobby.AfterAMirrorMatch;
+                    TeamBalancing = Team_Balancing.Off;
                     SwapTeamsAfterMatch = true;
                     BlueMaxPlayers = 6;
                     RedMaxPlayers = 6;
@@ -767,32 +802,32 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public EMapRotation? MapRotation = null;
-            public EReturnToLobby? ReturnToLobby = null;
-            public ETeamBalancing? TeamBalancing = null;
-            public bool? SwapTeamsAfterMatch = null;
-            public int? BlueMaxPlayers = null;
-            public int? RedMaxPlayers = null;
-            public int? MaxFFAPlayers = null;
-            public int? MaxSpectators = null;
-            public bool? MatchVoiceChat = null;
-            public bool? PauseGameOnPlayerDisconnect = null;
+            public Map_Rotation? MapRotation;
+            public Return_To_Lobby? ReturnToLobby;
+            public Team_Balancing? TeamBalancing;
+            public bool? SwapTeamsAfterMatch;
+            public int? BlueMaxPlayers;
+            public int? RedMaxPlayers;
+            public int? MaxFFAPlayers;
+            public int? MaxSpectators;
+            public bool? MatchVoiceChat;
+            public bool? PauseGameOnPlayerDisconnect;
 
-            public enum EMapRotation
+            public enum Map_Rotation
             {
                 AfterAMirrorMatch,
                 AfterAGame,
                 Paused,
             }
 
-            public enum EReturnToLobby
+            public enum Return_To_Lobby
             {
                 Never,
                 AfterAGame,
                 AfterAMirrorMatch
             }
 
-            public enum ETeamBalancing
+            public enum Team_Balancing
             {
                 Off,
                 AfterAGame,
@@ -813,5 +848,5 @@ namespace Deltin.CustomGameAutomation
             }
         }
     }
-    */
+#pragma warning restore CS1591
 }

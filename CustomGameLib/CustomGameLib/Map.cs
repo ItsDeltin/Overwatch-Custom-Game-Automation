@@ -229,7 +229,7 @@ namespace Deltin.CustomGameAutomation
                 Gamemode.Escort,
 
                 // Followed by arcade gamemodes
-                //Gamemode.CaptureTheFlag,
+                Gamemode.CaptureTheFlag,
                 Gamemode.Deathmatch,
                 Gamemode.Elimination,
                 Gamemode.JunkensteinsRevenge, // < Fix later when Junkensteins revenge is live, the position is a guess
@@ -249,7 +249,7 @@ namespace Deltin.CustomGameAutomation
                 Event.None,             // Control
                 Event.None,             // Escort
 
-                //Event.None,             // CaptureTheFlag
+                Event.None,             // CaptureTheFlag
                 Event.None,             // Deathmatch
                 Event.None,             // Elimination
                 Event.HalloweenTerror,  // JunkensteinsRevenge
