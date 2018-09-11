@@ -348,6 +348,7 @@ namespace Deltin.CustomGameAutomation
         // Deathmatch
         public static Map DM_BlackForest                   = new Map(Gamemode.Deathmatch,            "DM_BlackForest",                   Event.None);
         public static Map DM_BlackForest_Winter            = new Map(Gamemode.Deathmatch,            "DM_BlackForest_Winter",            Event.WinterWonderland);
+        public static Map DM_BlizzardWorld                 = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld",                 Event.None);
         public static Map DM_Castillo                      = new Map(Gamemode.Deathmatch,            "DM_Castillo",                      Event.None);
         public static Map DM_ChateauGuillard               = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard",               Event.None);
         public static Map DM_Dorado                        = new Map(Gamemode.Deathmatch,            "DM_Dorado",                        Event.None);
@@ -453,6 +454,7 @@ namespace Deltin.CustomGameAutomation
         // Team Deathmatch
         public static Map TDM_BlackForest                  = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest",                  Event.None);
         public static Map TDM_BlackForest_Winter           = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest_Winter",           Event.WinterWonderland);
+        public static Map TDM_BlizzardWorld                = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld",                Event.None);
         public static Map TDM_Castillo                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Castillo",                     Event.None);
         public static Map TDM_ChateauGuillard              = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard",              Event.None);
         public static Map TDM_Dorado                       = new Map(Gamemode.TeamDeathmatch,        "TDM_Dorado",                       Event.None);
