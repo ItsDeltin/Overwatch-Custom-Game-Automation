@@ -10,8 +10,8 @@ namespace ZombieBot
             if (initial)
             {
                 cg.Settings.SetGameName("Zombies - Infection");
-                cg.Settings.SetTeamName(PlayerTeam.Blue, "Survivors");
-                cg.Settings.SetTeamName(PlayerTeam.Red, "Zombies");
+                cg.Settings.SetTeamName(Team.Blue, "Survivors");
+                cg.Settings.SetTeamName(Team.Red, "Zombies");
 
                 int moderatorSlot = cg.PlayerInfo.ModeratorSlot();
 

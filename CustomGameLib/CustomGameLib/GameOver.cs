@@ -34,7 +34,7 @@ namespace Deltin.CustomGameAutomation
 
         void GameOverCheck()
         {
-            PlayerTeam? currentWinningTeamCheck = null;
+            Team? currentWinningTeamCheck = null;
             Stopwatch checkTime = new Stopwatch();
             int checkLength = (int)(1.5 * 1000); // 1.5 seconds in milliseconds
             bool executed = false;
@@ -45,19 +45,19 @@ namespace Deltin.CustomGameAutomation
                 {
                     updateScreen(); // Start
 
-                    PlayerTeam? thisCheck = null;
+                    Team? thisCheck = null;
 
                     for (int x = 110; x < 450; x++)
                         // Test for a straight line '|'
                         if (CompareColor(x, 295, new int[] { 132, 117, 87 }, 7) && CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
                         {
-                            thisCheck = PlayerTeam.Blue;
+                            thisCheck = Team.Blue;
                             break;
                         }
                         // Test for just the top '*'
                         else if (CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
                         {
-                            thisCheck = PlayerTeam.Red;
+                            thisCheck = Team.Red;
                             break;
                         }
 
@@ -79,7 +79,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         if (!executed && checkTime.ElapsedMilliseconds >= checkLength)
                         {
-                            OnGameOver(this, new GameOverArgs((PlayerTeam)thisCheck));
+                            OnGameOver(this, new GameOverArgs((Team)thisCheck));
                             executed = true;
                         }
                     }
@@ -131,12 +131,12 @@ namespace Deltin.CustomGameAutomation
     /// <seealso cref="CustomGame.OnGameOver"/>
     public class GameOverArgs : EventArgs
     {
-        private PlayerTeam WinningTeam;
+        private Team WinningTeam;
 
         /// <summary>
         /// Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
         /// </summary>
-        internal GameOverArgs(PlayerTeam winningteam)
+        internal GameOverArgs(Team winningteam)
         {
             WinningTeam = winningteam;
         }
@@ -146,7 +146,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <returns>Returns the team that won the game.</returns>
         /// <seealso cref="CustomGame.OnGameOver"/>
-        public PlayerTeam GetWinningTeam()
+        public Team GetWinningTeam()
         {
             return WinningTeam;
         }

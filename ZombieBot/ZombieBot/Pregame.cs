@@ -62,7 +62,7 @@ namespace ZombieBot
                             {
                                 Console.WriteLine("Inviting the player " + data[0] + "...");
                                 // invite player to game
-                                cg.InvitePlayer(data[0]); // invite player to game
+                                cg.InvitePlayer(data[0], Team.BlueAndRed); // invite player to game
                                 a.RemoveFromQueue(data[0]); // remove player from queue
                             }
                         }
@@ -223,7 +223,7 @@ namespace ZombieBot
                         redslots = cg.RedSlots;
                     }
 
-                    cg.AI.AddAI(AIHero.McCree, Difficulty.Easy, BotTeam.Red, 6); // fill team 2 with mccree bots
+                    cg.AI.AddAI(AIHero.McCree, Difficulty.Easy, Team.Red, 6); // fill team 2 with mccree bots
 
                     Thread.Sleep(1500);
 

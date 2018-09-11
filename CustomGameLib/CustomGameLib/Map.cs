@@ -338,6 +338,7 @@ namespace Deltin.CustomGameAutomation
         public static Map CTF_Oasis_University             = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_University",             Event.None);
 
         // Control
+        public static Map C_Busan                          = new Map(Gamemode.Control,               "C_Busan",                          Event.None);
         public static Map C_Ilios                          = new Map(Gamemode.Control,               "C_Ilios",                          Event.None);
         public static Map C_Lijiang                        = new Map(Gamemode.Control,               "C_Lijiang",                        Event.None);
         public static Map C_Lijiang_Lunar                  = new Map(Gamemode.Control,               "C_Lijiang_Lunar",                  Event.LunarNewYear);
@@ -425,6 +426,7 @@ namespace Deltin.CustomGameAutomation
 
         // Skirmish
         public static Map SKIRM_BlizzardWorld              = new Map(Gamemode.Skirmish,              "SKIRM_BlizzardWorld",              Event.None);
+        public static Map SKIRM_Busan                      = new Map(Gamemode.Skirmish,              "SKIRM_Busan",                      Event.None);
         public static Map SKIRM_Dorado                     = new Map(Gamemode.Skirmish,              "SKIRM_Dorado",                     Event.None);
         public static Map SKIRM_Eichenwalde                = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde",                Event.None);
         public static Map SKIRM_Eichenwalde_Halloween      = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde_Halloween",      Event.HalloweenTerror);

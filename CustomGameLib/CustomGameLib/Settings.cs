@@ -211,21 +211,39 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="team">Team to change name.</param>
         /// <param name="name">Name to change team's name to.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters. Also thrown if <paramref name="team"/> is Spectator or Queue.</exception>
         /// <exception cref="ArgumentException">Thown if <paramref name="name"/> has the text "admin" in it.</exception>
-        public void SetTeamName(PlayerTeam team, string name)
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
+        public void SetTeamName(Team team, string name)
         {
+            if (name == null)
+                throw new ArgumentNullException("name", "name cannot be null.");
             if (name.Length < 1)
                 throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 1.");
             if (name.Length > 15)
                 throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 15 or lower.");
             if (name.ToLower().Contains("admin"))
                 throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
-            if (team == PlayerTeam.Blue) cg.LeftClick(Points.LOBBY_BLUE_NAME);
-            if (team == PlayerTeam.Red) cg.LeftClick(Points.LOBBY_RED_NAME);
-            cg.TextInput(name);
-            cg.KeyPress(Keys.Return);
-            Thread.Sleep(500);
+            if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
+                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+
+            if (team.HasFlag(Team.Blue))
+            {
+                cg.LeftClick(Points.LOBBY_BLUE_NAME);
+
+                cg.TextInput(name);
+                cg.KeyPress(Keys.Return);
+                Thread.Sleep(500);
+            }
+
+            if (team.HasFlag(Team.Red))
+            {
+                cg.LeftClick(Points.LOBBY_RED_NAME);
+
+                cg.TextInput(name);
+                cg.KeyPress(Keys.Return);
+                Thread.Sleep(500);
+            }
         }
 
         /// <summary>
@@ -289,14 +307,6 @@ namespace Deltin.CustomGameAutomation
         {
             settings.SetSettings(cg);
         }
-    }
-
-    public enum LobbyTeam
-    {
-        Blue,
-        Red,
-        FFA,
-        Spectator
     }
 
 #pragma warning disable CS1591

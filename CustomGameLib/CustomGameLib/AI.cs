@@ -30,13 +30,16 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="hero">Hero type to add.</param>
         /// <param name="difficulty">Difficulty of hero.</param>
-        /// <param name="team">Team that AI joins.</param>
+        /// <param name="team">Team that AI joins. Can be red, blue, or both.</param>
         /// <param name="count">Amount of AI that is added. Set to -1 for max. Default is -1</param>
         /// <returns>Returns false if no AI can be added.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if count is less than -1.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="count"/> is less than -1 or <paramref name="team"/> is Spectator or Queue.</exception>
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
-        public bool AddAI(AIHero hero, Difficulty difficulty, BotTeam team, int count = -1)
+        public bool AddAI(AIHero hero, Difficulty difficulty, Team team, int count = -1)
         {
+            if (team.HasFlag(Team.Queue) || team.HasFlag(Team.Spectator))
+                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+
             if (count < -1)
                 throw new ArgumentOutOfRangeException("count", count, "AI count must be -1 or higher.");
 
@@ -81,7 +84,7 @@ namespace Deltin.CustomGameAutomation
                 press.Add(Keys.Down);
                 press.Add(Keys.Down);
 
-                if (team != BotTeam.Both)
+                if (team != Team.BlueAndRed)
                 {
                     press.Add(Keys.Space);
                     int teamID = (int)team;

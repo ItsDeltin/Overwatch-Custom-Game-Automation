@@ -14,6 +14,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="ta">Determines if all heroes should be enabled, disabled or neither before toggling</param>
         /// <param name="team">Team to change roster for.</param>
         /// <param name="heroes">Heroes to toggle.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
         /// <example>
         /// The example below will enable random heroes for a team.
         /// <code>
@@ -43,18 +44,21 @@ namespace Deltin.CustomGameAutomation
         /// }
         /// </code>
         /// </example>
-        public void SetHeroRoster(ToggleAction ta, BotTeam team, params Hero[] heroes)
+        public void SetHeroRoster(ToggleAction ta, Team team, params Hero[] heroes)
         {
+            if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
+                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+
             GoToSettings();
             LeftClick(Points.SETTINGS_HEROES); // click heroes
             LeftClick(Points.SETTINGS_HEROES_ROSTER); // click hero roster
             // If team doesn't equal both, click a team to change hero roster for.
-            if (team == BotTeam.Blue)
+            if (team == Team.Blue)
             {
                 LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_DROPDOWN, 250);
                 LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_BLUE, 250);
             }
-            if (team == BotTeam.Red)
+            if (team == Team.Red)
             {
                 LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_DROPDOWN, 250);
                 LeftClick(Points.SETTINGS_HEROES_ROSTER_TEAM_RED, 250);
@@ -73,7 +77,7 @@ namespace Deltin.CustomGameAutomation
 
             KeyPress(Keys.Down);
             Thread.Sleep(1);
-            if (team == BotTeam.Both)
+            if (team == Team.BlueAndRed)
             {
                 KeyPress(Keys.Down);
                 Thread.Sleep(1);
@@ -314,17 +318,17 @@ namespace Deltin.CustomGameAutomation
                     }
                     heroid++;
                 }
-                // heroid is now 0 = general, 1 = ana, 2 = bastion and so on.
+                // heroid is now 0 = General, 1 = Ana, 2 = Bastion, etc.
 
-                if (hero.Team != BotTeam.Both)
+                if (hero.Team != Team.BlueAndRed)
                 {
                     // Click team to change settings for.
-                    if (hero.Team == BotTeam.Blue)
+                    if (hero.Team == Team.Blue)
                     {
                         LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_DROPDOWN); // click team menu
                         LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_BLUE); // click blue
                     }
-                    if (hero.Team == BotTeam.Red)
+                    if (hero.Team == Team.Red)
                     {
                         LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_DROPDOWN); // click team menu
                         LeftClick(Points.SETTINGS_HEROES_SETTINGS_TEAM_RED); // click red
@@ -436,7 +440,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Team to change hero settings for.
         /// </summary>
-        public BotTeam Team;
+        public Team Team;
         /// <summary>
         /// Array of settings to change. Must be the same size as setto.
         /// </summary>
@@ -452,8 +456,12 @@ namespace Deltin.CustomGameAutomation
         /// <param name="team">Team to change hero settings for.</param>
         /// <param name="set">Array of settings to change. Must be the same size as setto.</param>
         /// <param name="setto">Array to change settings to. Must be the same size as set.</param>
-        public SetHero(Hero? hero, BotTeam team, string[] set, object[] setto)
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
+        public SetHero(Hero? hero, Team team, string[] set, object[] setto)
         {
+            if (Team.HasFlag(Team.Spectator) || Team.HasFlag(Team.Queue))
+                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+
             Hero = hero;
             Team = team;
             Set = set;
@@ -466,33 +474,117 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public enum Hero
     {
+        /// <summary>
+        /// Ana hero.
+        /// </summary>
         Ana,
+        /// <summary>
+        /// Bastion hero.
+        /// </summary>
         Bastion,
+        /// <summary>
+        /// Brigitte hero.
+        /// </summary>
         Brigitte,
+        /// <summary>
+        /// DVA hero.
+        /// </summary>
         DVA,
+        /// <summary>
+        /// Doomfist hero.
+        /// </summary>
         Doomfist,
+        /// <summary>
+        /// Genji hero.
+        /// </summary>
         Genji,
+        /// <summary>
+        /// Hanzo hero.
+        /// </summary>
         Hanzo,
+        /// <summary>
+        /// Junkrat hero.
+        /// </summary>
         Junkrat,
+        /// <summary>
+        /// Lucio hero.
+        /// </summary>
         Lucio,
+        /// <summary>
+        /// McCree hero.
+        /// </summary>
         McCree,
+        /// <summary>
+        /// Mei hero.
+        /// </summary>
         Mei,
+        /// <summary>
+        /// Mercy hero.
+        /// </summary>
         Mercy,
+        /// <summary>
+        /// Moira hero.
+        /// </summary>
         Moira,
+        /// <summary>
+        /// Orisa hero.
+        /// </summary>
         Orisa,
+        /// <summary>
+        /// Pharah hero.
+        /// </summary>
         Pharah,
+        /// <summary>
+        /// Reaper hero.
+        /// </summary>
         Reaper,
+        /// <summary>
+        /// Reinhardt hero.
+        /// </summary>
         Reinhardt,
+        /// <summary>
+        /// Roadhog hero.
+        /// </summary>
         Roadhog,
+        /// <summary>
+        /// Soldier 76 hero.
+        /// </summary>
         Soldier76,
+        /// <summary>
+        /// Sombra hero.
+        /// </summary>
         Sombra,
+        /// <summary>
+        /// Symmetra hero.
+        /// </summary>
         Symmetra,
+        /// <summary>
+        /// Torbjorn hero.
+        /// </summary>
         Torbjorn,
+        /// <summary>
+        /// Tracer hero.
+        /// </summary>
         Tracer,
+        /// <summary>
+        /// Widowmaker hero.
+        /// </summary>
         Widowmaker,
+        /// <summary>
+        /// Winston hero.
+        /// </summary>
         Winston,
+        /// <summary>
+        /// Wrecking Ball hero.
+        /// </summary>
         WreckingBall,
+        /// <summary>
+        /// Zarya hero.
+        /// </summary>
         Zarya,
+        /// <summary>
+        /// Zenyatta hero.
+        /// </summary>
         Zenyatta
     }
 }

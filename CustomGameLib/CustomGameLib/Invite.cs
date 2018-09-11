@@ -12,10 +12,12 @@ namespace Deltin.CustomGameAutomation
         /// <param name="team">Team that the invited player joins.</param>
         /// <returns>Returns true if <paramref name="playerName"/> is a valid battletag.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
-        public bool InvitePlayer(string playerName, InviteTeam team = InviteTeam.Both)
+        public bool InvitePlayer(string playerName, Team team)
         {
             if (playerName == null)
                 throw new ArgumentNullException("playerTeam");
+            if (team.HasFlag(Team.Queue))
+                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Queue.");
 
             updateScreen();
             // check if the add AI button is there.
@@ -33,18 +35,18 @@ namespace Deltin.CustomGameAutomation
 
             TextInput(playerName);
 
-            if (team != InviteTeam.Both)
+            if (team != Team.BlueAndRed)
             {
                 LeftClick(Points.INVITE_TEAM_DROPDOWN);
-                if (team == InviteTeam.Blue)
+                if (team.HasFlag(Team.Blue))
                 {
                     LeftClick(Points.INVITE_TEAM_BLUE);
                 }
-                else if (team == InviteTeam.Red)
+                else if (team.HasFlag(Team.Red))
                 {
                     LeftClick(Points.INVITE_TEAM_RED);
                 }
-                else if (team == InviteTeam.Spectator)
+                else if (team.HasFlag(Team.Spectator))
                 {
                     LeftClick(Points.INVITE_TEAM_SPECTATOR);
                 }

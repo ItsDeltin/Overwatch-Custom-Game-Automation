@@ -1026,25 +1026,6 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
     }
-    
-    /// <summary>
-    /// Teams on the queue.
-    /// </summary>
-    public enum QueueTeam
-    {
-        /// <summary>
-        /// Queueing for both blue and red.
-        /// </summary>
-        Neutral,
-        /// <summary>
-        /// Queueing for blue.
-        /// </summary>
-        Blue,
-        /// <summary>
-        /// Queueing for red.
-        /// </summary>
-        Red
-    }
 
     /// <summary>
     /// Result info of CG_PlayerInfo.GetHero()
@@ -1072,7 +1053,6 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         NoCompatibleHeroFound
     }
-
 
     /// <summary>
     /// Flags for obtaining slots.

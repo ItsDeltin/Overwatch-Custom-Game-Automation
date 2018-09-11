@@ -260,7 +260,7 @@
             Changes a player's state in Overwatch.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.InvitePlayer(System.String,Deltin.CustomGameAutomation.InviteTeam)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.InvitePlayer(System.String,Deltin.CustomGameAutomation.Team)">
             <summary>
             Invites a player to the game via battletag.
             </summary>
@@ -404,13 +404,14 @@
             Starts the game when waiting for players.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetHeroRoster(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.BotTeam,Deltin.CustomGameAutomation.Hero[])">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetHeroRoster(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Team,Deltin.CustomGameAutomation.Hero[])">
             <summary>
             Toggles what heroes can be selected.
             </summary>
             <param name="ta">Determines if all heroes should be enabled, disabled or neither before toggling</param>
             <param name="team">Team to change roster for.</param>
             <param name="heroes">Heroes to toggle.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
             <example>
             The example below will enable random heroes for a team.
             <code>
@@ -525,16 +526,16 @@
             The AI class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.AI"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.BotTeam,System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.Team,System.Int32)">
             <summary>
             Add AI to the game.
             </summary>
             <param name="hero">Hero type to add.</param>
             <param name="difficulty">Difficulty of hero.</param>
-            <param name="team">Team that AI joins.</param>
+            <param name="team">Team that AI joins. Can be red, blue, or both.</param>
             <param name="count">Amount of AI that is added. Set to -1 for max. Default is -1</param>
             <returns>Returns false if no AI can be added.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if count is less than -1.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="count" /> is less than -1 or <paramref name="team" /> is Spectator or Queue.</exception>
             <example>
       The code below will even out the teams with AI if the teams are unbalanced.
       <code>
@@ -1317,6 +1318,56 @@
             The default keys set in Overwatch's settings.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.Team">
+            <summary>
+            Teams in Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Team.Blue">
+            <summary>
+            The blue team.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Team.Red">
+            <summary>
+            The red team.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Team.BlueAndRed">
+            <summary>
+            The blue and red team.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Team.Spectator">
+            <summary>
+            The spectators.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Team.Queue">
+            <summary>
+            The queue.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.QueueTeam">
+            <summary>
+            Teams in the queue.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Neutral">
+            <summary>
+            Queueing for both blue and red.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Blue">
+            <summary>
+            Queueing for blue.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Red">
+            <summary>
+            Queueing for red.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.Join">
             <summary>
             Options for who can join the game.
@@ -1431,7 +1482,7 @@
             </summary>
             <seealso cref="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver"/>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.GameOverArgs.#ctor(Deltin.CustomGameAutomation.PlayerTeam)">
+        <member name="M:Deltin.CustomGameAutomation.GameOverArgs.#ctor(Deltin.CustomGameAutomation.Team)">
             <summary>
             Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
             </summary>
@@ -1602,26 +1653,6 @@
             <param name="battletag">Battletag of player to check. Is case sensitive.</param>
             <returns>Returns true if player exists, else returns false.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.QueueTeam">
-            <summary>
-            Teams on the queue.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Neutral">
-            <summary>
-            Queueing for both blue and red.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Blue">
-            <summary>
-            Queueing for blue.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.QueueTeam.Red">
-            <summary>
-            Queueing for red.
-            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
             <summary>
@@ -2290,7 +2321,7 @@
             Array to change settings to. Must be the same size as set.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.SetHero.#ctor(System.Nullable{Deltin.CustomGameAutomation.Hero},Deltin.CustomGameAutomation.BotTeam,System.String[],System.Object[])">
+        <member name="M:Deltin.CustomGameAutomation.SetHero.#ctor(System.Nullable{Deltin.CustomGameAutomation.Hero},Deltin.CustomGameAutomation.Team,System.String[],System.Object[])">
             <summary>
             
             </summary>
@@ -2298,10 +2329,151 @@
             <param name="team">Team to change hero settings for.</param>
             <param name="set">Array of settings to change. Must be the same size as setto.</param>
             <param name="setto">Array to change settings to. Must be the same size as set.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Hero">
             <summary>
             All heroes in Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Ana">
+            <summary>
+            Ana hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Bastion">
+            <summary>
+            Bastion hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Brigitte">
+            <summary>
+            Brigitte hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.DVA">
+            <summary>
+            DVA hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Doomfist">
+            <summary>
+            Doomfist hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Genji">
+            <summary>
+            Genji hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Hanzo">
+            <summary>
+            Hanzo hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Junkrat">
+            <summary>
+            Junkrat hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Lucio">
+            <summary>
+            Lucio hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.McCree">
+            <summary>
+            McCree hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Mei">
+            <summary>
+            Mei hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Mercy">
+            <summary>
+            Mercy hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Moira">
+            <summary>
+            Moira hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Orisa">
+            <summary>
+            Orisa hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Pharah">
+            <summary>
+            Pharah hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Reaper">
+            <summary>
+            Reaper hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Reinhardt">
+            <summary>
+            Reinhardt hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Roadhog">
+            <summary>
+            Roadhog hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Soldier76">
+            <summary>
+            Soldier 76 hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Sombra">
+            <summary>
+            Sombra hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Symmetra">
+            <summary>
+            Symmetra hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Torbjorn">
+            <summary>
+            Torbjorn hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Tracer">
+            <summary>
+            Tracer hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Widowmaker">
+            <summary>
+            Widowmaker hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Winston">
+            <summary>
+            Winston hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.WreckingBall">
+            <summary>
+            Wrecking Ball hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Zarya">
+            <summary>
+            Zarya hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Zenyatta">
+            <summary>
+            Zenyatta hero.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Settings">
@@ -2342,14 +2514,15 @@
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 3 characters or greater than 64 characters.</exception>
             <exception cref="T:System.ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.SetTeamName(Deltin.CustomGameAutomation.PlayerTeam,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetTeamName(Deltin.CustomGameAutomation.Team,System.String)">
             <summary>
             Changes a team's name.
             </summary>
             <param name="team">Team to change name.</param>
             <param name="name">Name to change team's name to.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="name"/> is less than 1 character or greater than 15 characters. Also thrown if <paramref name="team"/> is Spectator or Queue.</exception>
             <exception cref="T:System.ArgumentException">Thown if <paramref name="name"/> has the text "admin" in it.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.SetMaxPlayers(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>

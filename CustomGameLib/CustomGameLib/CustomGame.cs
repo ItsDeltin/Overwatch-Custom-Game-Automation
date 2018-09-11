@@ -175,7 +175,6 @@ namespace Deltin.CustomGameAutomation
             Disposed = true;
             // Stop scanning commands
             Commands.StopScanning();
-            // Remove data of all executed commands.
             if (bmp != null)
                 bmp.Dispose();
             DisposeGameOverCheck();
@@ -239,30 +238,53 @@ namespace Deltin.CustomGameAutomation
         public DefaultKeys DefaultKeys = new DefaultKeys();
     }
 
-    public enum BotTeam
-    {
-        Both,
-        Blue,
-        Red
-    }
-    public enum InviteTeam
-    {
-        Blue,
-        Red,
-        Spectator,
-        Both
-    }
-    public enum PlayerTeam
-    {
-        Blue,
-        Red
-    }
+    /// <summary>
+    /// Teams in Overwatch.
+    /// </summary>
+    [Flags]
     public enum Team
     {
-        Blue,
-        Red,
-        Spectator
+        /// <summary>
+        /// The blue team.
+        /// </summary>
+        Blue = 1 << 0,
+        /// <summary>
+        /// The red team.
+        /// </summary>
+        Red = 1 << 1,
+        /// <summary>
+        /// The blue and red team.
+        /// </summary>
+        BlueAndRed = Blue | Red,
+        /// <summary>
+        /// The spectators.
+        /// </summary>
+        Spectator = 1 << 2,
+        /// <summary>
+        /// The queue.
+        /// </summary>
+        Queue = 1 << 3
     }
+
+    /// <summary>
+    /// Teams in the queue.
+    /// </summary>
+    public enum QueueTeam
+    {
+        /// <summary>
+        /// Queueing for both blue and red.
+        /// </summary>
+        Neutral,
+        /// <summary>
+        /// Queueing for blue.
+        /// </summary>
+        Blue,
+        /// <summary>
+        /// Queueing for red.
+        /// </summary>
+        Red
+    }
+
     /// <summary>
     /// Options for who can join the game.
     /// </summary>
