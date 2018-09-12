@@ -109,7 +109,7 @@ namespace Deltin.CustomGameAutomation
             toggle,
             dropdown
         }
-        static HeroSettingData[][] HeroSettings = HeroSettingData.GetSettings();
+        static HeroSettingData[][] HeroSettings = HeroSettingData.GetSettings(); // HeroSettings[hero][settingindex]
         private class HeroSettingData
         {
             public string setting;
@@ -122,7 +122,7 @@ namespace Deltin.CustomGameAutomation
             public static HeroSettingData[][] GetSettings()
             {
                 // Read hero_settings resource. Each value in array is a line in hero_settings.txt.
-                string[] settings = Properties.Resources.hero_settings.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                string[] settings = Properties.Resources.hero_settings.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 // List of settings for each hero.                                                 V +1 due to general settings.
                 List<HeroSettingData>[] settinglist = new List<HeroSettingData>[Enum.GetNames(typeof(Hero)).Length + 1];
                 for (int i = 0, heroindex = -1; i < settings.Length; i++)
@@ -172,8 +172,9 @@ namespace Deltin.CustomGameAutomation
         /// Change individual hero settings.
         /// </summary>
         /// <param name="herodata">Settings of the heroes you want to change.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when a <paramref name="herodata"/>'s set and setto length are not equal length.</exception>
-        /// <exception cref="InvalidSetheroException">Thrown when any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if a <paramref name="herodata"/>'s set and setto length are not equal length.</exception>
+        /// <exception cref="InvalidSetheroException">Thrown if a setting does not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="herodata"/> is null.</exception>
         /// <remarks>
         /// The complete list of settings can be found <a href="https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/blob/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt" content="here."/>
         /// Toggle settings require a boolean. Value and dropdown settings require an integer.
@@ -239,6 +240,9 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SetHero"/>
         public void SetHeroSettings(params SetHero[] herodata)
         {
+            if (herodata == null)
+                throw new ArgumentNullException("herodata", "herodata was null.");
+
             // Throw exception if any of the set or setto values in herodata are not the same length.
             for (int i = 0; i < herodata.Length; i++)
                 if (herodata[i].Set.Length != herodata[i].SetTo.Length)

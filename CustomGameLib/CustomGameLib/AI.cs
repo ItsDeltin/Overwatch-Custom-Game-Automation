@@ -41,11 +41,9 @@ namespace Deltin.CustomGameAutomation
                 throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
 
             if (count < -1)
-                throw new ArgumentOutOfRangeException("count", count, "AI count must be -1 or higher.");
+                throw new ArgumentOutOfRangeException("count", count, "AI count must be at least -1.");
 
             cg.updateScreen();
-
-            // Find the maximum amount of bots that can be placed on a team, and store it in the maxBots variable
 
             if (cg.DoesAddButtonExist())
             /*
@@ -54,6 +52,9 @@ namespace Deltin.CustomGameAutomation
              * The AI button will be missing if the server is full
              */
             {
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.CloseChat();
+
                 // Open AddAI menu.
                 cg.Cursor = Points.LOBBY_ADD_AI;
                 cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
@@ -109,6 +110,9 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(press.ToArray());
 
                 cg.ResetMouse();
+
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.OpenChat();
 
                 return true;
             }
@@ -523,7 +527,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool EditAI(int slot, AIHero setToHero, Difficulty setToDifficulty)
         {
-            return EditAI(slot, setToHero, setToDifficulty, true);
+            return EditAI(slot, (AIHero?)setToHero, (Difficulty?)setToDifficulty);
         }
         /// <summary>
         /// Edits the hero an AI is playing.
@@ -534,7 +538,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool EditAI(int slot, AIHero setToHero)
         {
-            return EditAI(slot, setToHero, null, true);
+            return EditAI(slot, setToHero, null);
         }
         /// <summary>
         /// Edits the difficulty of an AI.
@@ -545,10 +549,10 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool EditAI(int slot, Difficulty setToDifficulty)
         {
-            return EditAI(slot, null, setToDifficulty, true);
+            return EditAI(slot, null, setToDifficulty);
         }
 
-        bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty, bool x)
+        bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
         {
             if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
@@ -556,6 +560,9 @@ namespace Deltin.CustomGameAutomation
             // Make sure there is a player or AI in selected slot, or if they are a valid slot to select in queue.
             if (cg.PlayerSlots.Contains(slot) || (slot >= CustomGame.Queueid && slot - (CustomGame.Queueid) < cg.QueueCount))
             {
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.CloseChat();
+
                 // Click the slot of the selected slot.
                 var slotlocation = cg.Interact.FindSlotLocation(slot);
                 cg.LeftClick(slotlocation.X, slotlocation.Y);
@@ -600,11 +607,19 @@ namespace Deltin.CustomGameAutomation
                     cg.KeyPress(sim.ToArray());
 
                     cg.ResetMouse();
+
+                    if (cg.OpenChatIsDefault)
+                        cg.Chat.OpenChat();
+
                     return true;
                 }
                 else
                 {
                     cg.ResetMouse();
+
+                    if (cg.OpenChatIsDefault)
+                        cg.Chat.OpenChat();
+
                     return false;
                 }
             }

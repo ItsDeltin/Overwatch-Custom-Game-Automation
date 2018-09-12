@@ -447,8 +447,9 @@
             Change individual hero settings.
             </summary>
             <param name="herodata">Settings of the heroes you want to change.</param>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when a <paramref name="herodata"/>'s set and setto length are not equal length.</exception>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSetheroException">Thrown when any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if a <paramref name="herodata"/>'s set and setto length are not equal length.</exception>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSetheroException">Thrown if a setting does not exist for their respective heros or if a set's respective setto is not the correct type.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="herodata"/> is null.</exception>
             <remarks>
             The complete list of settings can be found <a href="https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/blob/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt" content="here."/>
             Toggle settings require a boolean. Value and dropdown settings require an integer.
