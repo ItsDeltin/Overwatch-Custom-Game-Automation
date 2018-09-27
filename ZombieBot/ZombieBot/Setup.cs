@@ -32,7 +32,7 @@ namespace ZombieBot
             // Make game public if jointype is serverbrowser and there is less than 7 players.
             if (Join == JoinType.ServerBrowser)
             {
-                if (cg.TotalPlayerCount < 7)
+                if (cg.AllCount < 7)
                 {
                     cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
                     MatchIsPublic = true;

@@ -30,7 +30,7 @@ namespace ZombieBot
                     cg.Chat.SwapChannel(Channel.Match);
                 }
 
-                int totalPlayerCount = cg.TotalPlayerCount - 1; // Get total number of players in server
+                int totalPlayerCount = cg.AllCount - 1; // Get total number of players in server
 
                 // update server
                 if (Join == JoinType.Abyxa)
@@ -67,7 +67,7 @@ namespace ZombieBot
                             }
                         }
                         Thread.Sleep(500);
-                        totalPlayerCount = cg.TotalPlayerCount;
+                        totalPlayerCount = cg.AllCount;
                     }
                 }
 
@@ -123,13 +123,13 @@ namespace ZombieBot
                     pregame.Reset();
                 }
 
-                if (Join == JoinType.ServerBrowser && MatchIsPublic == true && cg.TotalPlayerCount >= 7)
+                if (Join == JoinType.ServerBrowser && MatchIsPublic == true && cg.AllCount >= 7)
                 {
                     MatchIsPublic = false;
                     cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                 }
 
-                else if (Join == JoinType.ServerBrowser && MatchIsPublic == false && cg.TotalPlayerCount < 7)
+                else if (Join == JoinType.ServerBrowser && MatchIsPublic == false && cg.AllCount < 7)
                 {
                     MatchIsPublic = true;
                     cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);

@@ -333,11 +333,11 @@ namespace Deltin.CustomGameAutomation
         {
             cg.updateScreen();
 
-            var totalPlayers = cg.TotalPlayerSlots;
+            var allSlots = cg.AllSlots;
 
-            for (int i = 0; i < totalPlayers.Count; i++)
-                if (IsAI(totalPlayers[i], true))
-                    if (cg.Interact.RemoveAllBots(totalPlayers[i]))
+            for (int i = 0; i < allSlots.Count; i++)
+                if (IsAI(allSlots[i], true))
+                    if (cg.Interact.RemoveAllBots(allSlots[i]))
                         return true;
 
             return false;
@@ -359,7 +359,7 @@ namespace Deltin.CustomGameAutomation
                 throw new InvalidSlotException(slot);
 
             if (CustomGame.IsSlotSpectator(slot) // Since AI cannot join spectator, return false if the slot is a spectator slot.
-                || !cg.TotalPlayerSlots.Contains(slot)) // Return false if the slot is empty.
+                || !cg.AllSlots.Contains(slot)) // Return false if the slot is empty.
                 return false;
 
             // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
@@ -459,7 +459,7 @@ namespace Deltin.CustomGameAutomation
         {
             List<int> AISlots = new List<int>();
 
-            List<int> allPlayers = cg.TotalPlayerSlots;
+            List<int> allPlayers = cg.AllSlots;
 
             for (int i = 0; i < allPlayers.Count; i++)
             {
@@ -486,7 +486,7 @@ namespace Deltin.CustomGameAutomation
         {
             List<int> AISlots = new List<int>();
 
-            List<int> allPlayers = cg.TotalPlayerSlots;
+            List<int> allPlayers = cg.AllSlots;
 
             for (int i = 0; i < allPlayers.Count; i++)
             {
@@ -558,7 +558,7 @@ namespace Deltin.CustomGameAutomation
                 throw new InvalidSlotException(slot);
 
             // Make sure there is a player or AI in selected slot, or if they are a valid slot to select in queue.
-            if (cg.PlayerSlots.Contains(slot) || (slot >= CustomGame.Queueid && slot - (CustomGame.Queueid) < cg.QueueCount))
+            if (cg.PlayerSlots.Contains(slot))
             {
                 if (cg.OpenChatIsDefault)
                     cg.Chat.CloseChat();

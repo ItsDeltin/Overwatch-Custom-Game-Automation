@@ -13,7 +13,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Modes enabled in custom games.
         /// </summary>
-        public ModesEnabled ModesEnabled = null;
+        public Gamemode ModesEnabled = Gamemode.Assault | Gamemode.AssaultEscort | Gamemode.Control | Gamemode.Escort;
         /// <summary>
         /// The current event occuring in Overwatch.
         /// </summary>
@@ -104,8 +104,6 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="ToggleMap(ModesEnabled, Event, ToggleAction, Map[])"/>
         public void ToggleMap(ToggleAction ta, params Map[] maps)
         {
-            if (ModesEnabled == null)
-                throw new ArgumentNullException("CustomGame.ModesEnabled", "The field CustomGame.ModesEnabled must be set in order to use ToggleMap.");
             ToggleMap(ModesEnabled, CurrentOverwatchEvent, ta, maps);
         }
 
@@ -146,11 +144,8 @@ namespace Deltin.CustomGameAutomation
         /// </example>
         /// <seealso cref="Map"/>
         /// <seealso cref="ToggleMap(ToggleAction, Map[])"/>
-        public void ToggleMap(ModesEnabled modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
+        public void ToggleMap(Gamemode modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
         {
-            if (modesEnabled == null)
-                throw new ArgumentNullException("modesEnabled");
-
             GoToSettings();
 
             LeftClick(Points.SETTINGS_MAPS, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
@@ -164,20 +159,23 @@ namespace Deltin.CustomGameAutomation
             // Get the modes enabled state in a bool in alphabetical order.
             bool[] enabledModes = new bool[]
             {
-                modesEnabled.Assault,
-                modesEnabled.AssaultEscort,
-                modesEnabled.CaptureTheFlag,
-                modesEnabled.Control,
-                modesEnabled.Deathmatch,
-                modesEnabled.Elimination,
-                modesEnabled.Escort,
-                modesEnabled.JunkensteinsRevenge,
-                modesEnabled.Lucioball,
-                modesEnabled.MeisSnowballOffensive,
-                modesEnabled.Skirmish,
-                modesEnabled.TeamDeathmatch,
-                modesEnabled.YetiHunter
+                modesEnabled.HasFlag(Gamemode.Assault),
+                modesEnabled.HasFlag(Gamemode.AssaultEscort),
+                modesEnabled.HasFlag(Gamemode.CaptureTheFlag),
+                modesEnabled.HasFlag(Gamemode.Control),
+                modesEnabled.HasFlag(Gamemode.Deathmatch),
+                modesEnabled.HasFlag(Gamemode.Elimination),
+                modesEnabled.HasFlag(Gamemode.Escort),
+                modesEnabled.HasFlag(Gamemode.JunkensteinsRevenge),
+                modesEnabled.HasFlag(Gamemode.Lucioball),
+                modesEnabled.HasFlag(Gamemode.MeisSnowballOffensive),
+                modesEnabled.HasFlag(Gamemode.Skirmish),
+                modesEnabled.HasFlag(Gamemode.TeamDeathmatch),
+                modesEnabled.HasFlag(Gamemode.YetiHunter),
             };
+
+            if (enabledModes.Length != Enum.GetNames(typeof(Gamemode)).Length)
+                throw new NotImplementedException("The length of enabledModes does not equal the length of the gamemodes in the Gamemode enum.");
 
             List<int> selectMap = new List<int>();
             int mapcount = 0;
@@ -291,6 +289,35 @@ namespace Deltin.CustomGameAutomation
             }
 
             return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Gets the modes enabled in the Overwatch custom game.
+        /// </summary>
+        /// <param name="currentOverwatchEvent">The current Overwatch event.</param>
+        /// <returns></returns>
+        public Gamemode GetModesEnabled(Event currentOverwatchEvent)
+        {
+            NavigateToModesMenu();
+
+            ResetMouse();
+
+            Thread.Sleep(100);
+
+            updateScreen();
+
+            Gamemode modesEnabled = new Gamemode();
+
+            foreach(Gamemode gamemode in Enum.GetValues(typeof(Gamemode)))
+            {
+                Point gamemodeIconLocation = GetModeLocation(gamemode, currentOverwatchEvent);
+                if (gamemodeIconLocation != Point.Empty && CompareColor(gamemodeIconLocation, Colors.SETTINGS_MODES_ENABLED, Fades.SETTINGS_MODES_ENABLED))
+                    modesEnabled |= gamemode;
+            }
+
+            GoBack(2);
+
+            return modesEnabled;
         }
     }
 
@@ -594,43 +621,23 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Overwatch's gamemodes.
     /// </summary>
+    [Flags]
     public enum Gamemode
     {
 #pragma warning disable CS1591
-        Assault, // a
-        AssaultEscort, // ae
-        CaptureTheFlag, // ctf
-        Control, // c
-        Deathmatch, // dm
-        Elimination, // elim
-        Escort, // e
-        JunkensteinsRevenge, // jr
-        Lucioball, // lb
-        MeisSnowballOffensive, // mso
-        Skirmish, // skirm
-        TeamDeathmatch, // tdm
-        YetiHunter // yh
-#pragma warning restore CS1591
-    }
-    /// <summary>
-    /// Overwatch gamemodes that are enabled.
-    /// </summary>
-    public class ModesEnabled
-    {
-#pragma warning disable CS1591
-        public bool Assault, // a
-        AssaultEscort, // ae
-        CaptureTheFlag, // ctf
-        Control, // c
-        Deathmatch, // dm
-        Elimination, // elim
-        Escort, // e
-        JunkensteinsRevenge, // jr
-        Lucioball, // lb
-        MeisSnowballOffensive, // mso
-        Skirmish, // skirm
-        TeamDeathmatch, // tdm
-        YetiHunter; // yh
+        Assault               = 1 << 0, // a
+        AssaultEscort         = 1 << 1, // ae
+        CaptureTheFlag        = 1 << 2, // ctf
+        Control               = 1 << 3, // c
+        Deathmatch            = 1 << 4, // dm
+        Elimination           = 1 << 5, // elim
+        Escort                = 1 << 6, // e
+        JunkensteinsRevenge   = 1 << 7, // jr
+        Lucioball             = 1 << 8, // lb
+        MeisSnowballOffensive = 1 << 9, // mso
+        Skirmish              = 1 << 10, // skirm
+        TeamDeathmatch        = 1 << 11, // tdm
+        YetiHunter            = 1 << 12 // yh
 #pragma warning restore CS1591
     }
 }

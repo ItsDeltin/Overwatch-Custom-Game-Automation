@@ -11,166 +11,95 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        static int fade = 20;
+        const int slotFade = 20;
 
-        /*
-            * Checking the slots works by seeing if the color of a pixel on the slot and the color of a pixel slightly off the slot.
-            * If they are mostly different, the slot is occupied with a player.
-            * If not, the slot is empty.
-        */
+        static readonly int[] TotalRange     = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+        static readonly int[] PlayerRange    = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                                                 };
+        static readonly int[] BlueRange      = new int[] { 0, 1, 2, 3, 4, 5                                                                     };
+        static readonly int[] RedRange       = new int[] {                   6, 7, 8, 9, 10, 11                                                 };
+        static readonly int[] SpectatorRange = new int[] {                                       12, 13, 14, 15, 16, 17                         };
+        static readonly int[] QueueRange     = new int[] {                                                               18, 19, 20, 21, 22, 23 };
 
         #region Players in red and blue
         /// <summary>
-        /// Get player count of red team and blue team.
-        /// </summary>
-        public int PlayerCount
-        {
-            get
-            {
-                updateScreen();
-                int playersConnected = 0;
-                for (int i = 0; i < 12; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        playersConnected++;
-                return playersConnected;
-            }
-        }
-        /// <summary>
-        /// Gets the slots filled in red team and blue team.
+        /// Gets the slots filled in red and blue.
         /// </summary>
         public List<int> PlayerSlots
         {
             get
             {
-                updateScreen();
-                List<int> slot = new List<int>();
-                for (int i = 0; i < 12; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        slot.Add(i);
-                return slot;
+                return CheckRange(PlayerRange, true);
+            }
+        }
+        /// <summary>
+        /// Gets the number of players in red and blue.
+        /// </summary>
+        public int PlayerCount
+        {
+            get
+            {
+                return PlayerSlots.Count;
             }
         }
         #endregion
 
         #region Players in blue
         /// <summary>
-        /// Gets the player count of blue team.
-        /// </summary>
-        public int BlueCount
-        {
-            get
-            {
-                updateScreen();
-                int playersConnected = 0;
-                for (int i = 0; i < 6; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        playersConnected++;
-                return playersConnected;
-            }
-        }
-        /// <summary>
-        /// Gets the slots filled in blue team.
+        /// Gets the slots filled in blue.
         /// </summary>
         public List<int> BlueSlots
         {
             get
             {
-                updateScreen();
-                List<int> slot = new List<int>();
-                for (int i = 0; i < 6; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        slot.Add(i);
-                return slot;
+                return CheckRange(BlueRange, true);
+            }
+        }
+        /// <summary>
+        /// Gets the number of players in blue.
+        /// </summary>
+        public int BlueCount
+        {
+            get
+            {
+                return BlueSlots.Count;
             }
         }
         #endregion
 
         #region Players in red
         /// <summary>
-        /// Gets the player count of red team.
-        /// </summary>
-        public int RedCount
-        {
-            get
-            {
-                updateScreen();
-                int playersConnected = 0;
-                for (int i = 6; i < 12; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        playersConnected++;
-                return playersConnected;
-            }
-        }
-        /// <summary>
-        /// Gets the slots filled in red team.
+        /// Gets the slots filled in red.
         /// </summary>
         public List<int> RedSlots
         {
             get
             {
-                updateScreen();
-                List<int> slot = new List<int>();
-                for (int i = 6; i < 12; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1], slotLoc[i, 0], slotLoc[i, 1], fade) == false)
-                        slot.Add(i);
-                return slot;
-            }
-        }
-        #endregion
-
-        #region Players in queue
-        /// <summary>
-        /// Gets the number of players in the queue.
-        /// </summary>
-        public int QueueCount
-        {
-            get
-            {
-                updateScreen();
-                int inq = 0;
-
-                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
-                // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
-                for (int i = 0; i < 6; i++)
-                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, fade))
-                        inq = i + 1;
-                // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
-                // Check for the length of the scrollbar to get the number of players in the queue
-                if (inq == 6)
-                {
-                    // There can only be 10 players in the queue, which means with a full queue 4 can be hidden.
-                    for (int i = 0; i < 4; i++)
-                    {
-                        int y = 304 - (i * (10 - i));
-                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, fade)
-                            || CompareColor(894, y, new int[] { 132, 126, 123 }, fade))
-                        {
-                            inq = inq + i + 1;
-                            break;
-                        }
-                    }
-                }
-                return inq;
+                return CheckRange(RedRange, true);
             }
         }
         /// <summary>
-        /// Gets the slots filled in the queue.
+        /// Gets the number of players in red.
         /// </summary>
-        public List<int> QueueSlots
+        public int RedCount
         {
             get
             {
-                // No need for updateScreen() because QueueCount updates it.
-                List<int> slots = new List<int>();
-                int inq = QueueCount;
-                for (int i = 0; i < inq; i++)
-                    slots.Add(Queueid + i);
-                return slots;
+                return RedSlots.Count;
             }
         }
         #endregion
 
         #region Players in spectator
+        /// <summary>
+        /// Gets the slots filled in spectator.
+        /// </summary>
+        public List<int> SpectatorSlots
+        {
+            get
+            {
+                return CheckRange(SpectatorRange, true);
+            }
+        }
         /// <summary>
         /// Gets the number of players in spectator.
         /// </summary>
@@ -178,88 +107,177 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                updateScreen();
-
-                int offset = FindOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
-
-                int specConnected = 0;
-                for (int i = 12; i < Queueid; i++)
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
-                        specConnected++;
-                return specConnected;
-            }
-        }
-        /// <summary>
-        /// Gets the slots filled in spectator excluding the first slot.
-        /// </summary>
-        public List<int> SpectatorSlots
-        {
-            get
-            {
-                updateScreen();
-
-                int offset = FindOffset(); // The spectator list moves down when players join the queue, this finds the offset in pixels how far the list of slots moves down.
-
-                // List of slots filled
-                List<int> ss = new List<int>();
-                for (int i = 12; i < Queueid; i++)
-                {
-                    if (CompareColor(playerLoc[i, 0], playerLoc[i, 1] + offset, slotLoc[i, 0], slotLoc[i, 1] + offset, fade) == false)
-                        ss.Add(i);
-                }
-                return ss;
+                return SpectatorSlots.Count;
             }
         }
         #endregion
 
-        internal static int[,] playerLoc = new int[,] {
-            // First set is slot loc, second set is area next to slot
-            // blue
-            { 51, 255 }, // slot 1
-            { 51, 283 }, // slot 2
-            { 51, 311 }, // slot 3
-            { 51, 341 }, // slot 4
-            { 51, 369 }, // slot 5
-            { 51, 384 }, // slot 6 // Y = 397
-            // red
-            { 620, 255 }, // slot 7
-            { 620, 283 }, // slot 8
-            { 620, 311 }, // slot 9
-            { 620, 341 }, // slot 10
-            { 620, 369 }, // slot 11
-            { 620, 397 }, // slot 12
-            // spectators
-            { 893, 248 }, // slot 1
-            { 893, 264 }, // slot 2
-            { 893, 277 }, // slot 3
-            { 893, 290 }, // slot 4
-            { 893, 304 }, // slot 5
-            { 893, 317 }, // slot 6
-        }; // playerLoc
-        internal static int[,] slotLoc = new int[,]
+        #region Players in queue
+        /// <summary>
+        /// Gets the slots filled in the queue.
+        /// </summary>
+        public List<int> QueueSlots
         {
-            // blue
-            { 48, 255 }, // slot 1
-            { 48, 283 }, // slot 2
-            { 48, 311 }, // slot 3
-            { 48, 341 }, // slot 4
-            { 48, 369 }, // slot 5
-            { 48, 384 }, // slot 6 // Y = 397
-            // red
-            { 624, 255 }, // slot 7
-            { 624, 283 }, // slot 8
-            { 624, 311 }, // slot 9
-            { 624, 341 }, // slot 10
-            { 624, 369 }, // slot 11
-            { 624, 397 }, // slot 12
-            // spectators
-            { 896, 248 }, // slot 1
-            { 896, 264 }, // slot 2
-            { 896, 277 }, // slot 3
-            { 896, 290 }, // slot 4
-            { 896, 304 }, // slot 5
-            { 896, 317 }, // slot 6
-        }; // slotloc
+            get
+            {
+                return CheckRange(QueueRange, true);
+            }
+        }
+        /// <summary>
+        /// Gets the number of players in the queue.
+        /// </summary>
+        public int QueueCount
+        {
+            get
+            {
+                return QueueSlots.Count;
+            }
+        }
+        #endregion
+
+        #region All Players
+        /// <summary>
+        /// Gets all slots filled in the custom game.
+        /// </summary>
+        public List<int> AllSlots
+        {
+            get
+            {
+                return CheckRange(TotalRange, true);
+            }
+        }
+        /// <summary>
+        /// Gets the number of players in the custom game.
+        /// </summary>
+        public int AllCount
+        {
+            get
+            {
+                return AllSlots.Count;
+            }
+        }
+        #endregion
+
+        internal static Point[] SlotLocations = new Point[]
+        {
+            // Blue
+            new Point(51, 255), // Slot 0
+            new Point(51, 283), // Slot 1
+            new Point(51, 311), // Slot 2
+            new Point(51, 341), // Slot 3
+            new Point(51, 369), // Slot 4
+            new Point(51, 384), // Slot 5
+            // Red
+            new Point(624, 255), // Slot 6
+            new Point(624, 283), // Slot 7
+            new Point(624, 311), // Slot 8
+            new Point(624, 341), // Slot 9
+            new Point(624, 369), // Slot 10
+            new Point(624, 397), // Slot 11
+            // Spectator
+            new Point(896, 248), // slot 12
+            new Point(896, 264), // slot 13
+            new Point(896, 277), // slot 14
+            new Point(896, 290), // slot 15
+            new Point(896, 304), // slot 16
+            new Point(896, 317), // slot 17
+        };
+
+        private bool IsSlotFilled(int slot, bool update)
+        {
+            if (!IsSlotValid(slot))
+                throw new InvalidSlotException(slot);
+
+            if (!IsSlotInQueue(slot))
+            {
+                if (update)
+                    updateScreen();
+
+                int x = SlotLocations[slot].X,
+                    y = SlotLocations[slot].Y,
+                    compareToX = SlotLocations[slot].X,
+                    compareToY = SlotLocations[slot].Y;
+
+                if (slot == 0)
+                    compareToX -= 8;
+                else if (CustomGame.IsSlotInQueue(slot) || CustomGame.IsSlotSpectator(slot))
+                    compareToX -= 3;
+                else if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
+                    compareToX -= 4;
+                else
+                    throw new NotImplementedException();
+
+                if (IsSlotSpectator(slot))
+                {
+                    int spectatorYOffset = FindSpectatorOffset(true);
+                    compareToY -= spectatorYOffset;
+                    y -= spectatorYOffset;
+                }
+
+                return !CompareColor(x, y, compareToX, compareToY, slotFade);
+            }
+            else
+            {
+                return GetQueueCount(false, update) + Queueid > slot;
+            }
+        }
+
+        private List<int> CheckRange(int[] slotsToCheck, bool update)
+        {
+            if (update)
+                updateScreen();
+            List<int> slots = new List<int>();
+            foreach (int slot in slotsToCheck)
+                if (IsSlotFilled(slot, false))
+                    slots.Add(slot);
+            return slots;
+        }
+
+        private int GetQueueCount(bool includeHidden, bool update)
+        {
+            if (update)
+                updateScreen();
+
+            int inq = 0;
+
+            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
+            // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
+            for (int i = 0; i < 6; i++)
+                if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, slotFade))
+                    inq = i + 1;
+            // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
+            // Check for the length of the scrollbar to get the number of players in the queue
+            if (inq == 6 && includeHidden)
+            {
+                // There can only be 10 players in the queue, which means with a full queue 4 can be hidden.
+                for (int i = 0; i < 4; i++)
+                {
+                    int y = 304 - (i * (10 - i));
+                    if (CompareColor(894, y, new int[] { 153, 153, 152 }, slotFade)
+                        || CompareColor(894, y, new int[] { 132, 126, 123 }, slotFade))
+                    {
+                        inq = inq + i + 1;
+                        break;
+                    }
+                }
+            }
+            return inq;
+        }
+
+        // Finds the offset in pixels of the queue to spectator displacement
+        internal int FindSpectatorOffset(bool noUpdate = false)
+        {
+            if (!noUpdate)
+                updateScreen();
+
+            int inq = GetQueueCount(false, true);
+
+            // The spectator slots moves down 13 pixels for each player in the queue plus 23.
+            int offset = inq * 13;
+            if (inq > 0)
+                offset += 23;
+            return offset;
+        }
 
         #region Players Invited
         /// <summary>
@@ -329,58 +347,6 @@ namespace Deltin.CustomGameAutomation
         858 // slot 11 861
         };
         #endregion
-
-        #region All Players
-        /// <summary>
-        /// Gets the total amount of players in the custom game server.
-        /// </summary>
-        public int TotalPlayerCount
-        {
-            get
-            {
-                updateScreen();
-
-                return PlayerCount + SpectatorCount + QueueCount;
-            }
-            private set { }
-        }
-        /// <summary>
-        /// Gets all the slots of every player in the custom game server. Does not include players in queue.
-        /// </summary>
-        public List<int> TotalPlayerSlots
-        {
-            get
-            {
-                updateScreen();
-
-                List<int> slots = new List<int>();
-                slots.AddRange(PlayerSlots);
-                slots.AddRange(SpectatorSlots);
-
-                int queuecount = QueueCount;
-                for (int i = 0; i < queuecount; i++)
-                    slots.Add(Queueid + i);
-
-                return slots;
-            }
-            private set { }
-        }
-        #endregion
-
-        // Finds the offset in pixels of the queue to spectator displacement
-        internal int FindOffset()
-        {
-            updateScreen();
-            int inq = QueueCount;
-            // After 6 players, the spectators text doesn't move down anymore and instead forms a scrollbar.
-            if (inq > 6)
-                inq = 6;
-            // The spectator slots moves down 13 pixels for each player in the queue plus 23.
-            int offset = inq * 13;
-            if (inq > 0)
-                offset += 23;
-            return offset;
-        }
 
         #region Is slot X?
         /// <summary>
@@ -454,30 +420,30 @@ namespace Deltin.CustomGameAutomation
         /// </code>
         /// </example>
         /// <seealso cref="SlotFlags"/>
-        public List<int> GetSlots(SlotFlags flags)
+        public List<int> GetSlots(SlotFlags flags, bool noUpdate = false)
         {
             List<int> slots = new List<int>();
 
+            if (!noUpdate)
+                updateScreen();
+
             // Add the blue slots
             if (flags.HasFlag(SlotFlags.BlueTeam))
-                slots.AddRange(BlueSlots);
+                slots.AddRange(CheckRange(BlueRange, false));
 
             // Add the red slots
             if (flags.HasFlag(SlotFlags.RedTeam))
-                slots.AddRange(RedSlots);
+                slots.AddRange(CheckRange(RedRange, false));
 
             // Add the spectator slots
             if (flags.HasFlag(SlotFlags.Spectators))
-                slots.AddRange(SpectatorSlots);
+                slots.AddRange(CheckRange(SpectatorRange, false));
 
             // Add the queue slots
             if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
             {
-                slots.AddRange(QueueSlots.Where((slot) =>
+                slots.AddRange(CheckRange(QueueRange, false).Where((slot) =>
                 {
-                    if (!IsSlotInQueue(slot))
-                        return false;
-
                     QueueTeam team = PlayerInfo.GetQueueTeam(slot);
 
                     if ((team == QueueTeam.Neutral && !flags.HasFlag(SlotFlags.NeutralQueue))
@@ -511,11 +477,11 @@ namespace Deltin.CustomGameAutomation
         public bool WaitForSlotUpdate(int maxtime = 1000)
         {
             Stopwatch time = new Stopwatch();
-            List<int> preslots = TotalPlayerSlots;
+            List<int> preslots = AllSlots;
             time.Start();
             while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
             {
-                List<int> newslots = TotalPlayerSlots;
+                List<int> newslots = AllSlots;
                 if (preslots.Count != newslots.Count)
                     return true;
                 else
@@ -760,7 +726,7 @@ namespace Deltin.CustomGameAutomation
                     return i;
 
             // Spectators
-            int offset = cg.FindOffset();
+            int offset = cg.FindSpectatorOffset();
             for (int i = 12; i < CustomGame.Queueid; i++)
                 if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
                     return i;
@@ -1028,7 +994,7 @@ namespace Deltin.CustomGameAutomation
     }
 
     /// <summary>
-    /// Result info of CG_PlayerInfo.GetHero()
+    /// Result info of GetHero().
     /// </summary>
     public enum HeroResultInfo
     {
@@ -1100,6 +1066,6 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Reliably gets the (non)AI, however is a lot slower.
         /// </summary>
-        AccurateGetAI = 1 << 8
+        AccurateGetAI = 1 << 8,
     }
 }

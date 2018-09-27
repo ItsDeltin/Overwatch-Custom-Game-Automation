@@ -59,7 +59,7 @@ namespace ZombieBot
 
                     cg.RestartGame();
 
-                    if (cg.TotalPlayerCount < 7 && Join == JoinType.ServerBrowser)
+                    if (cg.AllCount < 7 && Join == JoinType.ServerBrowser)
                     {
                         MatchIsPublic = true;
                         cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);

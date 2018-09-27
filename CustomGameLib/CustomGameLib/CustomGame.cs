@@ -25,6 +25,8 @@ namespace Deltin.CustomGameAutomation
         IntPtr OverwatchHandle = IntPtr.Zero;
         internal DefaultKeys DefaultKeys;
 
+        internal object CustomGameLock;
+
         /// <summary>
         /// Creates new CustomGame object.
         /// </summary>

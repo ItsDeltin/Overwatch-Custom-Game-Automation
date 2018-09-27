@@ -33,6 +33,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] ENDING_COMMEND_DEFEAT = new int[] { 120, 70, 74 };
 
         public static readonly int[] SETTINGS_ERROR = new int[] { 151, 119, 81 };
+        public static readonly int[] SETTINGS_MODES_ENABLED = new int[] { 125, 127, 135 };
     }
 
     internal class Fades
@@ -46,6 +47,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_CHANGE = 50;
 
         public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 40;
+        public static readonly int SETTINGS_MODES_ENABLED = 30;
 
         public static readonly int CONFIRM = 50;
 
@@ -145,6 +147,12 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 461, 169, 26);
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);
+    }
+
+    internal class Distance
+    {
+        public static readonly int LOBBY_SLOT_DISTANCE = 29;
+        public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 322;
     }
 
 }

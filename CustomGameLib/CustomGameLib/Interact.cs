@@ -32,16 +32,14 @@ namespace Deltin.CustomGameAutomation
         internal Point FindSlotLocation(int slot)
         {
             cg.updateScreen();
-            int offset = 0;
+            int yoffset = 0;
             int xoffset = 0;
-            int queuecount = cg.QueueCount;
-            if (slot > 11 && slot <= CustomGame.Queueid) offset = cg.FindOffset(); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
-            if (slot - CustomGame.Queueid >= queuecount) return Point.Empty; // If there is no one in the queue and the slot selected is a queue value, return invalid
-            if (slot > 11) xoffset = -100; // If there is more than 6 players in the queue, a scrollbar appears offsetting the slot's x location by a few pixels.
-            if (slot > CustomGame.Queueid) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at. Not equal to Queueid because that is set when returning 891, 24
+            if (CustomGame.IsSlotInQueue(slot) && !cg.QueueSlots.Contains(slot)) return Point.Empty; // If a queue slot is selected and there is no one in that queue slot, return empty.
+            if (CustomGame.IsSlotSpectator(slot)) yoffset = cg.FindSpectatorOffset(); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
+            if (CustomGame.IsSlotSpectator(slot) || CustomGame.IsSlotInQueue(slot)) xoffset = -100; // Prevents the player context menu from orientating left for slots in the spectator and queue.
+            if (CustomGame.IsSlotInQueue(slot)) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at.
 
-            if (slot != CustomGame.Queueid) return new Point(CustomGame.playerLoc[slot, 0] + xoffset, CustomGame.playerLoc[slot, 1] + offset); // Blue, Red, Spectators, and all of queue except for the first slot.
-            else return new Point(CustomGame.playerLoc[12, 0] + xoffset, 248); // Queue 1 location
+            return new Point(CustomGame.SlotLocations[slot].X + xoffset, CustomGame.SlotLocations[slot].Y + yoffset); // Blue, Red, Spectators, and all of queue except for the first slot.
         }
 
         internal Point OpenSlotMenu(int slot)

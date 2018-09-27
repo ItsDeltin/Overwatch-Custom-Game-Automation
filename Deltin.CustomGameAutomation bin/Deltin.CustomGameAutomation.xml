@@ -105,44 +105,39 @@
             Controls Overwatch's pause feature.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerCount">
-            <summary>
-            Get player count of red team and blue team.
-            </summary>
-        </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerSlots">
             <summary>
-            Gets the slots filled in red team and blue team.
+            Gets the slots filled in red and blue.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.BlueCount">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerCount">
             <summary>
-            Gets the player count of blue team.
+            Gets the number of players in red and blue.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.BlueSlots">
             <summary>
-            Gets the slots filled in blue team.
+            Gets the slots filled in blue.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.RedCount">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.BlueCount">
             <summary>
-            Gets the player count of red team.
+            Gets the number of players in blue.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.RedSlots">
             <summary>
-            Gets the slots filled in red team.
+            Gets the slots filled in red.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueCount">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.RedCount">
             <summary>
-            Gets the number of players in the queue.
+            Gets the number of players in red.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueSlots">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.SpectatorSlots">
             <summary>
-            Gets the slots filled in the queue.
+            Gets the slots filled in spectator.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.SpectatorCount">
@@ -150,9 +145,24 @@
             Gets the number of players in spectator.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.SpectatorSlots">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueSlots">
             <summary>
-            Gets the slots filled in spectator excluding the first slot.
+            Gets the slots filled in the queue.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.QueueCount">
+            <summary>
+            Gets the number of players in the queue.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.AllSlots">
+            <summary>
+            Gets all slots filled in the custom game.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.AllCount">
+            <summary>
+            Gets the number of players in the custom game.
             </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.GetInvitedCount">
@@ -166,16 +176,6 @@
             Gets a list of players who were invited but are not ingame.
             </summary>
             <returns>Integer list of players who are not ingame.</returns>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.TotalPlayerCount">
-            <summary>
-            Gets the total amount of players in the custom game server.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.TotalPlayerSlots">
-            <summary>
-            Gets all the slots of every player in the custom game server. Does not include players in queue.
-            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotValid(System.Int32)">
             <summary>
@@ -212,7 +212,7 @@
             <param name="slot">Slot to check</param>
             <returns></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)">
             <summary>
             Gets slots in the game.
             </summary>
@@ -323,9 +323,9 @@
             </code>
             </example>
             <seealso cref="T:Deltin.CustomGameAutomation.Map" />
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
+            <seealso cref="!:ToggleMap(ModesEnabled, Event, ToggleAction, Map[])" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ModesEnabled,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
             <summary>
             Toggles maps in Overwatch.
             </summary>
@@ -367,6 +367,13 @@
             </example>
             <seealso cref="T:Deltin.CustomGameAutomation.Map" />
             <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetModesEnabled(Deltin.CustomGameAutomation.Event)">
+            <summary>
+            Gets the modes enabled in the Overwatch custom game.
+            </summary>
+            <param name="currentOverwatchEvent">The current Overwatch event.</param>
+            <returns></returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>
@@ -1657,7 +1664,7 @@
         </member>
         <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
             <summary>
-            Result info of CG_PlayerInfo.GetHero()
+            Result info of GetHero().
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.Success">
@@ -1689,7 +1696,7 @@
             <summary>
             Flags for obtaining slots.
             </summary>
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags)"/>
+            <seealso cref="!:CustomGame.GetSlots(SlotFlags)"/>
         </member>
         <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeam">
             <summary>
@@ -1900,11 +1907,6 @@
         <member name="T:Deltin.CustomGameAutomation.Gamemode">
             <summary>
             Overwatch's gamemodes.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.ModesEnabled">
-            <summary>
-            Overwatch gamemodes that are enabled.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
