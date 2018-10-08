@@ -75,6 +75,9 @@
 .vsconstant::before {
     content: url('Assets/vs/Constant.png');
 }
+.vsdelegate::before {
+    content: url('Assets/vs/Delegate.png');
+}
 
 .content {
     background-color: white;

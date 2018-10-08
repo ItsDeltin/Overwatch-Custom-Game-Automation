@@ -34,7 +34,8 @@ namespace Deltin.CustomGameAutomation
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
 
-            if (Monitor.TryEnter(ScreenshotLock))
+            // This will take a screenshot of the Overwatch window.
+            if (Monitor.TryEnter(ScreenshotLock)) // (1) If another thread is already updating the screen...
             {
                 lock (BmpLock)
                 {
@@ -50,6 +51,7 @@ namespace Deltin.CustomGameAutomation
             }
             else
             {
+                // (1) ...Just wait for the thread to finish updating it then continue.
                 //Monitor.Wait(screenshotLock);
                 while (!Monitor.TryEnter(ScreenshotLock)) Thread.Sleep(10);
                 Monitor.Exit(ScreenshotLock);

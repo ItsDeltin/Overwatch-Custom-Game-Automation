@@ -45,8 +45,6 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public List<ListenTo> ListenTo = new List<ListenTo>();
 
-        object CommandLock = new object();
-
         /// <summary>
         /// Set to true to start listening to commands. Set to false to stop.
         /// </summary>
@@ -148,66 +146,69 @@ namespace Deltin.CustomGameAutomation
                 System.Threading.Thread.Sleep(5);
                 while (Listen == false) System.Threading.Thread.Sleep(5);
 
-                updatescreen(ref bmp);
-
-                int[][] chatColors = Chat.ChatColors;
-                int chatFade = Chat.ChatFade;
-                Bitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
-                for (int x = 0; x < chatMarkup.Width; x++)
-                    for (int y = 0; y < chatMarkup.Height; y++)
-                    {
-                        bool colorFound = false;
-                        for (int i = 0; i < chatColors.Length; i++)
-                            if (chatMarkup.CompareColor(x, y, chatColors[i], chatFade))
-                            {
-                                colorFound = true;
-                                break;
-                            }
-                        if (colorFound)
-                            chatMarkup.SetPixel(x, y, Color.Black);
-                        else
-                            chatMarkup.SetPixel(x, y, Color.White);
-                    }
-                if (PreviousChatMarkup == null)
-                    PreviousChatMarkup = chatMarkup;
-                else
+                lock (cg.CustomGameLock)
                 {
-                    if (CompareExecutors(PreviousChatMarkup, chatMarkup))
+                    updatescreen(ref bmp);
+
+                    int[][] chatColors = Chat.ChatColors;
+                    int chatFade = Chat.ChatFade;
+                    Bitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+                    for (int x = 0; x < chatMarkup.Width; x++)
+                        for (int y = 0; y < chatMarkup.Height; y++)
+                        {
+                            bool colorFound = false;
+                            for (int i = 0; i < chatColors.Length; i++)
+                                if (chatMarkup.CompareColor(x, y, chatColors[i], chatFade))
+                                {
+                                    colorFound = true;
+                                    break;
+                                }
+                            if (colorFound)
+                                chatMarkup.SetPixel(x, y, Color.Black);
+                            else
+                                chatMarkup.SetPixel(x, y, Color.White);
+                        }
+                    if (PreviousChatMarkup == null)
+                        PreviousChatMarkup = chatMarkup;
+                    else
                     {
-                        chatMarkup.Dispose();
-                        continue;
+                        if (CompareExecutors(PreviousChatMarkup, chatMarkup))
+                        {
+                            chatMarkup.Dispose();
+                            continue;
+                        }
+                        else
+                        {
+                            PreviousChatMarkup.Dispose();
+                            PreviousChatMarkup = chatMarkup;
+                        }
+                    }
+
+                    // Scan the second line in the chat.
+                    var seed = GetSeed(bmp, 13);
+                    var seedfade = GetSeedFade(bmp, 13);
+
+                    string word = null;
+
+                    LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
+                    if (linescan.Word.Contains("]"))
+                    {
+                        // If the first line contains ], scan the second line.
+                        LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
+                        word = linescan.Word + " " + secondlinescan.Word;
+                        AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, word);
                     }
                     else
                     {
-                        PreviousChatMarkup.Dispose();
-                        PreviousChatMarkup = chatMarkup;
-                    }
-                }
-
-                // Scan the second line in the chat.
-                var seed = GetSeed(bmp, 13);
-                var seedfade = GetSeedFade(bmp, 13);
-
-                string word = null;
-
-                LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
-                if (linescan.Word.Contains("]"))
-                {
-                    // If the first line contains ], scan the second line.
-                    LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
-                    word = linescan.Word + " " + secondlinescan.Word;
-                    AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, word);
-                }
-                else
-                {
-                    // Scan the first line in chat.
-                    seed = GetSeed(bmp, 24);
-                    seedfade = GetSeedFade(bmp, 24);
-                    linescan = ScanLine(bmp, 24, seed, seedfade);
-                    if (linescan.Word.Contains("]"))
-                    {
-                        word = linescan.Word;
-                        AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
+                        // Scan the first line in chat.
+                        seed = GetSeed(bmp, 24);
+                        seedfade = GetSeedFade(bmp, 24);
+                        linescan = ScanLine(bmp, 24, seed, seedfade);
+                        if (linescan.Word.Contains("]"))
+                        {
+                            word = linescan.Word;
+                            AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
+                        }
                     }
                 }
             } // while
@@ -269,67 +270,64 @@ namespace Deltin.CustomGameAutomation
             // See if command is being listened to. If it is, continue.
             if (word.Length > 0 && ltd != null && ltd.Listen)
             {
-                lock (CommandLock)
+                PlayerIdentity pi = null;
+
+                // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
+                if (ltd.RegisterProfile)
                 {
-                    PlayerIdentity pi = null;
+                    Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
 
-                    // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
-                    if (ltd.RegisterProfile)
-                    {
-                        Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
+                    // Open the chat
+                    cg.Chat.OpenChat();
 
-                        // Open the chat
-                        cg.Chat.OpenChat();
+                    // Open the career profile
+                    cg.RightClick(openMenuAt, 500);
 
-                        // Open the career profile
-                        cg.RightClick(openMenuAt, 500);
+                    // By default, the career profile option is selected and we can just press enter to open it.
+                    cg.KeyPress(Keys.Enter);
 
-                        // By default, the career profile option is selected and we can just press enter to open it.
+                    // Wait for the career profile to load.
+                    WaitForCareerProfileToLoad();
+
+                    // Take a screenshot of the career profile.
+                    cg.updateScreen();
+                    Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
+
+                    // Register the player identity.
+                    pi = new PlayerIdentity(careerProfileSnapshot);
+
+                    // Go back to the lobby.
+                    cg.GoBack(1);
+                    //cg.//ResetMouse();
+
+                    // If opening the career profile failed, the state of the chat could be incorrect, 
+                    // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
+                    // This will fix it.
+                    cg.Chat.OpenChat();
+                    if (!cg.OpenChatIsDefault)
                         cg.KeyPress(Keys.Enter);
+                }
 
-                        // Wait for the career profile to load.
-                        WaitForCareerProfileToLoad();
-
-                        // Take a screenshot of the career profile.
-                        cg.updateScreen();
-                        Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
-
-                        // Register the player identity.
-                        pi = new PlayerIdentity(careerProfileSnapshot);
-
-                        // Go back to the lobby.
-                        cg.GoBack(1);
-                        cg.ResetMouse();
-
-                        // If opening the career profile failed, the state of the chat could be incorrect, 
-                        // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
-                        // This will fix it.
-                        cg.Chat.OpenChat();
-                        if (!cg.OpenChatIsDefault)
-                            cg.KeyPress(Keys.Enter);
+                // Store executor noise data in a bitmap.
+                var executorscan = new Rectangle(0, y - 4, namelength, 6);
+                Bitmap executor = bmp.Clone(executorscan, bmp.PixelFormat);
+                // Set name pixels to black and everything else to white
+                for (int xi = 0; xi < executor.Width; xi++)
+                    for (int yi = 0; yi < executor.Height; yi++)
+                    {
+                        if (executor.CompareColor(xi, yi, seed, seedfade))
+                            executor.SetPixel(xi, yi, Color.Black);
+                        else
+                            executor.SetPixel(xi, yi, Color.White);
                     }
 
-                    // Store executor noise data in a bitmap.
-                    var executorscan = new Rectangle(0, y - 4, namelength, 6);
-                    Bitmap executor = bmp.Clone(executorscan, bmp.PixelFormat);
-                    // Set name pixels to black and everything else to white
-                    for (int xi = 0; xi < executor.Width; xi++)
-                        for (int yi = 0; yi < executor.Height; yi++)
-                        {
-                            if (executor.CompareColor(xi, yi, seed, seedfade))
-                                executor.SetPixel(xi, yi, Color.Black);
-                            else
-                                executor.SetPixel(xi, yi, Color.White);
-                        }
+                ChatIdentity ci = new ChatIdentity(executor);
 
-                    ChatIdentity ci = new ChatIdentity(executor);
+                CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci);
+                if (ltd?.Callback != null)
+                    ltd.Callback.Invoke(commandData);
 
-                    CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci);
-                    if (ltd?.Callback != null)
-                        ltd.Callback.Invoke(commandData);
-
-                    System.Threading.Thread.Sleep(50);
-                } // lock
+                System.Threading.Thread.Sleep(50);
             } // if command is being listened to
         }
 
@@ -560,7 +558,7 @@ namespace Deltin.CustomGameAutomation
 
             cg.GoBack(1);
 
-            cg.ResetMouse();
+            //cg.//ResetMouse();
 
             return new PlayerIdentity(careerProfile);
         }

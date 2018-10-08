@@ -25,45 +25,57 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void TogglePause()
         {
-            if (cg.OpenChatIsDefault)
+            lock (cg.CustomGameLock)
             {
-                cg.Chat.CloseChat();
-                Thread.Sleep(250);
+                if (cg.OpenChatIsDefault)
+                {
+                    cg.Chat.CloseChat();
+                    Thread.Sleep(250);
+                }
+
+                cg.KeyDown(Keys.Control);
+                cg.KeyDown(Keys.Shift);
+                cg.AlternateInput(0xBB);
+                cg.KeyUp(Keys.Shift);
+                cg.KeyUp(Keys.Control);
+
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.OpenChat();
             }
-
-            cg.KeyDown(Keys.Control);
-            cg.KeyDown(Keys.Shift);
-            cg.AlternateInput(0xBB);
-            cg.KeyUp(Keys.Shift);
-            cg.KeyUp(Keys.Control);
-
-            if (cg.OpenChatIsDefault)
-                cg.Chat.OpenChat();
         }
         /// <summary>
         /// Pauses the game.
         /// </summary>
         public void PauseGame()
         {
-            if (!IsPaused())
-                TogglePause();
+            lock (cg.CustomGameLock)
+            {
+                if (!IsPaused())
+                    TogglePause();
+            }
         }
         /// <summary>
         /// Unpauses the game.
         /// </summary>
         public void UnpauseGame()
         {
-            if (IsPaused())
-                TogglePause();
+            lock (cg.CustomGameLock)
+            {
+                if (IsPaused())
+                    TogglePause();
+            }
         }
         /// <summary>
         /// Determines if the game is paused.
         /// </summary>
         public bool IsPaused()
         {
-            cg.updateScreen();
-            // Check if the pause text is there.
-            return cg.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
+            lock (cg.CustomGameLock)
+            {
+                cg.updateScreen();
+                // Check if the pause text is there.
+                return cg.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
+            }
         }
     }
 }

@@ -10,9 +10,13 @@ namespace Deltin.CustomGameAutomation
     partial class CustomGame
     {
         /// <summary>
-        /// The number where the queue starts.
+        /// The number where the queue slots start.
         /// </summary>
         public const int Queueid = 18;
+        /// <summary>
+        /// The number where the spectator slots start.
+        /// </summary>
+        public const int Spectatorid = 12;
 
         /// <summary>
         /// Changes a player's state in Overwatch.
@@ -31,7 +35,6 @@ namespace Deltin.CustomGameAutomation
 
         internal Point FindSlotLocation(int slot)
         {
-            cg.updateScreen();
             int yoffset = 0;
             int xoffset = 0;
             if (CustomGame.IsSlotInQueue(slot) && !cg.QueueSlots.Contains(slot)) return Point.Empty; // If a queue slot is selected and there is no one in that queue slot, return empty.
@@ -67,7 +70,7 @@ namespace Deltin.CustomGameAutomation
             if (cg.CompareColor(point, new int[] { 83, 133, 155 }, 20)) // Detects if the blue color of the selected option is there, clicks then returns true
             {
                 cg.LeftClick(point, 0);
-                cg.ResetMouse();
+                //cg.//ResetMouse();
                 return true;
             }
             return false;
@@ -109,55 +112,60 @@ namespace Deltin.CustomGameAutomation
         /// <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
         public void MenuOptionMarkup(int slot, int max, string savelocation, double yincrement = 11.5)
         {
-            if (!CustomGame.IsSlotValid(slot))
-                throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
-
-            Point slotlocation = OpenSlotMenu(slot);
-
-            // Get direction opened menu is going.
-            Direction dir = Getmenudirection(slotlocation);
-            int[] offset = OffsetViaDirection(dir);
-
-            int xstart = slotlocation.X + 14,  // X position to start scanning
-                xmax = 79, // How far on the X axis to scan
-                ystart = 0, // Y position to start scanning
-                ymax = 6; // How far on the Y axis to scan.
-
-            if (dir == Direction.RightDown)
+            lock (cg.CustomGameLock)
             {
-                ystart = slotlocation.Y + 12;
-            }
-            else if (dir == Direction.RightUp)
-            {
-                ystart = slotlocation.Y - 128;
-                yincrement = -yincrement;
-            }
+                if (!CustomGame.IsSlotValid(slot))
+                    throw new InvalidSlotException(string.Format("Slot argument '{0}' is out of range.", slot));
 
-            cg.updateScreen();
-            for (int mi = 0, yii = ystart; mi < max; mi++, yii = ystart + (int)(yincrement * (mi))) // Mi is the line to scan, yii is the Y coordinate of line mi.
-            {
-                // Get bitmap of option
-                Bitmap work = cg.BmpClone(xstart, yii, xmax, ymax);
+                Point slotlocation = OpenSlotMenu(slot);
 
-                for (int xi = 0; xi < work.Width; xi++)
-                    for (int yi = 0; yi < work.Height; yi++)
-                    {
-                        int fade = 80;
-                        int[] textcolor = new int[] { 169, 169, 169 };
-                        if (work.CompareColor(xi, yi, textcolor, fade))
-                            work.SetPixel(xi, yi, Color.Black);
-                        else
-                            work.SetPixel(xi, yi, Color.White);
-                    }
-                work.Save(savelocation + "markup-" + (mi).ToString() + ".png");
-                work.Dispose();
+                // Get direction opened menu is going.
+                Direction dir = Getmenudirection(slotlocation);
+                int[] offset = OffsetViaDirection(dir);
+
+                int xstart = slotlocation.X + 14,  // X position to start scanning
+                    xmax = 79, // How far on the X axis to scan
+                    ystart = 0, // Y position to start scanning
+                    ymax = 6; // How far on the Y axis to scan.
+
+                if (dir == Direction.RightDown)
+                {
+                    ystart = slotlocation.Y + 12;
+                }
+                else if (dir == Direction.RightUp)
+                {
+                    ystart = slotlocation.Y - 128;
+                    yincrement = -yincrement;
+                }
+
+                cg.updateScreen();
+                for (int mi = 0, yii = ystart; mi < max; mi++, yii = ystart + (int)(yincrement * (mi))) // Mi is the line to scan, yii is the Y coordinate of line mi.
+                {
+                    // Get bitmap of option
+                    Bitmap work = cg.BmpClone(xstart, yii, xmax, ymax);
+
+                    for (int xi = 0; xi < work.Width; xi++)
+                        for (int yi = 0; yi < work.Height; yi++)
+                        {
+                            int fade = 80;
+                            int[] textcolor = new int[] { 169, 169, 169 };
+                            if (work.CompareColor(xi, yi, textcolor, fade))
+                                work.SetPixel(xi, yi, Color.Black);
+                            else
+                                work.SetPixel(xi, yi, Color.White);
+                        }
+                    work.Save(savelocation + "markup-" + (mi).ToString() + ".png");
+                    work.Dispose();
+                }
+
+                // Close the menu.
+                cg.LeftClick(Points.OPTIONS_APPLY, 100);
+                cg.LeftClick(Points.OPTIONS_BACK, 100);
+                //cg.//ResetMouse();
             }
-
-            // Close the menu.
-            cg.LeftClick(Points.OPTIONS_APPLY, 100);
-            cg.LeftClick(Points.OPTIONS_BACK, 100);
-            cg.ResetMouse();
         }
+
+        private const double DefaultYIncrement = 11.5;
 
         /// <summary>
         /// Scans a player menu for an option.
@@ -169,80 +177,106 @@ namespace Deltin.CustomGameAutomation
         /// <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
         /// <returns>Returns true if the option in the markup has been found, else returns false.</returns>
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
-        public bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)
+        internal bool MenuOptionScan(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = DefaultYIncrement)
         {
-            if (!CustomGame.IsSlotValid(slot))
-                throw new InvalidSlotException(slot);
-
-            Point slotlocation = OpenSlotMenu(slot);
-            if (slotlocation.IsEmpty)
-                return false;
-
-            Point optionLocation = MenuOptionScan(slotlocation, markup, minimumPercent, max, yincrement);
-
-            if (optionLocation.IsEmpty)
+            lock (cg.CustomGameLock)
             {
-                cg.CloseOptionMenu();
-                return false;
-            }
-            else
-            {
-                SelectMenuOption(optionLocation);
-                return true;
+                if (!CustomGame.IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
+
+                Point slotlocation = OpenSlotMenu(slot);
+                if (slotlocation.IsEmpty)
+                    return false;
+
+                Point optionLocation = MenuOptionScan(slotlocation, markup, minimumPercent, max, yincrement);
+
+                if (optionLocation.IsEmpty)
+                {
+                    cg.CloseOptionMenu();
+                    return false;
+                }
+                else
+                {
+                    SelectMenuOption(optionLocation);
+                    return true;
+                }
             }
         }
 
-        internal Point MenuOptionScan(Point location, Bitmap markup, int minimumPercent, int max, double yincrement = 11.5)
+        internal Point MenuOptionScan(Point location, Bitmap markup, int minimumPercent, int max, double yincrement = DefaultYIncrement)
         {
-            Direction dir = Getmenudirection(location); // Get menu direction after opening menu.
-            int[] offset = OffsetViaDirection(dir);
-
-            int xstart = location.X + 14,  // X position to start scanning.
-                xselect = location.X + 10; // Amount to increment X when selecting the option after the option has been found.
-            int ystart = 0; // Y position to start scanning.
-            if (dir == Direction.RightDown)
+            lock (cg.CustomGameLock)
             {
-                ystart = location.Y + 12;
+                Direction dir = Getmenudirection(location); // Get menu direction after opening menu.
+                int[] offset = OffsetViaDirection(dir);
+
+                int xstart = location.X + 14,  // X position to start scanning.
+                    xselect = location.X + 10; // Amount to increment X when selecting the option after the option has been found.
+                int ystart = 0; // Y position to start scanning.
+                if (dir == Direction.RightDown)
+                {
+                    ystart = location.Y + 12;
+                }
+                else if (dir == Direction.RightUp)
+                {
+                    ystart = location.Y - 128;
+                    yincrement = -yincrement;
+                }
+
+                cg.updateScreen();
+                List<int> percentResults = new List<int>();
+                // Scan each option and get the likelyhood in percent of the option being the markup.
+                for
+                (
+                    int mi = 0, yii = ystart;
+                    mi < max;
+                    mi++, yii = ystart + (int)(yincrement * mi)
+                ) // Mi is the line to scan, yii is the Y coordinate of line mi.
+                {
+                    int success = 0;
+                    int total = 0;
+
+                    for (int xi = 0; xi < markup.Width; xi++)
+                        for (int yi = 0; yi < markup.Height; yi++)
+                        {
+                            total++;
+
+                            bool bmpPixelIsBlack = cg.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
+                            bool markupPixelIsBlack = markup.GetPixelAt(xi, yi) == Color.FromArgb(0, 0, 0);
+
+                            if (bmpPixelIsBlack == markupPixelIsBlack)
+                                success++;
+                        }
+                    int percent = (int)((Convert.ToDouble(success) / Convert.ToDouble(total)) * 100);
+                    percentResults.Add(percent);
+                }
+
+                int maxpercent = percentResults.IndexOf(percentResults.Max());
+                if (percentResults[maxpercent] > minimumPercent)
+                    return new Point(xselect, ystart + (int)(yincrement * maxpercent));
+                else
+                    return Point.Empty;
             }
-            else if (dir == Direction.RightUp)
+        }
+
+        internal bool PeakOption(int slot, Bitmap markup, int minimumPercent, int max, double yincrement = DefaultYIncrement)
+        {
+            lock (cg.CustomGameLock)
             {
-                ystart = location.Y - 128;
-                yincrement = -yincrement;
+                if (!CustomGame.IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
+
+                Point slotLocation = cg.Interact.OpenSlotMenu(slot);
+
+                if (slotLocation.IsEmpty)
+                    return false;
+
+                bool optionFound = !cg.Interact.MenuOptionScan(slotLocation, markup, minimumPercent, max, yincrement).IsEmpty;
+
+                cg.CloseOptionMenu();
+
+                return optionFound;
             }
-
-            cg.updateScreen();
-            List<int> percentResults = new List<int>();
-            // Scan each option and get the likelyhood in percent of the option being the markup.
-            for
-            (
-                int mi = 0, yii = ystart;
-                mi < max;
-                mi++, yii = ystart + (int)(yincrement * mi)
-            ) // Mi is the line to scan, yii is the Y coordinate of line mi.
-            {
-                int success = 0;
-                int total = 0;
-
-                for (int xi = 0; xi < markup.Width; xi++)
-                    for (int yi = 0; yi < markup.Height; yi++)
-                    {
-                        total++;
-
-                        bool bmpPixelIsBlack = cg.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
-                        bool markupPixelIsBlack = markup.GetPixelAt(xi, yi) == Color.FromArgb(0, 0, 0);
-
-                        if (bmpPixelIsBlack == markupPixelIsBlack)
-                            success++;
-                    }
-                int percent = (int)((Convert.ToDouble(success) / Convert.ToDouble(total)) * 100);
-                percentResults.Add(percent);
-            }
-
-            int maxpercent = percentResults.IndexOf(percentResults.Max());
-            if (percentResults[maxpercent] > minimumPercent)
-                return new Point(xselect, ystart + (int)(yincrement * maxpercent));
-            else
-                return Point.Empty;
         }
 
         static internal Bitmap RemoveFromGameMarkup = new Bitmap(Properties.Resources.remove_from_game); // Get remove from game markup
@@ -354,31 +388,34 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="InvalidSlotException">Thrown if the <paramref name="targetSlot"/> or <paramref name="destinationSlot"/> argument is out of range of possible slots to move.</exception>
         public void Move(int targetSlot, int destinationSlot)
         {
-            if (!CustomGame.IsSlotValid(targetSlot))
-                throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
-            if (!CustomGame.IsSlotValid(destinationSlot))
-                throw new InvalidSlotException(string.Format("destinationSlot argument '{0}' is out of range.", destinationSlot));
-
-            cg.ResetMouse();
-
-            cg.updateScreen();
-            if (cg.DoesAddButtonExist())
+            lock (cg.CustomGameLock)
             {
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
+                if (!CustomGame.IsSlotValid(targetSlot))
+                    throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
+                if (!CustomGame.IsSlotValid(destinationSlot))
+                    throw new InvalidSlotException(string.Format("destinationSlot argument '{0}' is out of range.", destinationSlot));
+
+                //cg.//ResetMouse();
+
+                cg.updateScreen();
+                if (cg.DoesAddButtonExist())
+                {
+                    cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
+                }
+                else
+                {
+                    cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
+                }
+
+                Point targetSlotLoc = FindSlotLocation(targetSlot);
+                Point destinationSlotLoc = FindSlotLocation(destinationSlot);
+                cg.LeftClick(targetSlotLoc, 25);
+                cg.LeftClick(destinationSlotLoc, 25);
+
+                Thread.Sleep(200);
+
+                ExitMoveMenu();
             }
-            else
-            {
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
-            }
-
-            Point targetSlotLoc = FindSlotLocation(targetSlot);
-            Point destinationSlotLoc = FindSlotLocation(destinationSlot);
-            cg.LeftClick(targetSlotLoc, 25);
-            cg.LeftClick(destinationSlotLoc, 25);
-
-            Thread.Sleep(200);
-
-            ExitMoveMenu();
         }
 
         /// <summary>
@@ -386,29 +423,32 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SwapAll()
         {
-            bool aistatus = cg.DoesAddButtonExist();
+            lock (cg.CustomGameLock)
+            {
+                bool aistatus = cg.DoesAddButtonExist();
 
-            // click move
-            if (aistatus)
-            {
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
-            }
-            else
-            {
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
-            }
+                // click move
+                if (aistatus)
+                {
+                    cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
+                }
+                else
+                {
+                    cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
+                }
 
-            // click swap all
-            if (aistatus)
-            {
-                cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT, 25);
-            }
-            else
-            {
-                cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT, 25);
-            }
+                // click swap all
+                if (aistatus)
+                {
+                    cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT, 25);
+                }
+                else
+                {
+                    cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT, 25);
+                }
 
-            ExitMoveMenu();
+                ExitMoveMenu();
+            }
         }
 
         private void ExitMoveMenu()
@@ -423,7 +463,7 @@ namespace Deltin.CustomGameAutomation
             else
                 cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
 
-            cg.ResetMouse();
+            //cg.//ResetMouse();
         }
     }
 }

@@ -34,6 +34,8 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly int[] SETTINGS_ERROR = new int[] { 151, 119, 81 };
         public static readonly int[] SETTINGS_MODES_ENABLED = new int[] { 125, 127, 135 };
+
+        public static readonly int[] EXIT_TO_DESKTOP = new int[] { 83, 124, 152 };
     }
 
     internal class Fades
@@ -55,6 +57,7 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly int ENDING_COMMEND_DEFEAT = 10;
 
+        public static readonly int EXIT_TO_DESKTOP = 15;
     }
 
     internal class Points
@@ -139,6 +142,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_HEROES_ROSTER_ENABLE_ALL = new Point(597, 130);
 
         public static readonly Point ENDING_COMMEND_DEFEAT = new Point(53, 62);
+
+        public static readonly Point EXIT_TO_DESKTOP = new Point(130, 505);
     }
 
     internal class Rectangles
@@ -149,10 +154,12 @@ namespace Deltin.CustomGameAutomation
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);
     }
 
-    internal class Distance
+    internal class Distances
     {
         public static readonly int LOBBY_SLOT_DISTANCE = 29;
-        public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 322;
+        public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 319; // 322
+        public static readonly int LOBBY_SPECTATOR_SLOT_DISTANCE = 13;
+        public static readonly int LOBBY_QUEUE_OFFSET = 6; // Did you know that the queue list is 6 pixels higher than the spectator list?
     }
 
 }

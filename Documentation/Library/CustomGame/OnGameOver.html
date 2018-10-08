@@ -19,22 +19,22 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/OnGameOver.html">OnGameOver</a> Event</strong></div><div class="section">Events that are executed when the game is over.<br />            To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section">Type: <span class="type">EventHandler</span><<a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a>></div><div class="section"></div><div class="section"><strong>Examples</strong></div><div class="section">The example below will send a message to chat when the game is over.
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/OnGameOver.html">OnGameOver</a> Event</strong></div><div class="section">Events that are executed when the game is over.<br />            To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section">Type: <span class="type">EventHandler</span><<a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a>></div><div class="section"></div><div class="section"><strong>Examples</strong></div><div class="section">The example below will send a message to chat when the game is over.
 <pre><code class="lang-csharp">using Deltin.CustomGameAutomation;
-            
+
 public class OnGameOverExample
 {
     public static void SendMessageToChatWhenGameIsOver(CustomGame cg)
     {
-        cg.GameSettings.SetTeamName(PlayerTeam.Blue, "\ Blue Team");
-        cg.GameSettings.SetTeamName(PlayerTeam.Red, "* Red Team");
+        cg.Settings.SetTeamName(Team.Blue, @"\ Blue Team");
+        cg.Settings.SetTeamName(Team.Red, "* Red Team");
         cg.OnGameOver += Cg_OnGameOver;
     }
-    
+
     private static void Cg_OnGameOver(object sender, GameOverArgs e)
     {
-        PlayerTeam winningTeam = e.GetWinningTeam();
-        (sender as CustomGame).Chat.Chat(string.Format("The game is over, Team {0} has won!", winningTeam.ToString()));
+        Team winningTeam = e.GetWinningTeam();
+        ((CustomGame)sender).Chat.SendChatMessage(string.Format("The game is over, Team {0} has won!", winningTeam.ToString()));
     }
 }
 </code></pre></div><div class="section"><strong>See Also</strong></div><div class="section"><span class="vsmethod"><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a>.<a href="GameOverArgs/GetWinningTeam().html">GetWinningTeam</a>()</span></div>

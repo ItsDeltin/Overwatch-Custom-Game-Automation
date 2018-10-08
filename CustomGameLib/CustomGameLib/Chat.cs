@@ -30,52 +30,29 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="text">Text to send.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="text"/> is null.</exception>
-        /// <example>
-        /// The code below will send a message to the chat when a player joins.
-        /// <code>
-        /// using System.Threading;
-        /// using Deltin.CustomGameAutomation;
-        /// 
-        /// class ChatExample
-        /// {
-        ///     public static void SendMessageWhenPlayerJoins(CustomGame cg)
-        ///     {
-        ///         int previousPlayerCount = cg.TotalPlayerCount;
-        ///         while (true)
-        ///         {
-        ///             // If the last recorded player count does not equal the current player count, send a message to the chat.
-        ///             int playerCount = cg.TotalPlayerCount;
-        ///             if (playerCount != previousPlayerCount)
-        ///             {
-        ///                 cg.Chat.Chat("Welcome to my custom game!");
-        ///                 previousPlayerCount = playerCount;
-        ///             }
-        ///             
-        ///             Thread.Sleep(100);
-        ///         }
-        ///     }
-        /// }
-        /// </code>
-        /// </example>
+        /// <include file='docs.xml' path='doc/SendChatMessage/example'></include>
         public void SendChatMessage(string text)
         {
-            if (text == null)
-                throw new ArgumentNullException("text", "text was null.");
+            lock (cg.CustomGameLock)
+            {
+                if (text == null)
+                    throw new ArgumentNullException("text", "text was null.");
 
-            OpenChat();
-            cg.updateScreen();
-            // To prevent abuse, make sure that the channel is not general.
-            if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
-            {
-                cg.TextInput(text);
-            }
-            cg.KeyPress(Keys.Return);
-            if (cg.OpenChatIsDefault)
-            {
-                Thread.Sleep(250);
                 OpenChat();
+                cg.updateScreen();
+                // To prevent abuse, make sure that the channel is not general.
+                if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
+                {
+                    cg.TextInput(text);
+                }
+                cg.KeyPress(Keys.Return);
+                if (cg.OpenChatIsDefault)
+                {
+                    Thread.Sleep(250);
+                    OpenChat();
+                }
+                //cg.//ResetMouse();
             }
-            cg.ResetMouse();
         }
 
         /// <summary>
@@ -89,16 +66,19 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to join</param>
         public void SwapChannel(Channel channel)
         {
-            OpenChat();
-            cg.TextInput(GetChannelJoinCommand(channel));
-            cg.KeyPress(Keys.Return);
-            // Open chat if it is default to be opened
-            if (cg.OpenChatIsDefault)
+            lock (cg.CustomGameLock)
+            {
                 OpenChat();
-            else
+                cg.TextInput(GetChannelJoinCommand(channel));
                 cg.KeyPress(Keys.Return);
+                // Open chat if it is default to be opened
+                if (cg.OpenChatIsDefault)
+                    OpenChat();
+                else
+                    cg.KeyPress(Keys.Return);
 
-            cg.ResetMouse();
+                //cg.//ResetMouse();
+            }
         }
 
         /// <summary>
@@ -107,24 +87,27 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to leave.</param>
         public void LeaveChannel(Channel channel)
         {
-            if (!cg.OpenChatIsDefault)
-                OpenChat();
-            cg.TextInput(GetChannelJoinCommand(channel));
-            cg.KeyPress(Keys.Return);
-            Thread.Sleep(250);
-            cg.updateScreen();
-            if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+            lock (cg.CustomGameLock)
             {
-                SendChatMessage("/leavechannel");
-                if (cg.OpenChatIsDefault)
-                {
-                    cg.updateScreen();
-                    if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
-                        cg.KeyPress(Keys.Tab);
-                }
-            }
-            else if (!cg.OpenChatIsDefault)
+                if (!cg.OpenChatIsDefault)
+                    OpenChat();
+                cg.TextInput(GetChannelJoinCommand(channel));
                 cg.KeyPress(Keys.Return);
+                Thread.Sleep(250);
+                cg.updateScreen();
+                if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+                {
+                    SendChatMessage("/leavechannel");
+                    if (cg.OpenChatIsDefault)
+                    {
+                        cg.updateScreen();
+                        if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+                            cg.KeyPress(Keys.Tab);
+                    }
+                }
+                else if (!cg.OpenChatIsDefault)
+                    cg.KeyPress(Keys.Return);
+            }
         }
 
         /// <summary>
@@ -133,35 +116,71 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to rejoin.</param>
         public void JoinChannel(Channel channel)
         {
-            SendChatMessage("/joinchannel " + channel.ToString());
+            lock (cg.CustomGameLock)
+            {
+                SendChatMessage("/joinchannel " + channel.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Makes the chat opened by default.
+        /// </summary>
+        public void OpenChatIsDefault()
+        {
+            lock (cg.CustomGameLock)
+            {
+                OpenChat();
+                cg.OpenChatIsDefault = true;
+            }
+        }
+
+        /// <summary>
+        /// Makes the chat closed by default.
+        /// </summary>
+        public void ClosedChatIsDefault()
+        {
+            lock (cg.CustomGameLock)
+            {
+                CloseChat();
+                cg.OpenChatIsDefault = false;
+            }
         }
 
         internal void OpenChat()
         {
-            // Pressing Enter in the chatbox will close it. If the key is Enter, check if a channel is found.
-            if (cg.DefaultKeys.OpenChat == Keys.Enter && GetCurrentChannel() != null)
-                return;
+            lock (cg.CustomGameLock)
+            {
+                // Pressing Enter in the chatbox will close it. If the key is Enter, check if a channel is found.
+                if (cg.DefaultKeys.OpenChat == Keys.Enter && GetCurrentChannel() != null)
+                    return;
 
-            //cg.LeftClick(Points.LOBBY_CHATBOX, 100);
-            cg.Activate();
-            cg.KeyPress(cg.DefaultKeys.OpenChat);
-            Thread.Sleep(100);
+                //cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+                cg.Activate();
+                cg.KeyPress(cg.DefaultKeys.OpenChat);
+                Thread.Sleep(100);
+            }
         }
 
         internal Channel? GetCurrentChannel()
         {
-            cg.updateScreen();
-            for (int i = 0; i < ChatColors.Length; i++)
-                if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
-                    return (Channel)i;
-            return null;
+            lock (cg.CustomGameLock)
+            {
+                cg.updateScreen();
+                for (int i = 0; i < ChatColors.Length; i++)
+                    if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
+                        return (Channel)i;
+                return null;
+            }
         }
 
         internal void CloseChat()
         {
-            OpenChat();
-            cg.KeyPress(Keys.Return);
-            Thread.Sleep(250);
+            lock (cg.CustomGameLock)
+            {
+                OpenChat();
+                cg.KeyPress(Keys.Return);
+                Thread.Sleep(250);
+            }
         }
 
         internal static int[] GetChannelColor(Channel channel)

@@ -21,7 +21,7 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(250);
             }
 
-            ResetMouse();
+            //ResetMouse();
         }
 
         /// <summary>
@@ -62,15 +62,18 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void RestartGame()
         {
-            if (OpenChatIsDefault)
-                Chat.CloseChat();
+            lock (CustomGameLock)
+            {
+                if (OpenChatIsDefault)
+                    Chat.CloseChat();
 
-            LeftClick(Points.LOBBY_RESTART);
-            LoadStall();
-            BackToMenu();
+                LeftClick(Points.LOBBY_RESTART);
+                LoadStall();
+                BackToMenu();
 
-            if (OpenChatIsDefault)
-                Chat.OpenChat();
+                if (OpenChatIsDefault)
+                    Chat.OpenChat();
+            }
         }
 
         /// <summary>
@@ -78,15 +81,18 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGame()
         {
-            if (OpenChatIsDefault)
-                Chat.CloseChat();
+            lock (CustomGameLock)
+            {
+                if (OpenChatIsDefault)
+                    Chat.CloseChat();
 
-            LeftClick(Points.LOBBY_START_GAME, 3000);
-            LoadStall();
-            BackToMenu();
+                LeftClick(Points.LOBBY_START_GAME, 3000);
+                LoadStall();
+                BackToMenu();
 
-            if (OpenChatIsDefault)
-                Chat.OpenChat();
+                if (OpenChatIsDefault)
+                    Chat.OpenChat();
+            }
         }
 
         /// <summary>
@@ -94,9 +100,12 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SendServerToLobby()
         {
-            LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
-            WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
-            ResetMouse();
+            lock (CustomGameLock)
+            {
+                LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
+                WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
+                //ResetMouse();
+            }
         }
 
         /// <summary>
@@ -104,7 +113,10 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGamemode()
         {
-            LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
+            lock (CustomGameLock)
+            {
+                LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
+            }
         }
 
         internal void GoToSettings()

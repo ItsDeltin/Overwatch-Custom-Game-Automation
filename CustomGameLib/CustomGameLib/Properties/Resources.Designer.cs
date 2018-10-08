@@ -314,6 +314,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap remove_friend {
+            get {
+                object obj = ResourceManager.GetObject("remove_friend", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap remove_from_game {
             get {
                 object obj = ResourceManager.GetObject("remove_from_game", resourceCulture);

@@ -19,9 +19,9 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/SetHeroSettings(SetHero[]).html">SetHeroSettings</a>(<a href="SetHero/SetHero.html"><span class="type">SetHero</span></a>[] herodata) Method</strong></div><div class="section">Change individual hero settings.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-herodata">herodata</div></td><td><a href="SetHero/SetHero.html"><span class="type">SetHero</span></a>[]</td><td>Settings of the heroes you want to change.</td></tr></table></div><div class="section"></div><div class="section"><table><tr><th>Exception</th><th>Thrown</th></tr><tr><td><span class="type">ArgumentOutOfRangeException</span></td><td>Thrown when a <a href="CustomGame/SetHeroSettings(SetHero[]).html#param-herodata">herodata</a>'s set and setto length are not equal length.</td></tr><tr><td><a href="InvalidSetheroException/InvalidSetheroException.html"><span class="type">InvalidSetheroException</span></a></td><td>Thrown when any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.</td></tr></table></div><div class="section"><strong>Remarks</strong></div><div class="section">The complete list of settings can be found <a href="https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/blob/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt">here.</a><br />            Toggle settings require a boolean. Value and dropdown settings require an integer.</div><div class="section"><strong>Examples</strong></div><div class="section">The code below will make blue spawn with ultimates and have infinite ultimate duration, and give red 200% movement speed and 50% movement gravity.
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a>.<a href="CustomGame/SetHeroSettings(SetHero[]).html">SetHeroSettings</a>(<a href="SetHero/SetHero.html"><span class="type">SetHero</span></a>[] herodata) Method</strong></div><div class="section">Change individual hero settings.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-herodata">herodata</div></td><td><a href="SetHero/SetHero.html"><span class="type">SetHero</span></a>[]</td><td>Settings of the heroes you want to change.</td></tr></table></div><div class="section"></div><div class="section"><table><tr><th>Exception</th><th>Thrown</th></tr><tr><td><span class="type">ArgumentOutOfRangeException</span></td><td>Thrown if a <a href="CustomGame/SetHeroSettings(SetHero[]).html#param-herodata">herodata</a>'s set and setto length are not equal length.</td></tr><tr><td><a href="InvalidSetheroException/InvalidSetheroException.html"><span class="type">InvalidSetheroException</span></a></td><td>Thrown if a setting does not exist for their respective heros or if a set's respective setto is not the correct type.</td></tr><tr><td><span class="type">ArgumentNullException</span></td><td>Thrown if <a href="CustomGame/SetHeroSettings(SetHero[]).html#param-herodata">herodata</a> is null.</td></tr></table></div><div class="section"><strong>Remarks</strong></div><div class="section">The complete list of settings can be found <a href="https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/blob/master/CustomGameLib/CustomGameLib/Resources/hero_settings.txt">here.</a><br />            Toggle settings require a boolean. Value and dropdown settings require an integer.</div><div class="section"><strong>Examples</strong></div><div class="section">The code below will make blue spawn with ultimates and have infinite ultimate duration, and give red 200% movement speed and 50% movement gravity.
 <pre><code class="lang-csharp">using Deltin.CustomGameAutomation;
-            
+
 public class SetHeroSettingsExample
 {
     public void SetHeroValues(CustomGame cg)
@@ -31,16 +31,16 @@ public class SetHeroSettingsExample
             // Make blue spawn with ultimates and have infinite ultimate duration.
             new SetHero(
                 null, // General is null
-                BotTeam.Blue,
+                Team.Blue,
                 new string[] { "spawn_with_ultimate_ready", "infinite_ultimate_duration" },
-                new object[] { true,                         true }
+                new object[] { true, true }
             )
             // Give red 200% movement speed and 50% movement gravity.
             , new SetHero(
                 null,
-                BotTeam.Red,
+                Team.Red,
                 new string[] { "movement_speed", "movement_gravity" },
-                new object[] { 200,              50 }
+                new object[] { 200, 50 }
             )
         );
     }
@@ -48,7 +48,7 @@ public class SetHeroSettingsExample
 </code></pre>
 The code below will make torbjorn on either team use hammer only and mercy on red use her staff.
 <pre><code class="lang-csharp">using Deltin.CustomGameAutomation;
-            
+      
 public class SetHeroSettingsExample
 {
     public void SetHeroValues(CustomGame cg)

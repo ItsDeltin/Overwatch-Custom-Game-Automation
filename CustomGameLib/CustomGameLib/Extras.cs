@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 
 namespace Deltin.CustomGameAutomation
 {
-    unsafe static class Extensions
+    internal unsafe static class Extensions
     {
         // Gets a pixel color from a bitmap without locking the bitmap from other threads. Also a lot faster.
         public static Color GetPixelAt(this Bitmap bmp, int x, int y)

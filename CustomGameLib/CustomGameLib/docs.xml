@@ -263,4 +263,234 @@
       </code>
     </example>
   </AddAI>
+  <setHeroRoster>
+    <example>
+      The example below will enable random heroes for a team.
+      <code>
+      using System;
+      using System.Collections.Generic;
+      using System.Linq;
+      using Deltin.CustomGameAutomation;
+
+      public class SetHeroRosterExample
+      {
+          public static void ChooseRandomHeroes(CustomGame cg, Team team, int randomHeroCount)
+          {
+              Random rnd = new Random();
+              int heroCount = Enum.GetNames(typeof(Hero)).Length - 1;
+
+              List&lt;Hero&gt; chooseHeroes = new List&lt;Hero&gt;();
+              while (chooseHeroes.Count &lt; randomHeroCount)
+              {
+                  int heroID = rnd.Next(heroCount);
+                  if (chooseHeroes.Select(hero =&gt; (int)hero).Contains(heroID))
+                      continue;
+                  chooseHeroes.Add((Hero)heroID);
+              }
+
+              cg.SetHeroRoster(ToggleAction.DisableAll, team, chooseHeroes.ToArray());
+          }
+      }
+      </code>
+    </example>
+  </setHeroRoster>
+  <setHeroSettings>
+    <example>
+      The code below will make blue spawn with ultimates and have infinite ultimate duration, and give red 200% movement speed and 50% movement gravity.
+      <code>
+      using Deltin.CustomGameAutomation;
+
+      public class SetHeroSettingsExample
+      {
+          public void SetHeroValues(CustomGame cg)
+          {
+              cg.SetHeroSettings
+              (
+                  // Make blue spawn with ultimates and have infinite ultimate duration.
+                  new SetHero(
+                      null, // General is null
+                      Team.Blue,
+                      new string[] { "spawn_with_ultimate_ready", "infinite_ultimate_duration" },
+                      new object[] { true, true }
+                  )
+                  // Give red 200% movement speed and 50% movement gravity.
+                  , new SetHero(
+                      null,
+                      Team.Red,
+                      new string[] { "movement_speed", "movement_gravity" },
+                      new object[] { 200, 50 }
+                  )
+              );
+          }
+      }
+      </code>
+      The code below will make torbjorn on either team use hammer only and mercy on red use her staff.
+      <code>
+      using Deltin.CustomGameAutomation;
+            
+      public class SetHeroSettingsExample
+      {
+          public void SetHeroValues(CustomGame cg)
+          {
+              cg.SetHeroSettings
+              (
+                  // Make torbjorn only allowed to use his hammer.
+                  new SetHero(
+                      Hero.Torbjorn, // Torbjorn
+                      BotTeam.Both, // On both teams
+                      new string[] { "weapons_enabled" },
+                      new object[] { 2 } // 0 = All, 1 = Rivet gun only, 2 = Forge hammer only.
+                  )
+                  // Make mercy on red only allowed to use her staff.
+                  , new SetHero(
+                      Hero.Mercy, // Mercy
+                      BotTeam.Red, // On red
+                      new string[] { "weapons_enabled" },
+                      new object[] { 1 } // 0 = All, 1 = Caduceus staff only, 2 = Caduceus blaster only
+                  )
+              );
+          }
+      }
+      </code>
+    </example>
+  </setHeroSettings>
+  <SendChatMessage>
+    <example>
+      The code below will send a message to the chat when a player joins.
+      <code>
+      using Deltin.CustomGameAutomation;
+      using System.Threading;
+    
+      public class SendChatMessageExample
+      {
+          public static void SendChatMessageWhenPlayerJoins(CustomGame cg)
+          {
+              int previousPlayerCount = cg.AllCount;
+              while (true)
+              {
+                  // If the last recorded player count does not equal the current player count, send a message to the chat.
+                  int playerCount = cg.AllCount;
+                  if (playerCount &gt; previousPlayerCount)
+                  {
+                      cg.Chat.SendChatMessage("Welcome to my custom game!");
+                      previousPlayerCount = playerCount;
+                  }
+
+                  Thread.Sleep(100);
+              }
+          }
+      }
+      </code>
+    </example>
+  </SendChatMessage>
+  <PlayersDead>
+    <example>
+      The code below will award a point to a team if they get a kill.
+      <code>
+      using System;
+      using System.Collections.Generic;
+      using System.Threading;
+      using Deltin.CustomGameAutomation;
+            
+      public class PlayersDeadExample
+      {
+          public static void AwardTeamOnKill(CustomGame cg)
+          {
+              bool[] awarded = new bool[12];
+        
+              int redpoints = 0;
+              int bluepoints = 0;
+        
+              while (true)
+              {
+                  List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
+                  for (int i = 0; i &lt; 12; i++)
+                  {
+                      if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)
+                      {
+                          if (cg.IsSlotBlue(i))
+                          {
+                              redpoints++;
+                              Console.WriteLine("Red points: {0}", redpoints);
+                          }
+                          else if (cg.IsSlotRed(i))
+                          {
+                              bluepoints++;
+                              Console.WriteLine("Blue points: {0}", bluepoints);
+                          }
+                          awarded[i] = true;
+                      }
+                      else if (playersdead.Contains(i) == false &amp;&amp; awarded[i])
+                      {
+                          awarded[i] = false;
+                      }
+                  }
+                  Thread.Sleep(500);
+              }
+          }
+      }
+      </code>
+    </example>
+  </PlayersDead>
+  <ToggleMap1>
+    <example>
+      The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+      <code>
+      using Deltin.CustomGameAutomation;
+
+      public class ToggleMapExample
+      {
+          public static void SetEnabledMaps(CustomGame cg)
+          {
+              cg.ModesEnabled = Gamemode.Assault | Gamemode.AssaultEscort | Gamemode.Control | Gamemode.Escort;
+              cg.CurrentOverwatchEvent = Event.None;
+              cg.ToggleMap(ToggleAction.DisableAll, Map.A_Hanamura, Map.E_Gibraltar, Map.C_Ilios);
+          }
+      }
+      </code>
+    </example>
+  </ToggleMap1>
+  <ToggleMap2>
+    <example>
+      The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
+      <code>
+      using Deltin.CustomGameAutomation;
+
+      public class ToggleMapExample
+      {
+          public static void SetEnabledMaps(CustomGame cg)
+          {
+              cg.ToggleMap(Gamemode.Assault | Gamemode.AssaultEscort | Gamemode.Control | Gamemode.Escort,
+                  Event.None,
+                  ToggleAction.DisableAll, 
+                  Map.A_Hanamura, Map.E_Gibraltar, Map.C_Ilios);
+          }
+      }
+      </code>
+    </example>
+  </ToggleMap2>
+  <OnGameOver>
+    <example>
+      The example below will send a message to chat when the game is over.
+      <code>
+      using Deltin.CustomGameAutomation;
+
+      public class OnGameOverExample
+      {
+          public static void SendMessageToChatWhenGameIsOver(CustomGame cg)
+          {
+              cg.Settings.SetTeamName(Team.Blue, @"\ Blue Team");
+              cg.Settings.SetTeamName(Team.Red, "* Red Team");
+              cg.OnGameOver += Cg_OnGameOver;
+          }
+
+          private static void Cg_OnGameOver(object sender, GameOverArgs e)
+          {
+              Team winningTeam = e.GetWinningTeam();
+              ((CustomGame)sender).Chat.SendChatMessage(string.Format("The game is over, Team {0} has won!", winningTeam.ToString()));
+          }
+      }
+      </code>
+    </example>
+  </OnGameOver>
 </doc>

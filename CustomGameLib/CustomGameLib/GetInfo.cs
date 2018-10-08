@@ -168,12 +168,12 @@ namespace Deltin.CustomGameAutomation
             new Point(51, 369), // Slot 4
             new Point(51, 384), // Slot 5
             // Red
-            new Point(624, 255), // Slot 6
-            new Point(624, 283), // Slot 7
-            new Point(624, 311), // Slot 8
-            new Point(624, 341), // Slot 9
-            new Point(624, 369), // Slot 10
-            new Point(624, 397), // Slot 11
+            new Point(621, 255), // Slot 6
+            new Point(621, 283), // Slot 7
+            new Point(621, 311), // Slot 8
+            new Point(621, 341), // Slot 9
+            new Point(621, 369), // Slot 10
+            new Point(621, 397), // Slot 11
             // Spectator
             new Point(896, 248), // slot 12
             new Point(896, 264), // slot 13
@@ -185,40 +185,43 @@ namespace Deltin.CustomGameAutomation
 
         private bool IsSlotFilled(int slot, bool update)
         {
-            if (!IsSlotValid(slot))
-                throw new InvalidSlotException(slot);
-
-            if (!IsSlotInQueue(slot))
+            lock (CustomGameLock)
             {
-                if (update)
-                    updateScreen();
+                if (!IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
 
-                int x = SlotLocations[slot].X,
-                    y = SlotLocations[slot].Y,
-                    compareToX = SlotLocations[slot].X,
-                    compareToY = SlotLocations[slot].Y;
-
-                if (slot == 0)
-                    compareToX -= 8;
-                else if (CustomGame.IsSlotInQueue(slot) || CustomGame.IsSlotSpectator(slot))
-                    compareToX -= 3;
-                else if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
-                    compareToX -= 4;
-                else
-                    throw new NotImplementedException();
-
-                if (IsSlotSpectator(slot))
+                if (!IsSlotInQueue(slot))
                 {
-                    int spectatorYOffset = FindSpectatorOffset(true);
-                    compareToY -= spectatorYOffset;
-                    y -= spectatorYOffset;
-                }
+                    if (update)
+                        updateScreen();
 
-                return !CompareColor(x, y, compareToX, compareToY, slotFade);
-            }
-            else
-            {
-                return GetQueueCount(false, update) + Queueid > slot;
+                    int x = SlotLocations[slot].X,
+                        y = SlotLocations[slot].Y,
+                        compareToX = SlotLocations[slot].X,
+                        compareToY = SlotLocations[slot].Y;
+
+                    if (slot == 0)
+                        compareToX -= 8;
+                    else if (CustomGame.IsSlotInQueue(slot) || CustomGame.IsSlotSpectator(slot))
+                        compareToX -= 3;
+                    else if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
+                        compareToX -= 4;
+                    else
+                        throw new NotImplementedException();
+
+                    if (IsSlotSpectator(slot))
+                    {
+                        int spectatorYOffset = FindSpectatorOffset();
+                        compareToY += spectatorYOffset;
+                        y += spectatorYOffset;
+                    }
+
+                    return !CompareColor(x, y, compareToX, compareToY, slotFade);
+                }
+                else
+                {
+                    return GetQueueCount(false, update) + Queueid > slot;
+                }
             }
         }
 
@@ -235,33 +238,36 @@ namespace Deltin.CustomGameAutomation
 
         private int GetQueueCount(bool includeHidden, bool update)
         {
-            if (update)
-                updateScreen();
-
-            int inq = 0;
-
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
-            // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
-            for (int i = 0; i < 6; i++)
-                if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, slotFade))
-                    inq = i + 1;
-            // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
-            // Check for the length of the scrollbar to get the number of players in the queue
-            if (inq == 6 && includeHidden)
+            lock (CustomGameLock)
             {
-                // There can only be 10 players in the queue, which means with a full queue 4 can be hidden.
-                for (int i = 0; i < 4; i++)
+                if (update)
+                    updateScreen();
+
+                int inq = 0;
+
+                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\Offset.png" scale="1.3" />
+                // The SPECTATORS text moves down for every player in the queue. Check for all possible locations for the SPECTATORS text.
+                for (int i = 0; i < 6; i++)
+                    if (CompareColor(727, 266 + (i * 13), new int[] { 132, 147, 151 }, slotFade))
+                        inq = i + 1;
+                // If there are more than 6 players in the queue, a scrollbar appears to show the rest of the players in the queue.
+                // Check for the length of the scrollbar to get the number of players in the queue
+                if (inq == 6 && includeHidden)
                 {
-                    int y = 304 - (i * (10 - i));
-                    if (CompareColor(894, y, new int[] { 153, 153, 152 }, slotFade)
-                        || CompareColor(894, y, new int[] { 132, 126, 123 }, slotFade))
+                    // There can only be 10 players in the queue, which means with a full queue 4 can be hidden.
+                    for (int i = 0; i < 4; i++)
                     {
-                        inq = inq + i + 1;
-                        break;
+                        int y = 304 - (i * (10 - i));
+                        if (CompareColor(894, y, new int[] { 153, 153, 152 }, slotFade)
+                            || CompareColor(894, y, new int[] { 132, 126, 123 }, slotFade))
+                        {
+                            inq = inq + i + 1;
+                            break;
+                        }
                     }
                 }
+                return inq;
             }
-            return inq;
         }
 
         // Finds the offset in pixels of the queue to spectator displacement
@@ -278,75 +284,6 @@ namespace Deltin.CustomGameAutomation
                 offset += 23;
             return offset;
         }
-
-        #region Players Invited
-        /// <summary>
-        /// Gets the number of players who were invited but are not ingame.
-        /// </summary>
-        /// <returns>Number of players who are not ingame.</returns>
-        public int GetInvitedCount()
-        {
-            return GetInvitedSlots().Count;
-        }
-        /// <summary>
-        /// Gets a list of players who were invited but are not ingame.
-        /// </summary>
-        /// <returns>Integer list of players who are not ingame.</returns>
-        public List<int> GetInvitedSlots()
-        {
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo.png" scale="1" />
-
-            updateScreen();
-            List<int> invited = new List<int>();
-            List<int> pd = PlayerInfo.PlayersDead(true);
-
-            int[] bluecolor = new int[] { 82, 106, 117 };
-            int[] redcolor = new int[] { 110, 72, 76 };
-
-            int[] deadbluecolor = new int[] { 81, 82, 82 };
-            int[] deadredcolor = new int[] { 87, 83, 85 };
-
-            int[] color = bluecolor;
-            int[] deadcolor = deadbluecolor;
-
-            List<int> playersConnected = PlayerSlots;
-
-            for (int i = 0; i < InvitedMarkerLocations.Length; i++)
-            {
-                if (i == 6)
-                {
-                    color = redcolor;
-                    deadcolor = deadredcolor;
-                }
-                if (playersConnected.Contains(i) // If the player slot index is filled,
-                    && pd.Contains(i) == false // The player is not dead,
-                    && PlayerInfo.IsUltimateReady(i, true) == false // And the player's ultimate is not ready...
-                                                                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo1.png" scale="1.3" />
-                                                                    // And if the color isnt there...
-                                                                    // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\InviteInfo2.png" scale="1.3" />
-                    && !(CompareColor(InvitedMarkerLocations[i], 81, color, 20) || (CompareColor(InvitedMarkerLocations[i], 83, deadcolor, 20) && !CompareColor(InvitedMarkerLocations[i], 81, deadcolor, 20))))
-                    // If everything above is false, the player is invited but not ingame.
-                    invited.Add(i);
-            }
-            return invited;
-        }
-        private int[] InvitedMarkerLocations = new int[]
-        {
-        56, // slot 0 61
-        106, // slot 1 109
-        155, // slot 2 159
-        205, // slot 3 208
-        256, // slot 4 256
-        302, // slot 5 307
-
-        614, // slot 6 614
-        663, // slot 7 664
-        713, // slot 8 713
-        761, // slot 9 762
-        810, // slot 10 811
-        858 // slot 11 861
-        };
-        #endregion
 
         #region Is slot X?
         /// <summary>
@@ -377,6 +314,15 @@ namespace Deltin.CustomGameAutomation
             return slot >= 6 && slot <= 11;
         }
         /// <summary>
+        /// Returns true if the slot is in blue or red.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public static bool IsSlotBlueOrRed(int slot)
+        {
+            return IsSlotBlue(slot) || IsSlotRed(slot);
+        }
+        /// <summary>
         /// Returns true if the slot is in Spectator.
         /// </summary>
         /// <param name="slot">Slot to check</param>
@@ -400,6 +346,7 @@ namespace Deltin.CustomGameAutomation
         /// Gets slots in the game.
         /// </summary>
         /// <param name="flags">Flags for obtaining slots.</param>
+        /// <param name="noUpdate"></param>
         /// <returns>Returns a list of slots following <paramref name="flags"/>.</returns>
         /// <example>
         /// The code below will write all blue players that are not AI to the console.
@@ -422,51 +369,53 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SlotFlags"/>
         public List<int> GetSlots(SlotFlags flags, bool noUpdate = false)
         {
-            List<int> slots = new List<int>();
-
-            if (!noUpdate)
-                updateScreen();
-
-            // Add the blue slots
-            if (flags.HasFlag(SlotFlags.BlueTeam))
-                slots.AddRange(CheckRange(BlueRange, false));
-
-            // Add the red slots
-            if (flags.HasFlag(SlotFlags.RedTeam))
-                slots.AddRange(CheckRange(RedRange, false));
-
-            // Add the spectator slots
-            if (flags.HasFlag(SlotFlags.Spectators))
-                slots.AddRange(CheckRange(SpectatorRange, false));
-
-            // Add the queue slots
-            if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
+            lock (CustomGameLock)
             {
-                slots.AddRange(CheckRange(QueueRange, false).Where((slot) =>
+                List<int> slots = new List<int>();
+
+                if (!noUpdate)
+                    updateScreen();
+
+                // Add the blue slots
+                if (flags.HasFlag(SlotFlags.BlueTeam))
+                    slots.AddRange(CheckRange(BlueRange, false));
+
+                // Add the red slots
+                if (flags.HasFlag(SlotFlags.RedTeam))
+                    slots.AddRange(CheckRange(RedRange, false));
+
+                // Add the spectator slots
+                if (flags.HasFlag(SlotFlags.Spectators))
+                    slots.AddRange(CheckRange(SpectatorRange, false));
+
+                // Add the queue slots
+                if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
                 {
-                    QueueTeam team = PlayerInfo.GetQueueTeam(slot);
+                    slots.AddRange(CheckRange(QueueRange, false).Where((slot) =>
+                    {
+                        QueueTeam team = PlayerInfo.GetQueueTeam(slot);
 
-                    if ((team == QueueTeam.Neutral && !flags.HasFlag(SlotFlags.NeutralQueue))
-                        || (team == QueueTeam.Blue && !flags.HasFlag(SlotFlags.BlueQueue))
-                        || (team == QueueTeam.Red && !flags.HasFlag(SlotFlags.RedQueue)))
-                        return false;
+                        if ((team == QueueTeam.Neutral && !flags.HasFlag(SlotFlags.NeutralQueue))
+                            || (team == QueueTeam.Blue && !flags.HasFlag(SlotFlags.BlueQueue))
+                            || (team == QueueTeam.Red && !flags.HasFlag(SlotFlags.RedQueue)))
+                            return false;
 
-                    return true;
-                }));
+                        return true;
+                    }));
+                }
+
+                if (flags.HasFlag(SlotFlags.NoPlayers) || flags.HasFlag(SlotFlags.NoAI))
+                {
+                    List<int> aiSlots = AI.GetAISlots(flags.HasFlag(SlotFlags.AccurateGetAI));
+
+                    if (flags.HasFlag(SlotFlags.NoAI))
+                        slots = slots.Where(slot => aiSlots.Contains(slot) == false).ToList();
+
+                    if (flags.HasFlag(SlotFlags.NoPlayers))
+                        slots = slots.Where(slot => aiSlots.Contains(slot)).ToList();
+                }
+                return slots;
             }
-
-            if (flags.HasFlag(SlotFlags.NoPlayers) || flags.HasFlag(SlotFlags.NoAI))
-            {
-                List<int> aiSlots = AI.GetAISlots(flags.HasFlag(SlotFlags.AccurateGetAI));
-
-                if (flags.HasFlag(SlotFlags.NoAI))
-                    slots = slots.Where(slot => aiSlots.Contains(slot) == false).ToList();
-
-                if (flags.HasFlag(SlotFlags.NoPlayers))
-                    slots = slots.Where(slot => aiSlots.Contains(slot)).ToList();
-            }
-
-            return slots;
         }
 
         /// <summary>
@@ -476,21 +425,24 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         public bool WaitForSlotUpdate(int maxtime = 1000)
         {
-            Stopwatch time = new Stopwatch();
-            List<int> preslots = AllSlots;
-            time.Start();
-            while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+            lock (CustomGameLock)
             {
-                List<int> newslots = AllSlots;
-                if (preslots.Count != newslots.Count)
-                    return true;
-                else
-                    for (int i = 0; i < preslots.Count; i++)
-                        if (preslots[i] != newslots[i])
-                            return true;
-                Thread.Sleep(100);
+                Stopwatch time = new Stopwatch();
+                List<int> preslots = AllSlots;
+                time.Start();
+                while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+                {
+                    List<int> newslots = AllSlots;
+                    if (preslots.Count != newslots.Count)
+                        return true;
+                    else
+                        for (int i = 0; i < preslots.Count; i++)
+                            if (preslots[i] != newslots[i])
+                                return true;
+                    Thread.Sleep(100);
+                }
+                return false;
             }
-            return false;
         }
 
         /// <summary>
@@ -514,66 +466,23 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="noUpdate"></param>
         /// <returns>List of players who are dead.</returns>
-        /// <example>
-        /// The code below will award a point to a team if they get a kill.
-        /// <code>
-        /// using System;
-        /// using System.Collections.Generic;
-        /// using System.Threading;
-        /// using Deltin.CustomGameAutomation;
-        /// 
-        /// public class PlayersDeadExample
-        /// {
-        ///     public static void AwardTeamOnKill(CustomGame cg)
-        ///     {
-        ///         bool[] awarded = new bool[12];
-        ///         
-        ///         int redpoints = 0;
-        ///         int bluepoints = 0;
-        ///         
-        ///         while (true)
-        ///         {
-        ///             List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
-        ///             for (int i = 0; i &lt; 12; i++)
-        ///             {
-        ///                 if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)
-        ///                 {
-        ///                     if (cg.IsSlotBlue(i))
-        ///                     {
-        ///                         redpoints++;
-        ///                         Console.WriteLine("Red points: {0}", redpoints);
-        ///                     }
-        ///                     else if (cg.IsSlotRed(i))
-        ///                     {
-        ///                         bluepoints++;
-        ///                         Console.WriteLine("Blue points: {0}", bluepoints);
-        ///                     }
-        ///                     awarded[i] = true;
-        ///                 }
-        ///                 else if (playersdead.Contains(i) == false &amp;&amp; awarded[i])
-        ///                 {
-        ///                     awarded[i] = false;
-        ///                 }
-        ///             }
-        ///             Thread.Sleep(500);
-        ///         }
-        ///     }
-        /// }
-        /// </code>
-        /// </example>
+        /// <include file='docs.xml' path='doc/AddAI/example'></include>
         public List<int> PlayersDead(bool noUpdate = false)
         {
-            // Returns which players that are dead by checking the killed marker locations for a red 'X'.
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
+            lock (cg.CustomGameLock)
+            {
+                // Returns which players that are dead by checking the killed marker locations for a red 'X'.
+                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
 
-            if (!noUpdate)
-                cg.updateScreen();
-            List<int> playersDead = new List<int>();
-            for (int i = 0; i < 12; i++)
-                if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
-                    && !HasHealthBar(i, true))
-                    playersDead.Add(i);
-            return playersDead;
+                if (!noUpdate)
+                    cg.updateScreen();
+                List<int> playersDead = new List<int>();
+                for (int i = 0; i < 12; i++)
+                    if (cg.CompareColor(KilledPlayerMarkerLocations[i], 98, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
+                        && !HasHealthBar(i, true))
+                        playersDead.Add(i);
+                return playersDead;
+            }
         }
         private static int[] KilledPlayerMarkerLocations = new int[]
         {
@@ -629,21 +538,24 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
         public int[] MaxPlayerCount()
         {
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
-            cg.updateScreen();
-            int[] result = new int[2];
-            // Blue: X = 613
-            // Red: X = 752
-            int[] searchArea = new int[] { 250, 275, 310, 340, 370, 400 };
-            int[] blueColor = new int[] { 148, 202, 224 };
-            int[] redColor = new int[] { 167, 76, 86 };
-            for (int i = 0; i < searchArea.Length; i++)
-                if (cg.CompareColor(302, searchArea[i], blueColor, 50))
-                    result[0]++;
-            for (int i = 0; i < searchArea.Length; i++)
-                if (cg.CompareColor(370, searchArea[i], redColor, 50))
-                    result[1]++;
-            return result;
+            lock (cg.CustomGameLock)
+            {
+                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
+                cg.updateScreen();
+                int[] result = new int[2];
+                // Blue: X = 613
+                // Red: X = 752
+                int[] searchArea = new int[] { 250, 275, 310, 340, 370, 400 };
+                int[] blueColor = new int[] { 148, 202, 224 };
+                int[] redColor = new int[] { 167, 76, 86 };
+                for (int i = 0; i < searchArea.Length; i++)
+                    if (cg.CompareColor(302, searchArea[i], blueColor, 50))
+                        result[0]++;
+                for (int i = 0; i < searchArea.Length; i++)
+                    if (cg.CompareColor(370, searchArea[i], redColor, 50))
+                        result[1]++;
+                return result;
+            }
         }
 
         /// <summary>
@@ -654,17 +566,20 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsHeroChosen(int slot)
         {
-            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
-                throw new InvalidSlotException(slot);
-            if (cg.PlayerSlots.Contains(slot) == false)
-                return false;
+            lock (cg.CustomGameLock)
+            {
+                if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
+                    throw new InvalidSlotException(slot);
+                if (cg.PlayerSlots.Contains(slot) == false)
+                    return false;
 
-            cg.updateScreen();
+                cg.updateScreen();
 
-            if (PlayersDead(true).Contains(slot))
-                return true;
+                if (PlayersDead(true).Contains(slot))
+                    return true;
 
-            return _HeroChosen(slot);
+                return _HeroChosen(slot);
+            }
         }
 
         // Private method to check if a hero is chosen.
@@ -714,30 +629,33 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Slot the moderator is on.</returns>
         public int ModeratorSlot()
         {
-            // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
-            // Find the moderator icon.
+            lock (cg.CustomGameLock)
+            {
+                // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
+                // Find the moderator icon.
 
-            cg.updateScreen();
-            int fade = 40;
+                cg.updateScreen();
+                int fade = 40;
 
-            // Red and blue
-            for (int i = 0; i < 12; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], Colors.MODERATOR_ICON, fade))
-                    return i;
+                // Red and blue
+                for (int i = 0; i < 12; i++)
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1], Colors.MODERATOR_ICON, fade))
+                        return i;
 
-            // Spectators
-            int offset = cg.FindSpectatorOffset();
-            for (int i = 12; i < CustomGame.Queueid; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
-                    return i;
+                // Spectators
+                int offset = cg.FindSpectatorOffset();
+                for (int i = 12; i < CustomGame.Queueid; i++)
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
+                        return i;
 
-            // Queue
-            int queuecount = cg.QueueCount;
-            for (int i = 12; i < 12 + queuecount; i++)
-                if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, Colors.SPECTATOR_MODERATOR_ICON, fade))
-                    return i + 6;
+                // Queue
+                int queuecount = cg.QueueCount;
+                for (int i = 12; i < 12 + queuecount; i++)
+                    if (cg.CompareColor(ModeratorLocations[i, 0], ModeratorLocations[i, 1] - 5, Colors.SPECTATOR_MODERATOR_ICON, fade))
+                        return i + 6;
 
-            return -1;
+                return -1;
+            }
         }
 
         /// <summary>
@@ -748,22 +666,25 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public QueueTeam GetQueueTeam(int slot)
         {
-            if (!CustomGame.IsSlotInQueue(slot))
-                throw new InvalidSlotException(slot);
-            Point check = cg.Interact.FindSlotLocation(slot);
-            check.X -= 25;
-            cg.updateScreen();
-            Color color = cg.GetPixelAt(check.X, check.Y);
+            lock (cg.CustomGameLock)
+            {
+                if (!CustomGame.IsSlotInQueue(slot))
+                    throw new InvalidSlotException(slot);
+                Point check = cg.Interact.FindSlotLocation(slot);
+                check.X -= 25;
+                cg.updateScreen();
+                Color color = cg.GetPixelAt(check.X, check.Y);
 
-            // If the blue color is greater than the red color, the queue slot is on blue team.
-            if (color.B > color.R)
-                return QueueTeam.Blue;
-            // If the green color is less than 90, the queue slot is on the red team.
-            else if (color.G < 90)
-                return QueueTeam.Red;
-            // Else, the queue slot is on neutral team.
-            else
-                return QueueTeam.Neutral;
+                // If the blue color is greater than the red color, the queue slot is on blue team.
+                if (color.B > color.R)
+                    return QueueTeam.Blue;
+                // If the green color is less than 90, the queue slot is on the red team.
+                else if (color.G < 90)
+                    return QueueTeam.Red;
+                // Else, the queue slot is on neutral team.
+                else
+                    return QueueTeam.Neutral;
+            }
         }
 
         /// <summary>
@@ -775,11 +696,14 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsUltimateReady(int slot, bool noUpdate = false)
         {
-            if (slot >= UltimateCheckLocations.Length || slot < 0)
-                throw new InvalidSlotException(slot);
-            if (!noUpdate)
-                cg.updateScreen();
-            return /* GetLoadSlots(new int[] { slot }.ToList()).Contains(slot) == false && */ cg.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
+            lock (cg.CustomGameLock)
+            {
+                if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
+                    throw new InvalidSlotException(slot);
+                if (!noUpdate)
+                    cg.updateScreen();
+                return cg.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
+            }
         }
         Point[] UltimateCheckLocations = new Point[]
         {
@@ -806,14 +730,17 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public void GetHeroMarkup(int slot, string saveTo)
         {
-            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
-                throw new InvalidSlotException(slot);
+            lock (cg.CustomGameLock)
+            {
+                if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
+                    throw new InvalidSlotException(slot);
 
-            cg.updateScreen();
+                cg.updateScreen();
 
-            Bitmap save = cg.BmpClone(HeroCheckLocations[slot], HeroCheckY, 20, 9);
+                Bitmap save = cg.BmpClone(HeroCheckLocations[slot], HeroCheckY, 20, 9);
 
-            save.Save(saveTo);
+                save.Save(saveTo);
+            }
         }
 
         /// <summary>
@@ -837,78 +764,81 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
         {
-            if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
-                throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));
-
-            if (!cg.PlayerSlots.Contains(slot))
+            lock (cg.CustomGameLock)
             {
-                resultInfo = HeroResultInfo.SlotEmpty;
-                return null;
-            }
+                if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
+                    throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));
 
-            if (PlayersDead(true).Contains(slot))
-            {
-                resultInfo = HeroResultInfo.PlayerWasDead;
-                return null;
-            }
-
-            if (!_HeroChosen(slot))
-            {
-                resultInfo = HeroResultInfo.NoHeroChosen;
-                return null;
-            }
-
-            List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
-
-            for (int m = 0; m < HeroMarkups.Length; m++)
-            {
-                if (HeroMarkups[m] != null)
+                if (!cg.PlayerSlots.Contains(slot))
                 {
-                    double total = 0;
-                    double success = 0;
+                    resultInfo = HeroResultInfo.SlotEmpty;
+                    return null;
+                }
 
-                    for (int x = 0; x < HeroMarkups[m].Width; x++)
-                        for (int y = 0; y < HeroMarkups[m].Height; y++)
-                        {
-                            int bmpX = HeroCheckLocations[slot] + x;
-                            int bmpY = HeroCheckY + y;
+                if (PlayersDead(true).Contains(slot))
+                {
+                    resultInfo = HeroResultInfo.PlayerWasDead;
+                    return null;
+                }
 
-                            int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
+                if (!_HeroChosen(slot))
+                {
+                    resultInfo = HeroResultInfo.NoHeroChosen;
+                    return null;
+                }
 
-                            if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
+                List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
+
+                for (int m = 0; m < HeroMarkups.Length; m++)
+                {
+                    if (HeroMarkups[m] != null)
+                    {
+                        double total = 0;
+                        double success = 0;
+
+                        for (int x = 0; x < HeroMarkups[m].Width; x++)
+                            for (int y = 0; y < HeroMarkups[m].Height; y++)
                             {
-                                total++;
-                                if (cg.CompareColor(bmpX, bmpY, markupColor, 20))
-                                    success++;
+                                int bmpX = HeroCheckLocations[slot] + x;
+                                int bmpY = HeroCheckY + y;
+
+                                int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
+
+                                if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
+                                {
+                                    total++;
+                                    if (cg.CompareColor(bmpX, bmpY, markupColor, 20))
+                                        success++;
+                                }
                             }
+
+                        double probability = (success / total) * 100;
+
+                        if (probability >= 80)
+                            results.Add(new Tuple<Hero, double>((Hero)m, probability));
+                    }
+                }
+
+                if (results.Count == 0)
+                {
+                    resultInfo = HeroResultInfo.NoCompatibleHeroFound;
+                    return null;
+                }
+                else
+                {
+                    int highestIndex = -1;
+                    double highest = 0;
+
+                    for (int i = 0; i < results.Count; i++)
+                        if (results[i].Item2 > highest)
+                        {
+                            highestIndex = i;
+                            highest = results[i].Item2;
                         }
 
-                    double probability = (success / total) * 100;
-
-                    if (probability >= 80)
-                        results.Add(new Tuple<Hero, double>((Hero)m, probability));
+                    resultInfo = HeroResultInfo.Success;
+                    return results[highestIndex].Item1;
                 }
-            }
-
-            if (results.Count == 0)
-            {
-                resultInfo = HeroResultInfo.NoCompatibleHeroFound;
-                return null;
-            }
-            else
-            {
-                int highestIndex = -1;
-                double highest = 0;
-
-                for (int i = 0; i < results.Count; i++)
-                    if (results[i].Item2 > highest)
-                    {
-                        highestIndex = i;
-                        highest = results[i].Item2;
-                    }
-
-                resultInfo = HeroResultInfo.Success;
-                return results[highestIndex].Item1;
             }
         }
         static Bitmap[] HeroMarkups = new Bitmap[]
@@ -959,6 +889,17 @@ namespace Deltin.CustomGameAutomation
             875
         };
         int HeroCheckY = 73;
+
+        /// <summary>
+        /// Checks if a slot is your friend.
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public bool IsFriend(int slot)
+        {
+            return cg.Interact.PeakOption(slot, RemoveFriendMarkup, 80, 125, 1);
+        }
+        static internal Bitmap RemoveFriendMarkup = Properties.Resources.remove_friend;
 
         /// <summary>
         /// Checks if a player account exists via battletag. Is case sensitive.
@@ -1023,7 +964,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Flags for obtaining slots.
     /// </summary>
-    /// <seealso cref="CustomGame.GetSlots(SlotFlags)"/>
+    /// <seealso cref="CustomGame.GetSlots(SlotFlags, bool)"/>
     [Flags]
     public enum SlotFlags
     {

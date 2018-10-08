@@ -78,30 +78,9 @@ namespace Deltin.CustomGameAutomation
         /// <see cref="ModesEnabled"/> must be set to use this method. <see cref="CurrentOverwatchEvent"/> must be set if a seasonal Overwatch event is on.
         /// <include file="docs.xml" path="doc/getMaps" />
         /// </remarks>
-        /// <example>
-        /// The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
-        /// <code>
-        /// using Deltin.CustomGameAutomation;
-        /// 
-        /// public class ToggleMapExample
-        /// {
-        ///     public static void SetEnabledMaps(CustomGame cg) 
-        ///     {
-        ///         cg.ModesEnabled = new ModesEnabled()
-        ///         {
-        ///             Assault = true,
-        ///             AssaultEscort = true,
-        ///             Control = true,
-        ///             Escort = true
-        ///         }
-        ///         cg.CurrentOverwatchEvent = Event.None;
-        ///         cg.ToggleMap(ToggleAction.DisableAll, Map.A_Hanamura, E_Gibraltar, C_Ilios);
-        ///     }
-        /// }
-        /// </code>
-        /// </example>
+        /// <include file='docs.xml' path='doc/ToggleMap1/example'></include>
         /// <seealso cref="Map"/>
-        /// <seealso cref="ToggleMap(ModesEnabled, Event, ToggleAction, Map[])"/>
+        /// <seealso cref="ToggleMap(Gamemode, Event, ToggleAction, Map[])"/>
         public void ToggleMap(ToggleAction ta, params Map[] maps)
         {
             ToggleMap(ModesEnabled, CurrentOverwatchEvent, ta, maps);
@@ -118,100 +97,83 @@ namespace Deltin.CustomGameAutomation
         /// <remarks>
         /// <include file="docs.xml" path="doc/getMaps" />
         /// </remarks>
-        /// <example>
-        /// The code below will disable all maps but Hanamura, Gibraltar, and Ilios.
-        /// <code>
-        /// using Deltin.CustomGameAutomation;
-        /// 
-        /// public class ToggleMapExample
-        /// {
-        ///     public static void SetEnabledMaps(CustomGame cg) 
-        ///     {
-        ///         cg.ToggleMap(
-        ///             new ModesEnabled() 
-        ///             {
-        ///                 Assault = true,
-        ///                 AssaultEscort = true,
-        ///                 Control = true,
-        ///                 Escort = true
-        ///             },
-        ///             Event.None,
-        ///             ToggleAction.DisableAll, 
-        ///             Map.A_Hanamura, E_Gibraltar, C_Ilios);
-        ///     }
-        /// }
-        /// </code>
-        /// </example>
+        /// <include file='docs.xml' path='doc/ToggleMap2/example'></include>
         /// <seealso cref="Map"/>
         /// <seealso cref="ToggleMap(ToggleAction, Map[])"/>
         public void ToggleMap(Gamemode modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
         {
-            GoToSettings();
-
-            LeftClick(Points.SETTINGS_MAPS, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
-
-            // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
-            if (ta == ToggleAction.DisableAll)
-                LeftClick(Points.SETTINGS_MAPS_DISABLE_ALL, 250);
-            else if (ta == ToggleAction.EnableAll)
-                LeftClick(Points.SETTINGS_MAPS_ENABLE_ALL, 250);
-
-            // Get the modes enabled state in a bool in alphabetical order.
-            bool[] enabledModes = new bool[]
+            lock (CustomGameLock)
             {
-                modesEnabled.HasFlag(Gamemode.Assault),
-                modesEnabled.HasFlag(Gamemode.AssaultEscort),
-                modesEnabled.HasFlag(Gamemode.CaptureTheFlag),
-                modesEnabled.HasFlag(Gamemode.Control),
-                modesEnabled.HasFlag(Gamemode.Deathmatch),
-                modesEnabled.HasFlag(Gamemode.Elimination),
-                modesEnabled.HasFlag(Gamemode.Escort),
-                modesEnabled.HasFlag(Gamemode.JunkensteinsRevenge),
-                modesEnabled.HasFlag(Gamemode.Lucioball),
-                modesEnabled.HasFlag(Gamemode.MeisSnowballOffensive),
-                modesEnabled.HasFlag(Gamemode.Skirmish),
-                modesEnabled.HasFlag(Gamemode.TeamDeathmatch),
-                modesEnabled.HasFlag(Gamemode.YetiHunter),
-            };
+                int waitTime = 1;
 
-            if (enabledModes.Length != Enum.GetNames(typeof(Gamemode)).Length)
-                throw new NotImplementedException("The length of enabledModes does not equal the length of the gamemodes in the Gamemode enum.");
+                GoToSettings();
 
-            List<int> selectMap = new List<int>();
-            int mapcount = 0;
-            // For each enabled mode...
-            for (int i = 0; i < enabledModes.Length; i++)
-                if (enabledModes[i])
+                LeftClick(Points.SETTINGS_MAPS, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
+
+                // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
+                if (ta == ToggleAction.DisableAll)
+                    LeftClick(Points.SETTINGS_MAPS_DISABLE_ALL, 250);
+                else if (ta == ToggleAction.EnableAll)
+                    LeftClick(Points.SETTINGS_MAPS_ENABLE_ALL, 250);
+
+                // Get the modes enabled state in a bool in alphabetical order.
+                bool[] enabledModes = new bool[]
                 {
-                    Gamemode emi = (Gamemode)i; //enabledmodesindex
-                    List<Map> allowedmaps = Map.GetMapsInGamemode(emi, currentOverwatchEvent).ToList();
-                    // ...And for each map...
-                    for (int mi = 0; mi < maps.Length; mi++)
-                        // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...
-                        if (maps[mi].GameMode == emi && allowedmaps.Contains(maps[mi]))
-                        {
-                            // ...then add the map index to the selectmap list. 1, 5, 10 will toggle the first map in overwatch, the fifth, then the tenth...
-                            selectMap.Add(mapcount + allowedmaps.IndexOf(maps[mi]) + 1);
-                        }
-                    // ...then finally add the number of maps in the mode to the mapcount.
-                    mapcount += allowedmaps.Count;
-                }
-            mapcount++;
+                    modesEnabled.HasFlag(Gamemode.Assault),
+                    modesEnabled.HasFlag(Gamemode.AssaultEscort),
+                    modesEnabled.HasFlag(Gamemode.CaptureTheFlag),
+                    modesEnabled.HasFlag(Gamemode.Control),
+                    modesEnabled.HasFlag(Gamemode.Deathmatch),
+                    modesEnabled.HasFlag(Gamemode.Elimination),
+                    modesEnabled.HasFlag(Gamemode.Escort),
+                    modesEnabled.HasFlag(Gamemode.JunkensteinsRevenge),
+                    modesEnabled.HasFlag(Gamemode.Lucioball),
+                    modesEnabled.HasFlag(Gamemode.MeisSnowballOffensive),
+                    modesEnabled.HasFlag(Gamemode.Skirmish),
+                    modesEnabled.HasFlag(Gamemode.TeamDeathmatch),
+                    modesEnabled.HasFlag(Gamemode.YetiHunter),
+                };
 
-            // Toggle maps
-            for (int i = 0; i < mapcount; i++)
-            {
-                for (int mi = 0; mi < selectMap.Count; mi++)
-                    if (selectMap[mi] == i)
+                if (enabledModes.Length != Enum.GetNames(typeof(Gamemode)).Length)
+                    throw new NotImplementedException("The length of enabledModes does not equal the length of the gamemodes in the Gamemode enum.");
+
+                List<int> selectMap = new List<int>();
+                int mapcount = 0;
+                // For each enabled mode...
+                for (int i = 0; i < enabledModes.Length; i++)
+                    if (enabledModes[i])
                     {
-                        KeyPress(Keys.Space);
-                        Thread.Sleep(1);
-                    }
-                KeyPress(Keys.Down);
-                Thread.Sleep(1);
-            }
+                        Gamemode emi = (Gamemode)Enum.Parse(typeof(Gamemode), Enum.GetNames(typeof(Gamemode))[i]); //enabledmodesindex
 
-            GoBack(2, 0);
+                        List<Map> allowedmaps = Map.GetMapsInGamemode(emi, currentOverwatchEvent).ToList();
+                        // ...And for each map...
+                        for (int mi = 0; mi < maps.Length; mi++)
+                            // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...
+                            if (maps[mi].GameMode == emi && allowedmaps.Contains(maps[mi]))
+                            {
+                                // ...then add the map index to the selectmap list. 1, 5, 10 will toggle the first map in overwatch, the fifth, then the tenth...
+                                selectMap.Add(mapcount + allowedmaps.IndexOf(maps[mi]) + 1);
+                            }
+                        // ...then finally add the number of maps in the mode to the mapcount.
+                        mapcount += allowedmaps.Count;
+                    }
+                mapcount++;
+
+                // Toggle maps
+                for (int i = 0; i < mapcount; i++)
+                {
+                    for (int mi = 0; mi < selectMap.Count; mi++)
+                        if (selectMap[mi] == i)
+                        {
+                            KeyPress(Keys.Space);
+                            Thread.Sleep(waitTime);
+                        }
+                    KeyPress(Keys.Down);
+                    Thread.Sleep(waitTime);
+                }
+
+                GoBack(2, 0);
+            }
         }
 
         internal Point GetModeLocation(Gamemode mode, Event owevent)
@@ -298,26 +260,29 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public Gamemode GetModesEnabled(Event currentOverwatchEvent)
         {
-            NavigateToModesMenu();
-
-            ResetMouse();
-
-            Thread.Sleep(100);
-
-            updateScreen();
-
-            Gamemode modesEnabled = new Gamemode();
-
-            foreach(Gamemode gamemode in Enum.GetValues(typeof(Gamemode)))
+            lock (CustomGameLock)
             {
-                Point gamemodeIconLocation = GetModeLocation(gamemode, currentOverwatchEvent);
-                if (gamemodeIconLocation != Point.Empty && CompareColor(gamemodeIconLocation, Colors.SETTINGS_MODES_ENABLED, Fades.SETTINGS_MODES_ENABLED))
-                    modesEnabled |= gamemode;
+                NavigateToModesMenu();
+
+                //ResetMouse();
+
+                Thread.Sleep(100);
+
+                updateScreen();
+
+                Gamemode modesEnabled = new Gamemode();
+
+                foreach (Gamemode gamemode in Enum.GetValues(typeof(Gamemode)))
+                {
+                    Point gamemodeIconLocation = GetModeLocation(gamemode, currentOverwatchEvent);
+                    if (gamemodeIconLocation != Point.Empty && CompareColor(gamemodeIconLocation, Colors.SETTINGS_MODES_ENABLED, Fades.SETTINGS_MODES_ENABLED))
+                        modesEnabled |= gamemode;
+                }
+
+                GoBack(2);
+
+                return modesEnabled;
             }
-
-            GoBack(2);
-
-            return modesEnabled;
         }
     }
 

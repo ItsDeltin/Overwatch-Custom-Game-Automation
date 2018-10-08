@@ -27,8 +27,6 @@
             Contains data for identifying players who executed a command.
             </td></tr><tr><td><a href="CommandData/CommandData.html"><span class="type">CommandData</span></a></td><td>
             Data of Overwatch executed chat commands.
-            </td></tr><tr><td><a href="CommandExecuted/CommandExecuted.html"><span class="type">CommandExecuted</span></a></td><td>
-            Method to be executed when the command is executed.
             </td></tr><tr><td><a href="Commands/Commands.html"><span class="type">Commands</span></a></td><td>
             Chat commands for Overwatch.
             </td></tr><tr><td><a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a></td><td>
@@ -41,7 +39,7 @@
             Overwatch's keybinds.
             </td></tr><tr><td><a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a></td><td>
             Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
-            </td></tr><tr><td><a href="Identity/Identity.html"><span class="type">Identity</span></a></td><td></td></tr><tr><td><a href="Interact/Interact.html"><span class="type">Interact</span></a></td><td>
+            </td></tr><tr><td><a href="GameSettings/GameSettings.html"><span class="type">GameSettings</span></a></td><td></td></tr><tr><td><a href="Identity/Identity.html"><span class="type">Identity</span></a></td><td></td></tr><tr><td><a href="Interact/Interact.html"><span class="type">Interact</span></a></td><td>
             Changes a player's state in Overwatch.
             </td></tr><tr><td><a href="InvalidSetheroException/InvalidSetheroException.html"><span class="type">InvalidSetheroException</span></a></td><td>
             Exception for invalid SetHero values.
@@ -49,16 +47,16 @@
             Thrown when slot is invalid or out of range.
             </td></tr><tr><td><a href="ListenTo/ListenTo.html"><span class="type">ListenTo</span></a></td><td>
             Data for commands to listen to on the Commands class.
-            </td></tr><tr><td><a href="LoginFailedException/LoginFailedException.html"><span class="type">LoginFailedException</span></a></td><td>
-            Thrown when logging into Overwatch using CreateOverwatchProcess fails.
             </td></tr><tr><td><a href="Map/Map.html"><span class="type">Map</span></a></td><td>
             Maps in Overwatch.
             </td></tr><tr><td><a href="MissingOverwatchProcessException/MissingOverwatchProcessException.html"><span class="type">MissingOverwatchProcessException</span></a></td><td>
             Thrown if an Overwatch process is not found.
-            </td></tr><tr><td><a href="ModesEnabled/ModesEnabled.html"><span class="type">ModesEnabled</span></a></td><td>
-            Overwatch gamemodes that are enabled.
-            </td></tr><tr><td><a href="OverwatchProcessInfo/OverwatchProcessInfo.html"><span class="type">OverwatchProcessInfo</span></a></td><td>
-            Data for creating an Overwatch process.
+            </td></tr><tr><td><a href="OverwatchProcessInfoAuto/OverwatchProcessInfoAuto.html"><span class="type">OverwatchProcessInfoAuto</span></a></td><td>
+            Data for creating an Overwatch process automatically.
+            </td></tr><tr><td><a href="OverwatchProcessInfoManual/OverwatchProcessInfoManual.html"><span class="type">OverwatchProcessInfoManual</span></a></td><td>
+            Data for creating an Overwatch process manually.
+            </td></tr><tr><td><a href="OverwatchStartFailedException/OverwatchStartFailedException.html"><span class="type">OverwatchStartFailedException</span></a></td><td>
+            Thrown when creating an Overwatch process using  or  fails.
             </td></tr><tr><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
             Controls Overwatch's pause feature.
             </td></tr><tr><td><a href="PlayerIdentity/PlayerIdentity.html"><span class="type">PlayerIdentity</span></a></td><td>
@@ -71,7 +69,7 @@
             Custom Game settings in Overwatch.
             </td></tr></table></div><div class="section"><table><tr><th>Enum</th><th>Description</th></tr><tr><td><a href="AIHero.html"><span class="type">AIHero</span></a></td><td>
             AI heroes.
-            </td></tr><tr><td><a href="BotTeam.html"><span class="type">BotTeam</span></a></td><td></td></tr><tr><td><a href="Channel.html"><span class="type">Channel</span></a></td><td>
+            </td></tr><tr><td><a href="Channel.html"><span class="type">Channel</span></a></td><td>
             Chat channels for Overwatch.
             </td></tr><tr><td><a href="Difficulty.html"><span class="type">Difficulty</span></a></td><td>
             AI difficulties.
@@ -84,20 +82,24 @@
             </td></tr><tr><td><a href="Hero.html"><span class="type">Hero</span></a></td><td>
             All heroes in Overwatch.
             </td></tr><tr><td><a href="HeroResultInfo.html"><span class="type">HeroResultInfo</span></a></td><td>
-            Result info of CG_PlayerInfo.GetHero()
-            </td></tr><tr><td><a href="InviteTeam.html"><span class="type">InviteTeam</span></a></td><td></td></tr><tr><td><a href="Join.html"><span class="type">Join</span></a></td><td>
+            Result info of GetHero().
+            </td></tr><tr><td><a href="Join.html"><span class="type">Join</span></a></td><td>
             Options for who can join the game.
-            </td></tr><tr><td><a href="LobbyTeam.html"><span class="type">LobbyTeam</span></a></td><td></td></tr><tr><td><a href="PlayerTeam.html"><span class="type">PlayerTeam</span></a></td><td></td></tr><tr><td><a href="QueueTeam.html"><span class="type">QueueTeam</span></a></td><td>
-            Teams on the queue.
+            </td></tr><tr><td><a href="QueueTeam.html"><span class="type">QueueTeam</span></a></td><td>
+            Teams in the queue.
             </td></tr><tr><td><a href="ScreenshotMethod.html"><span class="type">ScreenshotMethod</span></a></td><td>
             The screenshot method used to capture the Overwatch window screen.
             BitBlt is faster and works even if another window is over the Overwatch window.
             If BitBlt does not work for you, use ScreenCopy.
             </td></tr><tr><td><a href="SlotFlags.html"><span class="type">SlotFlags</span></a></td><td>
             Flags for obtaining slots.
-            </td></tr><tr><td><a href="Team.html"><span class="type">Team</span></a></td><td></td></tr><tr><td><a href="ToggleAction.html"><span class="type">ToggleAction</span></a></td><td>
+            </td></tr><tr><td><a href="Team.html"><span class="type">Team</span></a></td><td>
+            Teams in Overwatch.
+            </td></tr><tr><td><a href="ToggleAction.html"><span class="type">ToggleAction</span></a></td><td>
             Enables/disables settings before toggling them.
-            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div>
+            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Delegate</th><th>Description</th></tr><tr><td><a href="CommandExecuted/CommandExecuted.html"><span class="type">CommandExecuted</span></a>(<a href="CommandData/CommandData.html"><span class="type">CommandData</span></a> data)</td><td>
+            Method to be executed when the command is executed.
+            </td></tr></table></div>
         </div>
     </div>
 </body>

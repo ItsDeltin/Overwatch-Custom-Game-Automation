@@ -80,68 +80,71 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset, int maxWaitTime = 5000)
         {
-            if (preset < 0)
-                throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
-
-            Point presetLocation = GetPresetLocation(preset);
-
-            cg.GoToSettings();
-            cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
-
-            Stopwatch wait = new Stopwatch();
-            wait.Start();
-
-            if (numPresets == -1)
+            lock (cg.CustomGameLock)
             {
-                while (true)
+                if (preset < 0)
+                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
+
+                Point presetLocation = GetPresetLocation(preset);
+
+                cg.GoToSettings();
+                cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
+
+                Stopwatch wait = new Stopwatch();
+                wait.Start();
+
+                if (numPresets == -1)
                 {
-                    cg.updateScreen();
-
-                    if (cg.CompareColor(presetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                    while (true)
                     {
-                        break;
-                    }
-                    else if (wait.ElapsedMilliseconds >= maxWaitTime)
-                    {
-                        cg.GoBack(2);
-                        cg.ResetMouse();
-                        return false;
-                    }
+                        cg.updateScreen();
 
-                    Thread.Sleep(100);
+                        if (cg.CompareColor(presetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                        {
+                            break;
+                        }
+                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
+                        {
+                            cg.GoBack(2);
+                            //cg.//ResetMouse();
+                            return false;
+                        }
+
+                        Thread.Sleep(100);
+                    }
                 }
-            }
-            else
-            {
-                Point finalPresetLocation = GetPresetLocation(numPresets);
-                while (true)
+                else
                 {
-                    cg.updateScreen();
-
-                    if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                    Point finalPresetLocation = GetPresetLocation(numPresets);
+                    while (true)
                     {
-                        break;
-                    }
-                    else if (wait.ElapsedMilliseconds >= maxWaitTime)
-                    {
-                        cg.GoBack(2);
-                        cg.ResetMouse();
-                        return false;
-                    }
+                        cg.updateScreen();
 
-                    Thread.Sleep(100);
+                        if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                        {
+                            break;
+                        }
+                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
+                        {
+                            cg.GoBack(2);
+                            //cg.//ResetMouse();
+                            return false;
+                        }
+
+                        Thread.Sleep(100);
+                    }
                 }
+
+                Thread.Sleep(250);
+
+                cg.LeftClick(presetLocation);
+                cg.LeftClick(Points.PRESETS_CONFIRM);
+
+                // Go back to lobby
+                cg.GoBack(2);
+                //cg.//ResetMouse();
+                return true;
             }
-
-            Thread.Sleep(250);
-
-            cg.LeftClick(presetLocation);
-            cg.LeftClick(Points.PRESETS_CONFIRM);
-
-            // Go back to lobby
-            cg.GoBack(2);
-            cg.ResetMouse();
-            return true;
         }
 
         /// <summary>
@@ -151,7 +154,10 @@ namespace Deltin.CustomGameAutomation
         /// <param name="num">Number of saved presets the host has.</param>
         public void SetNumPresets(int num)
         {
-            numPresets = num;
+            lock (cg.CustomGameLock)
+            {
+                numPresets = num;
+            }
         }
 
         private Point GetPresetLocation(int preset)
@@ -179,11 +185,14 @@ namespace Deltin.CustomGameAutomation
         /// <param name="setting">Join setting to select.</param>
         public void SetJoinSetting(Join setting)
         {
-            cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
-            if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
-            if (setting == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
-            if (setting == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
-            cg.ResetMouse();
+            lock (cg.CustomGameLock)
+            {
+                cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
+                if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
+                if (setting == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
+                if (setting == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
+                //cg.//ResetMouse();
+            }
         }
 
         /// <summary>
@@ -194,16 +203,19 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         public void SetGameName(string name)
         {
-            if (name.Length < 3)
-                throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
-            if (name.Length > 64)
-                throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 64 or lower.");
-            if (name.ToLower().Contains("admin"))
-                throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
-            cg.LeftClick(209, 165); // click on game's name
-            cg.TextInput(name);
-            cg.KeyPress(Keys.Return);
-            Thread.Sleep(500);
+            lock (cg.CustomGameLock)
+            {
+                if (name.Length < 3)
+                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
+                if (name.Length > 64)
+                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 64 or lower.");
+                if (name.ToLower().Contains("admin"))
+                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                cg.LeftClick(209, 165); // click on game's name
+                cg.TextInput(name);
+                cg.KeyPress(Keys.Return);
+                Thread.Sleep(500);
+            }
         }
 
         /// <summary>
@@ -216,33 +228,36 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         public void SetTeamName(Team team, string name)
         {
-            if (name == null)
-                throw new ArgumentNullException("name", "name cannot be null.");
-            if (name.Length < 1)
-                throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 1.");
-            if (name.Length > 15)
-                throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 15 or lower.");
-            if (name.ToLower().Contains("admin"))
-                throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
-            if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
-                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
-
-            if (team.HasFlag(Team.Blue))
+            lock (cg.CustomGameLock)
             {
-                cg.LeftClick(Points.LOBBY_BLUE_NAME);
+                if (name == null)
+                    throw new ArgumentNullException("name", "name cannot be null.");
+                if (name.Length < 1)
+                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 1.");
+                if (name.Length > 15)
+                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 15 or lower.");
+                if (name.ToLower().Contains("admin"))
+                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
+                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
 
-                cg.TextInput(name);
-                cg.KeyPress(Keys.Return);
-                Thread.Sleep(500);
-            }
+                if (team.HasFlag(Team.Blue))
+                {
+                    cg.LeftClick(Points.LOBBY_BLUE_NAME);
 
-            if (team.HasFlag(Team.Red))
-            {
-                cg.LeftClick(Points.LOBBY_RED_NAME);
+                    cg.TextInput(name);
+                    cg.KeyPress(Keys.Return);
+                    Thread.Sleep(500);
+                }
 
-                cg.TextInput(name);
-                cg.KeyPress(Keys.Return);
-                Thread.Sleep(500);
+                if (team.HasFlag(Team.Red))
+                {
+                    cg.LeftClick(Points.LOBBY_RED_NAME);
+
+                    cg.TextInput(name);
+                    cg.KeyPress(Keys.Return);
+                    Thread.Sleep(500);
+                }
             }
         }
 
@@ -256,56 +271,66 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="blueCount"/>, <paramref name="redCount"/>, <paramref name="ffaCount"/>, or <paramref name="spectatorCount"/> is less than 0 or greater than their max values.</exception>
         public void SetMaxPlayers(int? blueCount, int? redCount, int? ffaCount, int? spectatorCount)
         {
-            cg.GoToSettings();
-            cg.LeftClick(Points.SETTINGS_LOBBY, 100); // Click "lobby" option
-
-            if (blueCount < 0 || blueCount > 6)
-                throw new ArgumentOutOfRangeException("blueCount", blueCount, "blueCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
-
-            if (redCount < 0 || redCount > 6)
-                throw new ArgumentOutOfRangeException("redCount", redCount, "redCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
-
-            if (ffaCount < 0 || ffaCount > 12)
-                throw new ArgumentOutOfRangeException("ffaCount", ffaCount, "ffaCount is out of range. Value must be greater or equal to 1 and less than or equal to 12.");
-
-            if (spectatorCount < 0 || spectatorCount > 12)
-                throw new ArgumentOutOfRangeException("spectatorCount", spectatorCount, "spectatorCount is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
-
-            if (blueCount != null)
+            lock (cg.CustomGameLock)
             {
-                cg.LeftClick(Points.SETTINGS_LOBBY_BLUE_MAX_PLAYERS, 100);
-                cg.TextInput(blueCount.ToString());
-                cg.KeyPress(Keys.Enter);
-            }
+                cg.GoToSettings();
+                cg.LeftClick(Points.SETTINGS_LOBBY, 100); // Click "lobby" option
 
-            if (redCount != null)
-            {
-                cg.LeftClick(Points.SETTINGS_LOBBY_RED_MAX_PLAYERS, 100);
-                cg.TextInput(redCount.ToString());
-                cg.KeyPress(Keys.Enter);
-            }
+                if (blueCount < 0 || blueCount > 6)
+                    throw new ArgumentOutOfRangeException("blueCount", blueCount, "blueCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
 
-            if (ffaCount != null)
-            {
-                cg.LeftClick(Points.SETTINGS_LOBBY_FFA_MAX_PLAYERS, 100);
-                cg.TextInput(ffaCount.ToString());
-                cg.KeyPress(Keys.Enter);
-            }
+                if (redCount < 0 || redCount > 6)
+                    throw new ArgumentOutOfRangeException("redCount", redCount, "redCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
 
-            if (spectatorCount != null)
-            {
-                cg.LeftClick(Points.SETTINGS_LOBBY_MAX_SPECTATORS, 100);
-                cg.TextInput(spectatorCount.ToString());
-                cg.KeyPress(Keys.Enter);
-            }
+                if (ffaCount < 0 || ffaCount > 12)
+                    throw new ArgumentOutOfRangeException("ffaCount", ffaCount, "ffaCount is out of range. Value must be greater or equal to 1 and less than or equal to 12.");
 
-            cg.GoBack(3);
-            Thread.Sleep(150);
+                if (spectatorCount < 0 || spectatorCount > 12)
+                    throw new ArgumentOutOfRangeException("spectatorCount", spectatorCount, "spectatorCount is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
+
+                if (blueCount != null)
+                {
+                    cg.LeftClick(Points.SETTINGS_LOBBY_BLUE_MAX_PLAYERS, 100);
+                    cg.TextInput(blueCount.ToString());
+                    cg.KeyPress(Keys.Enter);
+                }
+
+                if (redCount != null)
+                {
+                    cg.LeftClick(Points.SETTINGS_LOBBY_RED_MAX_PLAYERS, 100);
+                    cg.TextInput(redCount.ToString());
+                    cg.KeyPress(Keys.Enter);
+                }
+
+                if (ffaCount != null)
+                {
+                    cg.LeftClick(Points.SETTINGS_LOBBY_FFA_MAX_PLAYERS, 100);
+                    cg.TextInput(ffaCount.ToString());
+                    cg.KeyPress(Keys.Enter);
+                }
+
+                if (spectatorCount != null)
+                {
+                    cg.LeftClick(Points.SETTINGS_LOBBY_MAX_SPECTATORS, 100);
+                    cg.TextInput(spectatorCount.ToString());
+                    cg.KeyPress(Keys.Enter);
+                }
+
+                cg.GoBack(3);
+                Thread.Sleep(150);
+            }
         }
 
+        /// <summary>
+        /// Changes settings in the Custom Game.
+        /// </summary>
+        /// <param name="settings">Settings to change.</param>
         public void SetSettings(GameSettings settings)
         {
-            settings.SetSettings(cg);
+            lock (cg.CustomGameLock)
+            {
+                settings.SetSettings(cg);
+            }
         }
     }
 

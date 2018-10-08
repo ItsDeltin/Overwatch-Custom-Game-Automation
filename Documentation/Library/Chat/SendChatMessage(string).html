@@ -19,30 +19,30 @@
             </script>
        </div>
         <div class="content">
-            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="Chat/Chat.html"><span class="type">Chat</span></a>.<a href="Chat/SendChatMessage(string).html">SendChatMessage</a>(<span class="blue">string</span> text) Method</strong></div><div class="section">Send message to chat.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-text">text</div></td><td><span class="blue">string</span></td><td>Text to send.</td></tr></table></div><div class="section"></div><div class="section"><table><tr><th>Exception</th><th>Thrown</th></tr><tr><td><span class="type">ArgumentNullException</span></td><td>Thrown if <a href="Chat/SendChatMessage(string).html#param-text">text</a> is null.</td></tr></table></div><div class="section"><strong>Examples</strong></div><div class="section">The code below will send a message to the chat when a player joins.
-<pre><code class="lang-csharp">using System.Threading;
-using Deltin.CustomGameAutomation;
-            
-class ChatExample
-{
-    public static void SendMessageWhenPlayerJoins(CustomGame cg)
-    {
-        int previousPlayerCount = cg.TotalPlayerCount;
-        while (true)
-        {
-            // If the last recorded player count does not equal the current player count, send a message to the chat.
-            int playerCount = cg.TotalPlayerCount;
-            if (playerCount != previousPlayerCount)
-            {
-                cg.Chat.Chat("Welcome to my custom game!");
-                previousPlayerCount = playerCount;
-            }
-            
-            Thread.Sleep(100);
-        }
-    }
-}
-</code></pre></div>
+            <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="Chat/Chat.html"><span class="type">Chat</span></a>.<a href="Chat/SendChatMessage(string).html">SendChatMessage</a>(<span class="blue">string</span> text) Method</strong></div><div class="section">Send message to chat.</div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td><div id="param-text">text</div></td><td><span class="blue">string</span></td><td>Text to send.</td></tr></table></div><div class="section"></div><div class="section"><table><tr><th>Exception</th><th>Thrown</th></tr><tr><td><span class="type">ArgumentNullException</span></td><td>Thrown if <a href="Chat/SendChatMessage(string).html#param-text">text</a> is null.</td></tr></table></div><div class="section"><strong>Examples</strong></div><div class="section">The code below will send a message to the chat when a player joins.
+  <pre><code class="lang-csharp">  using Deltin.CustomGameAutomation;
+  using System.Threading;
+    
+  public class SendChatMessageExample
+  {
+      public static void SendChatMessageWhenPlayerJoins(CustomGame cg)
+      {
+          int previousPlayerCount = cg.AllCount;
+          while (true)
+          {
+              // If the last recorded player count does not equal the current player count, send a message to the chat.
+              int playerCount = cg.AllCount;
+              if (playerCount &gt; previousPlayerCount)
+              {
+                  cg.Chat.SendChatMessage("Welcome to my custom game!");
+                  previousPlayerCount = playerCount;
+              }
+
+              Thread.Sleep(100);
+          }
+      }
+  }
+  </code></pre></div>
         </div>
     </div>
 </body>

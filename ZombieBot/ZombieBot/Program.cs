@@ -197,7 +197,7 @@ namespace ZombieBot
                     Join = JoinType.Private;
             }
 
-            IntPtr useHwnd = new IntPtr();
+            Process useProcess = null;
 
             while (true)
             {
@@ -212,7 +212,7 @@ namespace ZombieBot
 
                 else if (overwatchProcesses.Length == 1)
                 {
-                    useHwnd = overwatchProcesses[0].MainWindowHandle;
+                    useProcess = overwatchProcesses[0];
                     break;
                 }
 
@@ -228,7 +228,7 @@ namespace ZombieBot
                             if (overwatchProcesses[i].MainWindowHandle == hwnd)
                             {
                                 Console.WriteLine("Overwatch window found.");
-                                useHwnd = hwnd;
+                                useProcess = overwatchProcesses[i];
                                 lookingForWindow = false;
                                 break;
                             }
@@ -242,7 +242,7 @@ namespace ZombieBot
             Console.ReadLine();
             Console.WriteLine("Starting...");
 
-            cg = new CustomGame(new CustomGameBuilder() { OverwatchHandle = useHwnd, ScreenshotMethod = screenshotMethod });
+            cg = new CustomGame(new CustomGameBuilder() { OverwatchProcess = useProcess, ScreenshotMethod = screenshotMethod });
 
             // Set the mode enabled
             if (version == 0)

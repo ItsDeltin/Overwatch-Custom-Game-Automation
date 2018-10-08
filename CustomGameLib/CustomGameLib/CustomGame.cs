@@ -6,6 +6,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -14,6 +15,8 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public partial class CustomGame : IDisposable
     {
+        internal const string DebugHeader = "[CGL] ";
+
         static int KeyPressWait = 50;
 
         Bitmap bmp = null;
@@ -23,9 +26,10 @@ namespace Deltin.CustomGameAutomation
         internal Graphics g;
 
         IntPtr OverwatchHandle = IntPtr.Zero;
+        Process OverwatchProcess = null;
         internal DefaultKeys DefaultKeys;
 
-        internal object CustomGameLock;
+        internal object CustomGameLock = new object();
 
         /// <summary>
         /// Creates new CustomGame object.
@@ -35,20 +39,23 @@ namespace Deltin.CustomGameAutomation
             if (customGameBuilder == null)
                 customGameBuilder = new CustomGameBuilder();
 
-            if (customGameBuilder.OverwatchHandle == IntPtr.Zero)
+            if (customGameBuilder.OverwatchProcess != null)
             {
-                // Get the overwatch process
-                Process[] overwatchProcesses = Process.GetProcessesByName("Overwatch");
-                if (overwatchProcesses.Length > 0)
-                {
-                    OverwatchHandle = overwatchProcesses[0].MainWindowHandle;
-                }
+                OverwatchProcess = customGameBuilder.OverwatchProcess;
             }
             else
-                OverwatchHandle = customGameBuilder.OverwatchHandle;
+            {
+                // Get the overwatch process
+                OverwatchProcess = Process.GetProcessesByName("Overwatch").FirstOrDefault();
+            }
 
-            if (OverwatchHandle == IntPtr.Zero)
+            if (OverwatchProcess == null)
                 throw new MissingOverwatchProcessException("Could not find any Overwatch processes running.");
+
+            OverwatchHandle = OverwatchProcess.MainWindowHandle;
+
+            OverwatchProcess.EnableRaisingEvents = true;
+            OverwatchProcess.Exited += InvokeOnOverwatchProcessExit;
 
             SetupWindow(OverwatchHandle, ScreenshotMethod);
             Thread.Sleep(500);
@@ -81,7 +88,7 @@ namespace Deltin.CustomGameAutomation
             if (OpenChatIsDefault)
                 Chat.OpenChat();
 
-            SetupGameOverCheck();
+            StartPersistentScanning();
         }
 
         /// <summary>
@@ -124,19 +131,25 @@ namespace Deltin.CustomGameAutomation
 
         internal void ResetMouse()
         {
-            // There is an Overwatch glitch where exiting some menues will cause the first slot to become highlighted.
-            // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
-            // to tell the process where the cursor is. This will make the first slot become unhighlighted.
-            Thread.Sleep(100);
-            Cursor = Points.RESET_POINT;
-            Thread.Sleep(100);
+            lock (CustomGameLock)
+            {
+                // There is an Overwatch glitch where exiting some menus will cause the first slot to become highlighted.
+                // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
+                // to tell the process where the cursor is. This will make the first slot become unhighlighted.
+                Thread.Sleep(100);
+                Cursor = Points.RESET_POINT;
+                Thread.Sleep(100);
+            }
         }
 
         internal void CloseOptionMenu()
         {
-            LeftClick(400, 500, 100);
-            LeftClick(500, 500, 100);
-            ResetMouse();
+            lock (CustomGameLock)
+            {
+                LeftClick(400, 500, 100);
+                LeftClick(500, 500, 100);
+                //ResetMouse();
+            }
         }
 
         /// <summary>
@@ -149,24 +162,38 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns the state of the game.</returns>
         public GameState GetGameState()
         {
-            updateScreen();
+            lock (CustomGameLock)
+            {
+                updateScreen();
 
-            // Check if in lobby
-            if (CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
-                return GameState.InLobby;
+                // Check if in lobby
+                if (CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
+                    return GameState.InLobby;
 
-            // Check if waiting
-            if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
-                return GameState.Waiting;
+                // Check if waiting
+                if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
+                    return GameState.Waiting;
 
-            if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
-                return GameState.Ending_Commend;
+                if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
+                    return GameState.Ending_Commend;
 
-            if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
-                return GameState.Ingame;
+                if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+                    return GameState.Ingame;
 
-            return GameState.Unknown;
+                return GameState.Unknown;
+            }
         } 
+
+        /// <summary>
+        /// The Overwatch Process being used in the CustomGame class.
+        /// </summary>
+        public Process UsingOverwatchProcess
+        {
+            get
+            {
+                return OverwatchProcess;
+            }
+        }
 
         internal bool Disposed = false;
         /// <summary>
@@ -174,12 +201,15 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void Dispose()
         {
-            Disposed = true;
-            // Stop scanning commands
-            Commands.StopScanning();
-            if (bmp != null)
-                bmp.Dispose();
-            DisposeGameOverCheck();
+            lock (CustomGameLock)
+            {
+                Disposed = true;
+                // Stop scanning commands
+                Commands.StopScanning();
+                if (bmp != null)
+                    bmp.Dispose();
+                DisposePersistentScanningThread();
+            }
         }
 
     } // CustomGame class
@@ -225,7 +255,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The handle of the Overwatch process to use. Leave at default to use the first Overwatch process found.
         /// </summary>
-        public IntPtr OverwatchHandle = default;
+        public Process OverwatchProcess = null;
         /// <summary>
         /// The screenshot method the CustomGame class will use.
         /// </summary>
