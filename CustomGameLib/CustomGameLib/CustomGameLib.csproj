@@ -84,6 +84,7 @@
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <None Include="Resources\send_friend_request.png" />
     <None Include="Resources\remove_friend.png" />
     <None Include="Resources\wreckingball_markup.png" />
     <None Include="Resources\view_career_profile.png" />

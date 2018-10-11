@@ -69,8 +69,6 @@ namespace Deltin.CustomGameAutomation
     {
         internal Settings(CustomGame cg) : base(cg) { }
 
-        private int numPresets = -1;
-
         /// <summary>
         /// Loads a preset saved in Overwatch.
         /// </summary>
@@ -78,66 +76,16 @@ namespace Deltin.CustomGameAutomation
         /// <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
         /// <returns>Returns true if selecting the preset was successful.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
-        public bool LoadPreset(int preset, int maxWaitTime = 5000)
+        public bool LoadPreset(int preset)
         {
             lock (cg.CustomGameLock)
             {
                 if (preset < 0)
                     throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
 
-                Point presetLocation = GetPresetLocation(preset);
+                if (!NavigateToPresets()) return false;
 
-                cg.GoToSettings();
-                cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
-
-                Stopwatch wait = new Stopwatch();
-                wait.Start();
-
-                if (numPresets == -1)
-                {
-                    while (true)
-                    {
-                        cg.updateScreen();
-
-                        if (cg.CompareColor(presetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
-                        {
-                            break;
-                        }
-                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
-                        {
-                            cg.GoBack(2);
-                            //cg.//ResetMouse();
-                            return false;
-                        }
-
-                        Thread.Sleep(100);
-                    }
-                }
-                else
-                {
-                    Point finalPresetLocation = GetPresetLocation(numPresets);
-                    while (true)
-                    {
-                        cg.updateScreen();
-
-                        if (cg.CompareColor(finalPresetLocation, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
-                        {
-                            break;
-                        }
-                        else if (wait.ElapsedMilliseconds >= maxWaitTime)
-                        {
-                            cg.GoBack(2);
-                            //cg.//ResetMouse();
-                            return false;
-                        }
-
-                        Thread.Sleep(100);
-                    }
-                }
-
-                Thread.Sleep(250);
-
-                cg.LeftClick(presetLocation);
+                cg.LeftClick(GetPresetLocation(preset));
                 cg.LeftClick(Points.PRESETS_CONFIRM);
 
                 // Go back to lobby
@@ -147,36 +95,66 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        /// <summary>
-        /// Informs library of total number of saved presets. 
-        /// May make preset loading faster or more accurate.
-        /// </summary>
-        /// <param name="num">Number of saved presets the host has.</param>
-        public void SetNumPresets(int num)
+        /*
+        public Bitmap GeneratePresetMarkup(int preset)
         {
             lock (cg.CustomGameLock)
             {
-                numPresets = num;
+                if (preset < 0)
+                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
+
+                if (!NavigateToPresets()) return null;
+
+                Point presetLocation = GetPresetLocation(preset);
+                Bitmap presetMarkup = cg.BmpClone(presetLocation.X, presetLocation.Y, Rectangles.SETTINGS_PRESET_OPTION.Width, Rectangles.SETTINGS_PRESET_OPTION.Height);
+
+                presetMarkup.ConvertToMarkup(Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET, true);
+
+                cg.GoBack(2);
+
+                return presetMarkup;
             }
         }
+        */
 
         private Point GetPresetLocation(int preset)
         {
-            int x = 0;
-            int y = 155;
+            // 86, 155 is the location of the first preset. There are 144 pixels between each column and 33 between each row. There are 4 presets in each column.
+            return new Point(86 + (144 * (preset % 4)), 155 + (33 * (preset / 4)));
+        }
 
-            // Number of presets in a row is 4.
-            while (preset >= 4)
+        private bool NavigateToPresets()
+        {
+            lock (cg.CustomGameLock)
             {
-                preset = preset - 4;
-                y += 33; // Increment row by 1. Space between rows is 33 pixels.
-            }
-            if (preset == 0) x = 146; // Column 1
-            else if (preset == 1) x = 294; // Column 2
-            else if (preset == 2) x = 440; // Column 3
-            else if (preset == 3) x = 590; // Column 4
+                cg.GoToSettings();
+                cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
 
-            return new Point(x, y);
+                Stopwatch wait = new Stopwatch();
+                wait.Start();
+                int numPresets = 0;
+                while (true)
+                {
+                    cg.updateScreen();
+
+                    if (cg.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                    {
+                        numPresets++;
+                        wait.Restart();
+                    }
+                    else if (numPresets == 0 && wait.ElapsedMilliseconds >= 5000)
+                    {
+                        cg.GoBack(2);
+                        return false;
+                    }
+                    else if (wait.ElapsedMilliseconds >= 1000)
+                    {
+                        return true;
+                    }
+
+                    Thread.Sleep(100);
+                }
+            }
         }
 
         /// <summary>

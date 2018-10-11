@@ -177,8 +177,6 @@ namespace Deltin.CustomGameAutomation
 
                 if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
                 {
-                    bool draw = cg.debugmode; // For debug mode
-
                     List<int> rl = new List<int>(); // Likelyhood in percent for difficulties.
                     List<Difficulty> dl = new List<Difficulty>(); // Difficulty
 
@@ -199,20 +197,17 @@ namespace Deltin.CustomGameAutomation
                             foundWhite = true;
 
                             // For each difficulty markup
-                            for (int b = 0; b < DifficultyMarkups.Length; b++)
+                            for (int b = 0; b < Markups.DIFFICULTY_MARKUPS.Length; b++)
                             {
-                                Bitmap tmp = null;
-                                if (draw)
-                                    tmp = cg.BmpClone();
 
                                 // Check if bitmap matches checking area
                                 double success = 0;
                                 double total = 0;
-                                for (int x = 0; x < DifficultyMarkups[b].Width; x++)
-                                    for (int y = DifficultyMarkups[b].Height - 1; y >= 0; y--)
+                                for (int x = 0; x < Markups.DIFFICULTY_MARKUPS[b].Width; x++)
+                                    for (int y = Markups.DIFFICULTY_MARKUPS[b].Height - 1; y >= 0; y--)
                                     {
                                         // If the color pixel of the markup is not white, check if valid.
-                                        Color pc = DifficultyMarkups[b].GetPixel(x, y);
+                                        Color pc = Markups.DIFFICULTY_MARKUPS[b].GetPixel(x, y);
                                         if (pc != Color.FromArgb(255, 255, 255, 255))
                                         {
                                             // tc is true if the pixel is black, false if it is red.
@@ -220,32 +215,8 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Colors.WHITE, 50) == tc)
-                                            {
+                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
                                                 success++;
-
-                                                if (draw)
-                                                {
-                                                    if (tc)
-                                                        tmp.SetPixel(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Color.Blue);
-                                                    else
-                                                        tmp.SetPixel(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Color.Lime);
-                                                }
-                                            }
-                                            else if (draw)
-                                            {
-                                                if (tc)
-                                                    tmp.SetPixel(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Color.Red);
-                                                else
-                                                    tmp.SetPixel(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, DifficultyMarkups[b].Height - 1), Color.Orange);
-                                            }
-
-                                            if (draw)
-                                            {
-                                                tmp.SetPixel(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - DifficultyMarkups[b].Height * 2 + y, DifficultyMarkups[b].GetPixel(x, y));
-                                                cg.g.DrawImage(tmp, new Rectangle(0, -750, tmp.Width * 3, tmp.Height * 3));
-                                                Thread.Sleep(1);
-                                            }
                                         }
                                     }
                                 // Get the result
@@ -253,14 +224,6 @@ namespace Deltin.CustomGameAutomation
 
                                 rl.Add((int)result);
                                 dl.Add((Difficulty)b);
-
-                                if (draw)
-                                {
-                                    tmp.SetPixel(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Color.MediumPurple);
-                                    cg.g.DrawImage(tmp, new Rectangle(0, -750, tmp.Width * 3, tmp.Height * 3));
-                                    Console.WriteLine((Difficulty)b + " " + result);
-                                    Thread.Sleep(1000);
-                                }
                             }
                         }
                     }
@@ -295,41 +258,34 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static internal Bitmap[] DifficultyMarkups = new Bitmap[]
-        {
-                new Bitmap(Properties.Resources.easy_difficulty),
-                new Bitmap(Properties.Resources.medium_difficulty),
-                new Bitmap(Properties.Resources.hard_difficulty)
-        };
-
         static int[,] DifficultyLocations = new int[,]
         {
-                // X    Y  Length
-                // Blue
-                { 145, 259, 100 },
-                { 145, 288, 100 },
-                { 145, 316, 100 },
-                { 145, 345, 100 },
-                { 145, 373, 100 },
-                { 145, 402, 100 },
-                // Red
-                { 401, 259, 25 },
-                { 401, 288, 25 },
-                { 401, 316, 25 },
-                { 401, 345, 25 },
-                { 401, 373, 25 },
-                { 401, 402, 25 }
+            // X    Y  Length
+            // Blue
+            { 145, 259, 100 },
+            { 145, 288, 100 },
+            { 145, 316, 100 },
+            { 145, 345, 100 },
+            { 145, 373, 100 },
+            { 145, 402, 100 },
+            // Red
+            { 401, 259, 25 },
+            { 401, 288, 25 },
+            { 401, 316, 25 },
+            { 401, 345, 25 },
+            { 401, 373, 25 },
+            { 401, 402, 25 }
         };
 
         static int DifficultyLocationQueueX = 686;
         static int[] DifficultyLocationsQueue = new int[]
         {
-                244,
-                257,
-                270,
-                283,
-                297,
-                310
+            244,
+            257,
+            270,
+            283,
+            297,
+            310
         };
 
         /// <summary>
@@ -451,7 +407,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="IsAI(int, bool)"/>
         public bool AccurateIsAI(int slot)
         {
-            return cg.Interact.PeakOption(slot, Interact.RemoveAllBotsMarkup, 80, 6);
+            return cg.Interact.PeakOption(slot, Markups.REMOVE_ALL_BOTS);
         }
 
         /// <summary>
@@ -659,26 +615,12 @@ namespace Deltin.CustomGameAutomation
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
 
-                Point slotLocation = cg.Interact.OpenSlotMenu(slot);
+                bool optionFound = (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.OpenMenu | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_ALL_BOTS);
 
-                if (slotLocation.IsEmpty)
+                if (!optionFound)
                     return false;
 
-                if (cg.Interact.MenuOptionScan(slotLocation, Interact.RemoveAllBotsMarkup, 80, 6).IsEmpty)
-                {
-                    cg.CloseOptionMenu();
-                    return false;
-                }
-
-                Point removeFromGameOptionLocation = cg.Interact.MenuOptionScan(slotLocation, Interact.RemoveFromGameMarkup, 80, 6);
-
-                if (removeFromGameOptionLocation.IsEmpty)
-                {
-                    cg.CloseOptionMenu();
-                    return false;
-                }
-
-                return cg.Interact.SelectMenuOption(removeFromGameOptionLocation);
+                return (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.Click | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_FROM_GAME);
             }
         }
     }

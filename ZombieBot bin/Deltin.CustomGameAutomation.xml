@@ -44,6 +44,12 @@
             <para>Item2 = what the setting should equal.</para>
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetOverwatchProcess">
+            <summary>
+            Gets a running Overwatch process.
+            </summary>
+            <returns>The running Overwatch process. Returns null if there are none.</returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(Deltin.CustomGameAutomation.CustomGameBuilder)">
             <summary>
             Creates new CustomGame object.
@@ -221,6 +227,13 @@
         <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotInQueue(System.Int32)">
             <summary>
             Returns true if the slot is in queue.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlotSpectatorOrQueue(System.Int32)">
+            <summary>
+            Returns true if the slot is in spectator or queue.
             </summary>
             <param name="slot">Slot to check</param>
             <returns></returns>
@@ -1170,13 +1183,14 @@
             </summary>
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean,Deltin.CustomGameAutomation.CommandExecuted)">
+        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean,Deltin.CustomGameAutomation.CommandExecuted)">
             <summary>
             Data for commands to listen to on the Commands class.
             </summary>
             <param name="command">Command to listen to.</param>
             <param name="listen">Should this command be listened to?</param>
             <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
+            <param name="checkIfFriend">Should the player who executes this command be checked to see if they are a friend?</param>
             <param name="callback">Method to be executed when the command is executed.</param>
         </member>
         <member name="P:Deltin.CustomGameAutomation.ListenTo.Command">
@@ -1192,6 +1206,11 @@
         <member name="F:Deltin.CustomGameAutomation.ListenTo.RegisterProfile">
             <summary>
             Should the player who executes this command have their profile registered?
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.ListenTo.CheckIfFriend">
+            <summary>
+            Should the player who executes this command be checked to see if they are a friend?
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.ListenTo.Callback">
@@ -1865,27 +1884,6 @@
             The Interact class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionMarkup(System.Int32,System.Int32,System.String,System.Double)">
-            <summary>
-            Generates a markup for a menu option in Overwatch.
-            </summary>
-            <param name="slot">Slot to generate markup from.</param>
-            <param name="max">Maximum markups to capture.</param>
-            <param name="savelocation">Location to save markups.</param>
-            <param name="yincrement">Amount to skip on Y axis after every markup capture.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,System.Drawing.Bitmap,System.Int32,System.Int32,System.Double)">
-            <summary>
-            Scans a player menu for an option.
-            </summary>
-            <param name="slot">Slot's menu to scan.</param>
-            <param name="markup">Bitmap markup of option to scan for.</param>
-            <param name="minimumPercent">Minimum percent the markup has to match an option in the menu.</param>
-            <param name="max">Maximum options to scan.</param>
-            <param name="yincrement">Amount to skip on Y axis after every markup scan.</param>
-            <returns>Returns true if the option in the markup has been found, else returns false.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)">
             <summary>
             Removes player from the game
@@ -1965,17 +1963,17 @@
             Maps in Overwatch.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Map.GameMode">
+        <member name="P:Deltin.CustomGameAutomation.Map.GameMode">
             <summary>
             Gamemode of the map.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Map.MapName">
+        <member name="P:Deltin.CustomGameAutomation.Map.MapName">
             <summary>
             Name of the map.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Map.GameEvent">
+        <member name="P:Deltin.CustomGameAutomation.Map.GameEvent">
             <summary>
             The Overwatch event the map is on.
             </summary>
@@ -2322,6 +2320,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.send_friend_request">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.soldier_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
@@ -2352,7 +2355,7 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_neutral_team">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_neutral">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2601,7 +2604,7 @@
             The Settings class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Settings"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32,System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32)">
             <summary>
             Loads a preset saved in Overwatch.
             </summary>
@@ -2609,13 +2612,6 @@
             <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
             <returns>Returns true if selecting the preset was successful.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.SetNumPresets(System.Int32)">
-            <summary>
-            Informs library of total number of saved presets. 
-            May make preset loading faster or more accurate.
-            </summary>
-            <param name="num">Number of saved presets the host has.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join)">
             <summary>

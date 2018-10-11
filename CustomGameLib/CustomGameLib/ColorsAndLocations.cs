@@ -9,7 +9,7 @@ using System.Drawing.Imaging;
 namespace Deltin.CustomGameAutomation
 {
 
-    internal class Colors
+    internal static class Colors
     {
         public static readonly int[] WHITE = new int[] { 191, 191, 191 };
         public static readonly int[] LOADING_BLACK = new int[] { 64, 64, 64 };
@@ -38,7 +38,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] EXIT_TO_DESKTOP = new int[] { 83, 124, 152 };
     }
 
-    internal class Fades
+    internal static class Fades
     {
         public static readonly int SETTINGS_ERROR = 20;
         public static readonly int DEAD_PLAYER = 15;
@@ -48,7 +48,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_START_GAME = 30;
         public static readonly int LOBBY_CHANGE = 50;
 
-        public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 40;
+        public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 30;
         public static readonly int SETTINGS_MODES_ENABLED = 30;
 
         public static readonly int CONFIRM = 50;
@@ -60,7 +60,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int EXIT_TO_DESKTOP = 15;
     }
 
-    internal class Points
+    internal static class Points
     {
         public static readonly Point RESET_POINT = new Point(500, 500);
 
@@ -146,15 +146,17 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point EXIT_TO_DESKTOP = new Point(130, 505);
     }
 
-    internal class Rectangles
+    internal static class Rectangles
     {
         public static readonly Rectangle ENTIRE_SCREEN = new Rectangle(0, 0, 960, 540);
 
         public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 461, 169, 26);
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);
+
+        public static readonly Rectangle SETTINGS_PRESET_OPTION = new Rectangle(0, 0, 128, 20);
     }
 
-    internal class Distances
+    internal static class Distances
     {
         public static readonly int LOBBY_SLOT_DISTANCE = 29;
         public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 319; // 322
@@ -162,4 +164,54 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_QUEUE_OFFSET = 6; // Did you know that the queue list is 6 pixels higher than the spectator list?
     }
 
+    internal static class Markups
+    {
+        public static readonly Bitmap REMOVE_FROM_GAME    = Properties.Resources.remove_from_game;
+        public static readonly Bitmap SWAP_TO_RED         = Properties.Resources.swap_to_red;
+        public static readonly Bitmap SWAP_TO_BLUE        = Properties.Resources.swap_to_blue;
+        public static readonly Bitmap SWAP_TO_SPECTATORS  = Properties.Resources.swap_to_spectators;
+        public static readonly Bitmap SWAP_TO_NEUTRAL     = Properties.Resources.swap_to_neutral;
+        public static readonly Bitmap REMOVE_ALL_BOTS     = Properties.Resources.remove_all_bots;
+        public static readonly Bitmap VIEW_CAREER_PROFILE = Properties.Resources.view_career_profile;
+        public static readonly Bitmap SEND_FRIEND_REQUEST = Properties.Resources.send_friend_request;
+        public static readonly Bitmap REMOVE_FRIEND       = Properties.Resources.remove_friend;
+
+        public static readonly Bitmap[] DIFFICULTY_MARKUPS = new Bitmap[]
+        {
+            Properties.Resources.easy_difficulty,
+            Properties.Resources.medium_difficulty,
+            Properties.Resources.hard_difficulty
+        };
+        public static readonly Bitmap[] HERO_MARKUPS = new Bitmap[]
+        {
+            Properties.Resources.ana_markup, // Ana
+            Properties.Resources.bastion_markup, // Bastion
+            Properties.Resources.brigitte_markup, // Brigitte
+            Properties.Resources.dva_markup, // Dva
+            Properties.Resources.doomfist_markup, // Doomfist
+            Properties.Resources.gengi_markup, // Genji
+            Properties.Resources.hanzo_markup, // Hanzo
+            Properties.Resources.junkrat_markup, // Junkrat
+            Properties.Resources.lucio_markup, // Lucio
+            Properties.Resources.mccree_markup, // McCree
+            Properties.Resources.mei_markup, // Mei
+            Properties.Resources.mercy_markup, // Mercy
+            Properties.Resources.moira_markup, // Moira
+            Properties.Resources.orisa_markup, // Orisa
+            Properties.Resources.pharah_markup, // Pharah
+            Properties.Resources.reaper_markup, // Reaper
+            Properties.Resources.reinhardt_markup, // Reinhardt
+            Properties.Resources.roadhog_markup, // Roadhog
+            Properties.Resources.soldier_markup, // Soldier: 76
+            Properties.Resources.sombra_markup, // Sombra
+            Properties.Resources.symmetra_markup, // Symmetra
+            Properties.Resources.torbjorn_markup, // Torbjorn
+            Properties.Resources.tracer_markup, // Tracer
+            Properties.Resources.widowmaker_markup, // Widowmaker
+            Properties.Resources.winston_markup, // Winston
+            Properties.Resources.wreckingball_markup, // Wrecking Ball
+            Properties.Resources.zarya_markup, // Zarya
+            Properties.Resources.zenyatta_markup // Zenyatta
+        };
+    }
 }

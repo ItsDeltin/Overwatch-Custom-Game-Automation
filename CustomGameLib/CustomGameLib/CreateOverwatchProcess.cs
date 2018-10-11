@@ -359,6 +359,15 @@ namespace Deltin.CustomGameAutomation
         static readonly Tuple<string[], string[]> VideoSettings = new Tuple<string[], string[]>(
             new string[] { "RenderContrast", "RenderBrightness", "RenderGamma", "ColorblindMode", "FullscreenWindow", "FullscreenWindowEnabled", "MaximizedWindow" }, 
             new string[] { "0.5",            "0",                "2.2",         "0",              "0",                "0",                       "0" });
+
+        /// <summary>
+        /// Gets a running Overwatch process.
+        /// </summary>
+        /// <returns>The running Overwatch process. Returns null if there are none.</returns>
+        public static Process GetOverwatchProcess()
+        {
+            return Process.GetProcessesByName("Overwatch").FirstOrDefault();
+        }
     }
 
     /// <summary>

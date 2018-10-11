@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
 
         static int KeyPressWait = 50;
 
-        Bitmap bmp = null;
+        internal Bitmap bmp = null;
 
         internal bool debugmode = false;
         internal Form debug;

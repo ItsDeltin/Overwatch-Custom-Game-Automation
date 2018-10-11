@@ -344,6 +344,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap send_friend_request {
+            get {
+                object obj = ResourceManager.GetObject("send_friend_request", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap soldier_markup {
             get {
                 object obj = ResourceManager.GetObject("soldier_markup", resourceCulture);
@@ -404,9 +414,9 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap swap_to_neutral_team {
+        internal static System.Drawing.Bitmap swap_to_neutral {
             get {
-                object obj = ResourceManager.GetObject("swap_to_neutral_team", resourceCulture);
+                object obj = ResourceManager.GetObject("swap_to_neutral", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

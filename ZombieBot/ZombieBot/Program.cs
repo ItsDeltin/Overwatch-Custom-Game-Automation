@@ -17,68 +17,38 @@ namespace ZombieBot
         public static int minimumPlayers = 5; // Minimum players before the game starts
         public static JoinType? Join = null; // The way other players will join the game.
         public static Abyxa a;
-        public static CustomGame cg;
         public static Random rnd = new Random();
 
         public static int version = 0;
-        public static string[] maps = null;
-        public static string[] mapsSend = null;
-        static string[] ElimMaps = new string[]
+        private static InfectionMap[] ElimMaps = new InfectionMap[]
         {
-            "ELIM_Ayutthaya",
-            "ELIM_Ilios_Ruins",
-            "ELIM_Ilios_Well",
-            "ELIM_Ilios_Lighthouse",
-            "ELIM_Lijiang_ControlCenter",
-            "ELIM_Lijiang_Garden",
-            "ELIM_Nepal_Sanctum",
-            "ELIM_Nepal_Shrine",
-            "ELIM_Nepal_Village",
-            "ELIM_Oasis_CityCenter"
+            new InfectionMap(Map.ELIM_Ayutthaya, "Ayutthaya"),
+            new InfectionMap(Map.ELIM_Ilios_Well, "Ilios-Well"),
+            new InfectionMap(Map.ELIM_Ilios_Ruins, "Ilios-Ruins"),
+            new InfectionMap(Map.ELIM_Ilios_Lighthouse, "Ilios-Lighthouse"),
+            new InfectionMap(Map.ELIM_Lijiang_ControlCenter, "Lijiang-CC"),
+            new InfectionMap(Map.ELIM_Lijiang_Garden, "Lijiang-Garden"),
+            new InfectionMap(Map.ELIM_Nepal_Sanctum, "Nepal-Sanctum"),
+            new InfectionMap(Map.ELIM_Nepal_Shrine, "Nepal-Shrine"),
+            new InfectionMap(Map.ELIM_Nepal_Village, "Nepal-Village"),
+            new InfectionMap(Map.ELIM_Oasis_CityCenter, "Oasis-CC")
         };
-        static string[] ElimMapsSend = new string[]
+        private static InfectionMap[] TdmMaps = new InfectionMap[]
         {
-            "Ayutthaya",
-            "Ilios-Ruins",
-            "Ilios-Well",
-            "Ilios-Lighthouse",
-            "Lijiang-Control",
-            "Lijiang-Garden",
-            "Nepal-Sanctum",
-            "Nepal-Shrine",
-            "Nepal-Village",
-            "Oasis-CC"
-        };
-        public static string[] DmMaps = new string[] // Must be the same length as mapsSend
-        {
-            "TDM_Dorado",
-            "TDM_Eichenwalde",
-            "TDM_Hanamura",
-            "TDM_Hollywood",
-            "TDM_HorizonLunarColony",
-            "TDM_KingsRow",
-            "TDM_TempleOfAnubis",
-            "TDM_VolskayaIndustries",
-            "TDM_Ilios_Well",
-            "TDM_Ilios_Ruins"
-        };
-        public static string[] DmMapsSend = new string[] // Must be the same length as maps. Shorter versions of the map names to send to overwatch chat.
-        {
-            "Dorado",
-            "Eichenwalde",
-            "Hanamura",
-            "Hollywood",
-            "Horizon",
-            "KingsRow",
-            "TempleOfAnubis",
-            "Volskaya",
-            "Ilios-Well",
-            "Ilios-Ruins"
+            new InfectionMap(Map.TDM_Dorado, "Dorado"),
+            new InfectionMap(Map.TDM_Eichenwalde, "Eichenwalde"),
+            new InfectionMap(Map.TDM_Hanamura, "Hanamura"),
+            new InfectionMap(Map.TDM_Hollywood, "Hollywood"),
+            new InfectionMap(Map.TDM_HorizonLunarColony, "Horizon"),
+            new InfectionMap(Map.TDM_KingsRow, "KingsRow"),
+            new InfectionMap(Map.TDM_TempleOfAnubis, "TempleOfAnubis"),
+            new InfectionMap(Map.TDM_VolskayaIndustries, "Volskaya"),
+            new InfectionMap(Map.TDM_Ilios_Well, "Ilios-Well"),
+            new InfectionMap(Map.TDM_Ilios_Ruins, "Ilios-Ruins")
         };
 
         public static string[] ValidRegions = new string[] { "us", "eu", "kr" };
 
-        [STAThread]
         static void Main(string[] args)
         {
             string header = "Zombiebot v1.2";
@@ -90,6 +60,7 @@ namespace ZombieBot
             bool local = false; // Determines if the Abyxa website is on the local server.
             Event? owevent = null; // The current overwatch event
             ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt;
+            int preset = -1;
 
             // Parse config file
             string[] config = null;
@@ -181,7 +152,15 @@ namespace ZombieBot
                                         if (set == 0 || set == 1)
                                             version = set;
                                 }
-                            break;
+                                break;
+
+                            case "preset":
+                                {
+                                    if (Int32.TryParse(lineSplit[1], out int set))
+                                        if (set == 0 || set == 1)
+                                            preset = set;
+                                }
+                                break;
                         }
                     }
                 }
@@ -197,97 +176,88 @@ namespace ZombieBot
                     Join = JoinType.Private;
             }
 
-            Process useProcess = null;
-
-            while (true)
-            {
-                Process[] overwatchProcesses = Process.GetProcessesByName("Overwatch");
-
-                if (overwatchProcesses.Length == 0)
-                {
-                    Console.WriteLine("No Overwatch processes found, press enter to recheck.");
-                    Console.ReadLine();
-                    continue;
-                }
-
-                else if (overwatchProcesses.Length == 1)
-                {
-                    useProcess = overwatchProcesses[0];
-                    break;
-                }
-
-                else if (overwatchProcesses.Length > 1)
-                {
-                    Console.Write("Click on the Overwatch window to use... ");
-                    bool lookingForWindow = true;
-                    while (lookingForWindow)
-                    {
-                        IntPtr hwnd = Extra.GetForegroundWindow();
-                        overwatchProcesses = Process.GetProcessesByName("Overwatch");
-                        for (int i = 0; i < overwatchProcesses.Length; i++)
-                            if (overwatchProcesses[i].MainWindowHandle == hwnd)
-                            {
-                                Console.WriteLine("Overwatch window found.");
-                                useProcess = overwatchProcesses[i];
-                                lookingForWindow = false;
-                                break;
-                            }
-                        System.Threading.Thread.Sleep(500);
-                    }
-                    break;
-                }
-            }
-
             Console.WriteLine("Press return to start.");
             Console.ReadLine();
             Console.WriteLine("Starting...");
 
-            cg = new CustomGame(new CustomGameBuilder() { OverwatchProcess = useProcess, ScreenshotMethod = screenshotMethod });
-
-            // Set the mode enabled
-            if (version == 0)
-            {
-                cg.ModesEnabled = Gamemode.Elimination;
-                maps = ElimMaps;
-                mapsSend = ElimMapsSend;
-            }
-            else if (version == 1)
-            {
-                cg.ModesEnabled = Gamemode.TeamDeathmatch;
-                maps = DmMaps;
-                mapsSend = DmMapsSend;
-            }
-
-            // Set event
-            if (owevent == null)
-                cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
-            else
-                cg.CurrentOverwatchEvent = (Event)owevent;
-
-            cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, null));
-
-            a = null;
-            if (Join == JoinType.Abyxa)
-            {
-                a = new Abyxa(name, region, local);
-                a.SetMinimumPlayerCount(minimumPlayers);
-                cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
-            }
-
-            Setup(true);
-
             while (true)
             {
-                bool pregame = Pregame();
-                if (pregame)
+                CustomGame cg = new CustomGame(new CustomGameBuilder()
                 {
-                    Ingame();
+                    OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(new OverwatchProcessInfoAuto()),
+                    ScreenshotMethod = screenshotMethod
+                });
+                cg.OnDisconnect += Close;
+
+                Connected = true;
+
+                // Set the mode enabled
+                if (version == 0)
+                {
+                    cg.ModesEnabled = Gamemode.Elimination;
                 }
+                else if (version == 1)
+                {
+                    cg.ModesEnabled = Gamemode.TeamDeathmatch;
+                }
+
+                // Set event
+                if (owevent == null)
+                    cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
                 else
+                    cg.CurrentOverwatchEvent = (Event)owevent;
+
+                a = null;
+                if (Join == JoinType.Abyxa)
                 {
-                    Setup(false);
+                    a = new Abyxa(name, region, local);
+                    a.SetMinimumPlayerCount(minimumPlayers);
+                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                 }
-            }
+
+                var maps = version == 0 ? ElimMaps : TdmMaps;
+
+                Setup(cg, maps, preset, name);
+
+                try
+                {
+                    while (Connected)
+                    {
+                        Pregame(cg, maps);
+                        Ingame(cg);
+                    } // Game loop
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    Close(cg);
+                }
+            } // Bot loop
+        } // Main()
+
+        static bool Connected = true;
+
+        private static void Close(CustomGame cg)
+        {
+            cg.UsingOverwatchProcess.Close();
+            cg.UsingOverwatchProcess.WaitForExit();
+            cg.Dispose();
         }
+        private static void Close(object sender, EventArgs args)
+        {
+            Connected = false;
+            Close((CustomGame)sender);
+        }
+    }
+
+    class InfectionMap
+    {
+        public InfectionMap(Map map, string shortenedName)
+        {
+            Map = map;
+            ShortenedName = shortenedName;
+        }
+        public Map Map { get; private set; }
+        public string ShortenedName { get; private set; }
     }
 }

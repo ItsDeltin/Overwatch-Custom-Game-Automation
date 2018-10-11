@@ -134,7 +134,7 @@ namespace Deltin.CustomGameAutomation
                 List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue | SlotFlags.NoAI);
 
                 // Close the chat if it is opened
-                if (OpenChatIsDefault)
+                if (OpenChatIsDefault && players.Contains(5))
                     Chat.CloseChat();
 
                 List<InviteScanData> slotData = new List<InviteScanData>();
@@ -196,7 +196,7 @@ namespace Deltin.CustomGameAutomation
                 for (int i = 0; i < slotData.Count; i++)
                     slotData[i].Markup.Dispose();
 
-                if (OpenChatIsDefault)
+                if (OpenChatIsDefault && players.Contains(5))
                     Chat.OpenChat();
 
                 return slotData.Where(slot => slot.Changes / iterations * 100 >

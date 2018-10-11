@@ -150,14 +150,20 @@ namespace Deltin.CustomGameAutomation
         {
             lock (cg.CustomGameLock)
             {
+                cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+                /*
+                 * There was a month where clicking on the chat didn't open it. This was the old workaround.
+                 * cg.DefaultKeys.OpenChat had to be a key that registered when the chat was closed but not when it was opened. ex: Delete, Page Up, Page Down, etc.
+                 * 
+                
                 // Pressing Enter in the chatbox will close it. If the key is Enter, check if a channel is found.
                 if (cg.DefaultKeys.OpenChat == Keys.Enter && GetCurrentChannel() != null)
                     return;
 
-                //cg.LeftClick(Points.LOBBY_CHATBOX, 100);
                 cg.Activate();
                 cg.KeyPress(cg.DefaultKeys.OpenChat);
                 Thread.Sleep(100);
+                */
             }
         }
 
@@ -185,7 +191,7 @@ namespace Deltin.CustomGameAutomation
 
         internal static int[] GetChannelColor(Channel channel)
         {
-            return (ChatColors[(int)channel]);
+            return ChatColors[(int)channel];
         }
 
         internal static string GetChannelJoinCommand(Channel channel)

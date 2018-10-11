@@ -202,12 +202,12 @@ namespace Deltin.CustomGameAutomation
 
                     if (slot == 0)
                         compareToX -= 8;
-                    else if (CustomGame.IsSlotInQueue(slot) || CustomGame.IsSlotSpectator(slot))
+                    else if (IsSlotInQueue(slot) || IsSlotSpectator(slot))
                         compareToX -= 3;
-                    else if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
+                    else if (IsSlotBlue(slot))
                         compareToX -= 4;
-                    else
-                        throw new NotImplementedException();
+                    else if (IsSlotRed(slot))
+                        compareToX += 3;
 
                     if (IsSlotSpectator(slot))
                     {
@@ -339,6 +339,15 @@ namespace Deltin.CustomGameAutomation
         public static bool IsSlotInQueue(int slot)
         {
             return slot >= Queueid && slot < Queueid + 6;
+        }
+        /// <summary>
+        /// Returns true if the slot is in spectator or queue.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <returns></returns>
+        public static bool IsSlotSpectatorOrQueue(int slot)
+        {
+            return IsSlotSpectator(slot) || IsSlotInQueue(slot);
         }
         #endregion
 
@@ -789,20 +798,20 @@ namespace Deltin.CustomGameAutomation
 
                 List<Tuple<Hero, double>> results = new List<Tuple<Hero, double>>();
 
-                for (int m = 0; m < HeroMarkups.Length; m++)
+                for (int m = 0; m < Markups.HERO_MARKUPS.Length; m++)
                 {
-                    if (HeroMarkups[m] != null)
+                    if (Markups.HERO_MARKUPS[m] != null)
                     {
                         double total = 0;
                         double success = 0;
 
-                        for (int x = 0; x < HeroMarkups[m].Width; x++)
-                            for (int y = 0; y < HeroMarkups[m].Height; y++)
+                        for (int x = 0; x < Markups.HERO_MARKUPS[m].Width; x++)
+                            for (int y = 0; y < Markups.HERO_MARKUPS[m].Height; y++)
                             {
                                 int bmpX = HeroCheckLocations[slot] + x;
                                 int bmpY = HeroCheckY + y;
 
-                                int[] markupColor = HeroMarkups[m].GetPixelAt(x, y).ToInt();
+                                int[] markupColor = Markups.HERO_MARKUPS[m].GetPixelAt(x, y).ToInt();
 
                                 if (markupColor[0] != 0 && markupColor[1] != 0 && markupColor[2] != 0)
                                 {
@@ -841,37 +850,6 @@ namespace Deltin.CustomGameAutomation
                 }
             }
         }
-        static Bitmap[] HeroMarkups = new Bitmap[]
-        {
-            Properties.Resources.ana_markup, // Ana
-            Properties.Resources.bastion_markup, // Bastion
-            Properties.Resources.brigitte_markup, // Brigitte
-            Properties.Resources.dva_markup, // Dva
-            Properties.Resources.doomfist_markup, // Doomfist
-            Properties.Resources.gengi_markup, // Genji
-            Properties.Resources.hanzo_markup, // Hanzo
-            Properties.Resources.junkrat_markup, // Junkrat
-            Properties.Resources.lucio_markup, // Lucio
-            Properties.Resources.mccree_markup, // McCree
-            Properties.Resources.mei_markup, // Mei
-            Properties.Resources.mercy_markup, // Mercy
-            Properties.Resources.moira_markup, // Moira
-            Properties.Resources.orisa_markup, // Orisa
-            Properties.Resources.pharah_markup, // Pharah
-            Properties.Resources.reaper_markup, // Reaper
-            Properties.Resources.reinhardt_markup, // Reinhardt
-            Properties.Resources.roadhog_markup, // Roadhog
-            Properties.Resources.soldier_markup, // Soldier: 76
-            Properties.Resources.sombra_markup, // Sombra
-            Properties.Resources.symmetra_markup, // Symmetra
-            Properties.Resources.torbjorn_markup, // Torbjorn
-            Properties.Resources.tracer_markup, // Tracer
-            Properties.Resources.widowmaker_markup, // Widowmaker
-            Properties.Resources.winston_markup, // Winston
-            Properties.Resources.wreckingball_markup, // Wrecking Ball
-            Properties.Resources.zarya_markup, // Zarya
-            Properties.Resources.zenyatta_markup // Zenyatta
-        };
         int[] HeroCheckLocations = new int[]
         {
             76,
@@ -897,9 +875,8 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsFriend(int slot)
         {
-            return cg.Interact.PeakOption(slot, RemoveFriendMarkup, 80, 125, 1);
+            return cg.Interact.PeakOption(slot, Markups.REMOVE_FRIEND);
         }
-        static internal Bitmap RemoveFriendMarkup = Properties.Resources.remove_friend;
 
         /// <summary>
         /// Checks if a player account exists via battletag. Is case sensitive.

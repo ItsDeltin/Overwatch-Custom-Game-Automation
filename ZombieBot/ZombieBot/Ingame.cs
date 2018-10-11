@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Diagnostics;
+using Deltin.CustomGameAutomation;
 
 namespace ZombieBot
 {
     partial class Program
     {
-        public static void Ingame()
+        public static void Ingame(CustomGame cg)
         {
             int[] messageStamps = new int[] { 300, 240, 180, 120, 60, 30, 15 };
             int[] timeStamps = new int[] { 30, 60, 60, 60, 60, 30, 15 };
@@ -15,9 +17,18 @@ namespace ZombieBot
             Stopwatch game = new Stopwatch();
             game.Start();
 
+            new Task(() => 
+            {
+                cg.Chat.SendChatMessage("If you can't move, you are a zombie. You will be able to move when the preperation phase is over.");
+                Thread.Sleep(5000);
+                cg.Chat.SendChatMessage("Survivors win when time runs out. Survivors are converted to zombies when they die. Zombies win when all survivors are converted.");
+                Thread.Sleep(5000);
+                cg.Chat.SendChatMessage("Zombies will be released when preperation phase is over.");
+            }).Start();
+
             while (true)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(100);
 
                 if (Join == JoinType.Abyxa)
                     a.Update();
@@ -25,7 +36,7 @@ namespace ZombieBot
                 // Swap killed survivors to red
                 List<int> playersDead = cg.PlayerInfo.PlayersDead();
                 for (int i = 0; i < playersDead.Count(); i++)
-                    if (playersDead[i] < 6)
+                    if (CustomGame.IsSlotBlue(playersDead[i]))
                         cg.Interact.SwapToRed(playersDead[i]);
 
                 // end game if winning condition is met

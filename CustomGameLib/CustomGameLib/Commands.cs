@@ -127,6 +127,7 @@ namespace Deltin.CustomGameAutomation
         internal void StopScanning()
         {
             KeepScanning = false;
+            ScanCommandsTask.Wait();
         }
         private bool KeepScanning = true;
 
@@ -185,11 +186,12 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     // Scan the second line in the chat.
-                    var seed = GetSeed(bmp, 13);
-                    var seedfade = GetSeedFade(bmp, 13);
+                    
 
                     string word = null;
 
+                    var seed = GetSeed(bmp, 13);
+                    var seedfade = GetSeedFade(bmp, 13);
                     LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
                     if (linescan.Word.Contains("]"))
                     {
@@ -210,6 +212,8 @@ namespace Deltin.CustomGameAutomation
                             AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
                         }
                     }
+
+                    ShowScan(bmp, seed, seedfade, word);
                 }
             } // while
 
@@ -224,18 +228,22 @@ namespace Deltin.CustomGameAutomation
             bmp = cg.BmpClone(Rectangles.LOBBY_CHATBOX);
         }
 
-        void ShowScan(ref Bitmap bmp, int y, int[] seed, int seedfade)
+        void ShowScan(Bitmap bmp, int[] seed, int seedfade, string word)
         {
             // Show valid seed pixels in debug mode
             if (cg.debugmode)
             {
-                for (int xi = 0; xi < bmp.Width; xi++)
-                    for (int yi = y - 7; yi < y + 2; yi++)
-                        if (cg.CompareColor(xi, yi, seed, seedfade))
-                            bmp.SetPixel(xi, yi, Color.Purple);
-                //bmp.SetPixel(0, y, Color.Orange);
-                cg.g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width * scale, bmp.Height * scale));
-                updatescreen(ref bmp);
+                Bitmap nb = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+
+                for (int x = 0; x < nb.Width; x++)
+                    for (int y = 0; y < nb.Height; y++)
+                        if (nb.CompareColor(x, y, seed, seedfade))
+                            nb.SetPixel(x, y, Color.Purple);
+
+                cg.g.Clear(Color.White);
+                cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * scale, nb.Height * scale));
+                cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * scale * 1.1)));
+                nb.Dispose();
             }
         }
 
@@ -251,8 +259,8 @@ namespace Deltin.CustomGameAutomation
         {
             var seedpix = bmp.GetPixelAt(0, y);
             var antipix = bmp.GetPixelAt(1, y);
-            // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.5. Default is 50 
-            return (int)(((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2) / 2.5);
+            // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.2 (2.5?). Default is 50 
+            return (int)((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2 / 2.2);
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
@@ -271,9 +279,10 @@ namespace Deltin.CustomGameAutomation
             if (word.Length > 0 && ltd != null && ltd.Listen)
             {
                 PlayerIdentity pi = null;
+                bool isFriend = false;
 
                 // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
-                if (ltd.RegisterProfile)
+                if (ltd.RegisterProfile || ltd.CheckIfFriend)
                 {
                     Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
 
@@ -283,29 +292,37 @@ namespace Deltin.CustomGameAutomation
                     // Open the career profile
                     cg.RightClick(openMenuAt, 500);
 
-                    // By default, the career profile option is selected and we can just press enter to open it.
-                    cg.KeyPress(Keys.Enter);
+                    // If the Send Friend Request option exists, they are not a friend.
+                    isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
 
-                    // Wait for the career profile to load.
-                    WaitForCareerProfileToLoad();
-
-                    // Take a screenshot of the career profile.
-                    cg.updateScreen();
-                    Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
-
-                    // Register the player identity.
-                    pi = new PlayerIdentity(careerProfileSnapshot);
-
-                    // Go back to the lobby.
-                    cg.GoBack(1);
-                    //cg.//ResetMouse();
-
-                    // If opening the career profile failed, the state of the chat could be incorrect, 
-                    // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
-                    // This will fix it.
-                    cg.Chat.OpenChat();
-                    if (!cg.OpenChatIsDefault)
+                    if (ltd.RegisterProfile)
+                    {
+                        // By default, the career profile option is selected and we can just press enter to open it.
                         cg.KeyPress(Keys.Enter);
+
+                        // Wait for the career profile to load.
+                        WaitForCareerProfileToLoad();
+
+                        // Take a screenshot of the career profile.
+                        cg.updateScreen();
+                        Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
+
+                        // Register the player identity.
+                        pi = new PlayerIdentity(careerProfileSnapshot);
+
+                        // Go back to the lobby.
+                        cg.GoBack(1);
+                        //cg.//ResetMouse();
+
+                        // If opening the career profile failed, the state of the chat could be incorrect, 
+                        // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
+                        // This will fix it.
+                        cg.Chat.OpenChat();
+                        if (!cg.OpenChatIsDefault)
+                            cg.KeyPress(Keys.Enter);
+                    }
+                    else
+                        cg.CloseOptionMenu();
                 }
 
                 // Store executor noise data in a bitmap.
@@ -323,7 +340,7 @@ namespace Deltin.CustomGameAutomation
 
                 ChatIdentity ci = new ChatIdentity(executor);
 
-                CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci);
+                CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci, isFriend);
                 if (ltd?.Callback != null)
                     ltd.Callback.Invoke(commandData);
 
@@ -546,7 +563,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The player identity of the slot.</returns>
         public PlayerIdentity GetSlotIdentity(int slot)
         {
-            bool careerProfileOpenSuccess = cg.Interact.MenuOptionScan(slot, view_career_profile_markup, 80, 100, 1);
+            bool careerProfileOpenSuccess = cg.Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
             if (!careerProfileOpenSuccess)
                 return null;
 
@@ -562,7 +579,6 @@ namespace Deltin.CustomGameAutomation
 
             return new PlayerIdentity(careerProfile);
         }
-        static Bitmap view_career_profile_markup = Properties.Resources.view_career_profile;
 
         internal void WaitForCareerProfileToLoad()
         {
@@ -583,8 +599,9 @@ namespace Deltin.CustomGameAutomation
         /// <param name="command">Command to listen to.</param>
         /// <param name="listen">Should this command be listened to?</param>
         /// <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
+        /// <param name="checkIfFriend">Should the player who executes this command be checked to see if they are a friend?</param>
         /// <param name="callback">Method to be executed when the command is executed.</param>
-        public ListenTo(string command, bool listen, bool registerProfile, CommandExecuted callback)
+        public ListenTo(string command, bool listen, bool registerProfile, bool checkIfFriend, CommandExecuted callback)
         {
             for (int c = 0; c < command.Length; c++)
             {
@@ -599,17 +616,17 @@ namespace Deltin.CustomGameAutomation
                         command[c].ToString()));
             }
 
-            _command = command;
+            Command = command;
             Listen = listen;
             RegisterProfile = registerProfile;
+            CheckIfFriend = checkIfFriend;
             Callback = callback;
         }
 
-        string _command;
         /// <summary>
         /// Command to listen to.
         /// </summary>
-        public string Command { get { return _command; } }
+        public string Command { get; internal set; }
         /// <summary>
         /// Should this command be listened to?
         /// </summary>
@@ -618,6 +635,10 @@ namespace Deltin.CustomGameAutomation
         /// Should the player who executes this command have their profile registered?
         /// </summary>
         public bool RegisterProfile;
+        /// <summary>
+        /// Should the player who executes this command be checked to see if they are a friend?
+        /// </summary>
+        public bool CheckIfFriend;
         /// <summary>
         /// Method to be executed when the command is executed.
         /// </summary>
@@ -722,25 +743,24 @@ namespace Deltin.CustomGameAutomation
     /// <seealso cref="ListenTo"/>
     public class CommandData
     {
-        internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity, ChatIdentity chatIdentity)
+        internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity, ChatIdentity chatIdentity, bool isFriend)
         {
-            this.command = command;
-            this.channel = channel;
+            Command = command;
+            Channel = channel;
             PlayerIdentity = playerIdentity;
             ChatIdentity = chatIdentity;
+            IsFriend = isFriend;
         }
 
         /// <summary>
         /// Command player executed.
         /// </summary>
-        public string Command { get { return command; } internal set { command = value; } }
-        string command;
+        public string Command { get; internal set; }
 
         /// <summary>
         /// Channel the command was executed on.
         /// </summary>
-        public Channel Channel { get { return channel; } internal set { channel = value; } }
-        Channel channel;
+        public Channel Channel { get; internal set; }
 
         /// <summary>
         /// The identity of the player that executed the command.
@@ -748,6 +768,8 @@ namespace Deltin.CustomGameAutomation
         public PlayerIdentity PlayerIdentity;
 
         public ChatIdentity ChatIdentity;
+
+        public bool IsFriend { get; internal set; }
     }
 
     /// <summary>

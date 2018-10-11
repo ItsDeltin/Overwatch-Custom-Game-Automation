@@ -7,7 +7,7 @@ DefaultMode=None // Abyxa, ServerBrowser, Private, or None
 
 // The current overwatch event. Set to empty to get the event automatically.
 // Can be SummerGames, HalloweenTerror, WinterWonderland, LunarNewYear, Uprising, Aniversary
-Event=None
+Event=
 
 ScreenshotMethod=BitBlt // Screenshot method to use. Can be BitBlt or ScreenCopy.
 
@@ -15,3 +15,4 @@ ScreenshotMethod=BitBlt // Screenshot method to use. Can be BitBlt or ScreenCopy
 local=false
 name=Zombies - Infection
 region=us // Valid regions: "us", "eu", "kr"
+presetNum=0 // The number of the customgame preset.

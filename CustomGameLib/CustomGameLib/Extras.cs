@@ -74,6 +74,19 @@ namespace Deltin.CustomGameAutomation
             return (success / (bmp1.Width * bmp1.Height)) * 100 >= minimumPercentMatching;
         }
 
+        public static void ConvertToMarkup(this Bitmap bmp, int[] color, int fade, bool invert)
+        {
+            for (int x = 0; x < bmp.Width; x++)
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    bool matches = bmp.CompareColor(x, y, color, fade);
+                    if ((!invert && matches) || (invert && !matches))
+                        bmp.SetPixel(x, y, Color.Black);
+                    else
+                        bmp.SetPixel(x, y, Color.White);
+                }
+        }
+
         public static int[] ToInt(this Color color)
         {
             return new int[] { color.R, color.G, color.B };

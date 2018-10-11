@@ -295,209 +295,209 @@ namespace Deltin.CustomGameAutomation
         #region Maps
 #pragma warning disable CS1591
         // Assault
-        public static Map A_Hanamura                       = new Map(Gamemode.Assault,               "A_Hanamura",                       Event.None);
-        public static Map A_Hanamura_Winter                = new Map(Gamemode.Assault,               "A_Hanamura_Winter",                Event.WinterWonderland);
-        public static Map A_HorizonLunarColony             = new Map(Gamemode.Assault,               "A_HorizonLunarColony",             Event.None);
-        public static Map A_TempleOfAnubis                 = new Map(Gamemode.Assault,               "A_TempleOfAnubis",                 Event.None);
-        public static Map A_VolskayaIndustries             = new Map(Gamemode.Assault,               "A_VolskayaIndustries",             Event.None);
+        public static readonly Map A_Hanamura                       = new Map(Gamemode.Assault,               "A_Hanamura",                       Event.None);
+        public static readonly Map A_Hanamura_Winter                = new Map(Gamemode.Assault,               "A_Hanamura_Winter",                Event.WinterWonderland);
+        public static readonly Map A_HorizonLunarColony             = new Map(Gamemode.Assault,               "A_HorizonLunarColony",             Event.None);
+        public static readonly Map A_TempleOfAnubis                 = new Map(Gamemode.Assault,               "A_TempleOfAnubis",                 Event.None);
+        public static readonly Map A_VolskayaIndustries             = new Map(Gamemode.Assault,               "A_VolskayaIndustries",             Event.None);
 
         // AssaultEscort
-        public static Map AE_BlizzardWorld                 = new Map(Gamemode.AssaultEscort,         "AE_BlizzardWorld",                 Event.None);
-        public static Map AE_Eichenwalde                   = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde",                   Event.None);
-        public static Map AE_Eichenwalde_Halloween         = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde_Halloween",         Event.HalloweenTerror);
-        public static Map AE_Hollywood                     = new Map(Gamemode.AssaultEscort,         "AE_Hollywood",                     Event.None);
-        public static Map AE_Hollywood_Halloween           = new Map(Gamemode.AssaultEscort,         "AE_Hollywood_Halloween",           Event.HalloweenTerror);
-        public static Map AE_KingsRow                      = new Map(Gamemode.AssaultEscort,         "AE_KingsRow",                      Event.None);
-        public static Map AE_KingsRow_Winter               = new Map(Gamemode.AssaultEscort,         "AE_KingsRow_Winter",               Event.WinterWonderland);
-        public static Map AE_Numbani                       = new Map(Gamemode.AssaultEscort,         "AE_Numbani",                       Event.None);
+        public static readonly Map AE_BlizzardWorld                 = new Map(Gamemode.AssaultEscort,         "AE_BlizzardWorld",                 Event.None);
+        public static readonly Map AE_Eichenwalde                   = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde",                   Event.None);
+        public static readonly Map AE_Eichenwalde_Halloween         = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde_Halloween",         Event.HalloweenTerror);
+        public static readonly Map AE_Hollywood                     = new Map(Gamemode.AssaultEscort,         "AE_Hollywood",                     Event.None);
+        public static readonly Map AE_Hollywood_Halloween           = new Map(Gamemode.AssaultEscort,         "AE_Hollywood_Halloween",           Event.HalloweenTerror);
+        public static readonly Map AE_KingsRow                      = new Map(Gamemode.AssaultEscort,         "AE_KingsRow",                      Event.None);
+        public static readonly Map AE_KingsRow_Winter               = new Map(Gamemode.AssaultEscort,         "AE_KingsRow_Winter",               Event.WinterWonderland);
+        public static readonly Map AE_Numbani                       = new Map(Gamemode.AssaultEscort,         "AE_Numbani",                       Event.None);
 
         // Capture The Flag
-        public static Map CTF_Ayutthaya                    = new Map(Gamemode.CaptureTheFlag,        "CTF_Ayutthaya",                    Event.None);
-        public static Map CTF_Ilios_Lighthouse             = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Lighthouse",             Event.None);
-        public static Map CTF_Ilios_Ruins                  = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Ruins",                  Event.None);
-        public static Map CTF_Ilios_Well                   = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Well",                   Event.None);
-        public static Map CTF_Lijiang_ControlCenter        = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_ControlCenter",        Event.None);
-        public static Map CTF_Lijiang_ControlCenter_Lunar  = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_ControlCenter_Lunar",  Event.LunarNewYear);
-        public static Map CTF_Lijiang_Garden               = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_Garden",               Event.None);
-        public static Map CTF_Lijiang_Garden_Lunar         = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_Garden_Lunar",         Event.LunarNewYear);
-        public static Map CTF_Lijiang_NightMarket          = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_NightMarket",          Event.None);
-        public static Map CTF_Lijiang_NightMarket_Lunar    = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_NightMarket_Lunar",    Event.LunarNewYear);
-        public static Map CTF_Nepal_Sanctum                = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Sanctum",                Event.None);
-        public static Map CTF_Nepal_Shrine                 = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Shrine",                 Event.None);
-        public static Map CTF_Nepal_Village                = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Village",                Event.None);
-        public static Map CTF_Oasis_CityCenter             = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_CityCenter",             Event.None);
-        public static Map CTF_Oasis_Gardens                = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_Gardens",                Event.None);
-        public static Map CTF_Oasis_University             = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_University",             Event.None);
+        public static readonly Map CTF_Ayutthaya                    = new Map(Gamemode.CaptureTheFlag,        "CTF_Ayutthaya",                    Event.None);
+        public static readonly Map CTF_Ilios_Lighthouse             = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Lighthouse",             Event.None);
+        public static readonly Map CTF_Ilios_Ruins                  = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Ruins",                  Event.None);
+        public static readonly Map CTF_Ilios_Well                   = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Well",                   Event.None);
+        public static readonly Map CTF_Lijiang_ControlCenter        = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_ControlCenter",        Event.None);
+        public static readonly Map CTF_Lijiang_ControlCenter_Lunar  = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_ControlCenter_Lunar",  Event.LunarNewYear);
+        public static readonly Map CTF_Lijiang_Garden               = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_Garden",               Event.None);
+        public static readonly Map CTF_Lijiang_Garden_Lunar         = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_Garden_Lunar",         Event.LunarNewYear);
+        public static readonly Map CTF_Lijiang_NightMarket          = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_NightMarket",          Event.None);
+        public static readonly Map CTF_Lijiang_NightMarket_Lunar    = new Map(Gamemode.CaptureTheFlag,        "CTF_Lijiang_NightMarket_Lunar",    Event.LunarNewYear);
+        public static readonly Map CTF_Nepal_Sanctum                = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Sanctum",                Event.None);
+        public static readonly Map CTF_Nepal_Shrine                 = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Shrine",                 Event.None);
+        public static readonly Map CTF_Nepal_Village                = new Map(Gamemode.CaptureTheFlag,        "CTF_Nepal_Village",                Event.None);
+        public static readonly Map CTF_Oasis_CityCenter             = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_CityCenter",             Event.None);
+        public static readonly Map CTF_Oasis_Gardens                = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_Gardens",                Event.None);
+        public static readonly Map CTF_Oasis_University             = new Map(Gamemode.CaptureTheFlag,        "CTF_Oasis_University",             Event.None);
 
         // Control
-        public static Map C_Busan                          = new Map(Gamemode.Control,               "C_Busan",                          Event.None);
-        public static Map C_Ilios                          = new Map(Gamemode.Control,               "C_Ilios",                          Event.None);
-        public static Map C_Lijiang                        = new Map(Gamemode.Control,               "C_Lijiang",                        Event.None);
-        public static Map C_Lijiang_Lunar                  = new Map(Gamemode.Control,               "C_Lijiang_Lunar",                  Event.LunarNewYear);
-        public static Map C_Nepal                          = new Map(Gamemode.Control,               "C_Nepal",                          Event.None);
-        public static Map C_Oasis                          = new Map(Gamemode.Control,               "C_Oasis",                          Event.None);
+        public static readonly Map C_Busan                          = new Map(Gamemode.Control,               "C_Busan",                          Event.None);
+        public static readonly Map C_Ilios                          = new Map(Gamemode.Control,               "C_Ilios",                          Event.None);
+        public static readonly Map C_Lijiang                        = new Map(Gamemode.Control,               "C_Lijiang",                        Event.None);
+        public static readonly Map C_Lijiang_Lunar                  = new Map(Gamemode.Control,               "C_Lijiang_Lunar",                  Event.LunarNewYear);
+        public static readonly Map C_Nepal                          = new Map(Gamemode.Control,               "C_Nepal",                          Event.None);
+        public static readonly Map C_Oasis                          = new Map(Gamemode.Control,               "C_Oasis",                          Event.None);
 
         // Deathmatch
-        public static Map DM_BlackForest                   = new Map(Gamemode.Deathmatch,            "DM_BlackForest",                   Event.None);
-        public static Map DM_BlackForest_Winter            = new Map(Gamemode.Deathmatch,            "DM_BlackForest_Winter",            Event.WinterWonderland);
-        public static Map DM_BlizzardWorld                 = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld",                 Event.None);
-        public static Map DM_Castillo                      = new Map(Gamemode.Deathmatch,            "DM_Castillo",                      Event.None);
-        public static Map DM_ChateauGuillard               = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard",               Event.None);
-        public static Map DM_Dorado                        = new Map(Gamemode.Deathmatch,            "DM_Dorado",                        Event.None);
-        public static Map DM_Antarctica                    = new Map(Gamemode.Deathmatch,            "DM_Antarctica",                    Event.None);
-        public static Map DM_Antarctica_Winter             = new Map(Gamemode.Deathmatch,            "DM_Antarctica_Winter",             Event.WinterWonderland);
-        public static Map DM_Eichenwalde                   = new Map(Gamemode.Deathmatch,            "DM_Eichenwalde",                   Event.None);
-        public static Map DM_Eichenwalde_Halloween         = new Map(Gamemode.Deathmatch,            "DM_Eichenwalde_Halloween",         Event.HalloweenTerror);
-        public static Map DM_Hanamura                      = new Map(Gamemode.Deathmatch,            "DM_Hanamura",                      Event.None);
-        public static Map DM_Hanamura_Winter               = new Map(Gamemode.Deathmatch,            "DM_Hanamura_Winter",               Event.WinterWonderland);
-        public static Map DM_Hollywood                     = new Map(Gamemode.Deathmatch,            "DM_Hollywood",                     Event.None);
-        public static Map DM_Hollywood_Halloween           = new Map(Gamemode.Deathmatch,            "DM_Hollywood_Halloween",           Event.HalloweenTerror);
-        public static Map DM_HorizonLunarColony            = new Map(Gamemode.Deathmatch,            "DM_HorizonLunarColony",            Event.None);
-        public static Map DM_Ilios_Lighthouse              = new Map(Gamemode.Deathmatch,            "DM_Ilios_Lighthouse",              Event.None);
-        public static Map DM_Ilios_Ruins                   = new Map(Gamemode.Deathmatch,            "DM_Ilios_Ruins",                   Event.None);
-        public static Map DM_Ilios_Well                    = new Map(Gamemode.Deathmatch,            "DM_Ilios_Well",                    Event.None);
-        public static Map DM_KingsRow                      = new Map(Gamemode.Deathmatch,            "DM_KingsRow",                      Event.None);
-        public static Map DM_KingsRow_Winter               = new Map(Gamemode.Deathmatch,            "DM_KingsRow_Winter",               Event.WinterWonderland);
-        public static Map DM_Lijiang_ControlCenter         = new Map(Gamemode.Deathmatch,            "DM_Lijiang_ControlCenter",         Event.None);
-        public static Map DM_Lijiang_ControlCenter_Lunar   = new Map(Gamemode.Deathmatch,            "DM_Lijiang_ControlCenter_Lunar",   Event.LunarNewYear);
-        public static Map DM_Lijiang_Garden                = new Map(Gamemode.Deathmatch,            "DM_Lijiang_Garden",                Event.None);
-        public static Map DM_Lijiang_Garden_Lunar          = new Map(Gamemode.Deathmatch,            "DM_Lijiang_Garden_Lunar",          Event.LunarNewYear);
-        public static Map DM_Lijiang_NightMarket           = new Map(Gamemode.Deathmatch,            "DM_Lijiang_NightMarket",           Event.None);
-        public static Map DM_Lijiang_NightMarket_Lunar     = new Map(Gamemode.Deathmatch,            "DM_Lijiang_NightMarket_Lunar",     Event.LunarNewYear);
-        public static Map DM_Necropolis                    = new Map(Gamemode.Deathmatch,            "DM_Necropolis",                    Event.None);
-        public static Map DM_Nepal_Sanctum                 = new Map(Gamemode.Deathmatch,            "DM_Nepal_Sanctum",                 Event.None);
-        public static Map DM_Nepal_Shrine                  = new Map(Gamemode.Deathmatch,            "DM_Nepal_Shrine",                  Event.None);
-        public static Map DM_Nepal_Village                 = new Map(Gamemode.Deathmatch,            "DM_Nepal_Village",                 Event.None);
-        public static Map DM_Oasis_CityCenter              = new Map(Gamemode.Deathmatch,            "DM_Oasis_CityCenter",              Event.None);
-        public static Map DM_Oasis_Gardens                 = new Map(Gamemode.Deathmatch,            "DM_Oasis_Gardens",                 Event.None);
-        public static Map DM_Oasis_University              = new Map(Gamemode.Deathmatch,            "DM_Oasis_University",              Event.None);
-        public static Map DM_Petra                         = new Map(Gamemode.Deathmatch,            "DM_Petra",                         Event.None);
-        public static Map DM_TempleOfAnubis                = new Map(Gamemode.Deathmatch,            "DM_TempleOfAnubis",                Event.None);
-        public static Map DM_VolskayaIndustries            = new Map(Gamemode.Deathmatch,            "DM_VolskayaIndustries",            Event.None);
+        public static readonly Map DM_BlackForest                   = new Map(Gamemode.Deathmatch,            "DM_BlackForest",                   Event.None);
+        public static readonly Map DM_BlackForest_Winter            = new Map(Gamemode.Deathmatch,            "DM_BlackForest_Winter",            Event.WinterWonderland);
+        public static readonly Map DM_BlizzardWorld                 = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld",                 Event.None);
+        public static readonly Map DM_Castillo                      = new Map(Gamemode.Deathmatch,            "DM_Castillo",                      Event.None);
+        public static readonly Map DM_ChateauGuillard               = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard",               Event.None);
+        public static readonly Map DM_Dorado                        = new Map(Gamemode.Deathmatch,            "DM_Dorado",                        Event.None);
+        public static readonly Map DM_Antarctica                    = new Map(Gamemode.Deathmatch,            "DM_Antarctica",                    Event.None);
+        public static readonly Map DM_Antarctica_Winter             = new Map(Gamemode.Deathmatch,            "DM_Antarctica_Winter",             Event.WinterWonderland);
+        public static readonly Map DM_Eichenwalde                   = new Map(Gamemode.Deathmatch,            "DM_Eichenwalde",                   Event.None);
+        public static readonly Map DM_Eichenwalde_Halloween         = new Map(Gamemode.Deathmatch,            "DM_Eichenwalde_Halloween",         Event.HalloweenTerror);
+        public static readonly Map DM_Hanamura                      = new Map(Gamemode.Deathmatch,            "DM_Hanamura",                      Event.None);
+        public static readonly Map DM_Hanamura_Winter               = new Map(Gamemode.Deathmatch,            "DM_Hanamura_Winter",               Event.WinterWonderland);
+        public static readonly Map DM_Hollywood                     = new Map(Gamemode.Deathmatch,            "DM_Hollywood",                     Event.None);
+        public static readonly Map DM_Hollywood_Halloween           = new Map(Gamemode.Deathmatch,            "DM_Hollywood_Halloween",           Event.HalloweenTerror);
+        public static readonly Map DM_HorizonLunarColony            = new Map(Gamemode.Deathmatch,            "DM_HorizonLunarColony",            Event.None);
+        public static readonly Map DM_Ilios_Lighthouse              = new Map(Gamemode.Deathmatch,            "DM_Ilios_Lighthouse",              Event.None);
+        public static readonly Map DM_Ilios_Ruins                   = new Map(Gamemode.Deathmatch,            "DM_Ilios_Ruins",                   Event.None);
+        public static readonly Map DM_Ilios_Well                    = new Map(Gamemode.Deathmatch,            "DM_Ilios_Well",                    Event.None);
+        public static readonly Map DM_KingsRow                      = new Map(Gamemode.Deathmatch,            "DM_KingsRow",                      Event.None);
+        public static readonly Map DM_KingsRow_Winter               = new Map(Gamemode.Deathmatch,            "DM_KingsRow_Winter",               Event.WinterWonderland);
+        public static readonly Map DM_Lijiang_ControlCenter         = new Map(Gamemode.Deathmatch,            "DM_Lijiang_ControlCenter",         Event.None);
+        public static readonly Map DM_Lijiang_ControlCenter_Lunar   = new Map(Gamemode.Deathmatch,            "DM_Lijiang_ControlCenter_Lunar",   Event.LunarNewYear);
+        public static readonly Map DM_Lijiang_Garden                = new Map(Gamemode.Deathmatch,            "DM_Lijiang_Garden",                Event.None);
+        public static readonly Map DM_Lijiang_Garden_Lunar          = new Map(Gamemode.Deathmatch,            "DM_Lijiang_Garden_Lunar",          Event.LunarNewYear);
+        public static readonly Map DM_Lijiang_NightMarket           = new Map(Gamemode.Deathmatch,            "DM_Lijiang_NightMarket",           Event.None);
+        public static readonly Map DM_Lijiang_NightMarket_Lunar     = new Map(Gamemode.Deathmatch,            "DM_Lijiang_NightMarket_Lunar",     Event.LunarNewYear);
+        public static readonly Map DM_Necropolis                    = new Map(Gamemode.Deathmatch,            "DM_Necropolis",                    Event.None);
+        public static readonly Map DM_Nepal_Sanctum                 = new Map(Gamemode.Deathmatch,            "DM_Nepal_Sanctum",                 Event.None);
+        public static readonly Map DM_Nepal_Shrine                  = new Map(Gamemode.Deathmatch,            "DM_Nepal_Shrine",                  Event.None);
+        public static readonly Map DM_Nepal_Village                 = new Map(Gamemode.Deathmatch,            "DM_Nepal_Village",                 Event.None);
+        public static readonly Map DM_Oasis_CityCenter              = new Map(Gamemode.Deathmatch,            "DM_Oasis_CityCenter",              Event.None);
+        public static readonly Map DM_Oasis_Gardens                 = new Map(Gamemode.Deathmatch,            "DM_Oasis_Gardens",                 Event.None);
+        public static readonly Map DM_Oasis_University              = new Map(Gamemode.Deathmatch,            "DM_Oasis_University",              Event.None);
+        public static readonly Map DM_Petra                         = new Map(Gamemode.Deathmatch,            "DM_Petra",                         Event.None);
+        public static readonly Map DM_TempleOfAnubis                = new Map(Gamemode.Deathmatch,            "DM_TempleOfAnubis",                Event.None);
+        public static readonly Map DM_VolskayaIndustries            = new Map(Gamemode.Deathmatch,            "DM_VolskayaIndustries",            Event.None);
 
         // Elimination
-        public static Map ELIM_Ayutthaya                   = new Map(Gamemode.Elimination,           "ELIM_Ayutthaya",                   Event.None);
-        public static Map ELIM_BlackForest                 = new Map(Gamemode.Elimination,           "ELIM_BlackForest",                 Event.None);
-        public static Map ELIM_BlackForest_Winter          = new Map(Gamemode.Elimination,           "ELIM_BlackForest_Winter",          Event.WinterWonderland);
-        public static Map ELIM_Castillo                    = new Map(Gamemode.Elimination,           "ELIM_Castillo",                    Event.None);
-        public static Map ELIM_Antarctica                  = new Map(Gamemode.Elimination,           "ELIM_Antarctica",                  Event.None);
-        public static Map ELIM_Antarctica_Winter           = new Map(Gamemode.Elimination,           "ELIM_Antarctica_Winter",           Event.WinterWonderland);
-        public static Map ELIM_Ilios_Lighthouse            = new Map(Gamemode.Elimination,           "ELIM_Ilios_Lighthouse",            Event.None);
-        public static Map ELIM_Ilios_Ruins                 = new Map(Gamemode.Elimination,           "ELIM_Ilios_Ruins",                 Event.None);
-        public static Map ELIM_Ilios_Well                  = new Map(Gamemode.Elimination,           "ELIM_Ilios_Well",                  Event.None);
-        public static Map ELIM_Lijiang_ControlCenter       = new Map(Gamemode.Elimination,           "ELIM_Lijiang_ControlCenter",       Event.None);
-        public static Map ELIM_Lijiang_ControlCenter_Lunar = new Map(Gamemode.Elimination,           "ELIM_Lijiang_ControlCenter_Lunar", Event.LunarNewYear);
-        public static Map ELIM_Lijiang_Garden              = new Map(Gamemode.Elimination,           "ELIM_Lijiang_Garden",              Event.None);
-        public static Map ELIM_Lijiang_Garden_Lunar        = new Map(Gamemode.Elimination,           "ELIM_Lijiang_Garden_Lunar",        Event.LunarNewYear);
-        public static Map ELIM_Lijiang_NightMarket         = new Map(Gamemode.Elimination,           "ELIM_Lijiang_NightMarket",         Event.None);
-        public static Map ELIM_Lijiang_NightMarket_Lunar   = new Map(Gamemode.Elimination,           "ELIM_Lijiang_NightMarket_Lunar",   Event.LunarNewYear);
-        public static Map ELIM_Necropolis                  = new Map(Gamemode.Elimination,           "ELIM_Necropolis",                  Event.None);
-        public static Map ELIM_Nepal_Sanctum               = new Map(Gamemode.Elimination,           "ELIM_Nepal_Sanctum",               Event.None);
-        public static Map ELIM_Nepal_Shrine                = new Map(Gamemode.Elimination,           "ELIM_Nepal_Shrine",                Event.None);
-        public static Map ELIM_Nepal_Village               = new Map(Gamemode.Elimination,           "ELIM_Nepal_Village",               Event.None);
-        public static Map ELIM_Oasis_CityCenter            = new Map(Gamemode.Elimination,           "ELIM_Oasis_CityCenter",            Event.None);
-        public static Map ELIM_Oasis_Gardens               = new Map(Gamemode.Elimination,           "ELIM_Oasis_Gardens",               Event.None);
-        public static Map ELIM_Oasis_University            = new Map(Gamemode.Elimination,           "ELIM_Oasis_University",            Event.None);
+        public static readonly Map ELIM_Ayutthaya                   = new Map(Gamemode.Elimination,           "ELIM_Ayutthaya",                   Event.None);
+        public static readonly Map ELIM_BlackForest                 = new Map(Gamemode.Elimination,           "ELIM_BlackForest",                 Event.None);
+        public static readonly Map ELIM_BlackForest_Winter          = new Map(Gamemode.Elimination,           "ELIM_BlackForest_Winter",          Event.WinterWonderland);
+        public static readonly Map ELIM_Castillo                    = new Map(Gamemode.Elimination,           "ELIM_Castillo",                    Event.None);
+        public static readonly Map ELIM_Antarctica                  = new Map(Gamemode.Elimination,           "ELIM_Antarctica",                  Event.None);
+        public static readonly Map ELIM_Antarctica_Winter           = new Map(Gamemode.Elimination,           "ELIM_Antarctica_Winter",           Event.WinterWonderland);
+        public static readonly Map ELIM_Ilios_Lighthouse            = new Map(Gamemode.Elimination,           "ELIM_Ilios_Lighthouse",            Event.None);
+        public static readonly Map ELIM_Ilios_Ruins                 = new Map(Gamemode.Elimination,           "ELIM_Ilios_Ruins",                 Event.None);
+        public static readonly Map ELIM_Ilios_Well                  = new Map(Gamemode.Elimination,           "ELIM_Ilios_Well",                  Event.None);
+        public static readonly Map ELIM_Lijiang_ControlCenter       = new Map(Gamemode.Elimination,           "ELIM_Lijiang_ControlCenter",       Event.None);
+        public static readonly Map ELIM_Lijiang_ControlCenter_Lunar = new Map(Gamemode.Elimination,           "ELIM_Lijiang_ControlCenter_Lunar", Event.LunarNewYear);
+        public static readonly Map ELIM_Lijiang_Garden              = new Map(Gamemode.Elimination,           "ELIM_Lijiang_Garden",              Event.None);
+        public static readonly Map ELIM_Lijiang_Garden_Lunar        = new Map(Gamemode.Elimination,           "ELIM_Lijiang_Garden_Lunar",        Event.LunarNewYear);
+        public static readonly Map ELIM_Lijiang_NightMarket         = new Map(Gamemode.Elimination,           "ELIM_Lijiang_NightMarket",         Event.None);
+        public static readonly Map ELIM_Lijiang_NightMarket_Lunar   = new Map(Gamemode.Elimination,           "ELIM_Lijiang_NightMarket_Lunar",   Event.LunarNewYear);
+        public static readonly Map ELIM_Necropolis                  = new Map(Gamemode.Elimination,           "ELIM_Necropolis",                  Event.None);
+        public static readonly Map ELIM_Nepal_Sanctum               = new Map(Gamemode.Elimination,           "ELIM_Nepal_Sanctum",               Event.None);
+        public static readonly Map ELIM_Nepal_Shrine                = new Map(Gamemode.Elimination,           "ELIM_Nepal_Shrine",                Event.None);
+        public static readonly Map ELIM_Nepal_Village               = new Map(Gamemode.Elimination,           "ELIM_Nepal_Village",               Event.None);
+        public static readonly Map ELIM_Oasis_CityCenter            = new Map(Gamemode.Elimination,           "ELIM_Oasis_CityCenter",            Event.None);
+        public static readonly Map ELIM_Oasis_Gardens               = new Map(Gamemode.Elimination,           "ELIM_Oasis_Gardens",               Event.None);
+        public static readonly Map ELIM_Oasis_University            = new Map(Gamemode.Elimination,           "ELIM_Oasis_University",            Event.None);
 
         // Escort
-        public static Map E_Dorado                         = new Map(Gamemode.Escort,                "E_Dorado",                         Event.None);
-        public static Map E_Junkertown                     = new Map(Gamemode.Escort,                "E_Junkertown",                     Event.None);
-        public static Map E_Rialto                         = new Map(Gamemode.Escort,                "E_Rialto",                         Event.None);
-        public static Map E_Route66                        = new Map(Gamemode.Escort,                "E_Route66",                        Event.None);
-        public static Map E_Gibraltar                      = new Map(Gamemode.Escort,                "E_Gibraltar",                      Event.None);
+        public static readonly Map E_Dorado                         = new Map(Gamemode.Escort,                "E_Dorado",                         Event.None);
+        public static readonly Map E_Junkertown                     = new Map(Gamemode.Escort,                "E_Junkertown",                     Event.None);
+        public static readonly Map E_Rialto                         = new Map(Gamemode.Escort,                "E_Rialto",                         Event.None);
+        public static readonly Map E_Route66                        = new Map(Gamemode.Escort,                "E_Route66",                        Event.None);
+        public static readonly Map E_Gibraltar                      = new Map(Gamemode.Escort,                "E_Gibraltar",                      Event.None);
 
         // Junkensteins Revenge
-        public static Map JR_Adlersbrunn                   = new Map(Gamemode.JunkensteinsRevenge,   "JR_Adlersbrunn",                   Event.HalloweenTerror);
+        public static readonly Map JR_Adlersbrunn                   = new Map(Gamemode.JunkensteinsRevenge,   "JR_Adlersbrunn",                   Event.HalloweenTerror);
 
         // Lucioball
-        public static Map LB_EstasioDasRas                 = new Map(Gamemode.Lucioball,             "LB_EstasioDasRas",                 Event.SummerGames);
-        public static Map LB_SydneyHarbourArena            = new Map(Gamemode.Lucioball,             "LB_SydneyHarbourArena",            Event.SummerGames);
+        public static readonly Map LB_EstasioDasRas                 = new Map(Gamemode.Lucioball,             "LB_EstasioDasRas",                 Event.SummerGames);
+        public static readonly Map LB_SydneyHarbourArena            = new Map(Gamemode.Lucioball,             "LB_SydneyHarbourArena",            Event.SummerGames);
 
         // Meis Snowball Offensive
-        public static Map MSO_BlackForest_Winter           = new Map(Gamemode.MeisSnowballOffensive, "MSO_BlackForest_Winter",           Event.WinterWonderland);
-        public static Map MSO_Antarctica_Winter            = new Map(Gamemode.MeisSnowballOffensive, "MSO_Antarctica_Winter",            Event.WinterWonderland);
+        public static readonly Map MSO_BlackForest_Winter           = new Map(Gamemode.MeisSnowballOffensive, "MSO_BlackForest_Winter",           Event.WinterWonderland);
+        public static readonly Map MSO_Antarctica_Winter            = new Map(Gamemode.MeisSnowballOffensive, "MSO_Antarctica_Winter",            Event.WinterWonderland);
 
         // Skirmish
-        public static Map SKIRM_BlizzardWorld              = new Map(Gamemode.Skirmish,              "SKIRM_BlizzardWorld",              Event.None);
-        public static Map SKIRM_Busan                      = new Map(Gamemode.Skirmish,              "SKIRM_Busan",                      Event.None);
-        public static Map SKIRM_Dorado                     = new Map(Gamemode.Skirmish,              "SKIRM_Dorado",                     Event.None);
-        public static Map SKIRM_Eichenwalde                = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde",                Event.None);
-        public static Map SKIRM_Eichenwalde_Halloween      = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde_Halloween",      Event.HalloweenTerror);
-        public static Map SKIRM_Hanamura                   = new Map(Gamemode.Skirmish,              "SKIRM_Hanamura",                   Event.None);
-        public static Map SKIRM_Hanamura_Winter            = new Map(Gamemode.Skirmish,              "SKIRM_Hanamura_Winter",            Event.WinterWonderland);
-        public static Map SKIRM_Hollywood                  = new Map(Gamemode.Skirmish,              "SKIRM_Hollywood",                  Event.None);
-        public static Map SKIRM_Hollywood_Halloween        = new Map(Gamemode.Skirmish,              "SKIRM_Hollywood_Halloween",        Event.HalloweenTerror);
-        public static Map SKIRM_HorizonLunarColony         = new Map(Gamemode.Skirmish,              "SKIRM_HorizonLunarColony",         Event.None);
-        public static Map SKIRM_Ilios                      = new Map(Gamemode.Skirmish,              "SKIRM_Ilios",                      Event.None);
-        public static Map SKIRM_Junkertown                 = new Map(Gamemode.Skirmish,              "SKIRM_Junkertown",                 Event.None);
-        public static Map SKIRM_KingsRow                   = new Map(Gamemode.Skirmish,              "SKIRM_KingsRow",                   Event.None);
-        public static Map SKIRM_KingsRow_Winter            = new Map(Gamemode.Skirmish,              "SKIRM_KingsRow_Winter",            Event.WinterWonderland);
-        public static Map SKIRM_Lijiang                    = new Map(Gamemode.Skirmish,              "SKIRM_Lijiang",                    Event.None);
-        public static Map SKIRM_Lijiang_Lunar              = new Map(Gamemode.Skirmish,              "SKIRM_Lijiang_Lunar",              Event.LunarNewYear);
-        public static Map SKIRM_Nepal                      = new Map(Gamemode.Skirmish,              "SKIRM_Nepal",                      Event.None);
-        public static Map SKIRM_Numbani                    = new Map(Gamemode.Skirmish,              "SKIRM_Numbani",                    Event.None);
-        public static Map SKIRM_Oasis                      = new Map(Gamemode.Skirmish,              "SKIRM_Oasis",                      Event.None);
-        public static Map SKIRM_Railto                     = new Map(Gamemode.Skirmish,              "SKIRM_Railto",                     Event.None);
-        public static Map SKIRM_Route66                    = new Map(Gamemode.Skirmish,              "SKIRM_Route66",                    Event.None);
-        public static Map SKIRM_TempleOfAnubis             = new Map(Gamemode.Skirmish,              "SKIRM_TempleOfAnubis",             Event.None);
-        public static Map SKIRM_VolskayaIndustries         = new Map(Gamemode.Skirmish,              "SKIRM_VolskayaIndustries",         Event.None);
-        public static Map SKIRM_Gibraltar                  = new Map(Gamemode.Skirmish,              "SKIRM_Gibraltar",                  Event.None);
+        public static readonly Map SKIRM_BlizzardWorld              = new Map(Gamemode.Skirmish,              "SKIRM_BlizzardWorld",              Event.None);
+        public static readonly Map SKIRM_Busan                      = new Map(Gamemode.Skirmish,              "SKIRM_Busan",                      Event.None);
+        public static readonly Map SKIRM_Dorado                     = new Map(Gamemode.Skirmish,              "SKIRM_Dorado",                     Event.None);
+        public static readonly Map SKIRM_Eichenwalde                = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde",                Event.None);
+        public static readonly Map SKIRM_Eichenwalde_Halloween      = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde_Halloween",      Event.HalloweenTerror);
+        public static readonly Map SKIRM_Hanamura                   = new Map(Gamemode.Skirmish,              "SKIRM_Hanamura",                   Event.None);
+        public static readonly Map SKIRM_Hanamura_Winter            = new Map(Gamemode.Skirmish,              "SKIRM_Hanamura_Winter",            Event.WinterWonderland);
+        public static readonly Map SKIRM_Hollywood                  = new Map(Gamemode.Skirmish,              "SKIRM_Hollywood",                  Event.None);
+        public static readonly Map SKIRM_Hollywood_Halloween        = new Map(Gamemode.Skirmish,              "SKIRM_Hollywood_Halloween",        Event.HalloweenTerror);
+        public static readonly Map SKIRM_HorizonLunarColony         = new Map(Gamemode.Skirmish,              "SKIRM_HorizonLunarColony",         Event.None);
+        public static readonly Map SKIRM_Ilios                      = new Map(Gamemode.Skirmish,              "SKIRM_Ilios",                      Event.None);
+        public static readonly Map SKIRM_Junkertown                 = new Map(Gamemode.Skirmish,              "SKIRM_Junkertown",                 Event.None);
+        public static readonly Map SKIRM_KingsRow                   = new Map(Gamemode.Skirmish,              "SKIRM_KingsRow",                   Event.None);
+        public static readonly Map SKIRM_KingsRow_Winter            = new Map(Gamemode.Skirmish,              "SKIRM_KingsRow_Winter",            Event.WinterWonderland);
+        public static readonly Map SKIRM_Lijiang                    = new Map(Gamemode.Skirmish,              "SKIRM_Lijiang",                    Event.None);
+        public static readonly Map SKIRM_Lijiang_Lunar              = new Map(Gamemode.Skirmish,              "SKIRM_Lijiang_Lunar",              Event.LunarNewYear);
+        public static readonly Map SKIRM_Nepal                      = new Map(Gamemode.Skirmish,              "SKIRM_Nepal",                      Event.None);
+        public static readonly Map SKIRM_Numbani                    = new Map(Gamemode.Skirmish,              "SKIRM_Numbani",                    Event.None);
+        public static readonly Map SKIRM_Oasis                      = new Map(Gamemode.Skirmish,              "SKIRM_Oasis",                      Event.None);
+        public static readonly Map SKIRM_Railto                     = new Map(Gamemode.Skirmish,              "SKIRM_Railto",                     Event.None);
+        public static readonly Map SKIRM_Route66                    = new Map(Gamemode.Skirmish,              "SKIRM_Route66",                    Event.None);
+        public static readonly Map SKIRM_TempleOfAnubis             = new Map(Gamemode.Skirmish,              "SKIRM_TempleOfAnubis",             Event.None);
+        public static readonly Map SKIRM_VolskayaIndustries         = new Map(Gamemode.Skirmish,              "SKIRM_VolskayaIndustries",         Event.None);
+        public static readonly Map SKIRM_Gibraltar                  = new Map(Gamemode.Skirmish,              "SKIRM_Gibraltar",                  Event.None);
 
         // Team Deathmatch
-        public static Map TDM_BlackForest                  = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest",                  Event.None);
-        public static Map TDM_BlackForest_Winter           = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest_Winter",           Event.WinterWonderland);
-        public static Map TDM_BlizzardWorld                = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld",                Event.None);
-        public static Map TDM_Castillo                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Castillo",                     Event.None);
-        public static Map TDM_ChateauGuillard              = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard",              Event.None);
-        public static Map TDM_Dorado                       = new Map(Gamemode.TeamDeathmatch,        "TDM_Dorado",                       Event.None);
-        public static Map TDM_Antarctica                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica",                   Event.None);
-        public static Map TDM_Antarctica_Winter            = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica_Winter",            Event.WinterWonderland);
-        public static Map TDM_Eichenwalde                  = new Map(Gamemode.TeamDeathmatch,        "TDM_Eichenwalde",                  Event.None);
-        public static Map TDM_Eichenwalde_Halloween        = new Map(Gamemode.TeamDeathmatch,        "TDM_Eichenwalde_Halloween",        Event.HalloweenTerror);
-        public static Map TDM_Hanamura                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Hanamura",                     Event.None);
-        public static Map TDM_Hanamura_Winter              = new Map(Gamemode.TeamDeathmatch,        "TDM_Hanamura_Winter",              Event.WinterWonderland);
-        public static Map TDM_Hollywood                    = new Map(Gamemode.TeamDeathmatch,        "TDM_Hollywood",                    Event.None);
-        public static Map TDM_Hollywood_Halloween          = new Map(Gamemode.TeamDeathmatch,        "TDM_Hollywood_Halloween",          Event.HalloweenTerror);
-        public static Map TDM_HorizonLunarColony           = new Map(Gamemode.TeamDeathmatch,        "TDM_HorizonLunarColony",           Event.None);
-        public static Map TDM_Ilios_Lighthouse             = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Lighthouse",             Event.None);
-        public static Map TDM_Ilios_Ruins                  = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Ruins",                  Event.None);
-        public static Map TDM_Ilios_Well                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Well",                   Event.None);
-        public static Map TDM_KingsRow                     = new Map(Gamemode.TeamDeathmatch,        "TDM_KingsRow",                     Event.None);
-        public static Map TDM_KingsRow_Winter              = new Map(Gamemode.TeamDeathmatch,        "TDM_KingsRow_Winter",              Event.WinterWonderland);
-        public static Map TDM_Lijiang_ControlCenter        = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_ControlCenter",        Event.None);
-        public static Map TDM_Lijiang_ControlCenter_Lunar  = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_ControlCenter_Lunar",  Event.LunarNewYear);
-        public static Map TDM_Lijiang_Garden               = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_Garden",               Event.None);
-        public static Map TDM_Lijiang_Garden_Lunar         = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_Garden_Lunar",         Event.LunarNewYear);
-        public static Map TDM_Lijiang_NightMarket          = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_NightMarket",          Event.None);
-        public static Map TDM_Lijiang_NightMarket_Lunar    = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_NightMarket_Lunar",    Event.LunarNewYear);
-        public static Map TDM_Necropolis                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Necropolis",                   Event.None);
-        public static Map TDM_Nepal_Sanctum                = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Sanctum",                Event.None);
-        public static Map TDM_Nepal_Shrine                 = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Shrine",                 Event.None);
-        public static Map TDM_Nepal_Village                = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Village",                Event.None);
-        public static Map TDM_Oasis_CityCenter             = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_CityCenter",             Event.None);
-        public static Map TDM_Oasis_Gardens                = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_Gardens",                Event.None);
-        public static Map TDM_Oasis_University             = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_University",             Event.None);
-        public static Map TDM_Petra                        = new Map(Gamemode.TeamDeathmatch,        "TDM_Petra",                        Event.None);
-        public static Map TDM_TempleOfAnubis               = new Map(Gamemode.TeamDeathmatch,        "TDM_TempleOfAnubis",               Event.None);
-        public static Map TDM_VolskayaIndustries           = new Map(Gamemode.TeamDeathmatch,        "TDM_VolskayaIndustries",           Event.None);
+        public static readonly Map TDM_BlackForest                  = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest",                  Event.None);
+        public static readonly Map TDM_BlackForest_Winter           = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest_Winter",           Event.WinterWonderland);
+        public static readonly Map TDM_BlizzardWorld                = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld",                Event.None);
+        public static readonly Map TDM_Castillo                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Castillo",                     Event.None);
+        public static readonly Map TDM_ChateauGuillard              = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard",              Event.None);
+        public static readonly Map TDM_Dorado                       = new Map(Gamemode.TeamDeathmatch,        "TDM_Dorado",                       Event.None);
+        public static readonly Map TDM_Antarctica                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica",                   Event.None);
+        public static readonly Map TDM_Antarctica_Winter            = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica_Winter",            Event.WinterWonderland);
+        public static readonly Map TDM_Eichenwalde                  = new Map(Gamemode.TeamDeathmatch,        "TDM_Eichenwalde",                  Event.None);
+        public static readonly Map TDM_Eichenwalde_Halloween        = new Map(Gamemode.TeamDeathmatch,        "TDM_Eichenwalde_Halloween",        Event.HalloweenTerror);
+        public static readonly Map TDM_Hanamura                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Hanamura",                     Event.None);
+        public static readonly Map TDM_Hanamura_Winter              = new Map(Gamemode.TeamDeathmatch,        "TDM_Hanamura_Winter",              Event.WinterWonderland);
+        public static readonly Map TDM_Hollywood                    = new Map(Gamemode.TeamDeathmatch,        "TDM_Hollywood",                    Event.None);
+        public static readonly Map TDM_Hollywood_Halloween          = new Map(Gamemode.TeamDeathmatch,        "TDM_Hollywood_Halloween",          Event.HalloweenTerror);
+        public static readonly Map TDM_HorizonLunarColony           = new Map(Gamemode.TeamDeathmatch,        "TDM_HorizonLunarColony",           Event.None);
+        public static readonly Map TDM_Ilios_Lighthouse             = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Lighthouse",             Event.None);
+        public static readonly Map TDM_Ilios_Ruins                  = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Ruins",                  Event.None);
+        public static readonly Map TDM_Ilios_Well                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Ilios_Well",                   Event.None);
+        public static readonly Map TDM_KingsRow                     = new Map(Gamemode.TeamDeathmatch,        "TDM_KingsRow",                     Event.None);
+        public static readonly Map TDM_KingsRow_Winter              = new Map(Gamemode.TeamDeathmatch,        "TDM_KingsRow_Winter",              Event.WinterWonderland);
+        public static readonly Map TDM_Lijiang_ControlCenter        = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_ControlCenter",        Event.None);
+        public static readonly Map TDM_Lijiang_ControlCenter_Lunar  = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_ControlCenter_Lunar",  Event.LunarNewYear);
+        public static readonly Map TDM_Lijiang_Garden               = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_Garden",               Event.None);
+        public static readonly Map TDM_Lijiang_Garden_Lunar         = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_Garden_Lunar",         Event.LunarNewYear);
+        public static readonly Map TDM_Lijiang_NightMarket          = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_NightMarket",          Event.None);
+        public static readonly Map TDM_Lijiang_NightMarket_Lunar    = new Map(Gamemode.TeamDeathmatch,        "TDM_Lijiang_NightMarket_Lunar",    Event.LunarNewYear);
+        public static readonly Map TDM_Necropolis                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Necropolis",                   Event.None);
+        public static readonly Map TDM_Nepal_Sanctum                = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Sanctum",                Event.None);
+        public static readonly Map TDM_Nepal_Shrine                 = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Shrine",                 Event.None);
+        public static readonly Map TDM_Nepal_Village                = new Map(Gamemode.TeamDeathmatch,        "TDM_Nepal_Village",                Event.None);
+        public static readonly Map TDM_Oasis_CityCenter             = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_CityCenter",             Event.None);
+        public static readonly Map TDM_Oasis_Gardens                = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_Gardens",                Event.None);
+        public static readonly Map TDM_Oasis_University             = new Map(Gamemode.TeamDeathmatch,        "TDM_Oasis_University",             Event.None);
+        public static readonly Map TDM_Petra                        = new Map(Gamemode.TeamDeathmatch,        "TDM_Petra",                        Event.None);
+        public static readonly Map TDM_TempleOfAnubis               = new Map(Gamemode.TeamDeathmatch,        "TDM_TempleOfAnubis",               Event.None);
+        public static readonly Map TDM_VolskayaIndustries           = new Map(Gamemode.TeamDeathmatch,        "TDM_VolskayaIndustries",           Event.None);
 
         // Yeti Hunter
-        public static Map YH_Nepal_Village                 = new Map(Gamemode.YetiHunter,            "YH_Nepal_Village",                 Event.WinterWonderland);
+        public static readonly Map YH_Nepal_Village                 = new Map(Gamemode.YetiHunter,            "YH_Nepal_Village",                 Event.WinterWonderland);
 #pragma warning restore CS1591
         #endregion
 
         /// <summary>
         /// Gamemode of the map.
         /// </summary>
-        public Gamemode GameMode;
+        public Gamemode GameMode { get; private set; }
         /// <summary>
         /// Name of the map.
         /// </summary>
-        public string MapName;
+        public string MapName { get; private set; }
         /// <summary>
         /// The Overwatch event the map is on.
         /// </summary>
-        public Event GameEvent;
+        public Event GameEvent { get; private set; }
         private Map(Gamemode gamemode, string mapName, Event gameEvent)
         {
             GameMode = gamemode;
