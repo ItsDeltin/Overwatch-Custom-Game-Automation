@@ -127,7 +127,7 @@ namespace Deltin.CustomGameAutomation
                 LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 250);
             }
             else
-                {
+            {
                 LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_NOT_PRESENT, 250);
             }
         }
