@@ -58,7 +58,7 @@ namespace Deltin.CustomGameAutomation
                         cg.Chat.CloseChat();
 
                     // Open AddAI menu.
-                    cg.Cursor = Points.LOBBY_ADD_AI;
+                    cg.MoveMouseTo(Points.LOBBY_ADD_AI);
                     cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
                     cg.LeftClick(Points.LOBBY_ADD_AI, 500);
 

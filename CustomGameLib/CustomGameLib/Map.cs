@@ -343,6 +343,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map DM_BlizzardWorld                 = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld",                 Event.None);
         public static readonly Map DM_Castillo                      = new Map(Gamemode.Deathmatch,            "DM_Castillo",                      Event.None);
         public static readonly Map DM_ChateauGuillard               = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard",               Event.None);
+        public static readonly Map DM_ChateauGuillard_Halloween     = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard_Halloween",     Event.HalloweenTerror);
         public static readonly Map DM_Dorado                        = new Map(Gamemode.Deathmatch,            "DM_Dorado",                        Event.None);
         public static readonly Map DM_Antarctica                    = new Map(Gamemode.Deathmatch,            "DM_Antarctica",                    Event.None);
         public static readonly Map DM_Antarctica_Winter             = new Map(Gamemode.Deathmatch,            "DM_Antarctica_Winter",             Event.WinterWonderland);
@@ -449,6 +450,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map TDM_BlizzardWorld                = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld",                Event.None);
         public static readonly Map TDM_Castillo                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Castillo",                     Event.None);
         public static readonly Map TDM_ChateauGuillard              = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard",              Event.None);
+        public static readonly Map TDM_ChateauGuillard_Halloween    = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard_Halloween",    Event.HalloweenTerror);
         public static readonly Map TDM_Dorado                       = new Map(Gamemode.TeamDeathmatch,        "TDM_Dorado",                       Event.None);
         public static readonly Map TDM_Antarctica                   = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica",                   Event.None);
         public static readonly Map TDM_Antarctica_Winter            = new Map(Gamemode.TeamDeathmatch,        "TDM_Antarctica_Winter",            Event.WinterWonderland);

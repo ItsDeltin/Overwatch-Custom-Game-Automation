@@ -54,12 +54,12 @@ namespace Deltin.CustomGameAutomation
         /*  Sorry to anyone who maintains this monstrocity in the future :)
             Each coordinate in the first argument represents the location of a pixel making the letters. For example, the letter C:
                 
-            -4□■■■□
-            -3■□□□■
-            -2■□□□□
-            -1■□□□■
-            0□■■■□ 0,0 being the first black pixel on the first row (y=0).
-            -10123
+            -4□■■■□ | -4 ■■■ 
+            -3■□□□■ | -3■   ■ 
+            -2■□□□□ | -2■    
+            -1■□□□■ | -1■   ■
+             0□■■■□ |  0 ■■■  0,0 being the first black pixel on the first row (y=0).
+            -10123     -10123
                 
             ScanCommands() scans for letters at the 0 Y coordinate. When it hits a color of the chat, for example orange/tan for match chat, it will
             check for each letter in the "letters" array below. The most likely letter is chosen.
@@ -767,8 +767,14 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public PlayerIdentity PlayerIdentity;
 
+        /// <summary>
+        /// The chat identity of the player that executed the command.
+        /// </summary>
         public ChatIdentity ChatIdentity;
 
+        /// <summary>
+        /// True if the player that executed the command is a friend.
+        /// </summary>
         public bool IsFriend { get; internal set; }
     }
 

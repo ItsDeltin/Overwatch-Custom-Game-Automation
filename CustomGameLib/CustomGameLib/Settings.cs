@@ -406,22 +406,21 @@ namespace Deltin.CustomGameAutomation
 
         public class Settings_Modes_All : GameSettings
         {
-
             public Settings_Modes_All(bool initializeWithDefaults = false)
             {
                 if (initializeWithDefaults)
                 {
                     EnemyHealthBars = true;
-                    GameModeStart = Game_Mode_Start.All_Slots_Filled;
+                    GameModeStart = 0;
                     HealthPackRespawnTimeScalar = 100;
                     KillCam = true;
                     KillFeed = true;
                     Skins = true;
-                    SpawnHealthPacks = Spawn_Health_Packs.Determined_By_Mode;
+                    SpawnHealthPacks = 0;
 
                     AllowHeroSwitching = true;
-                    HeroLimit = Hero_Limit.One_Per_Team;
-                    LimitRoles = Limit_Roles.Off;
+                    HeroLimit = 1;
+                    LimitRoles = 0;
                     RespawnAsRandomHero = false;
                     RespawnTimeScalar = 100;
                 };
@@ -431,24 +430,18 @@ namespace Deltin.CustomGameAutomation
 
             // Settings
             public bool? EnemyHealthBars;
-            public Game_Mode_Start? GameModeStart;
+            public int? GameModeStart;
             public int? HealthPackRespawnTimeScalar;
             public bool? KillCam;
             public bool? KillFeed;
             public bool? Skins;
-            public Spawn_Health_Packs? SpawnHealthPacks;
+            public int? SpawnHealthPacks;
 
             public bool? AllowHeroSwitching;
-            public Hero_Limit? HeroLimit;
-            public Limit_Roles? LimitRoles;
+            public int? HeroLimit;
+            public int? LimitRoles;
             public bool? RespawnAsRandomHero;
             public int? RespawnTimeScalar;
-            // /Settings
-
-            public enum Game_Mode_Start { All_Slots_Filled, Immediately, Manual }
-            public enum Spawn_Health_Packs { Determined_By_Mode, Enabled, Disabled }
-            public enum Hero_Limit { Off, One_Per_Team, Two_Per_Team, One_Per_Game, Two_Per_Game }
-            public enum Limit_Roles { Off, Two_Of_Each_Role_Per_Team }
 
             internal override void Navigate(CustomGame cg)
             {
@@ -457,7 +450,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3);
@@ -489,7 +481,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Up, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -522,7 +513,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -538,7 +528,7 @@ namespace Deltin.CustomGameAutomation
                     Enabled = true;
                     CaptureSpeedModifier = 100;
                     CompetitiveRules = false;
-                    LimitValidControlPoints = Limit_Valid_Control_Points.All;
+                    LimitValidControlPoints = 0;
                     ScoreToWin = 2;
                     ScoringSpeedModifier = 100;
                 }
@@ -547,17 +537,9 @@ namespace Deltin.CustomGameAutomation
             public bool? Enabled;
             public int? CaptureSpeedModifier;
             public bool? CompetitiveRules;
-            public Limit_Valid_Control_Points? LimitValidControlPoints;
+            public int? LimitValidControlPoints;
             public int? ScoreToWin;
             public int? ScoringSpeedModifier;
-
-            public enum Limit_Valid_Control_Points
-            {
-                All,
-                First,
-                Second,
-                Third
-            }
 
             internal override void Navigate(CustomGame cg)
             {
@@ -567,7 +549,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -598,7 +579,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -631,7 +611,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -647,9 +626,9 @@ namespace Deltin.CustomGameAutomation
                     Enabled = false;
                     HeroSelectionTime = 20;
                     ScoreToWin = 3;
-                    RestrictPreviouslyUsedHeroes = Restrict_Previously_Used_Heroes.Off;
-                    HeroSelection = Hero_Selection.Any;
-                    LimitedChoicePool = Limited_Choice_Pool.TeamSizePlus2;
+                    RestrictPreviouslyUsedHeroes = 0;
+                    HeroSelection = 0;
+                    LimitedChoicePool = 2;
                     CaptureObjectiveTiebreaker = true;
                     TiebreakerAfterMatchTimeElapsed = 105;
                     TimeToCapture = 3;
@@ -662,19 +641,15 @@ namespace Deltin.CustomGameAutomation
             public bool? Enabled;
             public int? HeroSelectionTime;
             public int? ScoreToWin;
-            public Restrict_Previously_Used_Heroes? RestrictPreviouslyUsedHeroes;
-            public Hero_Selection? HeroSelection;
-            public Limited_Choice_Pool? LimitedChoicePool;
+            public int? RestrictPreviouslyUsedHeroes;
+            public int? HeroSelection;
+            public int? LimitedChoicePool;
             public bool? CaptureObjectiveTiebreaker;
             public int? TiebreakerAfterMatchTimeElapsed;
             public int? TimeToCapture;
             public int? DrawAfterMatchTimeElapsedWithNoTiebreaker;
             public bool? RevealHeroes;
             public int? RevealHeroesAfterMatchTimeElapsed;
-
-            public enum Restrict_Previously_Used_Heroes { Off, AfterRoundWon, AfterRoundPlayed }
-            public enum Hero_Selection { Any, Limited, Random, RandomMirrored }
-            public enum Limited_Choice_Pool { TeamSize, TeamSizePlus1, TeamSizePlus2, TeamSizePlus3 }
 
             internal override void Navigate(CustomGame cg)
             {
@@ -684,7 +659,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -721,7 +695,39 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
                 Thread.Sleep(100);
             }
+            internal override void Return(CustomGame cg)
+            {
+                cg.GoBack(3, 0);
+            }
+        }
 
+        public class Settings_Modes_JunkensteinsRevenge : GameSettings
+        {
+            public Settings_Modes_JunkensteinsRevenge(bool initializeWithDefaults = false)
+            {
+                if (initializeWithDefaults)
+                {
+                    Enabled = false;
+                    Difficulty = 0;
+                    DoorHealthScalar = 100;
+                    EndlessMode = false;
+                }
+            }
+
+            public bool? Enabled;
+            public int? Difficulty;
+            public int? DoorHealthScalar;
+            public bool? EndlessMode;
+
+            internal override void Navigate(CustomGame cg)
+            {
+                cg.NavigateToModesMenu();
+                Point point = cg.GetModeLocation(Gamemode.JunkensteinsRevenge, cg.CurrentOverwatchEvent);
+                Console.WriteLine(point);
+                cg.LeftClick(point.X, point.Y, 250);
+                cg.KeyPress(Keys.Left);
+                Thread.Sleep(100);
+            }
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -762,7 +768,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -789,7 +794,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(3, 0);
@@ -802,9 +806,9 @@ namespace Deltin.CustomGameAutomation
             {
                 if (initializeWithDefaults)
                 {
-                    MapRotation = Map_Rotation.AfterAMirrorMatch;
-                    ReturnToLobby = Return_To_Lobby.AfterAMirrorMatch;
-                    TeamBalancing = Team_Balancing.Off;
+                    MapRotation = 0;
+                    ReturnToLobby = 2;
+                    TeamBalancing = 0;
                     SwapTeamsAfterMatch = true;
                     BlueMaxPlayers = 6;
                     RedMaxPlayers = 6;
@@ -815,9 +819,9 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            public Map_Rotation? MapRotation;
-            public Return_To_Lobby? ReturnToLobby;
-            public Team_Balancing? TeamBalancing;
+            public int? MapRotation;
+            public int? ReturnToLobby;
+            public int? TeamBalancing;
             public bool? SwapTeamsAfterMatch;
             public int? BlueMaxPlayers;
             public int? RedMaxPlayers;
@@ -826,27 +830,6 @@ namespace Deltin.CustomGameAutomation
             public bool? MatchVoiceChat;
             public bool? PauseGameOnPlayerDisconnect;
 
-            public enum Map_Rotation
-            {
-                AfterAMirrorMatch,
-                AfterAGame,
-                Paused,
-            }
-
-            public enum Return_To_Lobby
-            {
-                Never,
-                AfterAGame,
-                AfterAMirrorMatch
-            }
-
-            public enum Team_Balancing
-            {
-                Off,
-                AfterAGame,
-                AfterAMirrorMatch
-            }
-
             internal override void Navigate(CustomGame cg)
             {
                 cg.GoToSettings();
@@ -854,7 +837,6 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Down);
                 Thread.Sleep(100);
             }
-
             internal override void Return(CustomGame cg)
             {
                 cg.GoBack(2);

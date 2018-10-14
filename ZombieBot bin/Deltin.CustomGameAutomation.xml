@@ -421,7 +421,7 @@
             </summary>
             <param name="path">Path to save screenshot to.</param>
         </member>
-        <member name="E:Deltin.CustomGameAutomation.CustomGame.OnOverwatchProcessExit">
+        <member name="E:Deltin.CustomGameAutomation.CustomGame.OnExit">
             <summary>
             Invoked when the Overwatch process exits.
             </summary>
@@ -434,6 +434,12 @@
         <member name="M:Deltin.CustomGameAutomation.CustomGame.IsDisconnected">
             <summary>
             Checks if Overwatch is disconnected.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.HasExited">
+            <summary>
+            Checks if Overwatch exited.
             </summary>
             <returns></returns>
         </member>
@@ -1282,6 +1288,16 @@
         <member name="F:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
             <summary>
             The identity of the player that executed the command.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
+            <summary>
+            The chat identity of the player that executed the command.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CommandData.IsFriend">
+            <summary>
+            True if the player that executed the command is a friend.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandExecuted">

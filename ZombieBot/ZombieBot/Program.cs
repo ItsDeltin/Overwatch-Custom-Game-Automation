@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using Deltin.CustomGameAutomation;
 
 namespace ZombieBot
@@ -187,9 +189,6 @@ namespace ZombieBot
                     OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(new OverwatchProcessInfoAuto()),
                     ScreenshotMethod = screenshotMethod
                 });
-                cg.OnDisconnect += Close;
-
-                Connected = true;
 
                 // Set the mode enabled
                 if (version == 0)
@@ -219,35 +218,23 @@ namespace ZombieBot
 
                 Setup(cg, maps, preset, name);
 
-                try
+                while (true)
                 {
-                    while (Connected)
-                    {
-                        Pregame(cg, maps);
-                        Ingame(cg);
-                    } // Game loop
+                    if (!Pregame(cg, maps))
+                        break;
+                    if (!Ingame(cg))
+                        break;
                 }
-                catch (Exception ex)
+
+                if (!cg.HasExited())
                 {
-                    Console.WriteLine(ex);
-                    Close(cg);
+                    cg.UsingOverwatchProcess.Close();
+                    cg.UsingOverwatchProcess.WaitForExit();
                 }
+                cg.Dispose();
+                Thread.Sleep(30000);
             } // Bot loop
         } // Main()
-
-        static bool Connected = true;
-
-        private static void Close(CustomGame cg)
-        {
-            cg.UsingOverwatchProcess.Close();
-            cg.UsingOverwatchProcess.WaitForExit();
-            cg.Dispose();
-        }
-        private static void Close(object sender, EventArgs args)
-        {
-            Connected = false;
-            Close((CustomGame)sender);
-        }
     }
 
     class InfectionMap

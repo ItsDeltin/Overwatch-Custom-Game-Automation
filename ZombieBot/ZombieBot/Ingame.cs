@@ -9,7 +9,7 @@ namespace ZombieBot
 {
     partial class Program
     {
-        public static void Ingame(CustomGame cg)
+        public static bool Ingame(CustomGame cg)
         {
             int[] messageStamps = new int[] { 300, 240, 180, 120, 60, 30, 15 };
             int[] timeStamps = new int[] { 30, 60, 60, 60, 60, 30, 15 };
@@ -32,6 +32,9 @@ namespace ZombieBot
 
                 if (Join == JoinType.Abyxa)
                     a.Update();
+
+                if (cg.IsDisconnected() || cg.HasExited())
+                    return false;
 
                 // Swap killed survivors to red
                 List<int> playersDead = cg.PlayerInfo.PlayersDead();
@@ -79,7 +82,7 @@ namespace ZombieBot
                         MatchIsPublic = false;
 
                     Thread.Sleep(1000);
-                    return;
+                    return true;
                 }
 
                 /*

@@ -17,8 +17,11 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="processInfo">Parameters for creating the process.</param>
         /// <returns>The created Overwatch process.</returns>
-        public static Process CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto processInfo)
+        public static Process CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto processInfo = null)
         {
+            if (processInfo == null)
+                processInfo = new OverwatchProcessInfoAuto();
+
             if (!File.Exists(processInfo.BattlenetExecutableFilePath))
                 throw new FileNotFoundException(string.Format("Battle.net.exe's executable at {0} was not found. " +
                     "Change battlenetExeLocation to the location of the battle.net.exe executable.", processInfo.BattlenetExecutableFilePath));
@@ -117,6 +120,9 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The created Overwatch process.</returns>
         public static Process CreateOverwatchProcessManually(OverwatchProcessInfoManual processInfo)
         {
+            if (processInfo == null)
+                throw new ArgumentNullException("processInfo");
+
             int maxWaitTime = 5000;
 
             if (!File.Exists(processInfo.OverwatchExecutableFilePath))
@@ -262,7 +268,7 @@ namespace Deltin.CustomGameAutomation
             return OWProcess;
         }
 
-        static List<Tuple<string, string>> ChangeVideoSettings(string settingsFilePath, string[] settings, string[] setTo)
+        private static List<Tuple<string, string>> ChangeVideoSettings(string settingsFilePath, string[] settings, string[] setTo)
         {
             string[] allSettings = File.ReadAllLines(settingsFilePath);
 
@@ -290,7 +296,7 @@ namespace Deltin.CustomGameAutomation
             return originalSettings;
         }
 
-        static void RestoreVideoSettings(string settingsFilePath, List<Tuple<string, string>> settingsList)
+        private static void RestoreVideoSettings(string settingsFilePath, List<Tuple<string, string>> settingsList)
         {
             List<string> settings = new List<string>();
             List<string> setTo = new List<string>();
@@ -302,7 +308,7 @@ namespace Deltin.CustomGameAutomation
             ChangeVideoSettings(settingsFilePath, settings.ToArray(), setTo.ToArray());
         }
 
-        static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, Bitmap bmp, Exception ex)
+        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, Bitmap bmp, Exception ex)
         {
             if (info.CloseOverwatchProcessOnFailure)
             {
@@ -315,7 +321,7 @@ namespace Deltin.CustomGameAutomation
             throw ex;
         }
 
-        static void WaitForVisibleProcessWindow(Process process)
+        private static void WaitForVisibleProcessWindow(Process process)
         {
             while (string.IsNullOrEmpty(process.MainWindowTitle))
             {
@@ -324,7 +330,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, Bitmap bmp, int maxTime)
+        private static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, Bitmap bmp, int maxTime)
         {
             Stopwatch elapsed = new Stopwatch();
             elapsed.Start();
@@ -342,7 +348,7 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
-        static void CreateCustomGame(IntPtr hwnd)
+        private static void CreateCustomGame(IntPtr hwnd)
         {
             KeyPress(hwnd, 100, Keys.Tab, Keys.Space);
             Thread.Sleep(500);
@@ -356,7 +362,7 @@ namespace Deltin.CustomGameAutomation
         /// <para>Item1 = the name of the setting.</para>
         /// <para>Item2 = what the setting should equal.</para>
         /// </summary>
-        static readonly Tuple<string[], string[]> VideoSettings = new Tuple<string[], string[]>(
+        private static readonly Tuple<string[], string[]> VideoSettings = new Tuple<string[], string[]>(
             new string[] { "RenderContrast", "RenderBrightness", "RenderGamma", "ColorblindMode", "FullscreenWindow", "FullscreenWindowEnabled", "MaximizedWindow" }, 
             new string[] { "0.5",            "0",                "2.2",         "0",              "0",                "0",                       "0" });
 

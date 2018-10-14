@@ -34,6 +34,9 @@ namespace Deltin.CustomGameAutomation
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
 
+            if (!Validate())
+                return;
+
             // This will take a screenshot of the Overwatch window.
             if (Monitor.TryEnter(ScreenshotLock)) // (1) If another thread is already updating the screen...
             {
@@ -60,6 +63,7 @@ namespace Deltin.CustomGameAutomation
 
         static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref Bitmap bmp)
         {
+            if (!Validate(hWnd)) return;
             // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
             SetupWindow(hWnd, method);
 
@@ -69,7 +73,7 @@ namespace Deltin.CustomGameAutomation
                 ScreenshotScreenCopy(hWnd, ref bmp);
         }
 
-        static void ScreenshotBitBlt(IntPtr hWnd, ref Bitmap bmp, bool adjust = true)
+        static void ScreenshotBitBlt(IntPtr hWnd, ref Bitmap bmp)
         {
             // get the hDC of the target window
             IntPtr hdcSrc = User32.GetDC(hWnd);

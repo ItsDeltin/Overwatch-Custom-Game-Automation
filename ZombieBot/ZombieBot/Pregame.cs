@@ -23,6 +23,9 @@ namespace ZombieBot
                 if (Join == JoinType.Abyxa)
                     a.Update();
 
+                if (cg.IsDisconnected() || cg.HasExited())
+                    return false;
+
                 if (skirmish.ElapsedMilliseconds >= 300 * 1000)
                 {
                     cg.RestartGame();

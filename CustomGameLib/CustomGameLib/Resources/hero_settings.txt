@@ -681,9 +681,11 @@ no_ammunition_requirement toggle
 
 -Torbjorn
 
-armor_pack toggle
-build_turret toggle
-build_turret_cooldown_time value
+deploy_turret toggle
+deploy_turret_cooldown_time value
+overload toggle
+overload_cooldown_time value
+overload_duration_scalar value
 quick_melee toggle
 ultimate_ability toggle
 ultimate_generation_combat value

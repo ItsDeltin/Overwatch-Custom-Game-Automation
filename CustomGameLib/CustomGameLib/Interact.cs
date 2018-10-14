@@ -62,7 +62,7 @@ namespace Deltin.CustomGameAutomation
         // Selects an option in the slot menu.
         internal bool SelectMenuOption(Point point)
         {
-            cg.Cursor = point; // Select the option
+            cg.MoveMouseTo(point); // Select the option
             Thread.Sleep(100);
             // <image url="$(ProjectDir)\ImageComments\Interact.cs\OptionSelect.png" scale="0.7" />
             cg.updateScreen();

@@ -55,7 +55,7 @@ namespace Deltin.CustomGameAutomation
             OverwatchHandle = OverwatchProcess.MainWindowHandle;
 
             OverwatchProcess.EnableRaisingEvents = true;
-            OverwatchProcess.Exited += InvokeOnOverwatchProcessExit;
+            OverwatchProcess.Exited += InvokeOnExit;
 
             SetupWindow(OverwatchHandle, ScreenshotMethod);
             Thread.Sleep(500);
@@ -101,6 +101,9 @@ namespace Deltin.CustomGameAutomation
 
         static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
         {
+            if (!Validate(hWnd))
+                return;
+
             if (method == ScreenshotMethod.ScreenCopy)
                 User32.SetForegroundWindow(hWnd);
             else
@@ -137,7 +140,7 @@ namespace Deltin.CustomGameAutomation
                 // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
                 // to tell the process where the cursor is. This will make the first slot become unhighlighted.
                 Thread.Sleep(100);
-                Cursor = Points.RESET_POINT;
+                MoveMouseTo(Points.RESET_POINT);
                 Thread.Sleep(100);
             }
         }
