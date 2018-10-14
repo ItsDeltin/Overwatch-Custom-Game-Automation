@@ -13,7 +13,6 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         void BackToMenu()
         {
-            Debug.WriteLine(DebugHeader + "Is lobby opened: " + IsLobbyOpened());
             if (!IsLobbyOpened())
             {
                 Activate();
@@ -160,8 +159,8 @@ namespace Deltin.CustomGameAutomation
         internal bool IsLobbyOpened()
         {
             updateScreen();
-            return CompareColor(704, 67, new int[] { 78, 122, 158 }, 30) // Test for invite players to group button
-                && CompareColor(237, 129, new int[] { 147, 148, 149 }, 10); // Test for the Create Game text
+            return CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MIN, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MAX) // Test for invite players to group button
+                && !CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Points.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE, Fades.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE); // Compare the invite players to group button with the area above it.
         }
 
         internal void NavigateToModesMenu()

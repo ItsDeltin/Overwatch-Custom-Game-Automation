@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System;
 using Deltin.CustomGameAutomation;
 
 namespace ZombieBot
@@ -46,12 +47,14 @@ namespace ZombieBot
                 bool endgame = false;
                 if (game.ElapsedMilliseconds >= 330 * 1000) // if time runs out, survivors win
                 {
+                    Console.WriteLine("Game Over: Survivors win.");
                     cg.Chat.SendChatMessage("The survivors defend long enough for help to arrive. Survivors win.");
                     endgame = true;
                     Thread.Sleep(2000);
                 }
                 if (cg.BlueCount == 0) // blue is empty, zombies win
                 {
+                    Console.WriteLine("Game Over: Zombies win.");
                     cg.Chat.SendChatMessage("The infection makes its way to the last human. Zombies win.");
                     endgame = true;
                     Thread.Sleep(2000);

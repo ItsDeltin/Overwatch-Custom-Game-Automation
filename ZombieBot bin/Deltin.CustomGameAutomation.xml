@@ -1434,11 +1434,6 @@
             The key used to open the Custom Game lobby. Is Keys.L by default.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenChat">
-            <summary>
-            The key used to open the chat. The default in Overwatch is Enter, but we recommend using Delete. Is Keys.Delete by default.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.CustomGameBuilder">
             <summary>
             CustomGame object builder.

@@ -9,6 +9,9 @@ namespace ZombieBot
         {
             cg.AI.RemoveAllBotsAuto();
 
+            if (Join == JoinType.Abyxa)
+                cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+
             if (preset != -1)
                 cg.Settings.LoadPreset(preset);
 

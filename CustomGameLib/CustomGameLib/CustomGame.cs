@@ -207,11 +207,11 @@ namespace Deltin.CustomGameAutomation
             lock (CustomGameLock)
             {
                 Disposed = true;
-                // Stop scanning commands
                 Commands.StopScanning();
+                DisposePersistentScanningThread();
+
                 if (bmp != null)
                     bmp.Dispose();
-                DisposePersistentScanningThread();
             }
         }
 
@@ -244,10 +244,6 @@ namespace Deltin.CustomGameAutomation
         /// The key used to open the Custom Game lobby. Is Keys.L by default.
         /// </summary>
         public Keys OpenCustomGameLobbyKey = Keys.L;
-        /// <summary>
-        /// The key used to open the chat. The default in Overwatch is Enter, but we recommend using Delete. Is Keys.Delete by default.
-        /// </summary>
-        public Keys OpenChat = Keys.Delete;
     }
 
     /// <summary>

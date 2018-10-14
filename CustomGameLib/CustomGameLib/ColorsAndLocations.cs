@@ -20,6 +20,8 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly int[] LOBBY_START_GAME = new int[] { 150, 127, 96 };
         public static readonly int[] LOBBY_CHANGE = new int[] { 126, 158, 181 };
+        public static readonly int[] LOBBY_INVITE_PLAYERS_TO_GROUP_MIN = new int[] { 77, 130, 165 };
+        public static readonly int[] LOBBY_INVITE_PLAYERS_TO_GROUP_MAX = new int[] { 95, 145, 180 };
 
         public static readonly int[] SETTINGS_PRESETS_LOADABLE_PRESET = new int[] { 126, 128, 134 };
 
@@ -47,6 +49,7 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly int LOBBY_START_GAME = 30;
         public static readonly int LOBBY_CHANGE = 50;
+        public static readonly int LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = 15;
 
         public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 30;
         public static readonly int SETTINGS_MODES_ENABLED = 30;
@@ -98,6 +101,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_BLUE_NAME = new Point(159, 229);
         public static readonly Point LOBBY_RED_NAME = new Point(458, 230);
         public static readonly Point LOBBY_PAUSED = new Point(441, 268);
+        public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP = new Point(703, 51);
+        public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = new Point(703, 40);
 
         public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
 

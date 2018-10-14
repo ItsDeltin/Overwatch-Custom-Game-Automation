@@ -40,11 +40,11 @@ namespace ZombieBot
 
                 var spectatorslots = cg.SpectatorSlots;
                 // If players are in spectator and slots are available, switch them to blue/red
-                for (int i = 0; i < addamount && i < spectatorslots.Count - 1; i++)
+                for (int i = 1; addamount > 0 && i < spectatorslots.Count; i++)
                 {
-                    if (cg.Interact.SwapToBlue(spectatorslots[i - 1]))
+                    if (cg.Interact.SwapToBlue(spectatorslots[i]))
                         addamount--;
-                    else if (cg.Interact.SwapToRed(spectatorslots[i - 1]))
+                    else if (cg.Interact.SwapToRed(spectatorslots[i]))
                         addamount--;
                 }
 
@@ -54,7 +54,7 @@ namespace ZombieBot
                 {
                     queue = a.Queuelist(); // get list of player in queue
 
-                    for (int i = 0; i < addamount && i < queue.Length; i++)
+                    for (int i = 0; addamount > 0 && i < queue.Length; i++)
                     {
                         // Get player data
                         string[] data = queue[i].Split(' ');
@@ -69,6 +69,8 @@ namespace ZombieBot
                             cg.WaitForSlotUpdate();
                             totalPlayerCount = cg.AllCount - 1;
                             a.RemoveFromQueue(data[0]); // remove player from queue
+
+                            addamount--;
                         }
                     }
                 }
@@ -137,6 +139,8 @@ namespace ZombieBot
                 // start the game.
                 if ((playingCount >= 7 || (queue.Length == 0 && cg.SpectatorCount == 1 && playingCount >= minimumPlayers)) && pregame.ElapsedMilliseconds >= 15 * 1000)
                 {
+                    Console.WriteLine("Starting game...");
+
                     if (Join == JoinType.ServerBrowser) cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
                     MatchIsPublic = false;
                     cg.SendServerToLobby();
@@ -202,10 +206,12 @@ namespace ZombieBot
                     VoteResults = new List<Vote>();
 
                     // Print the results to the chat
-                    cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", 
-                        maps[votemap[0]].ShortenedName, results[0], 
-                        maps[votemap[1]].ShortenedName, results[1], 
-                        maps[votemap[2]].ShortenedName, results[2]));
+                    string mapResults = String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes",
+                        maps[votemap[0]].ShortenedName, results[0],
+                        maps[votemap[1]].ShortenedName, results[1],
+                        maps[votemap[2]].ShortenedName, results[2]);
+                    cg.Chat.SendChatMessage(mapResults);
+                    Console.WriteLine(mapResults);
                     cg.Chat.SendChatMessage("Next map: " + maps[winningmap].ShortenedName);
                     cg.ToggleMap(ToggleAction.DisableAll, maps[winningmap].Map);
                     // Update map on website if jointype is Abyxa.

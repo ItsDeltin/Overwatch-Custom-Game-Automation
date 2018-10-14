@@ -20,7 +20,8 @@ namespace Deltin.CustomGameAutomation
 
         private void InvokeOnExit(object sender = null, EventArgs e = null)
         {
-            OnExit.Invoke(this, new EventArgs());
+            if (OnExit != null)
+                OnExit.Invoke(this, new EventArgs());
         }
 
         private bool OnDisconnectInvoked = false;
@@ -58,7 +59,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool HasExited()
         {
-            return Validate();
+            return !Validate();
         }
 
         internal bool Validate()

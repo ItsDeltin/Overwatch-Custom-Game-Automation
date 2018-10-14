@@ -127,7 +127,6 @@ namespace Deltin.CustomGameAutomation
         internal void StopScanning()
         {
             KeepScanning = false;
-            ScanCommandsTask.Wait();
         }
         private bool KeepScanning = true;
 
@@ -145,7 +144,8 @@ namespace Deltin.CustomGameAutomation
             {
                 // Wait for listen to equal true
                 System.Threading.Thread.Sleep(5);
-                while (Listen == false) System.Threading.Thread.Sleep(5);
+                if (!Listen)
+                    continue;
 
                 lock (cg.CustomGameLock)
                 {

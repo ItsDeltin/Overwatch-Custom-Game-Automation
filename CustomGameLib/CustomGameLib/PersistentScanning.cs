@@ -23,7 +23,6 @@ namespace Deltin.CustomGameAutomation
                     {
                         ScanGameOver(GameOverData);
                         InvokeOnDisconnect();
-                        //ScanInvitedPlayers(InviteData);
                     }
 
                     Thread.Sleep(10); // End
@@ -34,8 +33,6 @@ namespace Deltin.CustomGameAutomation
         private void DisposePersistentScanningThread()
         {
             PersistentScan = false;
-            PersistentScanningTask.Wait();
-            PersistentScanningTask.Dispose();
         }
         Task PersistentScanningTask = null;
         bool PersistentScan = true;

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -75,36 +76,44 @@ namespace Deltin.CustomGameAutomation
 
         static void ScreenshotBitBlt(IntPtr hWnd, ref Bitmap bmp)
         {
-            // get the hDC of the target window
-            IntPtr hdcSrc = User32.GetDC(hWnd);
-            // get the size
-            Rectangle windowRect = new Rectangle();
-            User32.GetWindowRect(hWnd, ref windowRect);
-            int width = windowRect.Right - windowRect.Left;
-            int height = windowRect.Bottom - windowRect.Top;
-            // create a device context we can copy to
-            IntPtr hdcDest = Gdi32.CreateCompatibleDC(hdcSrc);
-            // create a bitmap we can copy it to,
-            // using GetDeviceCaps to get the width/height
-            IntPtr hBitmap = Gdi32.CreateCompatibleBitmap(hdcSrc, width, height);
-            // select the bitmap object
-            IntPtr hOld = Gdi32.SelectObject(hdcDest, hBitmap);
-            // bitblt over
-            Gdi32.BitBlt(hdcDest, 1, 31, width - 10, height, hdcSrc, 0, 0, (uint)Gdi32.TernaryRasterOperations.SRCCOPY | (uint)Gdi32.TernaryRasterOperations.CAPTUREBLT);
-            // restore selection
-            Gdi32.SelectObject(hdcDest, hOld);
-            // clean up 
-            Gdi32.DeleteDC(hdcDest);
-            User32.ReleaseDC(hWnd, hdcSrc);
-            // get a .NET image object for it
-            Image img = Image.FromHbitmap(hBitmap);
-            // free up the Bitmap object
-            Gdi32.DeleteObject(hBitmap);
+            try
+            {
+                // get the hDC of the target window
+                IntPtr hdcSrc = User32.GetDC(hWnd);
+                // get the size
+                Rectangle windowRect = new Rectangle();
+                User32.GetWindowRect(hWnd, ref windowRect);
+                int width = windowRect.Right - windowRect.Left;
+                int height = windowRect.Bottom - windowRect.Top;
+                // create a device context we can copy to
+                IntPtr hdcDest = Gdi32.CreateCompatibleDC(hdcSrc);
+                // create a bitmap we can copy it to,
+                // using GetDeviceCaps to get the width/height
+                IntPtr hBitmap = Gdi32.CreateCompatibleBitmap(hdcSrc, width, height);
+                // select the bitmap object
+                IntPtr hOld = Gdi32.SelectObject(hdcDest, hBitmap);
+                // bitblt over
+                Gdi32.BitBlt(hdcDest, 1, 31, width - 10, height, hdcSrc, 0, 0, (uint)Gdi32.TernaryRasterOperations.SRCCOPY | (uint)Gdi32.TernaryRasterOperations.CAPTUREBLT);
+                // restore selection
+                Gdi32.SelectObject(hdcDest, hOld);
+                // clean up 
+                Gdi32.DeleteDC(hdcDest);
+                User32.ReleaseDC(hWnd, hdcSrc);
+                // get a .NET image object for it
+                Image img = Image.FromHbitmap(hBitmap);
+                // free up the Bitmap object
+                Gdi32.DeleteObject(hBitmap);
 
-            if (bmp != null)
-                bmp.Dispose();
-            bmp = new Bitmap(img);
-            img.Dispose();
+                if (bmp != null)
+                    bmp.Dispose();
+                bmp = new Bitmap(img);
+                img.Dispose();
+            }
+            catch (System.Runtime.InteropServices.ExternalException)
+            {
+                // Failed to capture window, usually because it was closed.
+                Debug.WriteLine(DebugHeader + "Failed to capture window. Is it closed?");
+            }
         }
 
         static void ScreenshotScreenCopy(IntPtr hWnd, ref Bitmap bmp)

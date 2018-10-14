@@ -29,7 +29,7 @@ namespace ZombieBot
 
         public void RemoveFromQueue(string battletag)
         {
-            new WebClient().DownloadData(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&remove=" + WebUtility.UrlEncode(battletag.Replace("#", "-")));
+            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&remove=" + WebUtility.UrlEncode(battletag.Replace("#", "-")), true);
         }
 
         public void SetPlayerCount(int playercount)
@@ -72,12 +72,16 @@ namespace ZombieBot
             Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&mpc=" + minimumPlayerCount);
         }
 
-        public void Req(string url)
+        private static void Req(string url, bool wait = false)
         {
-            new Task(() =>
+            Task requestTask = Task.Factory.StartNew(() =>
             {
-                new WebClient().DownloadData(url);
-            }).Start();
+                WebClient webClient = new WebClient();
+                webClient.DownloadData(url);
+                webClient.Dispose();
+            });
+            if (wait)
+                requestTask.Wait();
         }
     }
 }

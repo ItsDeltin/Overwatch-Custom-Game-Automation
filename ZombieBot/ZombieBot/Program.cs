@@ -182,11 +182,23 @@ namespace ZombieBot
             Console.ReadLine();
             Console.WriteLine("Starting...");
 
+            a = null;
+            if (Join == JoinType.Abyxa)
+            {
+                a = new Abyxa(name, region, local);
+                a.SetMinimumPlayerCount(minimumPlayers);
+            }
+
             while (true)
             {
                 CustomGame cg = new CustomGame(new CustomGameBuilder()
                 {
-                    OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(new OverwatchProcessInfoAuto()),
+                    OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(new OverwatchProcessInfoAuto()
+                    {
+                        MaxWaitForMenuTime = 30000,
+                        MaxBattlenetStartTime = 30000,
+                        MaxOverwatchStartTime = 30000
+                    }),
                     ScreenshotMethod = screenshotMethod
                 });
 
@@ -206,14 +218,6 @@ namespace ZombieBot
                 else
                     cg.CurrentOverwatchEvent = (Event)owevent;
 
-                a = null;
-                if (Join == JoinType.Abyxa)
-                {
-                    a = new Abyxa(name, region, local);
-                    a.SetMinimumPlayerCount(minimumPlayers);
-                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
-                }
-
                 var maps = version == 0 ? ElimMaps : TdmMaps;
 
                 Setup(cg, maps, preset, name);
@@ -226,13 +230,16 @@ namespace ZombieBot
                         break;
                 }
 
+                Console.WriteLine("Resetting (1/4)...");
                 if (!cg.HasExited())
                 {
                     cg.UsingOverwatchProcess.Close();
-                    cg.UsingOverwatchProcess.WaitForExit();
                 }
+                Console.WriteLine("Resetting (2/4)...");
                 cg.Dispose();
+                Console.WriteLine("Resetting (3/4)...");
                 Thread.Sleep(30000);
+                Console.WriteLine("Resetting (4/4)...");
             } // Bot loop
         } // Main()
     }
