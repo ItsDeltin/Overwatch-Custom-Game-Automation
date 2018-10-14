@@ -773,7 +773,7 @@ namespace Deltin.CustomGameAutomation
         public ChatIdentity ChatIdentity;
 
         /// <summary>
-        /// True if the player that executed the command is a friend.
+        /// Is the player that executed the command is a friend?
         /// </summary>
         public bool IsFriend { get; internal set; }
     }

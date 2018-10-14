@@ -339,7 +339,7 @@ namespace Deltin.CustomGameAutomation
                 if (!noUpdate)
                     cg.updateScreen();
 
-                int[] checkY = new int[0]; // The potential Y locations of the commendation icon
+                int checkY = 0; // The potential Y locations of the commendation icon
                 int checkX = 0; // Where to start scanning on the X axis for the commendation icon
                 int checkXLength = 0; // How many pixels to scan on the X axis for the commendation icon
 
@@ -351,9 +351,7 @@ namespace Deltin.CustomGameAutomation
 
                     // Find the potential Y locations of the commendation icon.
                     // 248 is the Y location of the first commendation icon of the player in the first slot of red and blue. 28 is how many pixels it is to the next commendation icon on the next slot.
-                    int y1 = 248 + (checkslot * 28),
-                        y2 = y1 + 9; // The second potential Y location is 9 pixels under the first potential spot.
-                    checkY = new int[] { y1, y2 };
+                    checkY = 257 + (checkslot * Distances.LOBBY_SLOT_DISTANCE);
 
                     if (CustomGame.IsSlotBlue(slot))
                         checkX = 74; // The start of the blue slots on the X axis
@@ -367,8 +365,7 @@ namespace Deltin.CustomGameAutomation
                     int checkslot = slot - CustomGame.Queueid;
 
                     // 245 is the Y location of the first commendation icon of the player in the first slot in queue. 14 is how many pixels it is to the next commendation icon on the next slot.
-                    int y = 245 + (checkslot * 14) - Distances.LOBBY_QUEUE_OFFSET;
-                    checkY = new int[] { y };
+                    checkY = 245 + (checkslot * 14) - Distances.LOBBY_QUEUE_OFFSET;
 
                     checkX = 707; // The start of the queue slots on this X axis
                     checkXLength = 163; // The length of the queue slots.
@@ -376,16 +373,12 @@ namespace Deltin.CustomGameAutomation
 
                 bool isAi = true;
 
-                for (int x = checkX; x < checkX + checkXLength; x++)
-                    for (int yi = 0; yi < checkY.Length; yi++)
+                for (int x = checkX; x < checkX + checkXLength; x += 2)
+                    // Check for the commendation icon.
+                    if (cg.CompareColor(x, checkY, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
                     {
-                        int y = checkY[yi];
-                        // Check for the commendation icon.
-                        if (cg.CompareColor(x, y, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
-                        {
-                            isAi = false;
-                            break;
-                        }
+                        isAi = false;
+                        break;
                     }
 
                 if (slot == 5 && cg.OpenChatIsDefault)

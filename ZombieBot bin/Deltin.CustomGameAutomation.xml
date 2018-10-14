@@ -1297,7 +1297,7 @@
         </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.IsFriend">
             <summary>
-            True if the player that executed the command is a friend.
+            Is the player that executed the command is a friend?
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandExecuted">

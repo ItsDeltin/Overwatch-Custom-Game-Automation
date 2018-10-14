@@ -13,6 +13,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         void BackToMenu()
         {
+            Debug.WriteLine(DebugHeader + "Is lobby opened: " + IsLobbyOpened());
             if (!IsLobbyOpened())
             {
                 Activate();
@@ -33,6 +34,7 @@ namespace Deltin.CustomGameAutomation
             Stopwatch sw = new Stopwatch();
             Stopwatch sc = new Stopwatch();
             sw.Start();
+
             while (true)
             {
                 if (
@@ -54,7 +56,6 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
             }
             Thread.Sleep(1000);
-            //Console.WriteLine("DONE"); // for debugging
         }
 
         /// <summary>
@@ -159,8 +160,8 @@ namespace Deltin.CustomGameAutomation
         internal bool IsLobbyOpened()
         {
             updateScreen();
-            return CompareColor(835, 179, new int[] { 121, 152, 184 }, 50) // Test for blue button (move/settings) at the top of the screen
-                    && CompareColor(704, 67, new int[] { 78, 122, 158 }, 30); // Test for invite players to group button
+            return CompareColor(704, 67, new int[] { 78, 122, 158 }, 30) // Test for invite players to group button
+                && CompareColor(237, 129, new int[] { 147, 148, 149 }, 10); // Test for the Create Game text
         }
 
         internal void NavigateToModesMenu()
