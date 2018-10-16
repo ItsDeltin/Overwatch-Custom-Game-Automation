@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Threading;
+using System.Linq;
 using Deltin.CustomGameAutomation;
 
 namespace ZombieBot
 {
     partial class Program
     {
-        public static void Setup(CustomGame cg, InfectionMap[] maps, int preset, string name)
+        public static void Setup(CustomGame cg, Map[] maps, int preset, string name)
         {
             cg.AI.RemoveAllBotsAuto();
 
             if (Join == JoinType.Abyxa)
                 cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
 
-            if (preset != -1)
+            if (preset > -1)
                 cg.Settings.LoadPreset(preset);
 
             try
@@ -39,13 +41,16 @@ namespace ZombieBot
                     cg.Interact.Move(allSlots[0], 12);
             }
 
-            int map = rnd.Next(maps.Length);
-            Console.WriteLine("Map chosen: " + maps[map].ShortenedName);
-            cg.ToggleMap(ToggleAction.DisableAll, maps[map].Map);
+            cg.ToggleMap(ToggleAction.EnableAll);
+            Thread.Sleep(500);
 
             // Update map on website if jointype is abyxa.
             if (Join == JoinType.Abyxa)
-                a.SetMap(maps[map].ShortenedName.ToLower());
+            {
+                string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
+                if (currentMap != null)
+                    a.SetMap(currentMap);
+            }
 
             // Make game public if jointype is serverbrowser and there is less than 7 players.
             if (Join == JoinType.ServerBrowser)

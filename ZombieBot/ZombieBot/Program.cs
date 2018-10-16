@@ -22,31 +22,31 @@ namespace ZombieBot
         public static Random rnd = new Random();
 
         public static int version = 0;
-        private static InfectionMap[] ElimMaps = new InfectionMap[]
+        private static Map[] ElimMaps = new Map[]
         {
-            new InfectionMap(Map.ELIM_Ayutthaya, "Ayutthaya"),
-            new InfectionMap(Map.ELIM_Ilios_Well, "Ilios-Well"),
-            new InfectionMap(Map.ELIM_Ilios_Ruins, "Ilios-Ruins"),
-            new InfectionMap(Map.ELIM_Ilios_Lighthouse, "Ilios-Lighthouse"),
-            new InfectionMap(Map.ELIM_Lijiang_ControlCenter, "Lijiang-CC"),
-            new InfectionMap(Map.ELIM_Lijiang_Garden, "Lijiang-Garden"),
-            new InfectionMap(Map.ELIM_Nepal_Sanctum, "Nepal-Sanctum"),
-            new InfectionMap(Map.ELIM_Nepal_Shrine, "Nepal-Shrine"),
-            new InfectionMap(Map.ELIM_Nepal_Village, "Nepal-Village"),
-            new InfectionMap(Map.ELIM_Oasis_CityCenter, "Oasis-CC")
+            Map.ELIM_Ayutthaya,
+            Map.ELIM_Ilios_Well,
+            Map.ELIM_Ilios_Ruins,
+            Map.ELIM_Ilios_Lighthouse,
+            Map.ELIM_Lijiang_ControlCenter,
+            Map.ELIM_Lijiang_Garden,
+            Map.ELIM_Nepal_Sanctum,
+            Map.ELIM_Nepal_Shrine,
+            Map.ELIM_Nepal_Village,
+            Map.ELIM_Oasis_CityCenter,
         };
-        private static InfectionMap[] TdmMaps = new InfectionMap[]
+        private static Map[] TdmMaps = new Map[]
         {
-            new InfectionMap(Map.TDM_Dorado, "Dorado"),
-            new InfectionMap(Map.TDM_Eichenwalde, "Eichenwalde"),
-            new InfectionMap(Map.TDM_Hanamura, "Hanamura"),
-            new InfectionMap(Map.TDM_Hollywood, "Hollywood"),
-            new InfectionMap(Map.TDM_HorizonLunarColony, "Horizon"),
-            new InfectionMap(Map.TDM_KingsRow, "KingsRow"),
-            new InfectionMap(Map.TDM_TempleOfAnubis, "TempleOfAnubis"),
-            new InfectionMap(Map.TDM_VolskayaIndustries, "Volskaya"),
-            new InfectionMap(Map.TDM_Ilios_Well, "Ilios-Well"),
-            new InfectionMap(Map.TDM_Ilios_Ruins, "Ilios-Ruins")
+            Map.TDM_Dorado,
+            Map.TDM_Eichenwalde,
+            Map.TDM_Hanamura,
+            Map.TDM_Hollywood,
+            Map.TDM_HorizonLunarColony,
+            Map.TDM_KingsRow,
+            Map.TDM_TempleOfAnubis,
+            Map.TDM_VolskayaIndustries,
+            Map.TDM_Ilios_Well,
+            Map.TDM_Ilios_Ruins
         };
 
         public static string[] ValidRegions = new string[] { "us", "eu", "kr" };
@@ -156,11 +156,10 @@ namespace ZombieBot
                                 }
                                 break;
 
-                            case "preset":
+                            case "presetNum":
                                 {
                                     if (Int32.TryParse(lineSplit[1], out int set))
-                                        if (set == 0 || set == 1)
-                                            preset = set;
+                                        preset = set;
                                 }
                                 break;
                         }
@@ -242,16 +241,5 @@ namespace ZombieBot
                 Console.WriteLine("Resetting (4/4)...");
             } // Bot loop
         } // Main()
-    }
-
-    class InfectionMap
-    {
-        public InfectionMap(Map map, string shortenedName)
-        {
-            Map = map;
-            ShortenedName = shortenedName;
-        }
-        public Map Map { get; private set; }
-        public string ShortenedName { get; private set; }
     }
 }

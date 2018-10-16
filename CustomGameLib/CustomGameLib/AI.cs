@@ -12,7 +12,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// AI settings for Overwatch.
         /// </summary>
-        public AI AI;
+        public AI AI { get; private set; }
     }
 
     /// <summary>

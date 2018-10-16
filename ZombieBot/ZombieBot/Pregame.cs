@@ -11,7 +11,7 @@ namespace ZombieBot
     {
         static bool MatchIsPublic = false;
 
-        public static bool Pregame(CustomGame cg, InfectionMap[] maps)
+        public static bool Pregame(CustomGame cg, Map[] maps)
         {
             int prevPlayerCount = 0;
             Stopwatch pregame = new Stopwatch();
@@ -28,10 +28,22 @@ namespace ZombieBot
 
                 if (skirmish.ElapsedMilliseconds >= 300 * 1000)
                 {
+                    Console.Write("Restarting the game. New map: ");
+
                     cg.RestartGame();
                     prevPlayerCount = 0;
                     skirmish.Restart();
                     cg.Chat.SwapChannel(Channel.Match);
+
+                    string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
+                    if (currentMap != null)
+                    {
+                        Console.WriteLine(currentMap);
+                        if (Join == JoinType.Abyxa)
+                            a.SetMap(currentMap);
+                    }
+                    else
+                        Console.WriteLine("Unknown");
                 }
 
                 int totalPlayerCount = cg.AllCount - 1; // Get total number of players in server
@@ -180,9 +192,9 @@ namespace ZombieBot
                     // Send the maps to vote for to the chat.
                     cg.Chat.SendChatMessage(FormatMessage(
                         "Vote for map! (15 seconds)",
-                        maps[votemap[0]].ShortenedName + " - $VOTE 1",
-                        maps[votemap[1]].ShortenedName + " - $VOTE 2",
-                        maps[votemap[2]].ShortenedName + " - $VOTE 3"));
+                        maps[votemap[0]].ShortName + " - $VOTE 1",
+                        maps[votemap[1]].ShortName + " - $VOTE 2",
+                        maps[votemap[2]].ShortName + " - $VOTE 3"));
 
                     // Listen to the "$VOTE" command for 15 seconds.
                     ListenTo listenTo = new ListenTo("$VOTE", true, false, false, OnVote);
@@ -207,16 +219,16 @@ namespace ZombieBot
 
                     // Print the results to the chat
                     string mapResults = String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes",
-                        maps[votemap[0]].ShortenedName, results[0],
-                        maps[votemap[1]].ShortenedName, results[1],
-                        maps[votemap[2]].ShortenedName, results[2]);
+                        maps[votemap[0]].ShortName, results[0],
+                        maps[votemap[1]].ShortName, results[1],
+                        maps[votemap[2]].ShortName, results[2]);
                     cg.Chat.SendChatMessage(mapResults);
                     Console.WriteLine(mapResults);
-                    cg.Chat.SendChatMessage("Next map: " + maps[winningmap].ShortenedName);
-                    cg.ToggleMap(ToggleAction.DisableAll, maps[winningmap].Map);
+                    cg.Chat.SendChatMessage("Next map: " + maps[winningmap].ShortName);
+                    cg.ToggleMap(ToggleAction.DisableAll, maps[winningmap]);
                     // Update map on website if jointype is Abyxa.
                     if (Join == JoinType.Abyxa)
-                        a.SetMap(maps[winningmap].ShortenedName.ToLower());
+                        a.SetMap(maps[winningmap].ShortName.ToLower());
 
                     // Swap everyone in red to blue.
                     var redslots = cg.RedSlots;

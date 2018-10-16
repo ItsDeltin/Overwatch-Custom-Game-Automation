@@ -11,8 +11,9 @@ Event=
 
 ScreenshotMethod=BitBlt // Screenshot method to use. Can be BitBlt or ScreenCopy.
 
+presetNum=-1 // The number of the customgame preset.
+
 // -- Server info --
 local=false
 name=Zombies - Infection
 region=us // Valid regions: "us", "eu", "kr"
-presetNum=0 // The number of the customgame preset.

@@ -57,7 +57,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Custom Game settings in Overwatch.
         /// </summary>
-        public Settings Settings;
+        public Settings Settings { get; private set; }
     }
     /// <summary>
     /// Custom Game settings in Overwatch.
@@ -73,7 +73,6 @@ namespace Deltin.CustomGameAutomation
         /// Loads a preset saved in Overwatch.
         /// </summary>
         /// <param name="preset">Preset to load. 0 is the first preset</param>
-        /// <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
         /// <returns>Returns true if selecting the preset was successful.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset)

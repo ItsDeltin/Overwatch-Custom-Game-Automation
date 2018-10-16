@@ -16,7 +16,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Chat commands for Overwatch.
         /// </summary>
-        public Commands Commands;
+        public Commands Commands { get; private set; }
     }
     /// <summary>
     /// Chat commands for Overwatch.
@@ -626,7 +626,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Command to listen to.
         /// </summary>
-        public string Command { get; internal set; }
+        public string Command { get; private set; }
         /// <summary>
         /// Should this command be listened to?
         /// </summary>
@@ -645,6 +645,7 @@ namespace Deltin.CustomGameAutomation
         public CommandExecuted Callback;
     }
 
+#pragma warning disable CS1591
     public class Identity : IDisposable
     {
         protected Identity(Bitmap identityMarkup)
@@ -680,6 +681,8 @@ namespace Deltin.CustomGameAutomation
         }
         private bool Disposed = false;
     }
+#pragma warning restore CS1591
+
 
     /// <summary>
     /// Contains data for identifying players who executed a command.
@@ -755,12 +758,12 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Command player executed.
         /// </summary>
-        public string Command { get; internal set; }
+        public string Command { get; private set; }
 
         /// <summary>
         /// Channel the command was executed on.
         /// </summary>
-        public Channel Channel { get; internal set; }
+        public Channel Channel { get; private set; }
 
         /// <summary>
         /// The identity of the player that executed the command.
@@ -775,7 +778,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Is the player that executed the command is a friend?
         /// </summary>
-        public bool IsFriend { get; internal set; }
+        public bool IsFriend { get; private set; }
     }
 
     /// <summary>

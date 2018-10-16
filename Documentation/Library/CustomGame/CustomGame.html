@@ -21,7 +21,7 @@
         <div class="content">
             <div class="section"><strong><a href="Deltin.CustomGameAutomation.html">Deltin.CustomGameAutomation</a>.<a href="CustomGame/CustomGame.html"><span class="type">CustomGame</span></a> Class</strong></div><div class="section">Automates Overwatch's custom games.</div><div class="section"><table><tr><th>Constructor</th><th>Description</th></tr><tr><td><a href="CustomGame/(CustomGameBuilder).html">CustomGame</a>([<a href="CustomGameBuilder/CustomGameBuilder.html"><span class="type">CustomGameBuilder</span></a> customGameBuilder])</td><td>
             Creates new CustomGame object.
-            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="CustomGame/CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto).html">CreateOverwatchProcessAutomatically</a>(<a href="OverwatchProcessInfoAuto/OverwatchProcessInfoAuto.html"><span class="type">OverwatchProcessInfoAuto</span></a> processInfo)</td><td><span class="type">Process</span></td><td>
+            </td></tr></table></div><div class="section"></div><div class="section"></div><div class="section"><table><tr><th>Method</th><th>Return Type</th><th>Description</th></tr><tr><td><a href="CustomGame/CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto).html">CreateOverwatchProcessAutomatically</a>([<a href="OverwatchProcessInfoAuto/OverwatchProcessInfoAuto.html"><span class="type">OverwatchProcessInfoAuto</span></a> processInfo])</td><td><span class="type">Process</span></td><td>
             Creates an Overwatch process using the currently logged in battle.net account.
             </td></tr><tr><td><a href="CustomGame/CreateOverwatchProcessManually(OverwatchProcessInfoManual).html">CreateOverwatchProcessManually</a>(<a href="OverwatchProcessInfoManual/OverwatchProcessInfoManual.html"><span class="type">OverwatchProcessInfoManual</span></a> processInfo)</td><td><span class="type">Process</span></td><td>
             Creates a new Overwatch process by logging into an account. I strongly reccommend using  instead.
@@ -31,6 +31,8 @@
             Disposes of all resources being used by the CustomGame instance.
             </td></tr><tr><td><a href="CustomGame/EnableOverwatchWindowInput().html">EnableOverwatchWindowInput</a>()</td><td></td><td>
             Enables input for the Overwatch window after disabling it with .
+            </td></tr><tr><td><a href="CustomGame/GetCurrentMap().html">GetCurrentMap</a>()</td><td><a href="Map/Map.html"><span class="type">Map</span></a>[]</td><td>
+            Gets the current map being played.
             </td></tr><tr><td><a href="CustomGame/GetCurrentOverwatchEvent().html">GetCurrentOverwatchEvent</a>()</td><td><a href="Event.html"><span class="type">Event</span></a></td><td>
             Gets the current Overwatch event. This compares the current date with past event's start and end times, so specific time may be a little off.
             </td></tr><tr><td><a href="CustomGame/GetGameState().html">GetGameState</a>()</td><td><a href="GameState.html"><span class="type">GameState</span></a></td><td>
@@ -39,10 +41,16 @@
             Gets the number of slots that are invited but are not ingame yet.
             </td></tr><tr><td><a href="CustomGame/GetInvitedSlots().html">GetInvitedSlots</a>()</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets the slots that are invited but are not ingame yet.
+            </td></tr><tr><td><a href="CustomGame/GetMapMarkup().html">GetMapMarkup</a>()</td><td><span class="type">Bitmap</span></td><td>
+            Gets the markup of the current selected map.
             </td></tr><tr><td><a href="CustomGame/GetModesEnabled(Event).html">GetModesEnabled</a>(<a href="Event.html"><span class="type">Event</span></a> currentOverwatchEvent)</td><td><a href="Gamemode.html"><span class="type">Gamemode</span></a></td><td>
             Gets the modes enabled in the Overwatch custom game.
+            </td></tr><tr><td><a href="CustomGame/GetOverwatchProcess().html">GetOverwatchProcess</a>()</td><td><span class="type">Process</span></td><td>
+            Gets a running Overwatch process.
             </td></tr><tr><td><a href="CustomGame/GetSlots(SlotFlags,bool).html">GetSlots</a>(<a href="SlotFlags.html"><span class="type">SlotFlags</span></a> flags, [<span class="blue">bool</span> noUpdate])</td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets slots in the game.
+            </td></tr><tr><td><a href="CustomGame/HasExited().html">HasExited</a>()</td><td><span class="blue">bool</span></td><td>
+            Checks if Overwatch exited.
             </td></tr><tr><td><a href="CustomGame/InvitePlayer(string,Team).html">InvitePlayer</a>(<span class="blue">string</span> playerName, <a href="Team.html"><span class="type">Team</span></a> team)</td><td><span class="blue">bool</span></td><td>
             Invites a player to the game via battletag.
             </td></tr><tr><td><a href="CustomGame/InvitePlayer(string,int).html">InvitePlayer</a>(<span class="blue">string</span> playerName, <span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
@@ -59,6 +67,8 @@
             Returns true if the slot is in red.
             </td></tr><tr><td><a href="CustomGame/IsSlotSpectator(int).html">IsSlotSpectator</a>(<span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
             Returns true if the slot is in Spectator.
+            </td></tr><tr><td><a href="CustomGame/IsSlotSpectatorOrQueue(int).html">IsSlotSpectatorOrQueue</a>(<span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
+            Returns true if the slot is in spectator or queue.
             </td></tr><tr><td><a href="CustomGame/IsSlotValid(int).html">IsSlotValid</a>(<span class="blue">int</span> slot)</td><td><span class="blue">bool</span></td><td>
             Returns true if the slot is blue, red, spectator, or in queue.
             </td></tr><tr><td><a href="CustomGame/RestartGame().html">RestartGame</a>()</td><td></td><td>
@@ -83,7 +93,9 @@
             Toggles maps in Overwatch.
             </td></tr><tr><td><a href="CustomGame/WaitForSlotUpdate(int).html">WaitForSlotUpdate</a>([<span class="blue">int</span> maxtime])</td><td><span class="blue">bool</span></td><td>
             Waits for the slots in overwatch to change.
-            </td></tr></table></div><div class="section"><table><tr><th>Property</th><th>Type</th><th>Description</th></tr><tr><td><a href="CustomGame/AllCount.html">AllCount</a></td><td><span class="blue">int</span></td><td>
+            </td></tr></table></div><div class="section"><table><tr><th>Property</th><th>Type</th><th>Description</th></tr><tr><td><a href="CustomGame/AI.html">AI</a></td><td><a href="AI/AI.html"><span class="type">AI</span></a></td><td>
+            AI settings for Overwatch.
+            </td></tr><tr><td><a href="CustomGame/AllCount.html">AllCount</a></td><td><span class="blue">int</span></td><td>
             Gets the number of players in the custom game.
             </td></tr><tr><td><a href="CustomGame/AllSlots.html">AllSlots</a></td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets all slots filled in the custom game.
@@ -91,8 +103,18 @@
             Gets the number of players in blue.
             </td></tr><tr><td><a href="CustomGame/BlueSlots.html">BlueSlots</a></td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets the slots filled in blue.
+            </td></tr><tr><td><a href="CustomGame/Chat.html">Chat</a></td><td><a href="Chat/Chat.html"><span class="type">Chat</span></a></td><td>
+            Chat for Overwatch.
+            </td></tr><tr><td><a href="CustomGame/Commands.html">Commands</a></td><td><a href="Commands/Commands.html"><span class="type">Commands</span></a></td><td>
+            Chat commands for Overwatch.
+            </td></tr><tr><td><a href="CustomGame/Interact.html">Interact</a></td><td><a href="Interact/Interact.html"><span class="type">Interact</span></a></td><td>
+            Changes a player's state in Overwatch.
+            </td></tr><tr><td><a href="CustomGame/Pause.html">Pause</a></td><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
+            Controls Overwatch's pause feature.
             </td></tr><tr><td><a href="CustomGame/PlayerCount.html">PlayerCount</a></td><td><span class="blue">int</span></td><td>
             Gets the number of players in red and blue.
+            </td></tr><tr><td><a href="CustomGame/PlayerInfo.html">PlayerInfo</a></td><td><a href="PlayerInfo/PlayerInfo.html"><span class="type">PlayerInfo</span></a></td><td>
+            Info about players in an Overwatch custom game.
             </td></tr><tr><td><a href="CustomGame/PlayerSlots.html">PlayerSlots</a></td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets the slots filled in red and blue.
             </td></tr><tr><td><a href="CustomGame/QueueCount.html">QueueCount</a></td><td><span class="blue">int</span></td><td>
@@ -103,41 +125,29 @@
             Gets the number of players in red.
             </td></tr><tr><td><a href="CustomGame/RedSlots.html">RedSlots</a></td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets the slots filled in red.
+            </td></tr><tr><td><a href="CustomGame/Settings.html">Settings</a></td><td><a href="Settings/Settings.html"><span class="type">Settings</span></a></td><td>
+            Custom Game settings in Overwatch.
             </td></tr><tr><td><a href="CustomGame/SpectatorCount.html">SpectatorCount</a></td><td><span class="blue">int</span></td><td>
             Gets the number of players in spectator.
             </td></tr><tr><td><a href="CustomGame/SpectatorSlots.html">SpectatorSlots</a></td><td><span class="type">List</span>&lt;<span class="blue">int</span>&gt;</td><td>
             Gets the slots filled in spectator.
             </td></tr><tr><td><a href="CustomGame/UsingOverwatchProcess.html">UsingOverwatchProcess</a></td><td><span class="type">Process</span></td><td>
             The Overwatch Process being used in the CustomGame class.
-            </td></tr></table></div><div class="section"><table><tr><th>Field</th><th>Type</th><th>Description</th></tr><tr><td><a href="CustomGame/AI.html">AI</a></td><td><a href="AI/AI.html"><span class="type">AI</span></a></td><td>
-            AI settings for Overwatch.
-            </td></tr><tr><td><a href="CustomGame/Chat.html">Chat</a></td><td><a href="Chat/Chat.html"><span class="type">Chat</span></a></td><td>
-            Chat for Overwatch.
-            </td></tr><tr><td><a href="CustomGame/Commands.html">Commands</a></td><td><a href="Commands/Commands.html"><span class="type">Commands</span></a></td><td>
-            Chat commands for Overwatch.
-            </td></tr><tr><td><a href="CustomGame/CurrentOverwatchEvent.html">CurrentOverwatchEvent</a></td><td><a href="Event.html"><span class="type">Event</span></a></td><td>
+            </td></tr></table></div><div class="section"><table><tr><th>Field</th><th>Type</th><th>Description</th></tr><tr><td><a href="CustomGame/CurrentOverwatchEvent.html">CurrentOverwatchEvent</a></td><td><a href="Event.html"><span class="type">Event</span></a></td><td>
             The current event occuring in Overwatch.
-            </td></tr><tr><td><a href="CustomGame/Interact.html">Interact</a></td><td><a href="Interact/Interact.html"><span class="type">Interact</span></a></td><td>
-            Changes a player's state in Overwatch.
             </td></tr><tr><td><a href="CustomGame/ModesEnabled.html">ModesEnabled</a></td><td><a href="Gamemode.html"><span class="type">Gamemode</span></a></td><td>
             Modes enabled in custom games.
-            </td></tr><tr><td><a href="CustomGame/Pause.html">Pause</a></td><td><a href="Pause/Pause.html"><span class="type">Pause</span></a></td><td>
-            Controls Overwatch's pause feature.
-            </td></tr><tr><td><a href="CustomGame/PlayerInfo.html">PlayerInfo</a></td><td><a href="PlayerInfo/PlayerInfo.html"><span class="type">PlayerInfo</span></a></td><td>
-            Info about players in an Overwatch custom game.
             </td></tr><tr><td><a href="CustomGame/Queueid.html">Queueid</a></td><td><span class="blue">int</span></td><td>
             The number where the queue slots start.
-            </td></tr><tr><td><a href="CustomGame/Settings.html">Settings</a></td><td><a href="Settings/Settings.html"><span class="type">Settings</span></a></td><td>
-            Custom Game settings in Overwatch.
             </td></tr><tr><td><a href="CustomGame/Spectatorid.html">Spectatorid</a></td><td><span class="blue">int</span></td><td>
             The number where the spectator slots start.
             </td></tr></table></div><div class="section"><table><tr><th>Event</th><th>Type</th><th>Description</th></tr><tr><td><a href="CustomGame/OnDisconnect.html">OnDisconnect</a></td><td><span class="type">EventHandler</span></td><td>
             Invoked when Overwatch disconnects.
+            </td></tr><tr><td><a href="CustomGame/OnExit.html">OnExit</a></td><td><span class="type">EventHandler</span></td><td>
+            Invoked when the Overwatch process exits.
             </td></tr><tr><td><a href="CustomGame/OnGameOver.html">OnGameOver</a></td><td><span class="type">EventHandler</span>&lt;<a href="GameOverArgs/GameOverArgs.html"><span class="type">GameOverArgs</span></a>&gt;</td><td>
             Events that are executed when the game is over.
             To get the winning team, blue team must have "\" on the start of their name, and red needs "*" on the start of their name.
-            </td></tr><tr><td><a href="CustomGame/OnOverwatchProcessExit.html">OnOverwatchProcessExit</a></td><td><span class="type">EventHandler</span></td><td>
-            Invoked when the Overwatch process exits.
             </td></tr></table></div><div class="section"></div><div class="section"></div>
         </div>
     </div>

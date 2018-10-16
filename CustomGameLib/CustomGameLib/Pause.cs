@@ -8,7 +8,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Controls Overwatch's pause feature.
         /// </summary>
-        public Pause Pause;
+        public Pause Pause { get; private set; }
     }
     /// <summary>
     /// Controls Overwatch's pause feature.

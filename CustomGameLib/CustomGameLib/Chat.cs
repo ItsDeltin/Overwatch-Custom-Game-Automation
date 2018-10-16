@@ -12,7 +12,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Chat for Overwatch.
         /// </summary>
-        public Chat Chat;
+        public Chat Chat { get; private set; }
     }
 
     /// <summary>

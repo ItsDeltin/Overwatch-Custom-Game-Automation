@@ -457,7 +457,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Info about players in an Overwatch custom game.
         /// </summary>
-        public PlayerInfo PlayerInfo;
+        public PlayerInfo PlayerInfo { get; private set; }
     }
 
     /// <summary>

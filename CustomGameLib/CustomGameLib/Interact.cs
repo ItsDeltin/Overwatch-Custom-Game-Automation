@@ -21,7 +21,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Changes a player's state in Overwatch.
         /// </summary>
-        public Interact Interact;
+        public Interact Interact { get; private set; }
     }
     /// <summary>
     /// Changes a player's state in Overwatch.
@@ -94,6 +94,15 @@ namespace Deltin.CustomGameAutomation
                 return Direction.RightDown;
         }
 
+        /// <summary>
+        /// Scans for an option at the specified point.
+        /// </summary>
+        /// <param name="scanLocation">The location to scan at.</param>
+        /// <param name="flags">The flags for scanning.</param>
+        /// <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+        /// <param name="markup">The markup to scan for. Set to null to ignore.</param>
+        /// <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnFound"/> flag.</para>
+        /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         public object MenuOptionScan(Point scanLocation, OptionScanFlags flags, string savelocation, Bitmap markup)
         {
             lock (cg.CustomGameLock)
@@ -239,24 +248,57 @@ namespace Deltin.CustomGameAutomation
                 return null;
             }
         }
+        /// <summary>
+        /// Scans for an option at the specified point.
+        /// </summary>
+        /// <param name="slot">The slot to scan at.</param>
+        /// <param name="flags">The flags for scanning.</param>
+        /// <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+        /// <param name="markup">The markup to scan for. Set to null to ignore.</param>
+        /// <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnFound"/> flag.</para>
+        /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         public object MenuOptionScan(int slot, OptionScanFlags flags, string savelocation, Bitmap markup)
         {
             return MenuOptionScan(FindSlotLocation(slot), flags, savelocation, markup);
         }
 
+        /// <summary>
+        /// Peaks for an option.
+        /// </summary>
+        /// <param name="scanLocation">The location to peak for the option at.</param>
+        /// <param name="markup">The markup of the option to peak for.</param>
+        /// <returns>True if the option was found.</returns>
         public bool PeakOption(Point scanLocation, Bitmap markup)
         {
             return (bool)MenuOptionScan(scanLocation, OptionScanFlags.OpenMenu | OptionScanFlags.CloseMenu | OptionScanFlags.ReturnFound, null, markup);
         }
+        /// <summary>
+        /// Peaks for an option.
+        /// </summary>
+        /// <param name="slot">The slot to peak for the option at.</param>
+        /// <param name="markup">The markup of the option to peak for.</param>
+        /// <returns>True if the option was found.</returns>
         public bool PeakOption(int slot, Bitmap markup)
         {
             return PeakOption(FindSlotLocation(slot), markup);
         }
 
+        /// <summary>
+        /// Clicks an option.
+        /// </summary>
+        /// <param name="scanLocation">The location to scan for the option at.</param>
+        /// <param name="markup">The markup of the option to scan for.</param>
+        /// <returns>True if the option was found.</returns>
         public bool ClickOption(Point scanLocation, Bitmap markup)
         {
             return (bool)MenuOptionScan(scanLocation, OptionScanFlags.OpenMenu | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound | OptionScanFlags.Click, null, markup);
         }
+        /// <summary>
+        /// Clicks an option.
+        /// </summary>
+        /// <param name="slot">The slot to scan for the option at.</param>
+        /// <param name="markup">The markup of the option to scan for.</param>
+        /// <returns>True if the option was found.</returns>
         public bool ClickOption(int slot, Bitmap markup)
         {
             return ClickOption(FindSlotLocation(slot), markup);
@@ -445,15 +487,39 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
+    /// <summary>
+    /// Flags for scanning an option menu in Overwatch.
+    /// </summary>
     [Flags]
     public enum OptionScanFlags
     {
+        /// <summary>
+        /// No flags.
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// Open the menu before scanning starts.
+        /// </summary>
         OpenMenu = 1 << 0,
+        /// <summary>
+        /// Close the menu after scanning finishes.
+        /// </summary>
         CloseMenu = 1 << 1,
+        /// <summary>
+        /// Close the menu if the option being scanned for is not found.
+        /// </summary>
         CloseIfNotFound = 1 << 2,
+        /// <summary>
+        /// Click the option if it is found.
+        /// </summary>
         Click = 1 << 3,
+        /// <summary>
+        /// Return the location of the option.
+        /// </summary>
         ReturnLocation = 1 << 4,
+        /// <summary>
+        /// Return whether or not the option is found.
+        /// </summary>
         ReturnFound = 1 << 5
     }
 }

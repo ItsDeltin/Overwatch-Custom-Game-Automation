@@ -11,8 +11,16 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public class InvalidSlotException : Exception
     {
+        /// <summary>
+        /// Throws invalid slot exception.
+        /// </summary>
+        /// <param name="message">Message of exception.</param>
         public InvalidSlotException(string message) : base(message) { }
 
+        /// <summary>
+        /// Throws invalid slot exception.
+        /// </summary>
+        /// <param name="slot">Invalid slot.</param>
         public InvalidSlotException(int slot) : base(string.Format("Slot {0} is not a valid slot.", slot.ToString())) { }
     }
 
@@ -46,7 +54,6 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
-    // For CreateOverwatchProcess.cs
     /// <summary>
     /// Thrown when creating an Overwatch process using <see cref="CustomGame.CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto)"/> or <see cref="CustomGame.CreateOverwatchProcessManually(OverwatchProcessInfoManual)"/> fails.
     /// </summary>

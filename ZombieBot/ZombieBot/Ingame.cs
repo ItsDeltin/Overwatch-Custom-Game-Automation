@@ -63,18 +63,21 @@ namespace ZombieBot
                 {
                     cg.Chat.SendChatMessage("Resetting, please wait...");
 
-                    game.Reset();
-
                     // ti will equal 0 if the game ends before mccree bots are removed, so remove the bots.
                     if (ti == 0)
-                    {
                         cg.AI.RemoveAllBotsAuto();
-                    }
                     Thread.Sleep(500);
 
-                    ti = 0;
+                    cg.ToggleMap(ToggleAction.EnableAll);
 
                     cg.RestartGame();
+
+                    if (Join == JoinType.Abyxa)
+                    {
+                        string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
+                        if (currentMap != null)
+                            a.SetMap(currentMap);
+                    }
 
                     if (cg.AllCount < 7 && Join == JoinType.ServerBrowser)
                     {

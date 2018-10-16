@@ -9,17 +9,17 @@
             Automates Overwatch's custom games.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.AI">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.AI">
             <summary>
             AI settings for Overwatch.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Chat">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Chat">
             <summary>
             Chat for Overwatch.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Commands">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Commands">
             <summary>
             Chat commands for Overwatch.
             </summary>
@@ -124,7 +124,7 @@
     </example>
             <seealso cref="M:Deltin.CustomGameAutomation.GameOverArgs.GetWinningTeam" />
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Pause">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Pause">
             <summary>
             Controls Overwatch's pause feature.
             </summary>
@@ -272,7 +272,7 @@
             <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
             <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.PlayerInfo">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo">
             <summary>
             Info about players in an Overwatch custom game.
             </summary>
@@ -287,7 +287,7 @@
             The number where the spectator slots start.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Interact">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Interact">
             <summary>
             Changes a player's state in Overwatch.
             </summary>
@@ -414,6 +414,18 @@
             </summary>
             <param name="currentOverwatchEvent">The current Overwatch event.</param>
             <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetMapMarkup">
+            <summary>
+            Gets the markup of the current selected map.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetCurrentMap">
+            <summary>
+            Gets the current map being played.
+            </summary>
+            <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="F:Deltin.CustomGameAutomation.Map.E_Route66"/> and <see cref="F:Deltin.CustomGameAutomation.Map.SKIRM_Route66"/>.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>
@@ -583,7 +595,7 @@
     </example>
             <seealso cref="T:Deltin.CustomGameAutomation.SetHero" />
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Settings">
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.Settings">
             <summary>
             Custom Game settings in Overwatch.
             </summary>
@@ -593,7 +605,7 @@
             AI settings for Overwatch.
             </summary>
             <remarks>
-            The AI class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.AI"/> field.
+            The AI class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.AI"/> field.
             </remarks>
         </member>
         <member name="M:Deltin.CustomGameAutomation.AI.AddAI(Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty,Deltin.CustomGameAutomation.Team,System.Int32)">
@@ -850,7 +862,7 @@
             Chat for Overwatch.
             </summary>
             <remarks>
-            The Chat class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Chat"/> field.
+            The Chat class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Chat"/> field.
             </remarks>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Chat.SendChatMessage(System.String)">
@@ -955,7 +967,7 @@
             Chat commands for Overwatch.
             </summary>
             <remarks>
-            The Commands class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" /> field.
+            The Commands class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Commands" /> field.
             </remarks>
             <example>
       The code below will allow the players in the server to vote for a map.
@@ -1161,7 +1173,7 @@
       }
       </code>
     </example>
-            <seealso cref="F:Deltin.CustomGameAutomation.CustomGame.Commands" />
+            <seealso cref="P:Deltin.CustomGameAutomation.CustomGame.Commands" />
             <seealso cref="T:Deltin.CustomGameAutomation.ListenTo" />
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData" />
             <seealso cref="T:Deltin.CustomGameAutomation.PlayerIdentity" />
@@ -1584,6 +1596,18 @@
             Thrown when slot is invalid or out of range.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.InvalidSlotException.#ctor(System.String)">
+            <summary>
+            Throws invalid slot exception.
+            </summary>
+            <param name="message">Message of exception.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.InvalidSlotException.#ctor(System.Int32)">
+            <summary>
+            Throws invalid slot exception.
+            </summary>
+            <param name="slot">Invalid slot.</param>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.MissingOverwatchProcessException">
             <summary>
             Thrown if an Overwatch process is not found.
@@ -1640,7 +1664,7 @@
             Controls Overwatch's pause feature.
             </summary>
             <remarks>
-            The Pause class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Pause"/> field.
+            The Pause class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Pause"/> field.
             </remarks>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Pause.TogglePause">
@@ -1668,7 +1692,7 @@
             Info about players in an Overwatch custom game.
             </summary>
             <remarks>
-            The PlayerInfo class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
+            The PlayerInfo class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
             </remarks>
         </member>
         <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayersDead(System.Boolean)">
@@ -1892,8 +1916,62 @@
             Changes a player's state in Overwatch.
             </summary>
             <remarks>
-            The Interact class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
+            The Interact class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
             </remarks>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Drawing.Point,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+            <summary>
+            Scans for an option at the specified point.
+            </summary>
+            <param name="scanLocation">The location to scan at.</param>
+            <param name="flags">The flags for scanning.</param>
+            <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+            <param name="markup">The markup to scan for. Set to null to ignore.</param>
+            <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
+            <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+            <summary>
+            Scans for an option at the specified point.
+            </summary>
+            <param name="slot">The slot to scan at.</param>
+            <param name="flags">The flags for scanning.</param>
+            <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+            <param name="markup">The markup to scan for. Set to null to ignore.</param>
+            <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
+            <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Drawing.Point,System.Drawing.Bitmap)">
+            <summary>
+            Peaks for an option.
+            </summary>
+            <param name="scanLocation">The location to peak for the option at.</param>
+            <param name="markup">The markup of the option to peak for.</param>
+            <returns>True if the option was found.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Int32,System.Drawing.Bitmap)">
+            <summary>
+            Peaks for an option.
+            </summary>
+            <param name="slot">The slot to peak for the option at.</param>
+            <param name="markup">The markup of the option to peak for.</param>
+            <returns>True if the option was found.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Drawing.Point,System.Drawing.Bitmap)">
+            <summary>
+            Clicks an option.
+            </summary>
+            <param name="scanLocation">The location to scan for the option at.</param>
+            <param name="markup">The markup of the option to scan for.</param>
+            <returns>True if the option was found.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Int32,System.Drawing.Bitmap)">
+            <summary>
+            Clicks an option.
+            </summary>
+            <param name="slot">The slot to scan for the option at.</param>
+            <param name="markup">The markup of the option to scan for.</param>
+            <returns>True if the option was found.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)">
             <summary>
@@ -1969,9 +2047,54 @@
             Swaps players on both teams.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.OptionScanFlags">
+            <summary>
+            Flags for scanning an option menu in Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.None">
+            <summary>
+            No flags.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.OpenMenu">
+            <summary>
+            Open the menu before scanning starts.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseMenu">
+            <summary>
+            Close the menu after scanning finishes.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseIfNotFound">
+            <summary>
+            Close the menu if the option being scanned for is not found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.Click">
+            <summary>
+            Click the option if it is found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation">
+            <summary>
+            Return the location of the option.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound">
+            <summary>
+            Return whether or not the option is found.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.Map">
             <summary>
             Maps in Overwatch.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Map.GameEvent">
+            <summary>
+            The Overwatch event the map is on.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Map.GameMode">
@@ -1984,9 +2107,9 @@
             Name of the map.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Map.GameEvent">
+        <member name="P:Deltin.CustomGameAutomation.Map.ShortName">
             <summary>
-            The Overwatch event the map is on.
+            Short name of the map.
             </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Map.MapIDFromName(System.String)">
@@ -2184,7 +2307,27 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Antarctica">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ayutthaya">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.bastion_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlackForest">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlizzardWorld">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2194,7 +2337,32 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Busan">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Castillo">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ChateauGuillard">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ChateauGuillard_Halloween">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.doomfist_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Dorado">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2209,7 +2377,27 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Eichenwalde">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Eichenwalde_Halloween">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.gengi_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Gibraltar">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hanamura">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2251,7 +2439,72 @@
             recieve_h [rest of string was truncated]&quot;;.
              </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hollywood">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hollywood_Halloween">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.HorizonLunarColony">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Lighthouse">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Ruins">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Well">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Junkertown">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.junkrat_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.KingsRow">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_ControlCenter">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_Garden">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_NightMarket">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2286,7 +2539,62 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Necropolis">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Sanctum">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Shrine">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Village">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Numbani">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_CityCenter">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_Gardens">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_University">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.orisa_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Petra">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2326,7 +2634,17 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Rialto">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.roadhog_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Route66">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2386,6 +2704,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.TempleOfAnubis">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.torbjorn_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
@@ -2397,6 +2720,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.view_career_profile">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.VolskayaIndustries">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2612,7 +2940,7 @@
             Custom Game settings in Overwatch.
             </summary>
             <remarks>
-            The Settings class is accessed in a CustomGame object on the <see cref="F:Deltin.CustomGameAutomation.CustomGame.Settings"/> field.
+            The Settings class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Settings"/> field.
             </remarks>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32)">
@@ -2620,7 +2948,6 @@
             Loads a preset saved in Overwatch.
             </summary>
             <param name="preset">Preset to load. 0 is the first preset</param>
-            <param name="maxWaitTime">Maximum time to wait for the preset to show up.</param>
             <returns>Returns true if selecting the preset was successful.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         </member>

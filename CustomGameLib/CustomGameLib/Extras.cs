@@ -29,10 +29,11 @@ namespace Deltin.CustomGameAutomation
         // Compares colors of bitmap
         public static bool CompareColor(this Bitmap bmp, int x, int y, int[] color, int fade)
         {
+            Color pixelColor = bmp.GetPixelAt(x, y);
             // If the color of the pixel at the input X and Y coordinates of the input bmp is at least (int fade) units or less close to the input color variable, return false.
-            return Math.Abs(bmp.GetPixelAt(x, y).R - color[0]) < fade &&
-                Math.Abs(bmp.GetPixelAt(x, y).G - color[1]) < fade &&
-                Math.Abs(bmp.GetPixelAt(x, y).B - color[2]) < fade;
+            return Math.Abs(pixelColor.R - color[0]) < fade &&
+                Math.Abs(pixelColor.G - color[1]) < fade &&
+                Math.Abs(pixelColor.B - color[2]) < fade;
         }
         public static bool CompareColor(this Bitmap bmp, Point point, int[] color, int fade)
         {
@@ -41,15 +42,17 @@ namespace Deltin.CustomGameAutomation
 
         public static bool CompareColor(this Bitmap bmp, int x, int y, int x2, int y2, int fade)
         {
+            Color pixelColor1 = bmp.GetPixelAt(x, y);
+            Color pixelColor2 = bmp.GetPixelAt(x2, y2);
             // If the color of the pixel at the input X and Y coordinates of the input bmp is at least (int fade) units or less close to the input color variable, return false.
-            return Math.Abs(bmp.GetPixelAt(x, y).R - bmp.GetPixelAt(x2, y2).R) < fade &&
-                Math.Abs(bmp.GetPixelAt(x, y).G - bmp.GetPixelAt(x2, y2).G) < fade &&
-                Math.Abs(bmp.GetPixelAt(x, y).B - bmp.GetPixelAt(x2, y2).B) < fade;
+            return Math.Abs(pixelColor1.R - pixelColor2.R) < fade &&
+                Math.Abs(pixelColor1.G - pixelColor2.G) < fade &&
+                Math.Abs(pixelColor1.B - pixelColor2.B) < fade;
         }
 
         public static bool CompareColor(this Bitmap bmp, int x, int y, int[] min, int[] max)
         {
-            var pixel = bmp.GetPixelAt(x, y);
+            Color pixel = bmp.GetPixelAt(x, y);
             return min[0] < pixel.R && pixel.R < max[0] &&
                    min[1] < pixel.G && pixel.G < max[1] &&
                    min[2] < pixel.B && pixel.B < max[2];

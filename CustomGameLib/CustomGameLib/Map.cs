@@ -284,6 +284,59 @@ namespace Deltin.CustomGameAutomation
                 return modesEnabled;
             }
         }
+
+        /// <summary>
+        /// Gets the markup of the current selected map.
+        /// </summary>
+        /// <returns></returns>
+        public Bitmap GetMapMarkup()
+        {
+            updateScreen();
+            return BmpClone(Rectangles.LOBBY_MAP);
+        }
+
+        /// <summary>
+        /// Gets the current map being played.
+        /// </summary>
+        /// <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="Map.E_Route66"/> and <see cref="Map.SKIRM_Route66"/>.</returns>
+        public Map[] GetCurrentMap()
+        {
+            updateScreen();
+
+            Tuple<double, MapMarkup> mostLikely = null;
+
+            foreach(MapMarkup mapMarkup in Markups.MAP_MARKUPS)
+            {
+                double total = 0;
+                double success = 0;
+                double fail = 0;
+                bool failed = false;
+
+                for (int x = 0; x < mapMarkup.Markup.Width && !failed; x++)
+                    for (int y = 0; y < mapMarkup.Markup.Height && !failed; y++)
+                    {
+                        total++;
+                        if (CompareColor(Rectangles.LOBBY_MAP.X + x, Rectangles.LOBBY_MAP.Y + y, mapMarkup.Markup.GetPixelAt(x, y).ToInt(), MapFade))
+                            success++;
+                        else
+                            fail++;
+
+                        failed = fail > MaximumMapIncorrectCount;
+                    }
+                if (failed)
+                    continue;
+
+                double result = success / total * 100;
+
+                if (result >= MinimumMapRatio && (mostLikely == null || (mostLikely.Item1 < result)))
+                    mostLikely = new Tuple<double, MapMarkup>(result, mapMarkup);
+            }
+
+            return mostLikely?.Item2.Maps;
+        }
+        private static readonly int MapFade = 10;
+        private static readonly int MinimumMapRatio = 98;
+        private static readonly int MaximumMapIncorrectCount = (int)(Rectangles.LOBBY_MAP.Width * Rectangles.LOBBY_MAP.Height * ((double)(100 - MinimumMapRatio) / 100));
     }
 
     /// <summary>
@@ -438,7 +491,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map SKIRM_Nepal                      = new Map(Gamemode.Skirmish,              "SKIRM_Nepal",                      Event.None);
         public static readonly Map SKIRM_Numbani                    = new Map(Gamemode.Skirmish,              "SKIRM_Numbani",                    Event.None);
         public static readonly Map SKIRM_Oasis                      = new Map(Gamemode.Skirmish,              "SKIRM_Oasis",                      Event.None);
-        public static readonly Map SKIRM_Railto                     = new Map(Gamemode.Skirmish,              "SKIRM_Railto",                     Event.None);
+        public static readonly Map SKIRM_Rialto                     = new Map(Gamemode.Skirmish,              "SKIRM_Rialto",                     Event.None);
         public static readonly Map SKIRM_Route66                    = new Map(Gamemode.Skirmish,              "SKIRM_Route66",                    Event.None);
         public static readonly Map SKIRM_TempleOfAnubis             = new Map(Gamemode.Skirmish,              "SKIRM_TempleOfAnubis",             Event.None);
         public static readonly Map SKIRM_VolskayaIndustries         = new Map(Gamemode.Skirmish,              "SKIRM_VolskayaIndustries",         Event.None);
@@ -488,6 +541,18 @@ namespace Deltin.CustomGameAutomation
 #pragma warning restore CS1591
         #endregion
 
+        private Map(Gamemode gamemode, string mapName, Event gameEvent)
+        {
+            GameEvent = gameEvent;
+            GameMode = gamemode;
+            MapName = mapName;
+            ShortName = mapName.Substring(mapName.IndexOf('_') + 1);
+        }
+
+        /// <summary>
+        /// The Overwatch event the map is on.
+        /// </summary>
+        public Event GameEvent { get; private set; }
         /// <summary>
         /// Gamemode of the map.
         /// </summary>
@@ -497,22 +562,22 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public string MapName { get; private set; }
         /// <summary>
-        /// The Overwatch event the map is on.
+        /// Short name of the map.
         /// </summary>
-        public Event GameEvent { get; private set; }
-        private Map(Gamemode gamemode, string mapName, Event gameEvent)
-        {
-            GameMode = gamemode;
-            MapName = mapName;
-            GameEvent = gameEvent;
-        }
+        public string ShortName { get; private set; }
 
+#pragma warning disable CS1591
         public bool Equals(Map other)
         {
             return MapName == other.MapName 
                 && GameMode == other.GameMode 
                 && GameEvent == other.GameEvent;
         }
+        public override string ToString()
+        {
+            return MapName;
+        }
+#pragma warning restore CS1591
 
         /// <summary>
         /// Gets map ID from map name.
@@ -542,14 +607,6 @@ namespace Deltin.CustomGameAutomation
             return null;
         }
 
-        private static FieldInfo[] GetMapFieldInfo()
-        {
-            return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);
-        }
-        private static Map MaparFromFieldInfo(FieldInfo fi)
-        {
-            return (Map)fi.GetValue(null);
-        }
         /// <summary>
         /// Gets all maps.
         /// </summary>
@@ -558,6 +615,7 @@ namespace Deltin.CustomGameAutomation
         {
             return GetMapFieldInfo().Select(v => (Map)v.GetValue(null)).ToArray();
         }
+
         /// <summary>
         /// Gets all maps in a gamemode.
         /// </summary>
@@ -566,7 +624,16 @@ namespace Deltin.CustomGameAutomation
         /// <returns>An array of maps in the <paramref name="gamemode"/>.</returns>
         public static Map[] GetMapsInGamemode(Gamemode gamemode, Event owEvent = Event.None)
         {
-            return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && v.GameMode == gamemode).ToArray();
+            return GetMaps().Where(v => (v.GameEvent == Event.None || v.GameEvent == owEvent) && gamemode.HasFlag(v.GameMode)).ToArray();
+        }
+
+        private static FieldInfo[] GetMapFieldInfo()
+        {
+            return typeof(Map).GetFields(BindingFlags.Public | BindingFlags.Static);
+        }
+        private static Map MaparFromFieldInfo(FieldInfo fi)
+        {
+            return (Map)fi.GetValue(null);
         }
     }
 
