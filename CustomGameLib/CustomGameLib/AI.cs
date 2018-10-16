@@ -373,9 +373,9 @@ namespace Deltin.CustomGameAutomation
 
                 bool isAi = true;
 
-                for (int x = checkX; x < checkX + checkXLength; x += 2)
+                for (double x = checkX; x < checkX + checkXLength; x += 1.5)
                     // Check for the commendation icon.
-                    if (cg.CompareColor(x, checkY, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
+                    if (cg.CompareColor(Convert.ToInt32(x), checkY, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
                     {
                         isAi = false;
                         break;

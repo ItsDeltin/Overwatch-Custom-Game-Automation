@@ -102,7 +102,7 @@ namespace ZombieBot
                 // Send a message when someone joins
                 if (allCountWithoutInvited > prevPlayerCount)
                 {
-                    int wait = minimumPlayers - totalPlayerCount;
+                    int wait = minimumPlayers - allCountWithoutInvited;
                     if (wait > 1) cg.Chat.SendChatMessage("Welcome to Zombies! Waiting for " + wait + " more players. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     if (wait == 1) cg.Chat.SendChatMessage("Welcome to Zombies! Waiting for " + wait + " more player. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");
                     if (wait < 0) cg.Chat.SendChatMessage("Welcome to Zombies! Game will be starting soon. I am a bot, source is at the github repository ItsDeltin/Overwatch-Custom-Game-Automation");

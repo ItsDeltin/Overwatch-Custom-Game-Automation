@@ -131,7 +131,7 @@ namespace Deltin.CustomGameAutomation
             lock (CustomGameLock)
             {
                 // Get all non-AI players
-                List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue | SlotFlags.NoAI);
+                List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue);
 
                 // Close the chat if it is opened
                 if (OpenChatIsDefault && players.Contains(5))
@@ -144,7 +144,7 @@ namespace Deltin.CustomGameAutomation
 
                 double iterations = 0;
 
-                while (sw.Elapsed.TotalSeconds <= InviteScanData.SecondsToScan)
+                while (sw.ElapsedMilliseconds <= InviteScanData.MSToScan)
                 {
                     updateScreen();
                     foreach (int slot in players)
@@ -165,24 +165,17 @@ namespace Deltin.CustomGameAutomation
                         else
                         {
                             // If there is, compare it to the previous one.
-                            double total = 0;
-                            double success = 0;
 
-                            for (int x = 0; x < markup.Width; x++)
-                                for (int y = 0; y < markup.Height; y++)
-                                {
-                                    total++;
-
-                                    if (previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
-                                        success++;
-                                }
-
-                            double percentage = (success / total) * 100;
+                            bool NotMatching = false;
+                            for (int x = 0; x < markup.Width && !NotMatching; x++)
+                                for (int y = 0; y < markup.Height && !NotMatching; y++)
+                                    if (!previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
+                                        NotMatching = true;
 
                             previousSlotData.Markup.Dispose();
                             previousSlotData.Markup = markup;
 
-                            if (percentage < InviteScanData.DifferenceToBeMarkedAsChanged)
+                            if (NotMatching)
                             {
                                 previousSlotData.Changes++;
                             }
@@ -190,7 +183,7 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     iterations++;
-                    Thread.Sleep(100);
+                    Thread.Sleep(10);
                 }
 
                 for (int i = 0; i < slotData.Count; i++)
@@ -256,11 +249,11 @@ namespace Deltin.CustomGameAutomation
             public const int PlayerRange = 10;
             public static readonly Point SpectatorOrigin = new Point(779, 251);
             public const int SpectatorRange = 6;
-            public const int MarkupFade = 30;
-            public const int SecondsToScan = 1;
+            public const int MarkupFade = 5;
+            public const int MSToScan = 250;
             public const int DifferenceToBeMarkedAsChanged = 100; // 100%
             public const int Player_MarkInvitedWithPercentageChanged = 50; // 50%
-            public const int Spectator_MarkInvitedWithPercentageChanged = 25; // 25%
+            public const int Spectator_MarkInvitedWithPercentageChanged = 20; // 25%
 
             /*
             public DateTime TimeSinceLastChange;

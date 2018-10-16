@@ -1768,11 +1768,12 @@
             </summary>
             <returns>Slot the moderator is on.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetQueueTeam(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetQueueTeam(System.Int32,System.Boolean)">
             <summary>
             Gets the team a player in the queue is queueing for.
             </summary>
             <param name="slot">Slot to check.</param>
+            <param name="noUpdate" />
             <returns>Team that the player is queueing for.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>

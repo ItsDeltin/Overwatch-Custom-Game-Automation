@@ -28,7 +28,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(PlayerRange, true);
+                return CheckRange(PlayerRange, 0, false);
             }
         }
         /// <summary>
@@ -51,7 +51,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(BlueRange, true);
+                return CheckRange(BlueRange, 0, false);
             }
         }
         /// <summary>
@@ -74,7 +74,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(RedRange, true);
+                return CheckRange(RedRange, 0, false);
             }
         }
         /// <summary>
@@ -97,7 +97,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(SpectatorRange, true);
+                return CheckRange(SpectatorRange, FindSpectatorOffset(), false);
             }
         }
         /// <summary>
@@ -120,7 +120,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(QueueRange, true);
+                return CheckRange(QueueRange, 0, false);
             }
         }
         /// <summary>
@@ -143,7 +143,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(TotalRange, true);
+                return CheckRange(TotalRange, FindSpectatorOffset(), false);
             }
         }
         /// <summary>
@@ -183,7 +183,7 @@ namespace Deltin.CustomGameAutomation
             new Point(896, 317), // slot 17
         };
 
-        private bool IsSlotFilled(int slot, bool update)
+        private bool IsSlotFilled(int slot, int yoffset, bool noUpdate)
         {
             lock (CustomGameLock)
             {
@@ -192,13 +192,12 @@ namespace Deltin.CustomGameAutomation
 
                 if (!IsSlotInQueue(slot))
                 {
-                    if (update)
+                    if (!noUpdate)
                         updateScreen();
 
                     int x = SlotLocations[slot].X,
                         y = SlotLocations[slot].Y,
-                        compareToX = SlotLocations[slot].X,
-                        compareToY = SlotLocations[slot].Y;
+                        compareToX = SlotLocations[slot].X;
 
                     if (slot == 0)
                         compareToX -= 8;
@@ -210,37 +209,33 @@ namespace Deltin.CustomGameAutomation
                         compareToX += 3;
 
                     if (IsSlotSpectator(slot))
-                    {
-                        int spectatorYOffset = FindSpectatorOffset();
-                        compareToY += spectatorYOffset;
-                        y += spectatorYOffset;
-                    }
+                        y += yoffset;
 
-                    return !CompareColor(x, y, compareToX, compareToY, slotFade);
+                    return !CompareColor(x, y, compareToX, y, slotFade);
                 }
                 else
                 {
-                    return GetQueueCount(false, update) + Queueid > slot;
+                    return GetQueueCount(false, noUpdate) + Queueid > slot;
                 }
             }
         }
 
-        private List<int> CheckRange(int[] slotsToCheck, bool update)
+        private List<int> CheckRange(int[] slotsToCheck, int yoffset, bool noUpdate)
         {
-            if (update)
+            if (!noUpdate)
                 updateScreen();
             List<int> slots = new List<int>();
             foreach (int slot in slotsToCheck)
-                if (IsSlotFilled(slot, false))
+                if (IsSlotFilled(slot, yoffset, true))
                     slots.Add(slot);
             return slots;
         }
 
-        private int GetQueueCount(bool includeHidden, bool update)
+        private int GetQueueCount(bool includeHidden, bool noUpdate)
         {
             lock (CustomGameLock)
             {
-                if (update)
+                if (!noUpdate)
                     updateScreen();
 
                 int inq = 0;
@@ -276,12 +271,13 @@ namespace Deltin.CustomGameAutomation
             if (!noUpdate)
                 updateScreen();
 
-            int inq = GetQueueCount(false, true);
+            int inq = GetQueueCount(false, false);
 
             // The spectator slots moves down 13 pixels for each player in the queue plus 23.
             int offset = inq * 13;
             if (inq > 0)
                 offset += 23;
+
             return offset;
         }
 
@@ -387,29 +383,26 @@ namespace Deltin.CustomGameAutomation
 
                 // Add the blue slots
                 if (flags.HasFlag(SlotFlags.BlueTeam))
-                    slots.AddRange(CheckRange(BlueRange, false));
+                    slots.AddRange(CheckRange(BlueRange, 0, true));
 
                 // Add the red slots
                 if (flags.HasFlag(SlotFlags.RedTeam))
-                    slots.AddRange(CheckRange(RedRange, false));
+                    slots.AddRange(CheckRange(RedRange, 0, true));
 
                 // Add the spectator slots
                 if (flags.HasFlag(SlotFlags.Spectators))
-                    slots.AddRange(CheckRange(SpectatorRange, false));
+                    slots.AddRange(CheckRange(SpectatorRange, FindSpectatorOffset(true), true));
 
                 // Add the queue slots
                 if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
                 {
-                    slots.AddRange(CheckRange(QueueRange, false).Where((slot) =>
+                    slots.AddRange(CheckRange(QueueRange, 0, true).Where((slot) =>
                     {
-                        QueueTeam team = PlayerInfo.GetQueueTeam(slot);
+                        QueueTeam team = PlayerInfo.GetQueueTeam(slot, true);
 
-                        if ((team == QueueTeam.Neutral && !flags.HasFlag(SlotFlags.NeutralQueue))
-                            || (team == QueueTeam.Blue && !flags.HasFlag(SlotFlags.BlueQueue))
-                            || (team == QueueTeam.Red && !flags.HasFlag(SlotFlags.RedQueue)))
-                            return false;
-
-                        return true;
+                        return team == QueueTeam.Neutral && flags.HasFlag(SlotFlags.NeutralQueue)
+                        || team == QueueTeam.Blue && flags.HasFlag(SlotFlags.BlueQueue)
+                        || team == QueueTeam.Red && flags.HasFlag(SlotFlags.RedQueue);
                     }));
                 }
 
@@ -423,6 +416,7 @@ namespace Deltin.CustomGameAutomation
                     if (flags.HasFlag(SlotFlags.NoPlayers))
                         slots = slots.Where(slot => aiSlots.Contains(slot)).ToList();
                 }
+
                 return slots;
             }
         }
@@ -671,9 +665,10 @@ namespace Deltin.CustomGameAutomation
         /// Gets the team a player in the queue is queueing for.
         /// </summary>
         /// <param name="slot">Slot to check.</param>
+        /// <param name="noUpdate"></param>
         /// <returns>Team that the player is queueing for.</returns>
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
-        public QueueTeam GetQueueTeam(int slot)
+        public QueueTeam GetQueueTeam(int slot, bool noUpdate = false)
         {
             lock (cg.CustomGameLock)
             {
@@ -681,7 +676,8 @@ namespace Deltin.CustomGameAutomation
                     throw new InvalidSlotException(slot);
                 Point check = cg.Interact.FindSlotLocation(slot);
                 check.X -= 25;
-                cg.updateScreen();
+                if (!noUpdate)
+                    cg.updateScreen();
                 Color color = cg.GetPixelAt(check.X, check.Y);
 
                 // If the blue color is greater than the red color, the queue slot is on blue team.
