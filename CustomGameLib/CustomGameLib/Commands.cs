@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -130,11 +131,11 @@ namespace Deltin.CustomGameAutomation
         }
         private bool KeepScanning = true;
 
-        Bitmap PreviousChatMarkup = null;
+        DirectBitmap PreviousChatMarkup = null;
 
         void ScanCommands()
         {
-            var bmp = new Bitmap(Rectangles.LOBBY_CHATBOX.Width, Rectangles.LOBBY_CHATBOX.Height, PixelFormat.Format32bppArgb);
+            DirectBitmap bmp = null;
 
             Stopwatch toggle = new Stopwatch();
             if (cg.debugmode)
@@ -143,17 +144,18 @@ namespace Deltin.CustomGameAutomation
             while (KeepScanning)
             {
                 // Wait for listen to equal true
-                System.Threading.Thread.Sleep(5);
+                Thread.Sleep(5);
                 if (!Listen)
                     continue;
 
+                // LOCK HERE V
                 lock (cg.CustomGameLock)
                 {
-                    updatescreen(ref bmp);
+                    UpdateChatCapture(ref bmp);
 
                     int[][] chatColors = Chat.ChatColors;
-                    int chatFade = Chat.ChatFade;
-                    Bitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+                    int chatFade = Chat.ChatFade + 10;
+                    DirectBitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height));
                     for (int x = 0; x < chatMarkup.Width; x++)
                         for (int y = 0; y < chatMarkup.Height; y++)
                         {
@@ -173,21 +175,22 @@ namespace Deltin.CustomGameAutomation
                         PreviousChatMarkup = chatMarkup;
                     else
                     {
-                        if (CompareExecutors(PreviousChatMarkup, chatMarkup))
+                        if (PreviousChatMarkup.CompareTo(chatMarkup, 5, 98, DBCompareFlags.Multithread))
                         {
                             chatMarkup.Dispose();
                             continue;
                         }
                         else
                         {
+                            PreviousChatMarkup.Save(@"C:\Users\HDdel\Documents\Abyxa\previous.png");
+                            chatMarkup.Save(@"C:\Users\HDdel\Documents\Abyxa\new.png");
+
                             PreviousChatMarkup.Dispose();
                             PreviousChatMarkup = chatMarkup;
                         }
                     }
 
                     // Scan the second line in the chat.
-                    
-
                     string word = null;
 
                     var seed = GetSeed(bmp, 13);
@@ -212,7 +215,6 @@ namespace Deltin.CustomGameAutomation
                             AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
                         }
                     }
-
                     ShowScan(bmp, seed, seedfade, word);
                 }
             } // while
@@ -220,25 +222,27 @@ namespace Deltin.CustomGameAutomation
             bmp.Dispose();
         }
 
-        void updatescreen(ref Bitmap bmp)
+        void UpdateChatCapture(ref DirectBitmap bmp)
         {
             cg.updateScreen();
             if (bmp != null)
                 bmp.Dispose();
-            bmp = cg.BmpClone(Rectangles.LOBBY_CHATBOX);
+            bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
         }
 
-        void ShowScan(Bitmap bmp, int[] seed, int seedfade, string word)
+        void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
         {
             // Show valid seed pixels in debug mode
             if (cg.debugmode)
             {
-                Bitmap nb = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), bmp.PixelFormat);
+                DirectBitmap dbc = bmp.Clone();
 
-                for (int x = 0; x < nb.Width; x++)
-                    for (int y = 0; y < nb.Height; y++)
-                        if (nb.CompareColor(x, y, seed, seedfade))
-                            nb.SetPixel(x, y, Color.Purple);
+                for (int x = 0; x < dbc.Width; x++)
+                    for (int y = 0; y < dbc.Height; y++)
+                        if (dbc.CompareColor(x, y, seed, seedfade))
+                            dbc.SetPixel(x, y, Color.Purple);
+                Bitmap nb = dbc.ToBitmap();
+                dbc.Dispose();
 
                 cg.g.Clear(Color.White);
                 cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * scale, nb.Height * scale));
@@ -248,23 +252,23 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Gets chat color
-        int[] GetSeed(Bitmap bmp, int y)
+        int[] GetSeed(DirectBitmap bmp, int y)
         {
-            var seedpix = bmp.GetPixelAt(0, y);
+            var seedpix = bmp.GetPixel(0, y);
             return new int[] { seedpix.R, seedpix.G, seedpix.B };
         }
 
         // Gets chat color seed fade.
-        int GetSeedFade(Bitmap bmp, int y)
+        int GetSeedFade(DirectBitmap bmp, int y)
         {
-            var seedpix = bmp.GetPixelAt(0, y);
-            var antipix = bmp.GetPixelAt(1, y);
+            var seedpix = bmp.GetPixel(0, y);
+            var antipix = bmp.GetPixel(1, y);
             // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.2 (2.5?). Default is 50 
             return (int)((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2 / 2.2);
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        void AddExecutedCommand(Bitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
+        void AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
         {
             // Clean up the word. makes something like "] $APPLE " into "$APPLE"
             var wordtemp = word.Split(new char[] { ']' }, 2);
@@ -305,7 +309,7 @@ namespace Deltin.CustomGameAutomation
 
                         // Take a screenshot of the career profile.
                         cg.updateScreen();
-                        Bitmap careerProfileSnapshot = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
+                        DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
 
                         // Register the player identity.
                         pi = new PlayerIdentity(careerProfileSnapshot);
@@ -327,7 +331,7 @@ namespace Deltin.CustomGameAutomation
 
                 // Store executor noise data in a bitmap.
                 var executorscan = new Rectangle(0, y - 4, namelength, 6);
-                Bitmap executor = bmp.Clone(executorscan, bmp.PixelFormat);
+                DirectBitmap executor = bmp.Clone(executorscan);
                 // Set name pixels to black and everything else to white
                 for (int xi = 0; xi < executor.Width; xi++)
                     for (int yi = 0; yi < executor.Height; yi++)
@@ -349,7 +353,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Scans a chat line.
-        LineScanResult ScanLine(Bitmap bmp, int y, int[] seed, int seedfade)
+        LineScanResult ScanLine(DirectBitmap bmp, int y, int[] seed, int seedfade)
         {
             int namelength = 0; // Length of the name of the player that sent a chat message.
             bool namefound = false; // Determines if the name of the player that sent the chat message has been found.
@@ -387,7 +391,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Checks for a chat letter at the input X and Y value.
-        LetterResult CheckLetter(Bitmap bmp, int x, int y, int[] seed, int seedfade)
+        LetterResult CheckLetter(DirectBitmap bmp, int x, int y, int[] seed, int seedfade)
         {
             // Possible letters
             List<LetterResult> letterresult = new List<LetterResult>();
@@ -474,7 +478,8 @@ namespace Deltin.CustomGameAutomation
             return null;
         }
 
-        private bool CompareExecutors(Bitmap e1, Bitmap e2)
+        /*
+        private bool CompareExecutors(DirectBitmap e1, DirectBitmap e2)
         {
             if (e1.Width != e2.Width || e1.Height != e2.Height)
                 return false;
@@ -485,12 +490,13 @@ namespace Deltin.CustomGameAutomation
                 for (int yi = 0; yi < e1.Height; yi++)
                 {
                     count++;
-                    if (e1.GetPixelAt(xi, yi) == e2.GetPixelAt(xi, yi))
+                    if (e1.GetPixel(xi, yi) == e2.GetPixel(xi, yi))
                         identiclecount++;
                 }
 
             return (identiclecount / count) * 100 >= 95;
         }
+        */
 
         private Channel GetChannelFromSeed(int[] seed)
         {
@@ -561,7 +567,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">Slot to check.</param>
         /// <returns>The player identity of the slot.</returns>
-        public PlayerIdentity GetSlotIdentity(int slot)
+        public PlayerIdentity GetPlayerIdentity(int slot)
         {
             bool careerProfileOpenSuccess = cg.Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
             if (!careerProfileOpenSuccess)
@@ -571,18 +577,18 @@ namespace Deltin.CustomGameAutomation
 
             cg.updateScreen();
 
-            Bitmap careerProfile = cg.BmpClone(Rectangles.LOBBY_CAREER_PROFILE);
+            DirectBitmap careerProfile = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
 
             cg.GoBack(1);
 
-            //cg.//ResetMouse();
+            Thread.Sleep(500);
 
             return new PlayerIdentity(careerProfile);
         }
 
         internal void WaitForCareerProfileToLoad()
         {
-            cg.WaitForColor(423, 164, new int[] { 85, 90, 107 }, 10, 5000);
+            cg.WaitForColor(345, 164, new int[] { 85, 91, 108 }, 5, 10000);
             System.Threading.Thread.Sleep(250);
         }
     }
@@ -646,29 +652,37 @@ namespace Deltin.CustomGameAutomation
     }
 
 #pragma warning disable CS1591
-    public class Identity : IDisposable
+    public abstract class Identity : IDisposable
     {
-        protected Identity(Bitmap identityMarkup)
+        internal Identity(DirectBitmap identityMarkup)
         {
             IdentityMarkup = identityMarkup;
         }
 
-        internal Bitmap IdentityMarkup;
+        internal DirectBitmap IdentityMarkup;
 
-        protected static bool CompareIdentities(Identity i1, Identity i2)
+        protected internal static bool CompareIdentities(Identity i1, Identity i2, int percentMatches = 90, int fade = 50)
         {
-            double total = 0;
-            double success = 0;
+            if (i1.IdentityMarkup.Width != i2.IdentityMarkup.Width || i1.IdentityMarkup.Height != i2.IdentityMarkup.Height)
+                return false;
 
-            for (int x = 0; x < i1.IdentityMarkup.Width; x++)
-                for (int y = 0; y < i1.IdentityMarkup.Height; y++)
+            
+
+            /*
+            int maxFail = i1.IdentityMarkup.Width * i1.IdentityMarkup.Height / percentMatches;
+            int failed = 0;
+            bool passed = false;
+
+            for (int x = 0; x < i1.IdentityMarkup.Width && !passed; x++)
+                for (int y = 0; y < i1.IdentityMarkup.Height && !passed; y++)
                 {
-                    total++;
-                    if (i1.IdentityMarkup.CompareColor(x, y, i2.IdentityMarkup.GetPixelAt(x, y).ToInt(), 50))
-                        success++;
+                    if (!i1.IdentityMarkup.CompareColor(x, y, i2.IdentityMarkup.GetPixel(x, y).ToInt(), fade))
+                        failed++;
+                    passed = failed > maxFail;
                 }
+            */
 
-            return (success / total) * 100 >= 90;
+            return i1.IdentityMarkup.CompareTo(i2.IdentityMarkup, fade, percentMatches, DBCompareFlags.Multithread);
         }
 
         /// <summary>
@@ -689,26 +703,11 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public class PlayerIdentity : Identity
     {
-        internal PlayerIdentity(Bitmap careerProfileMarkup) : base(careerProfileMarkup) { }
+        internal PlayerIdentity(DirectBitmap careerProfileMarkup) : base(careerProfileMarkup) { }
 
-        /// <summary>
-        /// Returns true if the 2 player identities are identicle.
-        /// </summary>
-        /// <param name="pi1">First player identity</param>
-        /// <param name="pi2">Second player identity</param>
-        /// <returns>Returns true if the player identities are identicle.</returns>
-        public static bool ComparePlayerIdentities(PlayerIdentity pi1, PlayerIdentity pi2)
+        public bool CompareIdentities(PlayerIdentity other)
         {
-            return CompareIdentities(pi1, pi2);
-        }
-        /// <summary>
-        /// Returns true if the 2 player identities are identicle.
-        /// </summary>
-        /// <param name="other">The other PlayerIdentity to compare to.</param>
-        /// <returns>Returns true if the player identities are identicle.</returns>
-        public bool ComparePlayerIdentities(PlayerIdentity other)
-        {
-            return ComparePlayerIdentities(this, other);
+            return CompareIdentities(this, other);
         }
     }
 
@@ -717,26 +716,11 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public class ChatIdentity : Identity
     {
-        internal ChatIdentity(Bitmap chatMarkup) : base(chatMarkup) { }
+        internal ChatIdentity(DirectBitmap chatMarkup) : base(chatMarkup) { }
 
-        /// <summary>
-        /// Returns true if the 2 player identities are identicle.
-        /// </summary>
-        /// <param name="ci1">First player identity</param>
-        /// <param name="ci2">Second player identity</param>
-        /// <returns>Returns true if the player identities are identicle.</returns>
-        public static bool CompareChatIdentities(ChatIdentity ci1, ChatIdentity ci2)
+        public bool CompareIdentities(ChatIdentity other)
         {
-            return CompareIdentities(ci1, ci2);
-        }
-        /// <summary>
-        /// Returns true if the 2 player identities are identicle.
-        /// </summary>
-        /// <param name="other">The other PlayerIdentity to compare to.</param>
-        /// <returns>Returns true if the player identities are identicle.</returns>
-        public bool CompareChatIdentities(ChatIdentity other)
-        {
-            return CompareChatIdentities(this, other);
+            return CompareIdentities(this, other);
         }
     }
 
@@ -768,12 +752,12 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The identity of the player that executed the command.
         /// </summary>
-        public PlayerIdentity PlayerIdentity;
+        public PlayerIdentity PlayerIdentity { get; private set; }
 
         /// <summary>
         /// The chat identity of the player that executed the command.
         /// </summary>
-        public ChatIdentity ChatIdentity;
+        public ChatIdentity ChatIdentity { get; private set; }
 
         /// <summary>
         /// Is the player that executed the command is a friend?

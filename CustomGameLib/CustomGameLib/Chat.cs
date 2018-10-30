@@ -41,7 +41,7 @@ namespace Deltin.CustomGameAutomation
                 OpenChat();
                 cg.updateScreen();
                 // To prevent abuse, make sure that the channel is not general.
-                if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
+                if (!Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
                 {
                     cg.TextInput(text);
                 }
@@ -95,13 +95,13 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Return);
                 Thread.Sleep(250);
                 cg.updateScreen();
-                if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+                if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
                 {
                     SendChatMessage("/leavechannel");
                     if (cg.OpenChatIsDefault)
                     {
                         cg.updateScreen();
-                        if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+                        if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
                             cg.KeyPress(Keys.Tab);
                     }
                 }
@@ -173,7 +173,7 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
                 for (int i = 0; i < ChatColors.Length; i++)
-                    if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
+                    if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
                         return (Channel)i;
                 return null;
             }
@@ -185,7 +185,7 @@ namespace Deltin.CustomGameAutomation
             {
                 OpenChat();
                 cg.KeyPress(Keys.Return);
-                Thread.Sleep(250);
+                Thread.Sleep(200);
             }
         }
 

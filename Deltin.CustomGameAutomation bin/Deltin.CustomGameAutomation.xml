@@ -287,6 +287,11 @@
             The number where the spectator slots start.
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.SlotCount">
+            <summary>
+            The number where the slots end.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.Interact">
             <summary>
             Changes a player's state in Overwatch.
@@ -1188,7 +1193,7 @@
             Set to true to start listening to commands. Set to false to stop.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Commands.GetSlotIdentity(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.Commands.GetPlayerIdentity(System.Int32)">
             <summary>
             Gets the player identity of a slot.
             </summary>
@@ -1246,40 +1251,10 @@
             Contains data for identifying players who executed a command.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity,Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="pi1">First player identity</param>
-            <param name="pi2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
             <summary>
             Contains data for identifying players who executed a command.
             </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity,Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="ci1">First player identity</param>
-            <param name="ci2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are identicle.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
@@ -1297,12 +1272,12 @@
             Channel the command was executed on.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
+        <member name="P:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
             <summary>
             The identity of the player that executed the command.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
+        <member name="P:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
             <summary>
             The chat identity of the player that executed the command.
             </summary>
@@ -1434,6 +1409,11 @@
         <member name="F:Deltin.CustomGameAutomation.CustomGameBase.cg">
             <summary>
             The <see cref="T:Deltin.CustomGameAutomation.CustomGame"/> object to use.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGameBase.Capture">
+            <summary>
+            The captured screen.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.DefaultKeys">
@@ -1786,12 +1766,11 @@
             <returns>Returns true if player as ultimate.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHeroMarkup(System.Int32,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHeroMarkup(System.Int32)">
             <summary>
             Obtains the markup of a hero icon.
             </summary>
             <param name="slot">Slot to get hero icon from.</param>
-            <param name="saveTo">Location on the file system to save it to.</param>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHero(System.Int32)">
@@ -1897,6 +1876,16 @@
             Get queue slots
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeamAndRedTeam">
+            <summary>
+            Get blue and red slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.All">
+            <summary>
+            Gets blue, red, spectator, and queue slots.
+            </summary>
+        </member>
         <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoPlayers">
             <summary>
             No players, only AI.
@@ -1920,7 +1909,7 @@
             The Interact class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Drawing.Point,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Drawing.Point,Deltin.CustomGameAutomation.OptionScanFlags,System.String,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Scans for an option at the specified point.
             </summary>
@@ -1931,7 +1920,7 @@
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,Deltin.CustomGameAutomation.OptionScanFlags,System.String,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Scans for an option at the specified point.
             </summary>
@@ -1942,7 +1931,7 @@
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Drawing.Point,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Drawing.Point,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Peaks for an option.
             </summary>
@@ -1950,7 +1939,7 @@
             <param name="markup">The markup of the option to peak for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Int32,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Int32,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Peaks for an option.
             </summary>
@@ -1958,7 +1947,7 @@
             <param name="markup">The markup of the option to peak for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Drawing.Point,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Drawing.Point,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Clicks an option.
             </summary>
@@ -1966,7 +1955,7 @@
             <param name="markup">The markup of the option to scan for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Int32,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Int32,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Clicks an option.
             </summary>
@@ -2235,6 +2224,22 @@
             Minimizes a window, even if the thread that owns the window is not responding. 
             This flag should only be used when minimizing windows from a different thread.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Gdi32.GetDIBits(System.IntPtr,System.IntPtr,System.UInt32,System.UInt32,System.Byte[],Deltin.CustomGameAutomation.Gdi32.BITMAPINFO@,Deltin.CustomGameAutomation.Gdi32.DIB_Color_Mode)">
+            <summary>
+                   Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
+            </summary>
+            <param name="hdc">A handle to the device context.</param>
+            <param name="hbmp">A handle to the bitmap. This must be a compatible bitmap (DDB).</param>
+            <param name="uStartScan">The first scan line to retrieve.</param>
+            <param name="cScanLines">The number of scan lines to retrieve.</param>
+            <param name="lpvBits">A pointer to a buffer to receive the bitmap data. If this parameter is <see cref="F:System.IntPtr.Zero"/>, the function passes the dimensions and format of the bitmap to the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure pointed to by the <paramref name="lpbi"/> parameter.</param>
+            <param name="lpbi">A pointer to a <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure that specifies the desired format for the DIB data.</param>
+            <param name="uUsage">The format of the bmiColors member of the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure. It must be one of the following values.</param>
+            <returns>If the lpvBits parameter is non-NULL and the function succeeds, the return value is the number of scan lines copied from the bitmap.
+            If the lpvBits parameter is NULL and GetDIBits successfully fills the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure, the return value is nonzero.
+            If the function fails, the return value is zero.
+            This function can return the following value: ERROR_INVALID_PARAMETER (87 (0×57))</returns>
         </member>
         <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCCOPY">
             <summary>dest = source</summary>

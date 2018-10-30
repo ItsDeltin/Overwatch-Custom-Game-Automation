@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -134,7 +136,7 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.updateScreen();
                 int[] scales = new int[] { 33, 49, 34 };
-                Bitmap tmp = cg.BmpClone(402, 244, scales[scalar], 16);
+                DirectBitmap tmp = Capture.Clone(402, 244, scales[scalar], 16);
                 for (int x = 0; x < tmp.Width; x++)
                     for (int y = 0; y < tmp.Height; y++)
                     {
@@ -143,11 +145,6 @@ namespace Deltin.CustomGameAutomation
                         else
                             tmp.SetPixel(x, y, Color.White);
                     }
-                if (cg.debugmode)
-                {
-                    int scale = 5;
-                    cg.g.DrawImage(tmp, new Rectangle(750, 0, tmp.Width * scale, tmp.Height * scale));
-                }
                 tmp.Save(saveAt);
                 tmp.Dispose();
             }
@@ -189,9 +186,9 @@ namespace Deltin.CustomGameAutomation
                         if (foundWhite)
                             foundWhiteIndex++;
 
-                        Color cc = cg.GetPixelAt(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
+                        Color cc = Capture.GetPixel(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
                         // Check for white color of text
-                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
+                        if (Capture.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
                             && (slot > 5 || cc.B - cc.R < 20))
                         {
                             foundWhite = true;
@@ -215,7 +212,7 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
+                                            if (Capture.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
                                                 success++;
                                         }
                                     }
@@ -248,7 +245,7 @@ namespace Deltin.CustomGameAutomation
                 {
                     int y = DifficultyLocationsQueue[slot - CustomGame.Queueid];
                     for (int x = DifficultyLocationQueueX; x < 150 + DifficultyLocationQueueX; x++)
-                        if (cg.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
+                        if (Capture.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
                             return null;
                     return Difficulty.Easy;
                 }
@@ -329,14 +326,14 @@ namespace Deltin.CustomGameAutomation
                     throw new InvalidSlotException(slot);
 
                 if (CustomGame.IsSlotSpectator(slot) // Since AI cannot join spectator, return false if the slot is a spectator slot.
-                    || !cg.AllSlots.Contains(slot)) // Return false if the slot is empty.
+                    || !cg.GetSlots(SlotFlags.All, true).Contains(slot)) // Return false if the slot is empty.
                     return false;
 
                 // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
-                if (slot == 5)
+                if (slot == 5 && cg.OpenChatIsDefault)
                     cg.Chat.CloseChat();
 
-                if (!noUpdate)
+                if (!noUpdate || slot == 5)
                     cg.updateScreen();
 
                 int checkY = 0; // The potential Y locations of the commendation icon
@@ -358,6 +355,15 @@ namespace Deltin.CustomGameAutomation
                     else if (CustomGame.IsSlotRed(slot))
                         checkX = 399; // The start of the red slots on the X axis
 
+                    if (cg.IsDeathmatch(true))
+                    {
+                        checkY += Distances.LOBBY_SLOT_DM_Y_OFFSET - 9;
+                        if (CustomGame.IsSlotBlue(slot))
+                            checkX += Distances.LOBBY_SLOT_DM_BLUE_X_OFFSET;
+                        else if (CustomGame.IsSlotRed(slot))
+                            checkX += Distances.LOBBY_SLOT_DM_RED_X_OFFSET;
+                    }
+
                     checkXLength = 195; // The length of the slots.
                 }
                 else if (CustomGame.IsSlotInQueue(slot))
@@ -365,7 +371,7 @@ namespace Deltin.CustomGameAutomation
                     int checkslot = slot - CustomGame.Queueid;
 
                     // 245 is the Y location of the first commendation icon of the player in the first slot in queue. 14 is how many pixels it is to the next commendation icon on the next slot.
-                    checkY = 245 + (checkslot * 14) - Distances.LOBBY_QUEUE_OFFSET;
+                    checkY = 245 + (checkslot * 14);// - Distances.LOBBY_QUEUE_OFFSET;
 
                     checkX = 707; // The start of the queue slots on this X axis
                     checkXLength = 163; // The length of the queue slots.
@@ -373,13 +379,11 @@ namespace Deltin.CustomGameAutomation
 
                 bool isAi = true;
 
-                for (double x = checkX; x < checkX + checkXLength; x += 1.5)
+                for (int x = checkX; x < checkX + checkXLength && isAi; x += 1)
+                {
                     // Check for the commendation icon.
-                    if (cg.CompareColor(Convert.ToInt32(x), checkY, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
-                    {
-                        isAi = false;
-                        break;
-                    }
+                    isAi = !Capture.CompareColor(Convert.ToInt32(x), checkY, new int[] { 75, 130, 130 }, new int[] { 115, 175, 175 });
+                }
 
                 if (slot == 5 && cg.OpenChatIsDefault)
                     cg.Chat.OpenChat();
@@ -531,7 +535,7 @@ namespace Deltin.CustomGameAutomation
                     cg.LeftClick(slotlocation.X, slotlocation.Y);
                     // Check if Edit AI window has opened by checking if the confirm button exists.
                     cg.updateScreen();
-                    if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
+                    if (Capture.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
                     {
                         var sim = new List<Keys>();
                         // Set hero if setToHero does not equal null.

@@ -81,6 +81,7 @@
     <Compile Include="Interact.cs" />
     <Compile Include="Invite.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="SlotIdentity.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />

@@ -169,112 +169,119 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 319; // 322
         public static readonly int LOBBY_SPECTATOR_SLOT_DISTANCE = 13;
         public static readonly int LOBBY_QUEUE_OFFSET = 6; // Did you know that the queue list is 6 pixels higher than the spectator list?
+        public static readonly int LOBBY_SLOT_HEIGHT = 26;
+        public static readonly int LOBBY_SPECTATOR_SLOT_HEIGHT = 11;
+
+        public static readonly int LOBBY_SLOT_DM_BLUE_X_OFFSET = 17;
+        public static readonly int LOBBY_SLOT_DM_RED_X_OFFSET = -17;
+        public static readonly int LOBBY_SLOT_DM_Y_OFFSET = -20;
     }
 
     internal static class Markups
     {
-        public static readonly Bitmap REMOVE_FROM_GAME    = Properties.Resources.remove_from_game;
-        public static readonly Bitmap SWAP_TO_RED         = Properties.Resources.swap_to_red;
-        public static readonly Bitmap SWAP_TO_BLUE        = Properties.Resources.swap_to_blue;
-        public static readonly Bitmap SWAP_TO_SPECTATORS  = Properties.Resources.swap_to_spectators;
-        public static readonly Bitmap SWAP_TO_NEUTRAL     = Properties.Resources.swap_to_neutral;
-        public static readonly Bitmap REMOVE_ALL_BOTS     = Properties.Resources.remove_all_bots;
-        public static readonly Bitmap VIEW_CAREER_PROFILE = Properties.Resources.view_career_profile;
-        public static readonly Bitmap SEND_FRIEND_REQUEST = Properties.Resources.send_friend_request;
-        public static readonly Bitmap REMOVE_FRIEND       = Properties.Resources.remove_friend;
+        // Markups for the option menu
+        public static readonly DirectBitmap REMOVE_FROM_GAME    = new DirectBitmap(Resources.remove_from_game, true);
+        public static readonly DirectBitmap SWAP_TO_RED         = new DirectBitmap(Resources.swap_to_red, true);
+        public static readonly DirectBitmap SWAP_TO_BLUE        = new DirectBitmap(Resources.swap_to_blue, true);
+        public static readonly DirectBitmap SWAP_TO_SPECTATORS  = new DirectBitmap(Resources.swap_to_spectators, true);
+        public static readonly DirectBitmap SWAP_TO_NEUTRAL     = new DirectBitmap(Resources.swap_to_neutral, true);
+        public static readonly DirectBitmap REMOVE_ALL_BOTS     = new DirectBitmap(Resources.remove_all_bots, true);
+        public static readonly DirectBitmap VIEW_CAREER_PROFILE = new DirectBitmap(Resources.view_career_profile, true);
+        public static readonly DirectBitmap SEND_FRIEND_REQUEST = new DirectBitmap(Resources.send_friend_request, true);
+        public static readonly DirectBitmap REMOVE_FRIEND       = new DirectBitmap(Resources.remove_friend, true);
 
-        public static readonly Bitmap[] DIFFICULTY_MARKUPS = new Bitmap[]
+        public static readonly DirectBitmap[] DIFFICULTY_MARKUPS = new DirectBitmap[]
         {
-            Properties.Resources.easy_difficulty,
-            Properties.Resources.medium_difficulty,
-            Properties.Resources.hard_difficulty
+            new DirectBitmap(Resources.easy_difficulty, true),
+            new DirectBitmap(Resources.medium_difficulty, true),
+            new DirectBitmap(Resources.hard_difficulty, true)
         };
-        public static readonly Bitmap[] HERO_MARKUPS = new Bitmap[]
+        public static readonly DirectBitmap[] HERO_MARKUPS = new DirectBitmap[]
         {
-            Properties.Resources.ana_markup, // Ana
-            Properties.Resources.bastion_markup, // Bastion
-            Properties.Resources.brigitte_markup, // Brigitte
-            Properties.Resources.dva_markup, // Dva
-            Properties.Resources.doomfist_markup, // Doomfist
-            Properties.Resources.gengi_markup, // Genji
-            Properties.Resources.hanzo_markup, // Hanzo
-            Properties.Resources.junkrat_markup, // Junkrat
-            Properties.Resources.lucio_markup, // Lucio
-            Properties.Resources.mccree_markup, // McCree
-            Properties.Resources.mei_markup, // Mei
-            Properties.Resources.mercy_markup, // Mercy
-            Properties.Resources.moira_markup, // Moira
-            Properties.Resources.orisa_markup, // Orisa
-            Properties.Resources.pharah_markup, // Pharah
-            Properties.Resources.reaper_markup, // Reaper
-            Properties.Resources.reinhardt_markup, // Reinhardt
-            Properties.Resources.roadhog_markup, // Roadhog
-            Properties.Resources.soldier_markup, // Soldier: 76
-            Properties.Resources.sombra_markup, // Sombra
-            Properties.Resources.symmetra_markup, // Symmetra
-            Properties.Resources.torbjorn_markup, // Torbjorn
-            Properties.Resources.tracer_markup, // Tracer
-            Properties.Resources.widowmaker_markup, // Widowmaker
-            Properties.Resources.winston_markup, // Winston
-            Properties.Resources.wreckingball_markup, // Wrecking Ball
-            Properties.Resources.zarya_markup, // Zarya
-            Properties.Resources.zenyatta_markup // Zenyatta
+            new DirectBitmap(Resources.ana_markup, true), // Ana
+            new DirectBitmap(Resources.bastion_markup, true), // Bastion
+            new DirectBitmap(Resources.brigitte_markup, true), // Brigitte
+            new DirectBitmap(Resources.dva_markup, true), // Dva
+            new DirectBitmap(Resources.doomfist_markup, true), // Doomfist
+            new DirectBitmap(Resources.gengi_markup, true), // Genji
+            new DirectBitmap(Resources.hanzo_markup, true), // Hanzo
+            new DirectBitmap(Resources.junkrat_markup, true), // Junkrat
+            new DirectBitmap(Resources.lucio_markup, true), // Lucio
+            new DirectBitmap(Resources.mccree_markup, true), // McCree
+            new DirectBitmap(Resources.mei_markup, true), // Mei
+            new DirectBitmap(Resources.mercy_markup, true), // Mercy
+            new DirectBitmap(Resources.moira_markup, true), // Moira
+            new DirectBitmap(Resources.orisa_markup, true), // Orisa
+            new DirectBitmap(Resources.pharah_markup, true), // Pharah
+            new DirectBitmap(Resources.reaper_markup, true), // Reaper
+            new DirectBitmap(Resources.reinhardt_markup, true), // Reinhardt
+            new DirectBitmap(Resources.roadhog_markup, true), // Roadhog
+            new DirectBitmap(Resources.soldier_markup, true), // Soldier: 76
+            new DirectBitmap(Resources.sombra_markup, true), // Sombra
+            new DirectBitmap(Resources.symmetra_markup, true), // Symmetra
+            new DirectBitmap(Resources.torbjorn_markup, true), // Torbjorn
+            new DirectBitmap(Resources.tracer_markup, true), // Tracer
+            new DirectBitmap(Resources.widowmaker_markup, true), // Widowmaker
+            new DirectBitmap(Resources.winston_markup, true), // Winston
+            new DirectBitmap(Resources.wreckingball_markup, true), // Wrecking Ball
+            new DirectBitmap(Resources.zarya_markup, true), // Zarya
+            new DirectBitmap(Resources.zenyatta_markup, true) // Zenyatta
         };
 
         public static readonly MapMarkup[] MAP_MARKUPS = new MapMarkup[]
         {
-            new MapMarkup(Resources.Antarctica, Map.DM_Antarctica, Map.ELIM_Antarctica, Map.TDM_Antarctica),
-            new MapMarkup(Resources.Ayutthaya, Map.CTF_Ayutthaya, Map.ELIM_Ayutthaya),
-            new MapMarkup(Resources.BlackForest, Map.DM_BlackForest, Map.ELIM_BlackForest, Map.TDM_BlackForest),
-            new MapMarkup(Resources.BlizzardWorld, Map.AE_BlizzardWorld, Map.DM_BlizzardWorld, Map.SKIRM_BlizzardWorld, Map.TDM_BlizzardWorld),
-            new MapMarkup(Resources.Busan, Map.C_Busan, Map.SKIRM_Busan),
-            new MapMarkup(Resources.Castillo, Map.DM_Castillo, Map.ELIM_Castillo, Map.TDM_Castillo),
-            new MapMarkup(Resources.ChateauGuillard, Map.DM_ChateauGuillard, Map.TDM_ChateauGuillard),
-            new MapMarkup(Resources.ChateauGuillard_Halloween, Map.DM_ChateauGuillard_Halloween, Map.TDM_ChateauGuillard_Halloween),
-            new MapMarkup(Resources.Dorado, Map.DM_Dorado, Map.E_Dorado, Map.SKIRM_Dorado, Map.TDM_Dorado),
-            new MapMarkup(Resources.Eichenwalde, Map.AE_Eichenwalde, Map.DM_Eichenwalde, Map.SKIRM_Eichenwalde, Map.TDM_Eichenwalde),
-            new MapMarkup(Resources.Eichenwalde_Halloween, Map.AE_Eichenwalde_Halloween, Map.DM_Eichenwalde_Halloween, Map.SKIRM_Eichenwalde_Halloween, Map.TDM_Eichenwalde_Halloween),
-            new MapMarkup(Resources.Gibraltar, Map.E_Gibraltar, Map.SKIRM_Gibraltar),
-            new MapMarkup(Resources.Hanamura, Map.A_Hanamura, Map.DM_Hanamura, Map.SKIRM_Hanamura, Map.TDM_Hanamura),
-            new MapMarkup(Resources.Hollywood, Map.AE_Hollywood, Map.DM_Hollywood, Map.SKIRM_Hollywood, Map.TDM_Hollywood),
-            new MapMarkup(Resources.Hollywood_Halloween, Map.AE_Hollywood_Halloween, Map.DM_Hollywood_Halloween, Map.SKIRM_Hollywood_Halloween, Map.TDM_Hollywood_Halloween),
-            new MapMarkup(Resources.HorizonLunarColony, Map.A_HorizonLunarColony, Map.DM_HorizonLunarColony, Map.SKIRM_HorizonLunarColony, Map.TDM_HorizonLunarColony),
-            new MapMarkup(Resources.Ilios, Map.C_Ilios, Map.SKIRM_Ilios),
-            new MapMarkup(Resources.Ilios_Lighthouse, Map.CTF_Ilios_Lighthouse, Map.DM_Ilios_Lighthouse, Map.ELIM_Ilios_Lighthouse, Map.TDM_Ilios_Lighthouse),
-            new MapMarkup(Resources.Ilios_Ruins, Map.CTF_Ilios_Ruins, Map.DM_Ilios_Ruins, Map.ELIM_Ilios_Ruins, Map.TDM_Ilios_Ruins),
-            new MapMarkup(Resources.Ilios_Well, Map.CTF_Ilios_Well, Map.DM_Ilios_Well, Map.ELIM_Ilios_Well, Map.TDM_Ilios_Well),
-            new MapMarkup(Resources.Junkertown, Map.E_Junkertown, Map.SKIRM_Junkertown),
-            new MapMarkup(Resources.KingsRow, Map.AE_KingsRow, Map.DM_KingsRow, Map.SKIRM_KingsRow, Map.TDM_KingsRow),
-            new MapMarkup(Resources.Lijiang, Map.C_Lijiang, Map.SKIRM_Lijiang),
-            new MapMarkup(Resources.Lijiang_ControlCenter, Map.CTF_Lijiang_ControlCenter, Map.DM_Lijiang_ControlCenter, Map.ELIM_Lijiang_ControlCenter, Map.TDM_Lijiang_ControlCenter),
-            new MapMarkup(Resources.Lijiang_Garden, Map.CTF_Lijiang_Garden, Map.DM_Lijiang_Garden, Map.ELIM_Lijiang_Garden, Map.TDM_Lijiang_Garden),
-            new MapMarkup(Resources.Lijiang_NightMarket, Map.CTF_Lijiang_NightMarket, Map.DM_Lijiang_NightMarket, Map.ELIM_Lijiang_NightMarket, Map.TDM_Lijiang_NightMarket),
-            new MapMarkup(Resources.Necropolis, Map.DM_Necropolis, Map.ELIM_Necropolis, Map.TDM_Necropolis),
-            new MapMarkup(Resources.Nepal, Map.C_Nepal, Map.SKIRM_Nepal),
-            new MapMarkup(Resources.Nepal_Sanctum, Map.CTF_Nepal_Sanctum, Map.DM_Nepal_Sanctum, Map.ELIM_Nepal_Sanctum, Map.TDM_Nepal_Sanctum),
-            new MapMarkup(Resources.Nepal_Shrine, Map.CTF_Nepal_Shrine, Map.DM_Nepal_Shrine, Map.ELIM_Nepal_Shrine, Map.TDM_Nepal_Shrine),
-            new MapMarkup(Resources.Nepal_Village, Map.CTF_Nepal_Village, Map.DM_Nepal_Village, Map.ELIM_Nepal_Village, Map.TDM_Nepal_Village),
-            new MapMarkup(Resources.Numbani, Map.AE_Numbani, Map.SKIRM_Numbani),
-            new MapMarkup(Resources.Oasis, Map.C_Oasis, Map.SKIRM_Oasis),
-            new MapMarkup(Resources.Oasis_CityCenter, Map.CTF_Oasis_CityCenter, Map.DM_Oasis_CityCenter, Map.ELIM_Oasis_CityCenter, Map.TDM_Oasis_CityCenter),
-            new MapMarkup(Resources.Oasis_Gardens, Map.CTF_Oasis_Gardens, Map.DM_Oasis_Gardens, Map.ELIM_Oasis_Gardens, Map.TDM_Oasis_Gardens),
-            new MapMarkup(Resources.Oasis_University, Map.CTF_Oasis_University, Map.DM_Oasis_University, Map.ELIM_Oasis_University, Map.TDM_Oasis_University),
-            new MapMarkup(Resources.Petra, Map.DM_Petra, Map.TDM_Petra),
-            new MapMarkup(Resources.Rialto, Map.E_Rialto, Map.SKIRM_Rialto),
-            new MapMarkup(Resources.Route66, Map.E_Route66, Map.SKIRM_Route66),
-            new MapMarkup(Resources.TempleOfAnubis, Map.A_TempleOfAnubis, Map.DM_TempleOfAnubis, Map.SKIRM_TempleOfAnubis, Map.TDM_TempleOfAnubis),
-            new MapMarkup(Resources.VolskayaIndustries, Map.A_VolskayaIndustries, Map.DM_VolskayaIndustries, Map.SKIRM_VolskayaIndustries, Map.TDM_VolskayaIndustries),
+            new MapMarkup(new DirectBitmap(Resources.Antarctica, true),                Map.DM_Antarctica, Map.ELIM_Antarctica, Map.TDM_Antarctica),
+            new MapMarkup(new DirectBitmap(Resources.Ayutthaya, true),                 Map.CTF_Ayutthaya, Map.ELIM_Ayutthaya),
+            new MapMarkup(new DirectBitmap(Resources.BlackForest, true),               Map.DM_BlackForest, Map.ELIM_BlackForest, Map.TDM_BlackForest),
+            new MapMarkup(new DirectBitmap(Resources.BlizzardWorld, true),             Map.AE_BlizzardWorld, Map.DM_BlizzardWorld, Map.SKIRM_BlizzardWorld, Map.TDM_BlizzardWorld),
+            new MapMarkup(new DirectBitmap(Resources.Busan, true),                     Map.C_Busan, Map.SKIRM_Busan),
+            new MapMarkup(new DirectBitmap(Resources.Castillo, true),                  Map.DM_Castillo, Map.ELIM_Castillo, Map.TDM_Castillo),
+            new MapMarkup(new DirectBitmap(Resources.ChateauGuillard, true),           Map.DM_ChateauGuillard, Map.TDM_ChateauGuillard),
+            new MapMarkup(new DirectBitmap(Resources.ChateauGuillard_Halloween, true), Map.DM_ChateauGuillard_Halloween, Map.TDM_ChateauGuillard_Halloween),
+            new MapMarkup(new DirectBitmap(Resources.Dorado, true),                    Map.DM_Dorado, Map.E_Dorado, Map.SKIRM_Dorado, Map.TDM_Dorado),
+            new MapMarkup(new DirectBitmap(Resources.Eichenwalde, true),               Map.AE_Eichenwalde, Map.DM_Eichenwalde, Map.SKIRM_Eichenwalde, Map.TDM_Eichenwalde),
+            new MapMarkup(new DirectBitmap(Resources.Eichenwalde_Halloween, true),     Map.AE_Eichenwalde_Halloween, Map.DM_Eichenwalde_Halloween, Map.SKIRM_Eichenwalde_Halloween, Map.TDM_Eichenwalde_Halloween),
+            new MapMarkup(new DirectBitmap(Resources.Gibraltar, true),                 Map.E_Gibraltar, Map.SKIRM_Gibraltar),
+            new MapMarkup(new DirectBitmap(Resources.Hanamura, true),                  Map.A_Hanamura, Map.DM_Hanamura, Map.SKIRM_Hanamura, Map.TDM_Hanamura),
+            new MapMarkup(new DirectBitmap(Resources.Hollywood, true),                 Map.AE_Hollywood, Map.DM_Hollywood, Map.SKIRM_Hollywood, Map.TDM_Hollywood),
+            new MapMarkup(new DirectBitmap(Resources.Hollywood_Halloween, true),       Map.AE_Hollywood_Halloween, Map.DM_Hollywood_Halloween, Map.SKIRM_Hollywood_Halloween, Map.TDM_Hollywood_Halloween),
+            new MapMarkup(new DirectBitmap(Resources.HorizonLunarColony, true),        Map.A_HorizonLunarColony, Map.DM_HorizonLunarColony, Map.SKIRM_HorizonLunarColony, Map.TDM_HorizonLunarColony),
+            new MapMarkup(new DirectBitmap(Resources.Ilios, true),                     Map.C_Ilios, Map.SKIRM_Ilios),
+            new MapMarkup(new DirectBitmap(Resources.Ilios_Lighthouse, true),          Map.CTF_Ilios_Lighthouse, Map.DM_Ilios_Lighthouse, Map.ELIM_Ilios_Lighthouse, Map.TDM_Ilios_Lighthouse),
+            new MapMarkup(new DirectBitmap(Resources.Ilios_Ruins, true),               Map.CTF_Ilios_Ruins, Map.DM_Ilios_Ruins, Map.ELIM_Ilios_Ruins, Map.TDM_Ilios_Ruins),
+            new MapMarkup(new DirectBitmap(Resources.Ilios_Well, true),                Map.CTF_Ilios_Well, Map.DM_Ilios_Well, Map.ELIM_Ilios_Well, Map.TDM_Ilios_Well),
+            new MapMarkup(new DirectBitmap(Resources.Junkertown, true),                Map.E_Junkertown, Map.SKIRM_Junkertown),
+            new MapMarkup(new DirectBitmap(Resources.KingsRow, true),                  Map.AE_KingsRow, Map.DM_KingsRow, Map.SKIRM_KingsRow, Map.TDM_KingsRow),
+            new MapMarkup(new DirectBitmap(Resources.Lijiang, true),                   Map.C_Lijiang, Map.SKIRM_Lijiang),
+            new MapMarkup(new DirectBitmap(Resources.Lijiang_ControlCenter, true),     Map.CTF_Lijiang_ControlCenter, Map.DM_Lijiang_ControlCenter, Map.ELIM_Lijiang_ControlCenter, Map.TDM_Lijiang_ControlCenter),
+            new MapMarkup(new DirectBitmap(Resources.Lijiang_Garden, true),            Map.CTF_Lijiang_Garden, Map.DM_Lijiang_Garden, Map.ELIM_Lijiang_Garden, Map.TDM_Lijiang_Garden),
+            new MapMarkup(new DirectBitmap(Resources.Lijiang_NightMarket, true),       Map.CTF_Lijiang_NightMarket, Map.DM_Lijiang_NightMarket, Map.ELIM_Lijiang_NightMarket, Map.TDM_Lijiang_NightMarket),
+            new MapMarkup(new DirectBitmap(Resources.Necropolis, true),                Map.DM_Necropolis, Map.ELIM_Necropolis, Map.TDM_Necropolis),
+            new MapMarkup(new DirectBitmap(Resources.Nepal, true),                     Map.C_Nepal, Map.SKIRM_Nepal),
+            new MapMarkup(new DirectBitmap(Resources.Nepal_Sanctum, true),             Map.CTF_Nepal_Sanctum, Map.DM_Nepal_Sanctum, Map.ELIM_Nepal_Sanctum, Map.TDM_Nepal_Sanctum),
+            new MapMarkup(new DirectBitmap(Resources.Nepal_Shrine, true),              Map.CTF_Nepal_Shrine, Map.DM_Nepal_Shrine, Map.ELIM_Nepal_Shrine, Map.TDM_Nepal_Shrine),
+            new MapMarkup(new DirectBitmap(Resources.Nepal_Village, true),             Map.CTF_Nepal_Village, Map.DM_Nepal_Village, Map.ELIM_Nepal_Village, Map.TDM_Nepal_Village),
+            new MapMarkup(new DirectBitmap(Resources.Numbani, true),                   Map.AE_Numbani, Map.SKIRM_Numbani),
+            new MapMarkup(new DirectBitmap(Resources.Oasis, true),                     Map.C_Oasis, Map.SKIRM_Oasis),
+            new MapMarkup(new DirectBitmap(Resources.Oasis_CityCenter, true),          Map.CTF_Oasis_CityCenter, Map.DM_Oasis_CityCenter, Map.ELIM_Oasis_CityCenter, Map.TDM_Oasis_CityCenter),
+            new MapMarkup(new DirectBitmap(Resources.Oasis_Gardens, true),             Map.CTF_Oasis_Gardens, Map.DM_Oasis_Gardens, Map.ELIM_Oasis_Gardens, Map.TDM_Oasis_Gardens),
+            new MapMarkup(new DirectBitmap(Resources.Oasis_University, true),          Map.CTF_Oasis_University, Map.DM_Oasis_University, Map.ELIM_Oasis_University, Map.TDM_Oasis_University),
+            new MapMarkup(new DirectBitmap(Resources.Petra, true),                     Map.DM_Petra, Map.TDM_Petra),
+            new MapMarkup(new DirectBitmap(Resources.Rialto, true),                    Map.E_Rialto, Map.SKIRM_Rialto),
+            new MapMarkup(new DirectBitmap(Resources.Route66, true),                   Map.E_Route66, Map.SKIRM_Route66),
+            new MapMarkup(new DirectBitmap(Resources.TempleOfAnubis, true),            Map.A_TempleOfAnubis, Map.DM_TempleOfAnubis, Map.SKIRM_TempleOfAnubis, Map.TDM_TempleOfAnubis),
+            new MapMarkup(new DirectBitmap(Resources.VolskayaIndustries, true),        Map.A_VolskayaIndustries, Map.DM_VolskayaIndustries, Map.SKIRM_VolskayaIndustries, Map.TDM_VolskayaIndustries),
         };
     }
 
     internal class MapMarkup
     {
-        public MapMarkup(Bitmap markup, params Map[] maps)
+        public MapMarkup(DirectBitmap markup, params Map[] maps)
         {
             Markup = markup;
             Maps = maps;
         }
-        public Bitmap Markup { get; private set; }
+        public DirectBitmap Markup { get; private set; }
         public Map[] Maps { get; private set; }
     }
 }

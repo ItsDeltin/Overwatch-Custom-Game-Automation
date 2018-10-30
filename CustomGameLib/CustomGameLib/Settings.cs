@@ -22,27 +22,27 @@ namespace Deltin.CustomGameAutomation
             updateScreen();
             // Look for the highlighted option
             for (int y = 110; y < 436; y++)
-                if (CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
-                    && CompareColor(649, y, Colors.WHITE, 20))
+                if (Capture.CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
+                    && Capture.CompareColor(649, y, Colors.WHITE, 20))
                 {
                     int checkY = y + 2;
 
                     bool? settingValue = null;
 
                     // If the setting is set to DISABLED
-                    if (CompareColor(564, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    if (Capture.CompareColor(564, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = false;
 
                     // If the setting is set to ENABLED
-                    else if (CompareColor(599, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(599, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = true;
 
                     // If the setting is set to OFF
-                    else if (CompareColor(589, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(589, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = false;
 
                     // If the setting is set to ON
-                    else if (CompareColor(588, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(588, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = true;
 
                     if (settingValue != null)
@@ -136,7 +136,7 @@ namespace Deltin.CustomGameAutomation
                 {
                     cg.updateScreen();
 
-                    if (cg.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                    if (Capture.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
                     {
                         numPresets++;
                         wait.Restart();

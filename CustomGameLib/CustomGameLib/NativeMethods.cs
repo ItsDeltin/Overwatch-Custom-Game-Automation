@@ -154,6 +154,22 @@ namespace Deltin.CustomGameAutomation
         internal static extern bool DeleteObject(IntPtr hObject);
         [DllImport("gdi32.dll")]
         internal static extern IntPtr SelectObject(IntPtr hDC, IntPtr hObject);
+        /// <summary>
+        ///        Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="hbmp">A handle to the bitmap. This must be a compatible bitmap (DDB).</param>
+        /// <param name="uStartScan">The first scan line to retrieve.</param>
+        /// <param name="cScanLines">The number of scan lines to retrieve.</param>
+        /// <param name="lpvBits">A pointer to a buffer to receive the bitmap data. If this parameter is <see cref="IntPtr.Zero"/>, the function passes the dimensions and format of the bitmap to the <see cref="BITMAPINFO"/> structure pointed to by the <paramref name="lpbi"/> parameter.</param>
+        /// <param name="lpbi">A pointer to a <see cref="BITMAPINFO"/> structure that specifies the desired format for the DIB data.</param>
+        /// <param name="uUsage">The format of the bmiColors member of the <see cref="BITMAPINFO"/> structure. It must be one of the following values.</param>
+        /// <returns>If the lpvBits parameter is non-NULL and the function succeeds, the return value is the number of scan lines copied from the bitmap.
+        /// If the lpvBits parameter is NULL and GetDIBits successfully fills the <see cref="BITMAPINFO"/> structure, the return value is nonzero.
+        /// If the function fails, the return value is zero.
+        /// This function can return the following value: ERROR_INVALID_PARAMETER (87 (0×57))</returns>
+        [DllImport("gdi32.dll", EntryPoint = "GetDIBits")]
+        internal static extern int GetDIBits([In] IntPtr hdc, [In] IntPtr hbmp, uint uStartScan, uint cScanLines, [Out] byte[] lpvBits, ref BITMAPINFO lpbi, DIB_Color_Mode uUsage);
 
         internal enum TernaryRasterOperations : uint
         {
@@ -193,5 +209,60 @@ namespace Deltin.CustomGameAutomation
             /// </summary>
             CAPTUREBLT = 0x40000000
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct BITMAPINFO
+        {
+            public BITMAPINFOHEADER bmiHeader;
+            public RGBQUAD[] bmiColors;
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct BITMAPINFOHEADER
+        {
+            public uint biSize;
+            public int biWidth;
+            public int biHeight;
+            public ushort biPlanes;
+            public ushort biBitCount;
+            public BitmapCompressionMode biCompression;
+            public uint biSizeImage;
+            public int biXPelsPerMeter;
+            public int biYPelsPerMeter;
+            public uint biClrUsed;
+            public uint biClrImportant;
+
+            public void Init()
+            {
+                biSize = (uint)Marshal.SizeOf(this);
+            }
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct RGBQUAD
+        {
+            public byte rgbBlue;
+            public byte rgbGreen;
+            public byte rgbRed;
+            public byte rgbReserved;
+        }
+        internal enum BitmapCompressionMode : uint
+        {
+            BI_RGB = 0,
+            BI_RLE8 = 1,
+            BI_RLE4 = 2,
+            BI_BITFIELDS = 3,
+            BI_JPEG = 4,
+            BI_PNG = 5
+        }
+        internal enum DIB_Color_Mode : uint
+        {
+            DIB_RGB_COLORS = 0,
+            DIB_PAL_COLORS = 1
+        }
+    }
+
+    internal static class Gdi32Plus
+    {
+        [DllImport("gdiplus.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        internal static extern int GdipCreateBitmapFromHBITMAP(HandleRef hbitmap, HandleRef hpalette, out IntPtr bitmap);
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -41,16 +45,13 @@ namespace Deltin.CustomGameAutomation
             // This will take a screenshot of the Overwatch window.
             if (Monitor.TryEnter(ScreenshotLock)) // (1) If another thread is already updating the screen...
             {
-                lock (BmpLock)
+                try
                 {
-                    try
-                    {
-                        Screenshot(ScreenshotMethod, OverwatchHandle, ref bmp);
-                    }
-                    finally
-                    {
-                        Monitor.Exit(ScreenshotLock);
-                    }
+                    Screenshot(ScreenshotMethod, OverwatchHandle, ref Capture);
+                }
+                finally
+                {
+                    Monitor.Exit(ScreenshotLock);
                 }
             }
             else
@@ -62,19 +63,19 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref Bitmap bmp)
+        static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
         {
             if (!Validate(hWnd)) return;
             // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
             SetupWindow(hWnd, method);
 
             if (method == ScreenshotMethod.BitBlt)
-                ScreenshotBitBlt(hWnd, ref bmp);
+                ScreenshotBitBlt(hWnd, ref capture);
             else if (method == ScreenshotMethod.ScreenCopy)
-                ScreenshotScreenCopy(hWnd, ref bmp);
+                ScreenshotScreenCopy(hWnd, ref capture);
         }
 
-        static void ScreenshotBitBlt(IntPtr hWnd, ref Bitmap bmp)
+        static void ScreenshotBitBlt(IntPtr hWnd, ref DirectBitmap capture)
         {
             try
             {
@@ -96,27 +97,25 @@ namespace Deltin.CustomGameAutomation
                 Gdi32.BitBlt(hdcDest, 1, 31, width - 10, height, hdcSrc, 0, 0, (uint)Gdi32.TernaryRasterOperations.SRCCOPY | (uint)Gdi32.TernaryRasterOperations.CAPTUREBLT);
                 // restore selection
                 Gdi32.SelectObject(hdcDest, hOld);
+
+                if (capture != null)
+                    capture.Dispose();
+                capture = new DirectBitmap(hdcSrc, hBitmap);
+
                 // clean up 
                 Gdi32.DeleteDC(hdcDest);
                 User32.ReleaseDC(hWnd, hdcSrc);
-                // get a .NET image object for it
-                Image img = Image.FromHbitmap(hBitmap);
                 // free up the Bitmap object
                 Gdi32.DeleteObject(hBitmap);
-
-                if (bmp != null)
-                    bmp.Dispose();
-                bmp = new Bitmap(img);
-                img.Dispose();
             }
-            catch (System.Runtime.InteropServices.ExternalException)
+            catch (ExternalException)
             {
                 // Failed to capture window, usually because it was closed.
                 Debug.WriteLine(DebugHeader + "Failed to capture window. Is it closed?");
             }
         }
 
-        static void ScreenshotScreenCopy(IntPtr hWnd, ref Bitmap bmp)
+        static void ScreenshotScreenCopy(IntPtr hWnd, ref DirectBitmap capture)
         {
             Rectangle rect = new Rectangle();
             User32.GetWindowRect(hWnd, ref rect);
@@ -124,12 +123,14 @@ namespace Deltin.CustomGameAutomation
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
 
-            if (bmp != null)
-                bmp.Dispose();
-            bmp = new Bitmap(width, height);
+            if (capture != null)
+                capture.Dispose();
+            Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             g.CopyFromScreen(rect.Left - 7, rect.Top, -14, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
             g.Dispose();
+            capture = new DirectBitmap(bmp);
+            bmp.Dispose();
         }
 
         /// <summary>
@@ -140,7 +141,330 @@ namespace Deltin.CustomGameAutomation
         {
             updateScreen();
 
-            bmp.Save(path);
+            Capture.Save(path);
         }
+    }
+
+    public class DirectBitmap : IDisposable
+    {
+        #region Public Fields
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        #endregion
+
+        #region Private Fields
+        private byte[] Bytes;
+        private int BytesPerLine;
+        private bool Inverted = false;
+        #endregion
+
+        #region Constructors
+        // From bytes.
+        internal DirectBitmap(byte[] bytes, int width, int height, bool inverted = false)
+        {
+            Bytes = bytes;
+            Width = width;
+            Height = height;
+            Inverted = inverted;
+            GetBytesPerLine();
+        }
+        // From hBitmap.
+        internal DirectBitmap(IntPtr hdcSrc, IntPtr hBitmap)
+        {
+            Gdi32.BITMAPINFO bmi = new Gdi32.BITMAPINFO();
+            bmi.bmiHeader.biSize = (uint)Marshal.SizeOf(bmi.bmiHeader);
+            Gdi32.GetDIBits(hdcSrc, hBitmap, 0, 0, null, ref bmi, Gdi32.DIB_Color_Mode.DIB_RGB_COLORS);
+
+            Bytes = new byte[bmi.bmiHeader.biSizeImage];
+
+            bmi.bmiHeader.biBitCount = 32;
+            bmi.bmiHeader.biCompression = Gdi32.BitmapCompressionMode.BI_RGB;
+            bmi.bmiHeader.biHeight = Math.Abs(bmi.bmiHeader.biHeight);
+            Gdi32.GetDIBits(hdcSrc, hBitmap, 0, (uint)bmi.bmiHeader.biHeight,
+                Bytes, ref bmi, Gdi32.DIB_Color_Mode.DIB_RGB_COLORS);
+
+            Width = bmi.bmiHeader.biWidth;
+            Height = bmi.bmiHeader.biHeight;
+            GetBytesPerLine();
+
+            Inverted = true;
+        }
+        // From another db
+        internal DirectBitmap(DirectBitmap other)
+        {
+            Bytes = other.Bytes;
+            Width = other.Width;
+            Height = other.Height;
+            GetBytesPerLine();
+        }
+        // From a bitmap
+        internal DirectBitmap(Bitmap bitmap, bool disposeBitmap = false)
+        {
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+            int size = bitmap.Width * bitmap.Height * 4;
+            Bytes = new byte[size];
+            Marshal.Copy(bitmapData.Scan0, Bytes, 0, size);
+            bitmap.UnlockBits(bitmapData);
+
+            Width = bitmap.Width;
+            Height = bitmap.Height;
+            GetBytesPerLine();
+
+            if (disposeBitmap)
+                bitmap.Dispose();
+        }
+        #endregion
+
+        #region Public Methods
+        internal Color GetPixel(int x, int y)
+        {
+            GetInternalLocation(x, y, out x, out y);
+            var offset = GetByteIndexLocation(x, y);
+
+            int a = Bytes[offset + 3],
+                r = Bytes[offset + 2],
+                g = Bytes[offset + 1],
+                b = Bytes[offset + 0];
+
+            return Color.FromArgb(a, r, g, b);
+        }
+
+        internal void SetPixel(int x, int y, Color color)
+        {
+            GetInternalLocation(x, y, out x, out y);
+            var offset = GetByteIndexLocation(x, y);
+
+            Bytes[offset + 3] = color.A;
+            Bytes[offset + 2] = color.R;
+            Bytes[offset + 1] = color.G;
+            Bytes[offset + 0] = color.B;
+        }
+
+        internal bool CompareColor(int x, int y, int[] color, int fade)
+        {
+            Color pixelColor = GetPixel(x, y);
+            return Math.Abs(pixelColor.R - color[0]) < fade
+                && Math.Abs(pixelColor.G - color[1]) < fade
+                && Math.Abs(pixelColor.B - color[2]) < fade;
+        }
+        internal bool CompareColor(Point point, int[] color, int fade)
+        {
+            return CompareColor(point.X, point.Y, color, fade);
+        }
+
+        internal bool CompareColor(int x1, int y1, int x2, int y2, int fade)
+        {
+            Color pixelColor1 = GetPixel(x1, y1);
+            Color pixelColor2 = GetPixel(x2, y2);
+            return Math.Abs(pixelColor1.R - pixelColor2.R) < fade
+                && Math.Abs(pixelColor1.G - pixelColor2.G) < fade
+                && Math.Abs(pixelColor1.B - pixelColor2.B) < fade;
+        }
+        internal bool CompareColor(Point point1, Point point2, int fade)
+        {
+            return CompareColor(point1.X, point1.Y, point2.X, point2.Y, fade);
+        }
+
+        internal bool CompareColor(int x, int y, int[] min, int[] max)
+        {
+            Color pixelColor = GetPixel(x, y);
+            return min[0] < pixelColor.R && pixelColor.R < max[0]
+                && min[1] < pixelColor.G && pixelColor.G < max[1]
+                && min[2] < pixelColor.B && pixelColor.B < max[2];
+        }
+        internal bool CompareColor(Point point, int[] min, int[] max)
+        {
+            return CompareColor(point.X, point.Y, min, max);
+        }
+
+        internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, int min, DBCompareFlags flags)
+        {
+            if (rectangle.Width != other.Width || rectangle.Height != other.Height)
+                return false;
+
+            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((double)(100 - min) / 100));
+            int pixelsFailed = 0;
+            bool failed = false;
+
+            Action<int, ParallelLoopState> check = new Action<int, ParallelLoopState>((x, loopState) =>
+            {
+                for (int y = 0; y < rectangle.Height && !failed; y++)
+                {
+                    Color pixelColor = other.GetPixel(x, y);
+                    if ((flags.HasFlag(DBCompareFlags.IgnoreBlack) && pixelColor == Color.Black)
+                    || (flags.HasFlag(DBCompareFlags.IgnoreWhite) && pixelColor == Color.White))
+                        continue;
+                    else if (!CompareColor(x + rectangle.X, y + rectangle.Y, pixelColor.ToInt(), fade))
+                        pixelsFailed++;
+
+                    failed = pixelsFailed >= maxFail;
+
+                    if (loopState != null && failed)
+                        loopState.Break();
+                }
+            });
+
+            if (!flags.HasFlag(DBCompareFlags.Multithread))
+                for (int x = 0; x < rectangle.Width && !failed; x++)
+                    check.Invoke(x, null);
+            else
+                Parallel.For(0, rectangle.Width, check);
+
+            return !failed;
+        }
+        internal bool CompareTo(DirectBitmap other, int fade, int min, DBCompareFlags flags)
+        {
+            return CompareTo(new Rectangle(0, 0, Width, Height), other, fade, min, flags);
+        }
+
+        internal DirectBitmap Clone()
+        {
+            return new DirectBitmap(this);
+        }
+        internal DirectBitmap Clone(int x, int y, int width, int height)
+        {
+            if (Inverted)
+            {
+                GetInternalLocation(x, y, out x, out y);
+                y -= height - 1;
+            }
+
+            int byteCount = width * height * 4;
+            byte[] newBytes = new byte[byteCount];
+
+            int index = 0;
+            for (int yi = y; yi < y + height; yi++)
+                for (int xi = x; xi < x + width; xi++)
+                {
+                    int i = GetByteIndexLocation(xi, yi);
+                    newBytes[index + 3] = Bytes[i + 3]; // A
+                    newBytes[index + 2] = Bytes[i + 2]; // R
+                    newBytes[index + 1] = Bytes[i + 1]; // G
+                    newBytes[index + 0] = Bytes[i + 0]; // B
+
+                    index += 4;
+                }
+
+            return new DirectBitmap(newBytes, width, height, Inverted);
+        }
+        internal DirectBitmap Clone(Rectangle rectangle)
+        {
+            return Clone(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        internal Bitmap CloneAsBitmap()
+        {
+            return ToBitmap();
+        }
+        internal Bitmap CloneAsBitmap(int x, int y, int width, int height)
+        {
+            DirectBitmap dbClone = Clone(x, y, width, height);
+            Bitmap bmp = dbClone.ToBitmap();
+            dbClone.Dispose();
+            return bmp;
+        }
+        internal Bitmap CloneAsBitmap(Rectangle rectangle)
+        {
+            return CloneAsBitmap(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        public void Save(string location)
+        {
+            Bitmap bmp = ToBitmap();
+            bmp.Save(location);
+            bmp.Dispose();
+        }
+
+        public Bitmap ToBitmap()
+        {
+            Bitmap bmp = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+            var bitmapData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.WriteOnly, bmp.PixelFormat);
+
+            byte[] saveBytes;
+            if (Inverted)
+                saveBytes = InvertYAxisNew();
+            else
+                saveBytes = Bytes;
+
+            Marshal.Copy(saveBytes, 0, bitmapData.Scan0, saveBytes.Length);
+            bmp.UnlockBits(bitmapData);
+
+            return bmp;
+        }
+
+        public void Dispose()
+        {
+
+        }
+        #endregion
+
+        #region Private Methods
+        // Returns the internal location of the specified pixel as it is stored in the Bytes[] array.
+        private void GetInternalLocation(int x, int y, out int resultX, out int resultY)
+        {
+            if (Inverted)
+            {
+                resultX = x;
+                resultY = Height - 1 - y;
+            }
+            else
+            {
+                resultX = x;
+                resultY = y;
+            }
+        }
+
+        // Gets the index of the bytes of the specified pixel in the Bytes[] array.
+        // the returned value is the B value. +1 is the G value, +2 is the R value, and +3 is the Alpha value.
+        private int GetByteIndexLocation(int x, int y)
+        {
+            return ((y * Width) + x) * 4;
+        }
+
+        // Flips the Bytes[] array vertically so the image is flipped.
+        private void InvertYAxis()
+        {
+            for (int i = 0; i < Width * Height * 4 / 2; i += BytesPerLine)
+                for (int j = 0; j < BytesPerLine; j += 4)
+                    for (int b = 0; b < 4; b++)
+                    {
+                        int findex = i + j + b,
+                            lindex = Bytes.Length - (i + BytesPerLine) + j + b;
+                        byte hold = Bytes[findex];
+                        Bytes[findex] = Bytes[lindex];
+                        Bytes[lindex] = hold;
+                    }
+        }
+
+        // Flips the Bytes[] array vertically so the image is flipped.
+        private byte[] InvertYAxisNew()
+        {
+            byte[] inverted = new byte[Bytes.Length];
+            for (int i = 0; i < (Width * Height * 4); i += BytesPerLine)
+                for (int j = 0; j < BytesPerLine; j += 4)
+                {
+                    inverted[i + j + 0] = Bytes[Bytes.Length - (i + BytesPerLine) + j + 0];
+                    inverted[i + j + 1] = Bytes[Bytes.Length - (i + BytesPerLine) + j + 1];
+                    inverted[i + j + 2] = Bytes[Bytes.Length - (i + BytesPerLine) + j + 2];
+                    inverted[i + j + 3] = Bytes[Bytes.Length - (i + BytesPerLine) + j + 3];
+                }
+            return inverted;
+        }
+
+        // Sets the BytesPerLine field to the amount of bytes per line for the image in the Bytes[] array.
+        private void GetBytesPerLine()
+        {
+            BytesPerLine = Width * 4;
+        }
+        #endregion
+    }
+    [Flags]
+    public enum DBCompareFlags
+    {
+        None = 0,
+        Multithread = 1 << 1,
+        IgnoreBlack = 1 << 2,
+        IgnoreWhite =  1 << 3
     }
 }

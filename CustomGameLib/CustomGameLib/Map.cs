@@ -275,7 +275,7 @@ namespace Deltin.CustomGameAutomation
                 foreach (Gamemode gamemode in Enum.GetValues(typeof(Gamemode)))
                 {
                     Point gamemodeIconLocation = GetModeLocation(gamemode, currentOverwatchEvent);
-                    if (gamemodeIconLocation != Point.Empty && CompareColor(gamemodeIconLocation, Colors.SETTINGS_MODES_ENABLED, Fades.SETTINGS_MODES_ENABLED))
+                    if (gamemodeIconLocation != Point.Empty && Capture.CompareColor(gamemodeIconLocation, Colors.SETTINGS_MODES_ENABLED, Fades.SETTINGS_MODES_ENABLED))
                         modesEnabled |= gamemode;
                 }
 
@@ -292,7 +292,7 @@ namespace Deltin.CustomGameAutomation
         public Bitmap GetMapMarkup()
         {
             updateScreen();
-            return BmpClone(Rectangles.LOBBY_MAP);
+            return Capture.CloneAsBitmap(Rectangles.LOBBY_MAP);
         }
 
         /// <summary>
@@ -301,38 +301,41 @@ namespace Deltin.CustomGameAutomation
         /// <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="Map.E_Route66"/> and <see cref="Map.SKIRM_Route66"/>.</returns>
         public Map[] GetCurrentMap()
         {
-            updateScreen();
-
-            Tuple<double, MapMarkup> mostLikely = null;
-
-            foreach(MapMarkup mapMarkup in Markups.MAP_MARKUPS)
+            lock (CustomGameLock)
             {
-                double total = 0;
-                double success = 0;
-                double fail = 0;
-                bool failed = false;
+                updateScreen();
 
-                for (int x = 0; x < mapMarkup.Markup.Width && !failed; x++)
-                    for (int y = 0; y < mapMarkup.Markup.Height && !failed; y++)
-                    {
-                        total++;
-                        if (CompareColor(Rectangles.LOBBY_MAP.X + x, Rectangles.LOBBY_MAP.Y + y, mapMarkup.Markup.GetPixelAt(x, y).ToInt(), MapFade))
-                            success++;
-                        else
-                            fail++;
+                Tuple<double, MapMarkup> mostLikely = null;
 
-                        failed = fail > MaximumMapIncorrectCount;
-                    }
-                if (failed)
-                    continue;
+                foreach (MapMarkup mapMarkup in Markups.MAP_MARKUPS)
+                {
+                    double total = 0;
+                    double success = 0;
+                    double fail = 0;
+                    bool failed = false;
 
-                double result = success / total * 100;
+                    for (int x = 0; x < mapMarkup.Markup.Width && !failed; x++)
+                        for (int y = 0; y < mapMarkup.Markup.Height && !failed; y++)
+                        {
+                            total++;
+                            if (Capture.CompareColor(Rectangles.LOBBY_MAP.X + x, Rectangles.LOBBY_MAP.Y + y, mapMarkup.Markup.GetPixel(x, y).ToInt(), MapFade))
+                                success++;
+                            else
+                                fail++;
 
-                if (result >= MinimumMapRatio && (mostLikely == null || (mostLikely.Item1 < result)))
-                    mostLikely = new Tuple<double, MapMarkup>(result, mapMarkup);
+                            failed = fail > MaximumMapIncorrectCount;
+                        }
+                    if (failed)
+                        continue;
+
+                    double result = success / total * 100;
+
+                    if (result >= MinimumMapRatio && (mostLikely == null || (mostLikely.Item1 < result)))
+                        mostLikely = new Tuple<double, MapMarkup>(result, mapMarkup);
+                }
+
+                return mostLikely?.Item2.Maps;
             }
-
-            return mostLikely?.Item2.Maps;
         }
         private static readonly int MapFade = 10;
         private static readonly int MinimumMapRatio = 98;

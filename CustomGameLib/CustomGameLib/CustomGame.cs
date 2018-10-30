@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
 
         static int KeyPressWait = 50;
 
-        internal Bitmap bmp = null;
+        internal DirectBitmap Capture = null;
 
         internal bool debugmode = false;
         internal Form debug;
@@ -170,17 +170,17 @@ namespace Deltin.CustomGameAutomation
                 updateScreen();
 
                 // Check if in lobby
-                if (CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
+                if (Capture.CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
                     return GameState.InLobby;
 
                 // Check if waiting
-                if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
+                if (Capture.CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
                     return GameState.Waiting;
 
-                if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
+                if (Capture.CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
                     return GameState.Ending_Commend;
 
-                if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+                if (Capture.CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                     return GameState.Ingame;
 
                 return GameState.Unknown;
@@ -210,8 +210,8 @@ namespace Deltin.CustomGameAutomation
                 Commands.StopScanning();
                 DisposePersistentScanningThread();
 
-                if (bmp != null)
-                    bmp.Dispose();
+                if (Capture != null)
+                    Capture.Dispose();
             }
         }
 
@@ -233,6 +233,10 @@ namespace Deltin.CustomGameAutomation
         /// The <see cref="CustomGame"/> object to use.
         /// </summary>
         protected CustomGame cg;
+        /// <summary>
+        /// The captured screen.
+        /// </summary>
+        protected DirectBitmap Capture { get { return cg.Capture; } }
     }
 
     /// <summary>

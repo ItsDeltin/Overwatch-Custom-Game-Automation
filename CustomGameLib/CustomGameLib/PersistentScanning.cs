@@ -49,13 +49,13 @@ namespace Deltin.CustomGameAutomation
 
                 for (int x = 110; x < 450; x++)
                     // Test for a straight line '|'
-                    if (CompareColor(x, 295, new int[] { 132, 117, 87 }, 7) && CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+                    if (Capture.CompareColor(x, 295, new int[] { 132, 117, 87 }, 7) && Capture.CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
                     {
                         thisCheck = Team.Blue;
                         break;
                     }
                     // Test for just the top '*'
-                    else if (CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
+                    else if (Capture.CompareColor(x, 267, new int[] { 132, 117, 87 }, 7))
                     {
                         thisCheck = Team.Red;
                         break;

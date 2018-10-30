@@ -28,13 +28,10 @@ namespace Deltin.CustomGameAutomation
 
         private void InvokeOnDisconnect()
         {
-            if (IsDisconnected())
+            if (OnDisconnect != null && IsDisconnected() && !OnDisconnectInvoked)
             {
-                if (OnDisconnect != null && !OnDisconnectInvoked)
-                {
                     OnDisconnect.Invoke(this, new EventArgs());
                     OnDisconnectInvoked = true;
-                }
             }
             else
                 OnDisconnectInvoked = false;
@@ -49,7 +46,7 @@ namespace Deltin.CustomGameAutomation
             lock (CustomGameLock)
             {
                 updateScreen();
-                return CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
+                return Capture.CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
             }
         }
 

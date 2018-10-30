@@ -62,7 +62,7 @@ namespace Deltin.CustomGameAutomation
 
                 updateScreen();
 
-                if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
+                if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     LeftClick(Points.INVITE_INVITE); // invite player
                     //ResetMouse();
@@ -107,7 +107,7 @@ namespace Deltin.CustomGameAutomation
 
                 updateScreen();
 
-                if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
+                if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     LeftClick(Points.INVITE_INVITE); // invite player
                     //ResetMouse();
@@ -155,7 +155,7 @@ namespace Deltin.CustomGameAutomation
                         // Copy a 20x20 (10x10 if spectator) pixel square of the invite icon animation.
                         Point scanAt = AddToSlotOrigin(IsSlotBlueOrRed(slot) ? InviteScanData.Origin : InviteScanData.SpectatorOrigin, slot, true);
                         int range = IsSlotBlueOrRed(slot) ? InviteScanData.PlayerRange : InviteScanData.SpectatorRange;
-                        Bitmap markup = BmpClone(scanAt.X - range, scanAt.Y - range, range * 2, range * 2);
+                        DirectBitmap markup = Capture.Clone(scanAt.X - range, scanAt.Y - range, range * 2, range * 2);
 
                         // If there is no previous record of the animation for the slot, create it.
                         if (previousSlotData == null)
@@ -166,16 +166,20 @@ namespace Deltin.CustomGameAutomation
                         {
                             // If there is, compare it to the previous one.
 
+                            /*
                             bool NotMatching = false;
                             for (int x = 0; x < markup.Width && !NotMatching; x++)
                                 for (int y = 0; y < markup.Height && !NotMatching; y++)
                                     if (!previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
                                         NotMatching = true;
+                            */
+
+                            bool notMatching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, 100, DBCompareFlags.Multithread);
 
                             previousSlotData.Markup.Dispose();
                             previousSlotData.Markup = markup;
 
-                            if (NotMatching)
+                            if (notMatching)
                             {
                                 previousSlotData.Changes++;
                             }
@@ -235,14 +239,14 @@ namespace Deltin.CustomGameAutomation
 
         internal class InviteScanData
         {
-            public InviteScanData(int slot, Bitmap markup)
+            public InviteScanData(int slot, DirectBitmap markup)
             {
                 Slot = slot;
                 Markup = markup;
             }
 
             public int Slot;
-            public Bitmap Markup;
+            public DirectBitmap Markup;
             public double Changes = 0;
 
             public static readonly Point Origin = new Point(176, 252);

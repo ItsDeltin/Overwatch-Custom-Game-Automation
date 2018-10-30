@@ -83,7 +83,7 @@ namespace Deltin.CustomGameAutomation
                         WaitForVisibleProcessWindow(owProcess);
                         RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
 
-                        Bitmap bmp = null;
+                        DirectBitmap bmp = null;
                         if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
                         {
                             Debug.WriteLine(DebugHeader + "Finished starting Overwatch.");
@@ -149,7 +149,7 @@ namespace Deltin.CustomGameAutomation
 
             Stopwatch elapsed = new Stopwatch();
            
-            Bitmap bmp = null;
+            DirectBitmap bmp = null;
             elapsed.Start();
             while (true)
             {
@@ -308,7 +308,7 @@ namespace Deltin.CustomGameAutomation
             ChangeVideoSettings(settingsFilePath, settings.ToArray(), setTo.ToArray());
         }
 
-        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, Bitmap bmp, Exception ex)
+        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, DirectBitmap bmp, Exception ex)
         {
             if (info.CloseOverwatchProcessOnFailure)
             {
@@ -330,7 +330,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, Bitmap bmp, int maxTime)
+        private static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, DirectBitmap bmp, int maxTime)
         {
             Stopwatch elapsed = new Stopwatch();
             elapsed.Start();

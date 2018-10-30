@@ -277,7 +277,7 @@ namespace ZombieBot
             {
                 // Test if the player already voted for a map. If they did, update the map they are voting for.
                 for (int i = 0; i < VoteResults.Count; i++)
-                    if (ChatIdentity.CompareChatIdentities(commandData.ChatIdentity, VoteResults[i].ChatIdentity))
+                    if (commandData.ChatIdentity.CompareIdentities(VoteResults[i].ChatIdentity))
                     {
                         Console.WriteLine(string.Format("Player #{0} changing their vote to: {1}", i, voteFor));
                         VoteResults[i].VotingFor = voteFor;
