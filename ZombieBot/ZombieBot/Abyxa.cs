@@ -74,7 +74,7 @@ namespace ZombieBot
 
         private static void Req(string url, bool wait = false)
         {
-            Task requestTask = Task.Factory.StartNew(() =>
+            Task requestTask = Task.Run(() =>
             {
                 WebClient webClient = new WebClient();
                 webClient.DownloadData(url);

@@ -421,15 +421,30 @@ namespace Deltin.CustomGameAutomation
                     }));
                 }
 
-                if (flags.HasFlag(SlotFlags.NoPlayers) || flags.HasFlag(SlotFlags.NoAI))
+                // Filter players/AI slots
+                if (flags.HasFlag(SlotFlags.PlayersOnly) || flags.HasFlag(SlotFlags.AIOnly))
                 {
                     List<int> aiSlots = AI.GetAISlots(flags.HasFlag(SlotFlags.AccurateGetAI));
 
-                    if (flags.HasFlag(SlotFlags.NoAI))
-                        slots = slots.Where(slot => aiSlots.Contains(slot) == false).ToList();
-
-                    if (flags.HasFlag(SlotFlags.NoPlayers))
+                    // Make the list AI only.
+                    if (flags.HasFlag(SlotFlags.AIOnly))
                         slots = slots.Where(slot => aiSlots.Contains(slot)).ToList();
+                    // Make the list players only.
+                    if (flags.HasFlag(SlotFlags.PlayersOnly))
+                        slots = slots.Where(slot => !aiSlots.Contains(slot)).ToList();
+                }
+
+                // Filter alive/dead slots
+                if (flags.HasFlag(SlotFlags.DeadOnly) || flags.HasFlag(SlotFlags.AliveOnly))
+                {
+                    List<int> deadPlayers = PlayerInfo.DeadSlots(true);
+
+                    // Make the list dead slots only.
+                    if (flags.HasFlag(SlotFlags.DeadOnly))
+                        slots = slots.Where(slot => deadPlayers.Contains(slot)).ToList();
+                    // Make the list alive slots only.
+                    if (flags.HasFlag(SlotFlags.AliveOnly))
+                        slots = slots.Where(slot => !deadPlayers.Contains(slot)).ToList();
                 }
 
                 return slots;
@@ -492,7 +507,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="noUpdate"></param>
         /// <returns>List of players who are dead.</returns>
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
-        public List<int> PlayersDead(bool noUpdate = false)
+        public List<int> DeadSlots(bool noUpdate = false)
         {
             lock (cg.CustomGameLock)
             {
@@ -600,7 +615,7 @@ namespace Deltin.CustomGameAutomation
 
                 cg.updateScreen();
 
-                if (PlayersDead(true).Contains(slot))
+                if (DeadSlots(true).Contains(slot))
                     return true;
 
                 return _HeroChosen(slot);
@@ -798,7 +813,7 @@ namespace Deltin.CustomGameAutomation
                     return null;
                 }
 
-                if (PlayersDead(true).Contains(slot))
+                if (DeadSlots(true).Contains(slot))
                 {
                     resultInfo = HeroResultInfo.PlayerWasDead;
                     return null;
@@ -996,16 +1011,24 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         All = BlueTeam | RedTeam | Spectators | Queue,
         /// <summary>
-        /// No players, only AI.
+        /// Players only, no AI.
         /// </summary>
-        NoPlayers = 1 << 6,
+        PlayersOnly = 1 << 6,
         /// <summary>
-        /// No AI, only players.
+        /// AI only, no players.
         /// </summary>
-        NoAI = 1 << 7,
+        AIOnly = 1 << 7,
+        /// <summary>
+        /// Gets dead players only.
+        /// </summary>
+        DeadOnly = 1 << 8,
+        /// <summary>
+        /// Gets alive players only.
+        /// </summary>
+        AliveOnly = 1 << 9,
         /// <summary>
         /// Reliably gets the (non)AI, however is a lot slower.
         /// </summary>
-        AccurateGetAI = 1 << 8,
+        AccurateGetAI = 1 << 10,
     }
 }

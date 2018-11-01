@@ -717,13 +717,13 @@
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
             <seealso cref="M:Deltin.CustomGameAutomation.AI.IsAI(System.Int32,System.Boolean)" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots(System.Boolean,System.Boolean)">
             <summary>
             Gets all slots that are AI.
             </summary>
             <returns>All AI slots.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots(System.Boolean,System.Boolean)">
             <summary>
             Gets all slots that are not AI.
             </summary>
@@ -1675,7 +1675,7 @@
             The PlayerInfo class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayersDead(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.DeadSlots(System.Boolean)">
             <summary>
             Gets a list of players who died.
             </summary>
@@ -1886,14 +1886,24 @@
             Gets blue, red, spectator, and queue slots.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoPlayers">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.PlayersOnly">
             <summary>
-            No players, only AI.
+            Players only, no AI.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoAI">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AIOnly">
             <summary>
-            No AI, only players.
+            AI only, no players.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.DeadOnly">
+            <summary>
+            Gets dead players only.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AliveOnly">
+            <summary>
+            Gets alive players only.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.SlotFlags.AccurateGetAI">

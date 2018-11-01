@@ -411,13 +411,13 @@ namespace Deltin.CustomGameAutomation
         /// Gets all slots that are AI.
         /// </summary>
         /// <returns>All AI slots.</returns>
-        public List<int> GetAISlots(bool accurate = false)
+        public List<int> GetAISlots(bool accurate = false, bool noUpdate = false)
         {
             lock (cg.CustomGameLock)
             {
                 List<int> AISlots = new List<int>();
 
-                List<int> allPlayers = cg.AllSlots;
+                List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
 
                 for (int i = 0; i < allPlayers.Count; i++)
                 {
@@ -441,13 +441,13 @@ namespace Deltin.CustomGameAutomation
         /// Gets all slots that are not AI.
         /// </summary>
         /// <returns>All player slots.</returns>
-        public List<int> GetPlayerSlots(bool accurate = false)
+        public List<int> GetPlayerSlots(bool accurate = false, bool noUpdate = false)
         {
             lock (cg.CustomGameLock)
             {
                 List<int> AISlots = new List<int>();
 
-                List<int> allPlayers = cg.AllSlots;
+                List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
 
                 for (int i = 0; i < allPlayers.Count; i++)
                 {

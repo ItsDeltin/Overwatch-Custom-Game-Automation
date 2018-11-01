@@ -38,10 +38,9 @@ namespace ZombieBot
                     return false;
 
                 // Swap killed survivors to red
-                List<int> playersDead = cg.PlayerInfo.PlayersDead();
-                for (int i = 0; i < playersDead.Count(); i++)
-                    if (CustomGame.IsSlotBlue(playersDead[i]))
-                        cg.Interact.SwapToRed(playersDead[i]);
+                List<int> survivorsDead = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.DeadOnly);
+                for (int i = 0; i < survivorsDead.Count(); i++)
+                    cg.Interact.SwapToRed(survivorsDead[i]);
 
                 // end game if winning condition is met
                 bool endgame = false;
