@@ -432,6 +432,19 @@
             </summary>
             <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="F:Deltin.CustomGameAutomation.Map.E_Route66"/> and <see cref="F:Deltin.CustomGameAutomation.Map.SKIRM_Route66"/>.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)">
+            <summary>
+            Gets the slots that have changed.
+            </summary>
+            <param name="slotInfo">The data of the last scan.</param>
+            <returns>A List of slots that changed.</returns>
+            <remarks>
+            <para>The returned slots are slots that have been swapped, removed, or added to the game.</para>
+            <para>The data of the scan is saved in <paramref name="slotInfo"/>. It is compared to next time it is used with this method.
+            A new <see cref="T:Deltin.CustomGameAutomation.SlotInfo"/> object will return every slot.</para>
+            </remarks>
+            <seealso cref="T:Deltin.CustomGameAutomation.SlotInfo"/>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>
             Takes a screenshot of the Overwatch window and saves it as an image to the specified path.
@@ -1284,12 +1297,12 @@
         </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.IsFriend">
             <summary>
-            Is the player that executed the command is a friend?
+            Is the player that executed the command a friend?
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandExecuted">
             <summary>
-            Method to be executed when the command is executed.
+            Method to be executed when a command is executed.
             </summary>
             <param name="data">Data of the command executed.</param>
         </member>
@@ -2148,6 +2161,22 @@
         <member name="T:Deltin.CustomGameAutomation.Gamemode">
             <summary>
             Overwatch's gamemodes.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.SlotInfo">
+            <summary>
+            Data about the saved slots.
+            </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)"/>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.SlotInfo.#ctor">
+            <summary>
+            Creates a new SlotInfo object.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.SlotInfo.Dispose">
+            <summary>
+            Disposes data used by the object.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">

@@ -18,7 +18,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         public bool InvitePlayer(string playerName, Team team)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (playerName == null)
                     throw new ArgumentNullException("playerTeam");
@@ -86,7 +86,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         public bool InvitePlayer(string playerName, int slot)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (playerName == null)
                     throw new ArgumentNullException("playerTeam");
@@ -128,7 +128,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The list of slots invited.</returns>
         public List<int> GetInvitedSlots()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 // Get all non-AI players
                 List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue);

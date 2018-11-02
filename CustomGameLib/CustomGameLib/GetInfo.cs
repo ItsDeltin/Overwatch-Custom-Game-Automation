@@ -185,7 +185,7 @@ namespace Deltin.CustomGameAutomation
 
         private bool IsSlotFilled(int slot, int yoffset, bool noUpdate)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 if (!IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
@@ -248,7 +248,7 @@ namespace Deltin.CustomGameAutomation
 
         private int GetQueueCount(bool includeHidden, bool noUpdate)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 if (!noUpdate)
                     updateScreen();
@@ -389,7 +389,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SlotFlags"/>
         public List<int> GetSlots(SlotFlags flags, bool noUpdate = false)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 List<int> slots = new List<int>();
 
@@ -458,7 +458,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         public bool WaitForSlotUpdate(int maxtime = 1000)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 Stopwatch time = new Stopwatch();
                 List<int> preslots = AllSlots;
@@ -509,7 +509,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
         public List<int> DeadSlots(bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 // Returns which players that are dead by checking the killed marker locations for a red 'X'.
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
@@ -578,7 +578,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns an int[] where [0] is blue max player count and [1] is red max player count.</returns>
         public int[] MaxPlayerCount()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
                 cg.updateScreen();
@@ -606,7 +606,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsHeroChosen(int slot)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                     throw new InvalidSlotException(slot);
@@ -669,7 +669,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Slot the moderator is on.</returns>
         public int ModeratorSlot()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
                 // Find the moderator icon.
@@ -707,7 +707,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public QueueTeam GetQueueTeam(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!CustomGame.IsSlotInQueue(slot))
                     throw new InvalidSlotException(slot);
@@ -737,7 +737,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsUltimateReady(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                     throw new InvalidSlotException(slot);
@@ -770,7 +770,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Bitmap GetHeroMarkup(int slot)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!CustomGame.IsSlotBlueOrRed(slot))
                     throw new InvalidSlotException(slot);
@@ -802,7 +802,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Hero? GetHero(int slot, out HeroResultInfo resultInfo)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                     throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));

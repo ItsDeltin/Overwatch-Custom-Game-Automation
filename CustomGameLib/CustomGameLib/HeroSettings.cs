@@ -18,7 +18,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/setHeroRoster/example'></include>
         public void SetHeroRoster(ToggleAction ta, Team team, params Hero[] heroes)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
                     throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
@@ -158,7 +158,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SetHero"/>
         public void SetHeroSettings(params SetHero[] herodata)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (herodata == null)
                     throw new ArgumentNullException("herodata", "herodata was null.");

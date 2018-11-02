@@ -149,7 +149,7 @@ namespace Deltin.CustomGameAutomation
                     continue;
 
                 // LOCK HERE V
-                lock (cg.CustomGameLock)
+                using (cg.LockHandler.SemiPassive)
                 {
                     UpdateChatCapture(ref bmp);
 
@@ -301,29 +301,32 @@ namespace Deltin.CustomGameAutomation
 
                     if (ltd.RegisterProfile)
                     {
-                        // By default, the career profile option is selected and we can just press enter to open it.
-                        cg.KeyPress(Keys.Enter);
-
-                        // Wait for the career profile to load.
-                        WaitForCareerProfileToLoad();
-
-                        // Take a screenshot of the career profile.
-                        cg.updateScreen();
-                        DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
-
-                        // Register the player identity.
-                        pi = new PlayerIdentity(careerProfileSnapshot);
-
-                        // Go back to the lobby.
-                        cg.GoBack(1);
-                        //cg.//ResetMouse();
-
-                        // If opening the career profile failed, the state of the chat could be incorrect, 
-                        // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
-                        // This will fix it.
-                        cg.Chat.OpenChat();
-                        if (!cg.OpenChatIsDefault)
+                        using (cg.LockHandler.Interactive)
+                        {
+                            // By default, the career profile option is selected and we can just press enter to open it.
                             cg.KeyPress(Keys.Enter);
+
+                            // Wait for the career profile to load.
+                            WaitForCareerProfileToLoad();
+
+                            // Take a screenshot of the career profile.
+                            cg.updateScreen();
+                            DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
+
+                            // Register the player identity.
+                            pi = new PlayerIdentity(careerProfileSnapshot);
+
+                            // Go back to the lobby.
+                            cg.GoBack(1);
+                            //cg.//ResetMouse();
+
+                            // If opening the career profile failed, the state of the chat could be incorrect, 
+                            // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
+                            // This will fix it.
+                            cg.Chat.OpenChat();
+                            if (!cg.OpenChatIsDefault)
+                                cg.KeyPress(Keys.Enter);
+                        }
                     }
                     else
                         cg.CloseOptionMenu();
@@ -760,13 +763,13 @@ namespace Deltin.CustomGameAutomation
         public ChatIdentity ChatIdentity { get; private set; }
 
         /// <summary>
-        /// Is the player that executed the command is a friend?
+        /// Is the player that executed the command a friend?
         /// </summary>
         public bool IsFriend { get; private set; }
     }
 
     /// <summary>
-    /// Method to be executed when the command is executed.
+    /// Method to be executed when a command is executed.
     /// </summary>
     /// <param name="data">Data of the command executed.</param>
     public delegate void CommandExecuted(CommandData data);

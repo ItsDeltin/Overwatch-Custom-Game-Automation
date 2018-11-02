@@ -77,7 +77,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (preset < 0)
                     throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
@@ -124,7 +124,7 @@ namespace Deltin.CustomGameAutomation
 
         private bool NavigateToPresets()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 cg.GoToSettings();
                 cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
@@ -162,7 +162,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="setting">Join setting to select.</param>
         public void SetJoinSetting(Join setting)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
                 if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
@@ -180,7 +180,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         public void SetGameName(string name)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (name.Length < 3)
                     throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
@@ -205,7 +205,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         public void SetTeamName(Team team, string name)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (name == null)
                     throw new ArgumentNullException("name", "name cannot be null.");
@@ -248,7 +248,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="blueCount"/>, <paramref name="redCount"/>, <paramref name="ffaCount"/>, or <paramref name="spectatorCount"/> is less than 0 or greater than their max values.</exception>
         public void SetMaxPlayers(int? blueCount, int? redCount, int? ffaCount, int? spectatorCount)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 cg.GoToSettings();
                 cg.LeftClick(Points.SETTINGS_LOBBY, 100); // Click "lobby" option
@@ -304,7 +304,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="settings">Settings to change.</param>
         public void SetSettings(GameSettings settings)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 settings.SetSettings(cg);
             }

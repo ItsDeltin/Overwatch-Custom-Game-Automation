@@ -62,7 +62,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void RestartGame()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (OpenChatIsDefault)
                     Chat.CloseChat();
@@ -81,7 +81,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGame()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (OpenChatIsDefault)
                     Chat.CloseChat();
@@ -100,7 +100,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SendServerToLobby()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
                 WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
@@ -113,7 +113,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGamemode()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
             }

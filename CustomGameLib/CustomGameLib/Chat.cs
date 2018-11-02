@@ -33,7 +33,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/SendChatMessage/example'></include>
         public void SendChatMessage(string text)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (text == null)
                     throw new ArgumentNullException("text", "text was null.");
@@ -66,7 +66,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to join</param>
         public void SwapChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 OpenChat();
                 cg.TextInput(GetChannelJoinCommand(channel));
@@ -87,7 +87,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to leave.</param>
         public void LeaveChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (!cg.OpenChatIsDefault)
                     OpenChat();
@@ -116,7 +116,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to rejoin.</param>
         public void JoinChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 SendChatMessage("/joinchannel " + channel.ToString());
             }
@@ -127,7 +127,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void OpenChatIsDefault()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 OpenChat();
                 cg.OpenChatIsDefault = true;
@@ -139,7 +139,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void ClosedChatIsDefault()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 CloseChat();
                 cg.OpenChatIsDefault = false;
@@ -148,7 +148,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void OpenChat()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 cg.LeftClick(Points.LOBBY_CHATBOX, 100);
                 /*
@@ -169,7 +169,7 @@ namespace Deltin.CustomGameAutomation
 
         internal Channel? GetCurrentChannel()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 cg.updateScreen();
                 for (int i = 0; i < ChatColors.Length; i++)
@@ -181,7 +181,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void CloseChat()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 OpenChat();
                 cg.KeyPress(Keys.Return);

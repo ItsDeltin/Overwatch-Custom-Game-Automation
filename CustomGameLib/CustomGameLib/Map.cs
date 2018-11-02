@@ -102,7 +102,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="ToggleMap(ToggleAction, Map[])"/>
         public void ToggleMap(Gamemode modesEnabled, Event currentOverwatchEvent, ToggleAction ta, params Map[] maps)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 int waitTime = 1;
 
@@ -260,7 +260,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public Gamemode GetModesEnabled(Event currentOverwatchEvent)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 NavigateToModesMenu();
 
@@ -301,7 +301,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="Map.E_Route66"/> and <see cref="Map.SKIRM_Route66"/>.</returns>
         public Map[] GetCurrentMap()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 updateScreen();
 

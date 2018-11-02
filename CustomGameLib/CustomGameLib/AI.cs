@@ -39,7 +39,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
         public bool AddAI(AIHero hero, Difficulty difficulty, Team team, int count = -1)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (team.HasFlag(Team.Queue) || team.HasFlag(Team.Spectator))
                     throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
@@ -132,7 +132,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="saveAt">Location to save markup at.</param>
         public void GetAIDifficultyMarkup(int scalar, string saveAt)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 cg.updateScreen();
                 int[] scales = new int[] { 33, 49, 34 };
@@ -161,7 +161,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Difficulty? GetAIDifficulty(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
@@ -293,7 +293,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="RemoveFromGameIfAI(int)"/>
         public bool RemoveAllBotsAuto()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive) // Interactive?
             {
                 cg.updateScreen();
 
@@ -317,7 +317,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsAI(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 // Look for the commendation icon for the slot chosen.
 
@@ -413,28 +413,25 @@ namespace Deltin.CustomGameAutomation
         /// <returns>All AI slots.</returns>
         public List<int> GetAISlots(bool accurate = false, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            List<int> AISlots = new List<int>();
+
+            List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
+
+            for (int i = 0; i < allPlayers.Count; i++)
             {
-                List<int> AISlots = new List<int>();
-
-                List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
-
-                for (int i = 0; i < allPlayers.Count; i++)
+                if (!accurate)
                 {
-                    if (!accurate)
-                    {
-                        if (IsAI(allPlayers[i], true))
-                            AISlots.Add(allPlayers[i]);
-                    }
-                    else
-                    {
-                        if (AccurateIsAI(allPlayers[i]))
-                            AISlots.Add(allPlayers[i]);
-                    }
+                    if (IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
                 }
-
-                return AISlots;
+                else
+                {
+                    if (AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
             }
+
+            return AISlots;
         }
 
         /// <summary>
@@ -443,28 +440,25 @@ namespace Deltin.CustomGameAutomation
         /// <returns>All player slots.</returns>
         public List<int> GetPlayerSlots(bool accurate = false, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            List<int> AISlots = new List<int>();
+
+            List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
+
+            for (int i = 0; i < allPlayers.Count; i++)
             {
-                List<int> AISlots = new List<int>();
-
-                List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
-
-                for (int i = 0; i < allPlayers.Count; i++)
+                if (!accurate)
                 {
-                    if (!accurate)
-                    {
-                        if (!IsAI(allPlayers[i], true))
-                            AISlots.Add(allPlayers[i]);
-                    }
-                    else
-                    {
-                        if (!AccurateIsAI(allPlayers[i]))
-                            AISlots.Add(allPlayers[i]);
-                    }
+                    if (!IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
                 }
-
-                return AISlots;
+                else
+                {
+                    if (!AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
             }
+
+            return AISlots;
         }
 
         /// <summary>
@@ -472,7 +466,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void CalibrateAIChecking()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 cg.RightClick(Points.LOBBY_MY_PLAYER_ICON, 250);
                 cg.KeyPress(Keys.Enter);
@@ -519,7 +513,7 @@ namespace Deltin.CustomGameAutomation
 
         bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
@@ -607,7 +601,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="Interact.RemoveFromGame(int)"/>
         public bool RemoveFromGameIfAI(int slot)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);

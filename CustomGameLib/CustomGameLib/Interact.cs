@@ -120,7 +120,7 @@ namespace Deltin.CustomGameAutomation
         /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         public object MenuOptionScan(Point scanLocation, OptionScanFlags flags, string savelocation, DirectBitmap markup)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiPassive)
             {
                 if (scanLocation == Point.Empty)
                 {
@@ -433,7 +433,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="InvalidSlotException">Thrown if the <paramref name="targetSlot"/> or <paramref name="destinationSlot"/> argument is out of range of possible slots to move.</exception>
         public void Move(int targetSlot, int destinationSlot)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (!CustomGame.IsSlotValid(targetSlot))
                     throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
@@ -468,7 +468,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SwapAll()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 bool aistatus = cg.DoesAddButtonExist();
 

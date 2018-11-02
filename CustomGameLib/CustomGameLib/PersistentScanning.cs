@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
             {
                 while (PersistentScan)
                 {
-                    lock (CustomGameLock)
+                    using (LockHandler.Passive)
                     {
                         ScanGameOver(GameOverData);
                         InvokeOnDisconnect();

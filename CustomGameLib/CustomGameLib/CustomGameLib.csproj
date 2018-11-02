@@ -74,6 +74,7 @@
     <Compile Include="CustomGame.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extras.cs" />
+    <Compile Include="LockHandler.cs" />
     <Compile Include="PersistentScanning.cs" />
     <Compile Include="Pause.cs" />
     <Compile Include="GetInfo.cs" />

@@ -29,7 +29,7 @@ namespace Deltin.CustomGameAutomation
         Process OverwatchProcess = null;
         internal DefaultKeys DefaultKeys;
 
-        internal object CustomGameLock = new object();
+        //internal object CustomGameLock = new object();
 
         /// <summary>
         /// Creates new CustomGame object.
@@ -134,7 +134,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void ResetMouse()
         {
-            lock (CustomGameLock)
+            lock (LockHandler.SemiPassive)
             {
                 // There is an Overwatch glitch where exiting some menus will cause the first slot to become highlighted.
                 // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
@@ -147,7 +147,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void CloseOptionMenu()
         {
-            lock (CustomGameLock)
+            lock (LockHandler.SemiPassive)
             {
                 LeftClick(400, 500, 100);
                 LeftClick(500, 500, 100);
@@ -165,7 +165,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns the state of the game.</returns>
         public GameState GetGameState()
         {
-            lock (CustomGameLock)
+            lock (LockHandler.Passive)
             {
                 updateScreen();
 
@@ -204,7 +204,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void Dispose()
         {
-            lock (CustomGameLock)
+            lock (LockHandler.Interactive)
             {
                 Disposed = true;
                 Commands.StopScanning();

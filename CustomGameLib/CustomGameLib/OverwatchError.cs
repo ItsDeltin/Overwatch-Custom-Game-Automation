@@ -43,7 +43,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsDisconnected()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
                 updateScreen();
                 return Capture.CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
