@@ -437,7 +437,7 @@ namespace Deltin.CustomGameAutomation
                 // Filter alive/dead slots
                 if (flags.HasFlag(SlotFlags.DeadOnly) || flags.HasFlag(SlotFlags.AliveOnly))
                 {
-                    List<int> deadPlayers = PlayerInfo.DeadSlots(true);
+                    List<int> deadPlayers = PlayerInfo.GetDeadSlots(true);
 
                     // Make the list dead slots only.
                     if (flags.HasFlag(SlotFlags.DeadOnly))
@@ -507,7 +507,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="noUpdate"></param>
         /// <returns>List of players who are dead.</returns>
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
-        public List<int> DeadSlots(bool noUpdate = false)
+        public List<int> GetDeadSlots(bool noUpdate = false)
         {
             using (cg.LockHandler.Passive)
             {
@@ -615,7 +615,7 @@ namespace Deltin.CustomGameAutomation
 
                 cg.updateScreen();
 
-                if (DeadSlots(true).Contains(slot))
+                if (GetDeadSlots(true).Contains(slot))
                     return true;
 
                 return _HeroChosen(slot);
@@ -813,7 +813,7 @@ namespace Deltin.CustomGameAutomation
                     return null;
                 }
 
-                if (DeadSlots(true).Contains(slot))
+                if (GetDeadSlots(true).Contains(slot))
                 {
                     resultInfo = HeroResultInfo.PlayerWasDead;
                     return null;

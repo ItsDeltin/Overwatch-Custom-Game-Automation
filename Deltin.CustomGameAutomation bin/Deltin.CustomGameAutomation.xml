@@ -1688,7 +1688,7 @@
             The PlayerInfo class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.DeadSlots(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetDeadSlots(System.Boolean)">
             <summary>
             Gets a list of players who died.
             </summary>

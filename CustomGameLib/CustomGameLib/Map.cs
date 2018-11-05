@@ -264,7 +264,7 @@ namespace Deltin.CustomGameAutomation
             {
                 NavigateToModesMenu();
 
-                //ResetMouse();
+                ResetMouse();
 
                 Thread.Sleep(100);
 

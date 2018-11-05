@@ -4,20 +4,23 @@ Any public method in the custom game class should use a lock.
 
 Passive locks is for functions that scan the Overwatch window but do not interact with it. 
 Any amount of passive locks will run side by side.
-Usage:
+- Usage in CustomGame class:
 using (LockHandler.Passive)
+- Usage in CustomGameBase class:
 using (cg.LockHandler.Passive)
 
 Semi-Passive locks is for functions that interact with the Overwatch window but do not go into any other menues allowing scanning to continue as normal. 
 Only 1 semi-passive lock will run at a time.
-Usage:
+- Usage in CustomGame class:
 using (LockHandler.SemiPassive)
+- Usage in CustomGameBase class:
 using (cg.LockHandler.SemiPassive)
 
 Interactive locks is for functions that interact with the Overwatch window and go into new menus. This will block passive locks from running during the interactive lock.
 Only 1 interactive lock will run at a time.
-Usage:
+- Usage in CustomGame class:
 using (LockHandler.Interactive)
+- Usage in CustomGameBase class:
 using (cg.LockHandler.Interactive)
 */
 
@@ -47,33 +50,40 @@ namespace Deltin.CustomGameAutomation
         private const int InteractiveI = 1;
         private const int SemiPassiveI = 2;
 
-        private List<PassiveData> PassiveList = new List<PassiveData>();
-        private object InteractiveLock = new object();
+        private List<PassiveData> PassiveList = new List<PassiveData>(); // List of passive methods running.
+        private object AccessLock = new object(); // Lock for accessing the PassiveList list.
 
-        private void SetLock(int lockType)
+        private object InteractiveLock = new object(); // Lock for semi-passive and interactive methods.
+        private bool RunningInteractive = false; // Determines if an interactive method is running.
+
+        private void SetLock(Locker locker)
         {
             int threadID = Thread.CurrentThread.ManagedThreadId;
-            switch (lockType)
+            switch (locker.LockType)
             {
                 // Passive:
                 case PassiveI:
+                    //SpinWait.SpinUntil(() => { return InteractiveWaitCount == 0; });
                     // Add the thread id to the list of passive threads.
-                    lock (InteractiveLock)
+                    SpinWait.SpinUntil(() => { return !RunningInteractive; });
+                    lock (AccessLock)
                         PassiveList.Add(new PassiveData(threadID));
                     break;
 
                 // Interactive:
                 case InteractiveI:
                     // Ignore calling thread if the calling thread is passive.
-                    for (int i = 0; i < PassiveList.Count; i++)
-                        if (PassiveList[i].ThreadID == threadID)
-                        {
-                            PassiveList[i].Waiting = true;
-                            break;
-                        }
-                    // Wait for all passive threads to finish.
+                    lock (AccessLock)
+                        for (int i = 0; i < PassiveList.Count; i++)
+                            if (PassiveList[i].ThreadID == threadID)
+                            {
+                                PassiveList[i].Waiting = true;
+                                break;
+                            }
+                    // Wait for all passive and interactive methods on other threads to finish.
                     Monitor.Enter(InteractiveLock);
-                    while (PassiveList.Any(p => p.ThreadID != threadID && !p.Waiting)) Thread.Sleep(1);
+                    SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != threadID && !p.Waiting); });
+                    RunningInteractive = true;
                     break;
 
                 // Semi-Passive:
@@ -82,26 +92,29 @@ namespace Deltin.CustomGameAutomation
                     break;
             }
         }
-        private void Unlock(int lockType)
+        private void Unlock(Locker locker)
         {
             int threadID = Thread.CurrentThread.ManagedThreadId;
-            switch (lockType)
+            switch (locker.LockType)
             {
                 // Passive:
                 case PassiveI:
                     // Remove from passive list.
-                    PassiveList.RemoveAll(v => v.ThreadID == threadID);
+                    lock (AccessLock)
+                        PassiveList.RemoveAll(v => v.ThreadID == threadID);
                     break;
 
                 // Interactive:
                 case InteractiveI:
-                    // Stop ignoring passive caller if it exists.
-                    for (int i = 0; i < PassiveList.Count; i++)
-                        if (PassiveList[i].ThreadID == threadID)
-                        {
-                            PassiveList[i].Waiting = false;
-                            break;
-                        }
+                    lock (AccessLock)
+                        // Stop ignoring passive caller if it exists.
+                        for (int i = 0; i < PassiveList.Count; i++)
+                            if (PassiveList[i].ThreadID == threadID)
+                            {
+                                PassiveList[i].Waiting = false;
+                                break;
+                            }
+                    RunningInteractive = false;
                     Monitor.Exit(InteractiveLock);
                     break;
 
@@ -118,14 +131,14 @@ namespace Deltin.CustomGameAutomation
             {
                 LockType = lockType;
                 LockHandler = lockHandler;
-                LockHandler.SetLock(lockType);
+                LockHandler.SetLock(this);
             }
-            private int LockType;
+            public int LockType { get; private set; }
             private LockHandler LockHandler;
 
             public void Dispose()
             {
-                LockHandler.Unlock(LockType);
+                LockHandler.Unlock(this);
             }
         }
 
