@@ -1,5 +1,4 @@
-﻿/*
-
+﻿/* Lock Guide
 Any public method in the custom game class should use a lock.
 
 Passive locks is for functions that scan the Overwatch window but do not interact with it. 
@@ -22,6 +21,8 @@ Only 1 interactive lock will run at a time.
 using (LockHandler.Interactive)
 - Usage in CustomGameBase class:
 using (cg.LockHandler.Interactive)
+
+A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiPassive are accessed outside of a using() statement.
 */
 
 using System;
@@ -54,7 +55,7 @@ namespace Deltin.CustomGameAutomation
         private object AccessLock = new object(); // Lock for accessing the PassiveList list.
 
         private object InteractiveLock = new object(); // Lock for semi-passive and interactive methods.
-        private bool RunningInteractive = false; // Determines if an interactive method is running.
+        private int InteractiveThreadID = -1; // The ID of the interactive thread. -1 for no interactive threads.
 
         private void SetLock(Locker locker)
         {
@@ -63,9 +64,8 @@ namespace Deltin.CustomGameAutomation
             {
                 // Passive:
                 case PassiveI:
-                    //SpinWait.SpinUntil(() => { return InteractiveWaitCount == 0; });
                     // Add the thread id to the list of passive threads.
-                    SpinWait.SpinUntil(() => { return !RunningInteractive; });
+                    SpinWait.SpinUntil(() => { return InteractiveThreadID == -1 || InteractiveThreadID == threadID; });
                     lock (AccessLock)
                         PassiveList.Add(new PassiveData(threadID));
                     break;
@@ -83,7 +83,7 @@ namespace Deltin.CustomGameAutomation
                     // Wait for all passive and interactive methods on other threads to finish.
                     Monitor.Enter(InteractiveLock);
                     SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != threadID && !p.Waiting); });
-                    RunningInteractive = true;
+                    InteractiveThreadID = threadID;
                     break;
 
                 // Semi-Passive:
@@ -114,7 +114,7 @@ namespace Deltin.CustomGameAutomation
                                 PassiveList[i].Waiting = false;
                                 break;
                             }
-                    RunningInteractive = false;
+                    InteractiveThreadID = -1;
                     Monitor.Exit(InteractiveLock);
                     break;
 

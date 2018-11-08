@@ -193,7 +193,7 @@ namespace Deltin.CustomGameAutomation
                 if (!IsSlotInQueue(slot))
                 {
                     if (!noUpdate)
-                        updateScreen();
+                        UpdateScreen();
 
                     int x = SlotLocations[slot].X,
                         y = SlotLocations[slot].Y;
@@ -238,7 +238,7 @@ namespace Deltin.CustomGameAutomation
         private List<int> CheckRange(int[] slotsToCheck, int yoffset, bool noUpdate)
         {
             if (!noUpdate)
-                updateScreen();
+                UpdateScreen();
             List<int> slots = new List<int>();
             foreach (int slot in slotsToCheck)
                 if (IsSlotFilled(slot, yoffset, true))
@@ -251,7 +251,7 @@ namespace Deltin.CustomGameAutomation
             using (LockHandler.Passive)
             {
                 if (!noUpdate)
-                    updateScreen();
+                    UpdateScreen();
 
                 int inq = 0;
 
@@ -284,7 +284,7 @@ namespace Deltin.CustomGameAutomation
         internal int FindSpectatorOffset(bool noUpdate = false)
         {
             if (!noUpdate)
-                updateScreen();
+                UpdateScreen();
 
             int inq = GetQueueCount(false, false);
 
@@ -394,7 +394,7 @@ namespace Deltin.CustomGameAutomation
                 List<int> slots = new List<int>();
 
                 if (!noUpdate)
-                    updateScreen();
+                    UpdateScreen();
 
                 // Add the blue slots
                 if (flags.HasFlag(SlotFlags.BlueTeam))
@@ -481,7 +481,7 @@ namespace Deltin.CustomGameAutomation
         internal bool IsDeathmatch(bool noUpdate = false)
         {
             if (!noUpdate)
-                updateScreen();
+                UpdateScreen();
             return !Capture.CompareColor(327, 302, new int[] { 172, 173, 175 }, 15);
         }
 
@@ -515,7 +515,7 @@ namespace Deltin.CustomGameAutomation
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\DeadPlayers.png" scale="1.3" />
 
                 if (!noUpdate)
-                    cg.updateScreen();
+                    cg.UpdateScreen();
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
                     if (Capture.CompareColor(KilledPlayerMarkerLocations[i], 98, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
@@ -564,7 +564,7 @@ namespace Deltin.CustomGameAutomation
             int y = 96;
 
             if (!noUpdate)
-                cg.updateScreen();
+                cg.UpdateScreen();
 
             for (int x = healthBarLocations[slot]; x < healthBarLocations[slot] + xLength; x++)
                 if (Capture.CompareColor(x, y, new int[] { 110, 110, 110 }, 10))
@@ -581,7 +581,7 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.Passive)
             {
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\MaxPlayers.png" scale="1" />
-                cg.updateScreen();
+                cg.UpdateScreen();
                 int[] result = new int[2];
                 // Blue: X = 613
                 // Red: X = 752
@@ -613,7 +613,7 @@ namespace Deltin.CustomGameAutomation
                 if (cg.PlayerSlots.Contains(slot) == false)
                     return false;
 
-                cg.updateScreen();
+                cg.UpdateScreen();
 
                 if (GetDeadSlots(true).Contains(slot))
                     return true;
@@ -674,7 +674,7 @@ namespace Deltin.CustomGameAutomation
                 // <image url="$(ProjectDir)\ImageComments\GetInfo.cs\ModeratorSlot.png" scale="0.7" />
                 // Find the moderator icon.
 
-                cg.updateScreen();
+                cg.UpdateScreen();
                 int fade = 40;
 
                 // Red and blue
@@ -713,7 +713,7 @@ namespace Deltin.CustomGameAutomation
                     throw new InvalidSlotException(slot);
                 Point check = cg.Interact.FindSlotLocation(slot);
                 if (!noUpdate)
-                    cg.updateScreen();
+                    cg.UpdateScreen();
                 Color color = Capture.GetPixel(check.X, check.Y);
 
                 // If the blue color is greater than the red color, the queue slot is on blue team.
@@ -742,7 +742,7 @@ namespace Deltin.CustomGameAutomation
                 if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
                     throw new InvalidSlotException(slot);
                 if (!noUpdate)
-                    cg.updateScreen();
+                    cg.UpdateScreen();
                 return Capture.CompareColor(UltimateCheckLocations[slot].X, UltimateCheckLocations[slot].Y, new int[] { 134, 134, 134 }, 5);
             }
         }
@@ -775,7 +775,7 @@ namespace Deltin.CustomGameAutomation
                 if (!CustomGame.IsSlotBlueOrRed(slot))
                     throw new InvalidSlotException(slot);
 
-                cg.updateScreen();
+                cg.UpdateScreen();
 
                 return cg.Capture.CloneAsBitmap(HeroCheckLocations[slot], HeroCheckY, 20, 9);
             }
@@ -906,129 +906,5 @@ namespace Deltin.CustomGameAutomation
         {
             return cg.Interact.PeakOption(slot, Markups.REMOVE_FRIEND);
         }
-
-        /// <summary>
-        /// Checks if a player account exists via battletag. Is case sensitive.
-        /// </summary>
-        /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
-        /// <returns>Returns true if player exists, else returns false.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
-        public static bool PlayerExists(string battletag)
-        {
-            if (battletag == null)
-                throw new ArgumentNullException("battletag", "Battletag was null.");
-
-            // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
-            try
-            {
-                string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
-
-                using (WebClient wc = new WebClient())
-                {
-                    string pageinfo = wc.DownloadString(playerprofile);
-                    wc.Dispose();
-
-                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
-                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
-                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
-                        return true;
-                }
-            }
-            catch (WebException) { }
-
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Result info of GetHero().
-    /// </summary>
-    public enum HeroResultInfo
-    {
-        /// <summary>
-        /// The hero the player was playing was successfully found.
-        /// </summary>
-        Success,
-        /// <summary>
-        /// Can't get the hero the player was playing because the player is dead. Try rescanning when the player is alive again.
-        /// </summary>
-        PlayerWasDead,
-        /// <summary>
-        /// The player did not choose a hero.
-        /// </summary>
-        NoHeroChosen,
-        /// <summary>
-        /// The slot was empty.
-        /// </summary>
-        SlotEmpty,
-        /// <summary>
-        /// Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
-        /// </summary>
-        NoCompatibleHeroFound
-    }
-
-    /// <summary>
-    /// Flags for obtaining slots.
-    /// </summary>
-    /// <seealso cref="CustomGame.GetSlots(SlotFlags, bool)"/>
-    [Flags]
-    public enum SlotFlags
-    {
-        /// <summary>
-        /// Get blue slots.
-        /// </summary>
-        BlueTeam = 1 << 0,
-        /// <summary>
-        /// Get red slots.
-        /// </summary>
-        RedTeam = 1 << 1,
-        /// <summary>
-        /// Get spectator slots.
-        /// </summary>
-        Spectators = 1 << 2,
-        /// <summary>
-        /// Get neutral queue slots.
-        /// </summary>
-        NeutralQueue = 1 << 3,
-        /// <summary>
-        /// Get red queue slots
-        /// </summary>
-        RedQueue = 1 << 4,
-        /// <summary>
-        /// Get blue queue slots
-        /// </summary>
-        BlueQueue = 1 << 5,
-        /// <summary>
-        /// Get queue slots
-        /// </summary>
-        Queue = NeutralQueue | RedQueue | BlueQueue,
-        /// <summary>
-        /// Get blue and red slots.
-        /// </summary>
-        BlueTeamAndRedTeam = BlueTeam | RedTeam,
-        /// <summary>
-        /// Gets blue, red, spectator, and queue slots.
-        /// </summary>
-        All = BlueTeam | RedTeam | Spectators | Queue,
-        /// <summary>
-        /// Players only, no AI.
-        /// </summary>
-        PlayersOnly = 1 << 6,
-        /// <summary>
-        /// AI only, no players.
-        /// </summary>
-        AIOnly = 1 << 7,
-        /// <summary>
-        /// Gets dead players only.
-        /// </summary>
-        DeadOnly = 1 << 8,
-        /// <summary>
-        /// Gets alive players only.
-        /// </summary>
-        AliveOnly = 1 << 9,
-        /// <summary>
-        /// Reliably gets the (non)AI, however is a lot slower.
-        /// </summary>
-        AccurateGetAI = 1 << 10,
     }
 }

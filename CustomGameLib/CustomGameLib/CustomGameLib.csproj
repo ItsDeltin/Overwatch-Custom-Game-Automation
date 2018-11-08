@@ -72,6 +72,7 @@
     <Compile Include="Commands.cs" />
     <Compile Include="CreateOverwatchProcess.cs" />
     <Compile Include="CustomGame.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extras.cs" />
     <Compile Include="LockHandler.cs" />

@@ -268,7 +268,7 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(100);
 
-                updateScreen();
+                UpdateScreen();
 
                 Gamemode modesEnabled = new Gamemode();
 
@@ -291,7 +291,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public Bitmap GetMapMarkup()
         {
-            updateScreen();
+            UpdateScreen();
             return Capture.CloneAsBitmap(Rectangles.LOBBY_MAP);
         }
 
@@ -303,7 +303,7 @@ namespace Deltin.CustomGameAutomation
         {
             using (LockHandler.Passive)
             {
-                updateScreen();
+                UpdateScreen();
 
                 Tuple<double, MapMarkup> mostLikely = null;
 
@@ -638,43 +638,5 @@ namespace Deltin.CustomGameAutomation
         {
             return (Map)fi.GetValue(null);
         }
-    }
-
-    /// <summary>
-    /// Overwatch's limited time events.
-    /// </summary>
-    public enum Event
-    {
-#pragma warning disable CS1591
-        None,
-        SummerGames,
-        HalloweenTerror,
-        WinterWonderland,
-        LunarNewYear,
-        Uprising,
-        Aniversary
-#pragma warning restore CS1591
-    }
-    /// <summary>
-    /// Overwatch's gamemodes.
-    /// </summary>
-    [Flags]
-    public enum Gamemode
-    {
-#pragma warning disable CS1591
-        Assault               = 1 << 0, // a
-        AssaultEscort         = 1 << 1, // ae
-        CaptureTheFlag        = 1 << 2, // ctf
-        Control               = 1 << 3, // c
-        Deathmatch            = 1 << 4, // dm
-        Elimination           = 1 << 5, // elim
-        Escort                = 1 << 6, // e
-        JunkensteinsRevenge   = 1 << 7, // jr
-        Lucioball             = 1 << 8, // lb
-        MeisSnowballOffensive = 1 << 9, // mso
-        Skirmish              = 1 << 10, // skirm
-        TeamDeathmatch        = 1 << 11, // tdm
-        YetiHunter            = 1 << 12 // yh
-#pragma warning restore CS1591
     }
 }

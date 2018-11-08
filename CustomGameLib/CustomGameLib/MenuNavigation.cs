@@ -11,7 +11,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Go back to executing position.
         /// </summary>
-        void BackToMenu()
+        private void BackToMenu()
         {
             if (!IsLobbyOpened())
             {
@@ -27,9 +27,9 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Stalls the program to wait for the map to finish loading.
         /// </summary>
-        void LoadStall()
+        private void LoadStall()
         {
-            updateScreen();
+            UpdateScreen();
             Stopwatch sw = new Stopwatch();
             Stopwatch sc = new Stopwatch();
             sw.Start();
@@ -52,7 +52,7 @@ namespace Deltin.CustomGameAutomation
                 if (sc.ElapsedMilliseconds > 3 * 1000 || sw.ElapsedMilliseconds >= 15 * 1000) break;
                 //Console.WriteLine(sc.ElapsedMilliseconds / 1000 + "\n"); // for debugging
                 Thread.Sleep(1000);
-                updateScreen();
+                UpdateScreen();
             }
             Thread.Sleep(1000);
         }
@@ -121,7 +121,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void GoToSettings()
         {
-            updateScreen();
+            UpdateScreen();
             if (DoesAddButtonExist())
             {
                 LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 250);
@@ -134,7 +134,7 @@ namespace Deltin.CustomGameAutomation
 
         internal bool DoesAddButtonExist()
         {
-            updateScreen();
+            UpdateScreen();
 
             return Capture.CompareColor(
                 700, 182, // Location of the "MOVE" button
@@ -149,7 +149,7 @@ namespace Deltin.CustomGameAutomation
                 LeftClick(Points.SETTINGS_BACK); // Clicks the back button
                 if (checkForErrorsAt.Contains(i))
                 {
-                    updateScreen();
+                    UpdateScreen();
                     if (Capture.CompareColor(Points.SETTINGS_ERROR, Colors.SETTINGS_ERROR, Fades.SETTINGS_ERROR))
                         LeftClick(Points.SETTINGS_DISCARD);
                 }
@@ -158,7 +158,7 @@ namespace Deltin.CustomGameAutomation
 
         internal bool IsLobbyOpened()
         {
-            updateScreen();
+            UpdateScreen();
             return Capture.CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MIN, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MAX) // Test for invite players to group button
                 && !Capture.CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Points.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE, Fades.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE); // Compare the invite players to group button with the area above it.
         }

@@ -27,12 +27,13 @@ namespace Deltin.CustomGameAutomation
         {
             using (LockHandler.Passive)
             {
+                object listLock = new object();
                 List<int> changedSlots = new List<int>();
 
                 var allSlots = AllSlots;
 
-                //for (int slot = 0; slot < CustomGame.SlotCount; slot++)
-                Parallel.For(0, SlotCount, (slot) =>
+                for (int slot = 0; slot < SlotCount; slot++)
+                //Parallel.For(0, SlotCount, (slot) =>
                 {
                     SlotIdentity slotIdentity = allSlots.Contains(slot) ? GetSlotIdentity(slot) : null;
 
@@ -49,25 +50,23 @@ namespace Deltin.CustomGameAutomation
                     {
                         slotInfo.SlotIdentities[slot] = slotIdentity;
                     }
-                    else if (slotIdentity == null && slotInfo.SlotIdentities[slot] == null)
-                    {
-                        changed = false;
-                    }
                     // Slot swapped
-                    else if (!slotInfo.SlotIdentities[slot].CompareIdentities(slotIdentity))
+                    else if (slotIdentity != null && slotInfo.SlotIdentities[slot] != null && !slotInfo.SlotIdentities[slot].CompareIdentities(slotIdentity))
                     {
                         slotInfo.SlotIdentities[slot].Dispose();
                         slotInfo.SlotIdentities[slot] = slotIdentity;
                     }
+                    // Slot did not change
                     else
                     {
-                        slotIdentity.Dispose();
+                        if (slotIdentity != null) slotIdentity.Dispose();
                         changed = false;
                     }
 
                     if (changed)
-                        changedSlots.Add(slot);
-                });
+                        lock (listLock)
+                            changedSlots.Add(slot);
+                };
 
                 return changedSlots;
             }
@@ -75,62 +74,110 @@ namespace Deltin.CustomGameAutomation
 
         private SlotIdentity GetSlotIdentity(int slot)
         {
-            if (!AllSlots.Contains(slot))
-                return null;
-
-            if (slot == 5 && OpenChatIsDefault)
-                Chat.CloseChat();
-            if (slot == 0)
-                ResetMouse();
-
-            Point origin = Point.Empty;
-            int width = 0;
-            int height = 0;
-
-            if (IsSlotBlueOrRed(slot))
+            using (LockHandler.Passive)
             {
-                width = 158;
-                height = Distances.LOBBY_SLOT_HEIGHT;
+                if (!AllSlots.Contains(slot))
+                    return null;
 
-                int comp = slot;
-                if (IsSlotBlue(slot))
+                if (slot == 5 && OpenChatIsDefault)
+                    Chat.CloseChat();
+                if (slot == 0)
+                    ResetMouse();
+
+                Point origin = Point.Empty;
+                int width = 0;
+                int height = 0;
+
+                if (IsSlotBlueOrRed(slot))
                 {
-                    origin = new Point(145, 239);
+                    width = 158;
+                    height = Distances.LOBBY_SLOT_HEIGHT;
+
+                    int comp = slot;
+                    if (IsSlotBlue(slot))
+                    {
+                        origin = new Point(145, 239);
+                    }
+                    else if (IsSlotRed(slot))
+                    {
+                        origin = new Point(372, 239);
+                        comp -= 6;
+                    }
+                    origin.Y += Distances.LOBBY_SLOT_DISTANCE * comp;
                 }
-                else if (IsSlotRed(slot))
+                else if (IsSlotSpectatorOrQueue(slot))
                 {
-                    origin = new Point(372, 239);
-                    comp -= 6;
+                    width = 158;
+                    height = Distances.LOBBY_SPECTATOR_SLOT_HEIGHT;
+                    origin = new Point(666, 245);
+
+                    int comp = slot;
+                    if (IsSlotSpectator(slot))
+                    {
+                        origin.Y += FindSpectatorOffset(true);
+                        comp -= Spectatorid;
+                    }
+                    else if (IsSlotInQueue(slot))
+                    {
+                        origin.Y -= Distances.LOBBY_QUEUE_OFFSET;
+                        comp -= Queueid;
+                    }
+                    origin.Y += Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * comp;
                 }
-                origin.Y += Distances.LOBBY_SLOT_DISTANCE * comp;
+
+                UpdateScreen();
+                DirectBitmap identity = Capture.Clone(origin.X, origin.Y, width, height);
+
+                if (slot == 5 && OpenChatIsDefault)
+                    Chat.OpenChat();
+
+                return new SlotIdentity(identity, slot);
             }
-            else if (IsSlotSpectatorOrQueue(slot))
+        }
+
+        /// <summary>
+        /// Tracks player slots.
+        /// </summary>
+        /// <param name="playerTracker"></param>
+        public void TrackPlayers(PlayerTracker playerTracker)
+        {
+            using (LockHandler.Interactive)
             {
-                width = 158;
-                height = Distances.LOBBY_SPECTATOR_SLOT_HEIGHT;
-                origin = new Point(666, 245);
+                List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo);
 
-                int comp = slot;
-                if (IsSlotSpectator(slot))
-                {
-                    origin.Y += FindSpectatorOffset(true);
-                    comp -= Spectatorid;
-                }
-                else if (IsSlotInQueue(slot))
-                {
-                    origin.Y -= Distances.LOBBY_QUEUE_OFFSET;
-                    comp -= Queueid;
-                }
-                origin.Y += Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * comp;
+                var slots = GetSlots(SlotFlags.All | SlotFlags.PlayersOnly);
+                var aiSlots = AllSlots; foreach (int slot in slots) aiSlots.Remove(slot);
+
+                foreach (int slot in changedSlots)
+                    if (slots.Contains(slot))
+                    {
+                        PlayerIdentity newIdentity = Commands.GetPlayerIdentity(slot);
+                        if (newIdentity == null)
+                            continue;
+
+                        var pi = playerTracker.Players.FirstOrDefault(p => newIdentity.CompareIdentities(p.PlayerIdentity));
+
+                        // New player joined the game
+                        if (pi == null)
+                        {
+                            playerTracker.Players.Add(new PlayerTrackerSlot(newIdentity, slot));
+                        }
+                        // Player swapped slots
+                        else
+                        {
+                            pi.Slot = slot;
+                            newIdentity.Dispose();
+                        }
+                    }
+
+                // Remove players that left the game.
+                for (int i = playerTracker.Players.Count - 1; i >= 0; i--)
+                    if (!slots.Contains(playerTracker.Players[i].Slot) && !aiSlots.Contains(playerTracker.Players[i].Slot))
+                    {
+                        playerTracker.Players[i].PlayerIdentity.Dispose();
+                        playerTracker.Players.RemoveAt(i);
+                    }
             }
-
-            updateScreen();
-            DirectBitmap identity = Capture.Clone(origin.X, origin.Y, width, height);
-
-            if (slot == 5 && OpenChatIsDefault)
-                Chat.OpenChat();
-
-            return new SlotIdentity(identity, slot);
         }
     }
 
@@ -168,5 +215,46 @@ namespace Deltin.CustomGameAutomation
         {
             return Identity.CompareIdentities(this, other);
         }
+    }
+
+    /// <summary>
+    /// Tracks player's slots.
+    /// </summary>
+    public class PlayerTracker
+    {
+        /// <summary>
+        /// Tracks player's slots.
+        /// </summary>
+        public PlayerTracker()
+        {
+
+        }
+
+        /// <summary>
+        /// Gets the player's slot from a player's identity.
+        /// </summary>
+        /// <param name="identity">The identity of the player.</param>
+        /// <returns>The slot of the player.</returns>
+        public int SlotFromPlayerIdentity(PlayerIdentity identity)
+        {
+            foreach (var player in Players)
+                if (player.PlayerIdentity.CompareIdentities(identity))
+                    return player.Slot;
+            return -1;
+        }
+
+        internal SlotInfo SlotInfo = new SlotInfo();
+        internal List<PlayerTrackerSlot> Players = new List<PlayerTrackerSlot>();
+    }
+    internal class PlayerTrackerSlot
+    {
+        public PlayerTrackerSlot(PlayerIdentity identity, int slot)
+        {
+            PlayerIdentity = identity;
+            Slot = slot;
+        }
+
+        public PlayerIdentity PlayerIdentity { get; private set; }
+        public int Slot { get; internal set; }
     }
 }

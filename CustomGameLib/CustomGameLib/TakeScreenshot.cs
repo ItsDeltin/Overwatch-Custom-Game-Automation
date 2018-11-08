@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.IO;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -29,12 +28,11 @@ namespace Deltin.CustomGameAutomation
 
     partial class CustomGame
     {
-        ScreenshotMethod ScreenshotMethod;
-
-        object ScreenshotLock = new object();
+        private ScreenshotMethod ScreenshotMethod;
+        private object ScreenshotLock = new object();
 
         // This grabs a screenshot of the Overwatch handle
-        internal void updateScreen()
+        internal void UpdateScreen()
         {
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
@@ -63,7 +61,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
+        private static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
         {
             if (!Validate(hWnd)) return;
             // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
@@ -75,7 +73,7 @@ namespace Deltin.CustomGameAutomation
                 ScreenshotScreenCopy(hWnd, ref capture);
         }
 
-        static void ScreenshotBitBlt(IntPtr hWnd, ref DirectBitmap capture)
+        private static void ScreenshotBitBlt(IntPtr hWnd, ref DirectBitmap capture)
         {
             try
             {
@@ -115,7 +113,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static void ScreenshotScreenCopy(IntPtr hWnd, ref DirectBitmap capture)
+        private static void ScreenshotScreenCopy(IntPtr hWnd, ref DirectBitmap capture)
         {
             Rectangle rect = new Rectangle();
             User32.GetWindowRect(hWnd, ref rect);
@@ -139,12 +137,16 @@ namespace Deltin.CustomGameAutomation
         /// <param name="path">Path to save screenshot to.</param>
         public void SaveScreenshot(string path)
         {
-            updateScreen();
+            UpdateScreen();
 
             Capture.Save(path);
         }
     }
 
+#pragma warning disable CS1591
+    /// <summary>
+    /// Stores Overwatch's capture data.
+    /// </summary>
     public class DirectBitmap : IDisposable
     {
         #region Public Fields
@@ -459,12 +461,5 @@ namespace Deltin.CustomGameAutomation
         }
         #endregion
     }
-    [Flags]
-    public enum DBCompareFlags
-    {
-        None = 0,
-        Multithread = 1 << 1,
-        IgnoreBlack = 1 << 2,
-        IgnoreWhite =  1 << 3
-    }
+#pragma warning restore CS1591
 }

@@ -18,7 +18,7 @@ namespace Deltin.CustomGameAutomation
             wait.Start();
             while (wait.ElapsedMilliseconds <= maxtime)
             {
-                updateScreen();
+                UpdateScreen();
                 if (Capture.CompareColor(x, y, color, fade))
                     return true;
                 Thread.Sleep(10);
@@ -39,7 +39,7 @@ namespace Deltin.CustomGameAutomation
 
             while (wait.ElapsedMilliseconds <= maxtime)
             {
-                updateScreen();
+                UpdateScreen();
                 Color newcolor = Capture.GetPixel(x, y);
 
                 if (Math.Abs(newcolor.R - startcolor.R) > fade ||

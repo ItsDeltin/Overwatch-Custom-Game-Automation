@@ -158,6 +158,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SetHero"/>
         public void SetHeroSettings(params SetHero[] herodata)
         {
+            int keyPressWait = 50;
             using (LockHandler.Interactive)
             {
                 if (herodata == null)
@@ -265,15 +266,15 @@ namespace Deltin.CustomGameAutomation
                     {
                         // Make topmost option highlighted
                         KeyPress(Keys.Down);
-                        Thread.Sleep(KeyPressWait);
+                        Thread.Sleep(keyPressWait);
                         // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\TopOption.png" scale="0.55" />
-                        updateScreen();
+                        UpdateScreen();
                         // Check if the second option is highlighted.
                         if (Capture.CompareColor(422, 200, Colors.WHITE, 10))
                         {
                             // If it is, press the up arrow.
                             KeyPress(Keys.Up);
-                            Thread.Sleep(KeyPressWait);
+                            Thread.Sleep(keyPressWait);
                         }
                     }
 
@@ -302,15 +303,15 @@ namespace Deltin.CustomGameAutomation
                                     if (value != option)
                                     {
                                         KeyPress(Keys.Space);
-                                        Thread.Sleep(KeyPressWait);
+                                        Thread.Sleep(keyPressWait);
                                     }
                                 }
                                 // If the selected setting is a dropdown menu...
                                 else if (HeroSettings[heroid][si].type == SettingType.dropdown)
                                 {
                                     KeyPress(Keys.Space);
-                                    Thread.Sleep(KeyPressWait);
-                                    KeyPress(Keys.Up); Thread.Sleep(KeyPressWait); KeyPress(Keys.Up);
+                                    Thread.Sleep(keyPressWait);
+                                    KeyPress(Keys.Up); Thread.Sleep(keyPressWait); KeyPress(Keys.Up);
                                     int option = (int)hero.SetTo[setSettingIndex];
                                     /* If the option variable equals 2, only Torbjorn's hammer can be used.
                                      * 0 = ALL
@@ -319,10 +320,10 @@ namespace Deltin.CustomGameAutomation
                                     for (int oi = 0; oi < option; oi++)
                                     {
                                         KeyPress(Keys.Down);
-                                        Thread.Sleep(KeyPressWait);
+                                        Thread.Sleep(keyPressWait);
                                     }
                                     KeyPress(Keys.Space);
-                                    Thread.Sleep(KeyPressWait);
+                                    Thread.Sleep(keyPressWait);
                                 }
                                 // If the selected setting is a numeric value...
                                 else // the last possible thing Settings[heroid][si].type could be is SettingType.value
@@ -331,16 +332,16 @@ namespace Deltin.CustomGameAutomation
                                     for (int sk = 0; sk < keys.Length; sk++)
                                     {
                                         KeyDown(keys[sk]);
-                                        Thread.Sleep(KeyPressWait);
+                                        Thread.Sleep(keyPressWait);
                                     }
                                     KeyPress(Keys.Return);
-                                    Thread.Sleep(KeyPressWait);
+                                    Thread.Sleep(keyPressWait);
                                 }
                             }
 
                         // Go to next setting
                         KeyPress(Keys.Down);
-                        Thread.Sleep(KeyPressWait);
+                        Thread.Sleep(keyPressWait);
                     }
                     GoBack(1);
                 }
@@ -392,124 +393,5 @@ namespace Deltin.CustomGameAutomation
             Set = set;
             SetTo = setto;
         }
-    }
-
-    /// <summary>
-    /// All heroes in Overwatch.
-    /// </summary>
-    public enum Hero
-    {
-        /// <summary>
-        /// Ana hero.
-        /// </summary>
-        Ana,
-        /// <summary>
-        /// Bastion hero.
-        /// </summary>
-        Bastion,
-        /// <summary>
-        /// Brigitte hero.
-        /// </summary>
-        Brigitte,
-        /// <summary>
-        /// DVA hero.
-        /// </summary>
-        DVA,
-        /// <summary>
-        /// Doomfist hero.
-        /// </summary>
-        Doomfist,
-        /// <summary>
-        /// Genji hero.
-        /// </summary>
-        Genji,
-        /// <summary>
-        /// Hanzo hero.
-        /// </summary>
-        Hanzo,
-        /// <summary>
-        /// Junkrat hero.
-        /// </summary>
-        Junkrat,
-        /// <summary>
-        /// Lucio hero.
-        /// </summary>
-        Lucio,
-        /// <summary>
-        /// McCree hero.
-        /// </summary>
-        McCree,
-        /// <summary>
-        /// Mei hero.
-        /// </summary>
-        Mei,
-        /// <summary>
-        /// Mercy hero.
-        /// </summary>
-        Mercy,
-        /// <summary>
-        /// Moira hero.
-        /// </summary>
-        Moira,
-        /// <summary>
-        /// Orisa hero.
-        /// </summary>
-        Orisa,
-        /// <summary>
-        /// Pharah hero.
-        /// </summary>
-        Pharah,
-        /// <summary>
-        /// Reaper hero.
-        /// </summary>
-        Reaper,
-        /// <summary>
-        /// Reinhardt hero.
-        /// </summary>
-        Reinhardt,
-        /// <summary>
-        /// Roadhog hero.
-        /// </summary>
-        Roadhog,
-        /// <summary>
-        /// Soldier 76 hero.
-        /// </summary>
-        Soldier76,
-        /// <summary>
-        /// Sombra hero.
-        /// </summary>
-        Sombra,
-        /// <summary>
-        /// Symmetra hero.
-        /// </summary>
-        Symmetra,
-        /// <summary>
-        /// Torbjorn hero.
-        /// </summary>
-        Torbjorn,
-        /// <summary>
-        /// Tracer hero.
-        /// </summary>
-        Tracer,
-        /// <summary>
-        /// Widowmaker hero.
-        /// </summary>
-        Widowmaker,
-        /// <summary>
-        /// Winston hero.
-        /// </summary>
-        Winston,
-        /// <summary>
-        /// Wrecking Ball hero.
-        /// </summary>
-        WreckingBall,
-        /// <summary>
-        /// Zarya hero.
-        /// </summary>
-        Zarya,
-        /// <summary>
-        /// Zenyatta hero.
-        /// </summary>
-        Zenyatta
     }
 }

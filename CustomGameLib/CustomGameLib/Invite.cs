@@ -25,7 +25,7 @@ namespace Deltin.CustomGameAutomation
                 if (team.HasFlag(Team.Queue))
                     throw new ArgumentOutOfRangeException("team", team, "Team cannot be Queue.");
 
-                updateScreen();
+                UpdateScreen();
                 // check if the add AI button is there.
                 // because the invite button gets moved if it is/isnt there.
                 if (DoesAddButtonExist())
@@ -60,7 +60,7 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(200);
 
-                updateScreen();
+                UpdateScreen();
 
                 if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
@@ -105,7 +105,7 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(200);
 
-                updateScreen();
+                UpdateScreen();
 
                 if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
@@ -146,7 +146,7 @@ namespace Deltin.CustomGameAutomation
 
                 while (sw.ElapsedMilliseconds <= InviteScanData.MSToScan)
                 {
-                    updateScreen();
+                    UpdateScreen();
                     foreach (int slot in players)
                     {
                         // Get the data relating to the slot.

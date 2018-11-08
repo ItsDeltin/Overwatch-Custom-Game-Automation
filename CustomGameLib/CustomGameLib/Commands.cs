@@ -29,7 +29,9 @@ namespace Deltin.CustomGameAutomation
     /// <seealso cref="CustomGame.Commands"/>
     /// <seealso cref="CustomGameAutomation.ListenTo"/>
     /// <seealso cref="CommandData"/>
+    /// <seealso cref="CommandExecuted"/>
     /// <seealso cref="PlayerIdentity"/>
+    /// <seealso cref="ChatIdentity"/>
     public class Commands : CustomGameBase
     {
         internal Commands(CustomGame cg) : base(cg)
@@ -41,19 +43,8 @@ namespace Deltin.CustomGameAutomation
             ScanCommandsTask.Start();
         }
 
-        /// <summary>
-        /// Commands to listen to.
-        /// </summary>
-        public List<ListenTo> ListenTo = new List<ListenTo>();
-
-        /// <summary>
-        /// Set to true to start listening to commands. Set to false to stop.
-        /// </summary>
-        public bool Listen = false;
-
         #region Letters
-        /*  Sorry to anyone who maintains this monstrocity in the future :)
-            Each coordinate in the first argument represents the location of a pixel making the letters. For example, the letter C:
+        /*  Each coordinate in the first argument represents the location of a pixel making the letters. For example, the letter C:
                 
             -4□■■■□ | -4 ■■■ 
             -3■□□□■ | -3■   ■ 
@@ -65,7 +56,7 @@ namespace Deltin.CustomGameAutomation
             ScanCommands() scans for letters at the 0 Y coordinate. When it hits a color of the chat, for example orange/tan for match chat, it will
             check for each letter in the "letters" array below. The most likely letter is chosen.
         */
-        static internal Letter[] letters = new Letter[]
+        static internal readonly Letter[] letters = new Letter[]
         {
             new Letter(new int[,] {{0,0},{1,-1},{2,-1},{3,-1},{4,0},{1,-2},{3,-3},{3,-2},{2,-4}}, 'A', 4), // uppercase A
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{4,0},{0,-1},{4,-1},{0,-2},{1,-2},{2,-2},{3,-2},/*{4,-2},*/{0,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, 'B', 4), // uppercase B
@@ -118,22 +109,25 @@ namespace Deltin.CustomGameAutomation
         };
         #endregion
 
-        Task ScanCommandsTask;
+        /// <summary>
+        /// Commands to listen to.
+        /// </summary>
+        public List<ListenTo> ListenTo = new List<ListenTo>();
+        /// <summary>
+        /// Set to true to start listening to commands. Set to false to stop.
+        /// </summary>
+        public bool Listen = false;
 
-        static internal Rectangle CareerProfileShotArea = new Rectangle(46, 101, 265, 82);
-
-        // Scale of debug images
-        static int scale = 5;
+        private Task ScanCommandsTask;
+        private bool KeepScanning = true;
+        private DirectBitmap PreviousChatMarkup = null;
 
         internal void StopScanning()
         {
             KeepScanning = false;
         }
-        private bool KeepScanning = true;
 
-        DirectBitmap PreviousChatMarkup = null;
-
-        void ScanCommands()
+        private void ScanCommands()
         {
             DirectBitmap bmp = null;
 
@@ -148,8 +142,7 @@ namespace Deltin.CustomGameAutomation
                 if (!Listen)
                     continue;
 
-                // LOCK HERE V
-                using (cg.LockHandler.SemiPassive)
+                using (var sp = cg.LockHandler.SemiPassive)
                 {
                     UpdateChatCapture(ref bmp);
 
@@ -182,9 +175,6 @@ namespace Deltin.CustomGameAutomation
                         }
                         else
                         {
-                            PreviousChatMarkup.Save(@"C:\Users\HDdel\Documents\Abyxa\previous.png");
-                            chatMarkup.Save(@"C:\Users\HDdel\Documents\Abyxa\new.png");
-
                             PreviousChatMarkup.Dispose();
                             PreviousChatMarkup = chatMarkup;
                         }
@@ -222,53 +212,129 @@ namespace Deltin.CustomGameAutomation
             bmp.Dispose();
         }
 
-        void UpdateChatCapture(ref DirectBitmap bmp)
+        // Scans a chat line.
+        private LineScanResult ScanLine(DirectBitmap bmp, int y, int[] seed, int seedfade)
         {
-            cg.updateScreen();
-            if (bmp != null)
-                bmp.Dispose();
-            bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
-        }
-
-        void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
-        {
-            // Show valid seed pixels in debug mode
-            if (cg.debugmode)
+            int namelength = 0; // Length of the name of the player that sent a chat message.
+            bool namefound = false; // Determines if the name of the player that sent the chat message has been found.
+            int space = 0; // Space in pixels between letters.
+            string word = ""; // Text of chat message
+            // For each pixel for the width of the chat message box.
+            for (int i = 0; i < bmp.Width; i++)
             {
-                DirectBitmap dbc = bmp.Clone();
+                // Test if pixel color is near seed color. if it is, scan for all the letters.
+                if (bmp.CompareColor(i, y, seed, seedfade))
+                {
+                    var bestletter = CheckLetter(bmp, i, y, seed, seedfade); // Scan for letter.
 
-                for (int x = 0; x < dbc.Width; x++)
-                    for (int y = 0; y < dbc.Height; y++)
-                        if (dbc.CompareColor(x, y, seed, seedfade))
-                            dbc.SetPixel(x, y, Color.Purple);
-                Bitmap nb = dbc.ToBitmap();
-                dbc.Dispose();
-
-                cg.g.Clear(Color.White);
-                cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * scale, nb.Height * scale));
-                cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * scale * 1.1)));
-                nb.Dispose();
+                    // bestletter will equal null if no letters is possible.
+                    if (bestletter != null)
+                    {
+                        // If space is 2 or higher, add a space to the word.
+                        if (i + bestletter.Least - space >= 2)
+                            word += " ";
+                        // Add the letter to the word
+                        word += bestletter.Letter;
+                        // Increment i to letter length to prevent pixels being checked that don't need to be checked because a confirmed letter is there.
+                        i += bestletter.Length;
+                        space = i + 1;
+                        // If the bestletter is ] for the first time, then the name length in pixels has been found. 
+                        if (bestletter.Letter == ']' && namefound == false)
+                        {
+                            namefound = true;
+                            namelength = i;
+                        }
+                    }
+                }
             }
+            return new LineScanResult(word, namelength);
         }
 
-        // Gets chat color
-        int[] GetSeed(DirectBitmap bmp, int y)
+        // Checks for a chat letter at the input X and Y value.
+        private LetterResult CheckLetter(DirectBitmap bmp, int x, int y, int[] seed, int seedfade)
         {
-            var seedpix = bmp.GetPixel(0, y);
-            return new int[] { seedpix.R, seedpix.G, seedpix.B };
-        }
+            // Possible letters
+            List<LetterResult> letterresult = new List<LetterResult>();
+            // For each letter
+            for (int li = 0; li < letters.Length; li++)
+            {
+                int totalpixels = 0;
+                int successcount = 0;
+                int optional = 0;
+                // For each pixel in letter
+                for (int pi = 0; pi < letters[li].Pixel.GetLength(0); pi++)
+                {
+                    int checkX = x + letters[li].Pixel[pi, 0],
+                        checkY = y + letters[li].Pixel[pi, 1];
 
-        // Gets chat color seed fade.
-        int GetSeedFade(DirectBitmap bmp, int y)
-        {
-            var seedpix = bmp.GetPixel(0, y);
-            var antipix = bmp.GetPixel(1, y);
-            // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.2 (2.5?). Default is 50 
-            return (int)((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2 / 2.2);
+                    if (checkX >= 0 && checkY >= 0 && checkX < Rectangles.LOBBY_CHATBOX.Width && checkY < Rectangles.LOBBY_CHATBOX.Height)
+                    {
+                        if (letters[li].Optional == null || letters[li].Optional.Contains(pi) == false)
+                        {
+                            totalpixels++;
+                            if (bmp.CompareColor(checkX, y + letters[li].Pixel[pi, 1], seed, seedfade))
+                                successcount++;
+                        }
+                        // Check optional pixels
+                        else if (bmp.CompareColor(x + letters[li].Pixel[pi, 0], y + letters[li].Pixel[pi, 1], seed, seedfade))
+                            optional++;
+                    }
+                }
+
+                // Check for ignore. These are pixels that shouldn't equal the seed.
+                if (letters[li].Ignore != null)
+                    for (int pi = 0; pi < letters[li].Ignore.GetLength(0); pi++)
+                    {
+                        int checkX = x + letters[li].Ignore[pi, 0],
+                            checkY = y + letters[li].Ignore[pi, 1];
+                        if (checkX >= 0 && checkY >= 0 && checkX < Rectangles.LOBBY_CHATBOX.Width && checkY < Rectangles.LOBBY_CHATBOX.Height
+                            && bmp.CompareColor(checkX, checkY, seed, seedfade))
+                                totalpixels++;
+                    }
+
+                double percent = Convert.ToDouble(successcount) / Convert.ToDouble(totalpixels) * 100;
+
+                if (percent == 100)
+                {
+                    LetterResult connected = null;
+                    // The letter L can connect to other letters. LM can be confused for U1. This checks for the letter that the L could be connected to.
+                    if (letters[li].LetterChar == 'L')
+                        connected = CheckLetter(bmp, x + letters[li].Length + 1, y, seed, seedfade);
+                    letterresult.Add(new LetterResult(letters[li].LetterChar, (int)percent, letters[li].Pixel.GetLength(0), letters[li].Length, letters[li].Least, connected, optional)); // Add letter to possible letters.
+                }
+            }
+
+            LetterResult bestletter = null; // The most likely letter that the letter found is.
+            for (int bi = 0; bi < letterresult.Count; bi++)
+            {
+                if (bestletter == null)
+                    bestletter = letterresult[bi];
+
+                // If letterresult[bi]'s pixel count is higher than bestletter's pixel count, make bestletter letterresult[bi] 
+                // Also, make sure LM/LN/LX/LL/LU isn't confused for something else.
+                if (letterresult[bi].TotalPixels + letterresult[bi].Optional > bestletter.TotalPixels + bestletter.Optional)
+                {
+                    if (bestletter.Connected != null)
+                    {
+                        // M, N, X, L, U are the letters L can connect to.
+                        if ((bestletter.Letter == 'L' && letterresult[bi].Letter == 'U' && new char[] { 'M', 'N', 'X', 'L', 'U' }.Contains(bestletter.Connected.Letter)) == false)
+                            bestletter = letterresult[bi];
+                    }
+                    else
+                        bestletter = letterresult[bi];
+                }
+            }
+
+            // Return the best possible letter.
+            if (bestletter != null)
+            {
+                return bestletter;
+            }
+            return null;
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        void AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
+        private void AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
         {
             // Clean up the word. makes something like "] $APPLE " into "$APPLE"
             var wordtemp = word.Split(new char[] { ']' }, 2);
@@ -310,7 +376,7 @@ namespace Deltin.CustomGameAutomation
                             WaitForCareerProfileToLoad();
 
                             // Take a screenshot of the career profile.
-                            cg.updateScreen();
+                            cg.UpdateScreen();
                             DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
 
                             // Register the player identity.
@@ -329,7 +395,7 @@ namespace Deltin.CustomGameAutomation
                         }
                     }
                     else
-                        cg.CloseOptionMenu();
+                        cg.Interact.CloseOptionMenu();
                 }
 
                 // Store executor noise data in a bitmap.
@@ -355,151 +421,50 @@ namespace Deltin.CustomGameAutomation
             } // if command is being listened to
         }
 
-        // Scans a chat line.
-        LineScanResult ScanLine(DirectBitmap bmp, int y, int[] seed, int seedfade)
+        private void UpdateChatCapture(ref DirectBitmap bmp)
         {
-            int namelength = 0; // Length of the name of the player that sent a chat message.
-            bool namefound = false; // Determines if the name of the player that sent the chat message has been found.
-            int space = 0; // Space in pixels between letters.
-            string word = ""; // Text of chat message
-            // For each pixel for the width of the chat message box.
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                // Test if pixel color is near seed color. if it is, scan for all the letters.
-                if (bmp.CompareColor(i, y, seed, seedfade))
-                {
-                    var bestletter = CheckLetter(bmp, i, y, seed, seedfade); // Scan for letter.
-
-                    // bestletter will equal null if no letters is possible.
-                    if (bestletter != null)
-                    {
-                        // If space is 2 or higher, add a space to the word.
-                        if (i + bestletter.least - space >= 2)
-                            word += " ";
-                        // Add the letter to the word
-                        word += bestletter.letter;
-                        // Increment i to letter length to prevent pixels being checked that don't need to be checked because a confirmed letter is there.
-                        i += bestletter.length;
-                        space = i + 1;
-                        // If the bestletter is ] for the first time, then the name length in pixels has been found. 
-                        if (bestletter.letter == ']' && namefound == false)
-                        {
-                            namefound = true;
-                            namelength = i;
-                        }
-                    }
-                }
-            }
-            return new LineScanResult(word, namelength);
+            cg.UpdateScreen();
+            if (bmp != null)
+                bmp.Dispose();
+            bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
         }
 
-        // Checks for a chat letter at the input X and Y value.
-        LetterResult CheckLetter(DirectBitmap bmp, int x, int y, int[] seed, int seedfade)
+        private void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
         {
-            // Possible letters
-            List<LetterResult> letterresult = new List<LetterResult>();
-            // For each letter
-            for (int li = 0; li < letters.Length; li++)
+            // Show valid seed pixels in debug mode
+            if (cg.debugmode)
             {
-                int totalpixels = 0;
-                int successcount = 0;
-                int optional = 0;
-                // For each pixel in letter
-                for (int pi = 0; pi < letters[li].pixel.GetLength(0); pi++)
-                {
-                    if (letters[li].optional == null || letters[li].optional.Contains(pi) == false)
-                    {
-                        totalpixels++;
-                        // check if not out of bounds of BMP
-                        if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].pixel[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
-                        {
-                            if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
-                            {
-                                successcount++;
-                            }
-                        }
-                    }
-                    // Check optional pixels
-                    else if (x + letters[li].pixel[pi, 0] >= 0 && y + letters[li].pixel[pi, 1] >= 0 && x + letters[li].pixel[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].pixel[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
-                    {
-                        if (bmp.CompareColor(x + letters[li].pixel[pi, 0], y + letters[li].pixel[pi, 1], seed, seedfade))
-                        {
-                            optional++;
-                        }
-                    }
-                }
+                DirectBitmap dbc = bmp.Clone();
 
-                // Check for ignore. These are pixels that shouldn't equal the seed.
-                if (letters[li].ignore != null)
-                    for (int pi = 0; pi < letters[li].ignore.GetLength(0); pi++)
-                        if (x + letters[li].ignore[pi, 0] > 0 && y + letters[li].ignore[pi, 1] > 0 && x + letters[li].ignore[pi, 0] < Rectangles.LOBBY_CHATBOX.Width && y + letters[li].ignore[pi, 1] < Rectangles.LOBBY_CHATBOX.Height)
-                            if (bmp.CompareColor(x + letters[li].ignore[pi, 0], y + letters[li].ignore[pi, 1], seed, seedfade))
-                                totalpixels++;
+                for (int x = 0; x < dbc.Width; x++)
+                    for (int y = 0; y < dbc.Height; y++)
+                        if (dbc.CompareColor(x, y, seed, seedfade))
+                            dbc.SetPixel(x, y, Color.Purple);
+                Bitmap nb = dbc.ToBitmap();
+                dbc.Dispose();
 
-                // Get percent.
-                double percent = Convert.ToDouble(successcount) / Convert.ToDouble(totalpixels) * 100;
-
-                if (percent == 100)
-                {
-                    LetterResult connected = null;
-                    // The letter L can connect to other letters. LM can be confused for U1. This checks for the letter that the L could be connected to.
-                    if (letters[li].letter == 'L')
-                        connected = CheckLetter(bmp, x + letters[li].length + 1, y, seed, seedfade);
-                    letterresult.Add(new LetterResult(letters[li].letter, (int)percent, letters[li].pixel.GetLength(0), letters[li].length, letters[li].least, connected, optional)); // Add letter to possible letters.
-                }
+                cg.g.Clear(Color.White);
+                cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * 5, nb.Height * 5));
+                cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * 5 * 1.1)));
+                nb.Dispose();
             }
-
-            LetterResult bestletter = null; // The most likely letter that the letter found is.
-            for (int bi = 0; bi < letterresult.Count; bi++)
-            {
-                if (bestletter == null)
-                    bestletter = letterresult[bi];
-
-                /*
-                    * If letterresult[bi]'s pixel count is higher than bestletter's pixel count, make bestletter letterresult[bi]
-                    * 
-                    * Also, make sure LM/LN/LX/LL/LU isn't confused for something else.
-                    */
-                if (letterresult[bi].totalPixels + letterresult[bi].optional > bestletter.totalPixels + bestletter.optional)
-                {
-                    if (bestletter.connected != null)
-                    {
-                        // The letters L can connect to.
-                        if ((bestletter.letter == 'L' && letterresult[bi].letter == 'U' && new char[] { 'M', 'N', 'X', 'L', 'U' }.Contains(bestletter.connected.letter)) == false)
-                            bestletter = letterresult[bi];
-                    }
-                    else
-                        bestletter = letterresult[bi];
-                }
-            }
-
-            // Return the best possible letter.
-            if (bestletter != null)
-            {
-                return bestletter;
-            }
-            return null;
         }
 
-        /*
-        private bool CompareExecutors(DirectBitmap e1, DirectBitmap e2)
+        // Gets chat color
+        private int[] GetSeed(DirectBitmap bmp, int y)
         {
-            if (e1.Width != e2.Width || e1.Height != e2.Height)
-                return false;
-
-            double identiclecount = 0; // number of pixels that are identicle.
-            double count = 0;
-            for (int xi = 0; xi < e1.Width; xi++)
-                for (int yi = 0; yi < e1.Height; yi++)
-                {
-                    count++;
-                    if (e1.GetPixel(xi, yi) == e2.GetPixel(xi, yi))
-                        identiclecount++;
-                }
-
-            return (identiclecount / count) * 100 >= 95;
+            var seedpix = bmp.GetPixel(0, y);
+            return new int[] { seedpix.R, seedpix.G, seedpix.B };
         }
-        */
+
+        // Gets chat color seed fade.
+        private int GetSeedFade(DirectBitmap bmp, int y)
+        {
+            var seedpix = bmp.GetPixel(0, y);
+            var antipix = bmp.GetPixel(1, y);
+            // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.2 (2.5?). Default is 50 
+            return (int)((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2 / 2.2);
+        }
 
         private Channel GetChannelFromSeed(int[] seed)
         {
@@ -515,54 +480,53 @@ namespace Deltin.CustomGameAutomation
 
         internal class Letter
         {
-            public int[,] pixel;
-            public char letter;
-            public int length;
-            public int least;
-            public int[] optional;
-            public int[,] ignore;
-
             public Letter(int[,] pixel, char letter, int length, int least = 0, int[] optional = null, int[,] ignore = null)
             {
-                this.pixel = pixel;
-                this.letter = letter;
-                this.length = length;
-                this.least = least;
-                this.optional = optional;
-                this.ignore = ignore;
+                Pixel = pixel;
+                LetterChar = letter;
+                Length = length;
+                Least = least;
+                Optional = optional;
+                Ignore = ignore;
             }
+            public int[,] Pixel { get; private set; }
+            public char LetterChar { get; private set; }
+            public int Length { get; private set; }
+            public int Least { get; private set; }
+            public int[] Optional { get; private set; }
+            public int[,] Ignore { get; private set; }
         }
 
         private class LetterResult
         {
-            public char letter;
-            public int percent;
-            public int totalPixels;
-            public int length;
-            public int least;
-            public LetterResult connected;
-            public int optional;
             public LetterResult(char letter, int percent, int totalPixels, int length, int least, LetterResult connected, int optional)
             {
-                this.letter = letter;
-                this.percent = percent;
-                this.totalPixels = totalPixels;
-                this.length = length;
-                this.least = least;
-                this.connected = connected;
-                this.optional = optional;
+                Letter = letter;
+                Percent = percent;
+                TotalPixels = totalPixels;
+                Length = length;
+                Least = least;
+                Connected = connected;
+                Optional = optional;
             }
+            public char Letter { get; private set; }
+            public int Percent { get; private set; }
+            public int TotalPixels { get; private set; }
+            public int Length { get; private set; }
+            public int Least { get; private set; }
+            public LetterResult Connected { get; private set; }
+            public int Optional { get; private set; }
         }
 
         private class LineScanResult
         {
-            public string Word;
-            public int NameLength;
             public LineScanResult(string word, int namelength)
             {
                 Word = word;
                 NameLength = namelength;
             }
+            public string Word { get; private set; }
+            public int NameLength { get; private set; }
         }
 
         /// <summary>
@@ -572,21 +536,24 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The player identity of the slot.</returns>
         public PlayerIdentity GetPlayerIdentity(int slot)
         {
-            bool careerProfileOpenSuccess = cg.Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
-            if (!careerProfileOpenSuccess)
-                return null;
+            using (cg.LockHandler.Interactive)
+            {
+                bool careerProfileOpenSuccess = cg.Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
+                if (!careerProfileOpenSuccess)
+                    return null;
 
-            WaitForCareerProfileToLoad();
+                WaitForCareerProfileToLoad();
 
-            cg.updateScreen();
+                cg.UpdateScreen();
 
-            DirectBitmap careerProfile = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
+                DirectBitmap careerProfile = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
 
-            cg.GoBack(1);
+                cg.GoBack(1);
 
-            Thread.Sleep(500);
+                Thread.Sleep(500);
 
-            return new PlayerIdentity(careerProfile);
+                return new PlayerIdentity(careerProfile);
+            }
         }
 
         internal void WaitForCareerProfileToLoad()
@@ -600,6 +567,7 @@ namespace Deltin.CustomGameAutomation
     /// Data for commands to listen to on the Commands class.
     /// </summary>
     /// <seealso cref="CommandData"/>
+    /// <seealso cref="Commands"/>
     public class ListenTo
     {
         /// <summary>
@@ -617,7 +585,7 @@ namespace Deltin.CustomGameAutomation
                 bool characterFound = false;
 
                 for (int l = 0; l < Commands.letters.Length; l++)
-                    if (command[c] == Commands.letters[l].letter)
+                    if (command[c] == Commands.letters[l].LetterChar)
                         characterFound = true;
 
                 if (!characterFound)
@@ -669,22 +637,6 @@ namespace Deltin.CustomGameAutomation
             if (i1.IdentityMarkup.Width != i2.IdentityMarkup.Width || i1.IdentityMarkup.Height != i2.IdentityMarkup.Height)
                 return false;
 
-            
-
-            /*
-            int maxFail = i1.IdentityMarkup.Width * i1.IdentityMarkup.Height / percentMatches;
-            int failed = 0;
-            bool passed = false;
-
-            for (int x = 0; x < i1.IdentityMarkup.Width && !passed; x++)
-                for (int y = 0; y < i1.IdentityMarkup.Height && !passed; y++)
-                {
-                    if (!i1.IdentityMarkup.CompareColor(x, y, i2.IdentityMarkup.GetPixel(x, y).ToInt(), fade))
-                        failed++;
-                    passed = failed > maxFail;
-                }
-            */
-
             return i1.IdentityMarkup.CompareTo(i2.IdentityMarkup, fade, percentMatches, DBCompareFlags.Multithread);
         }
 
@@ -728,9 +680,10 @@ namespace Deltin.CustomGameAutomation
     }
 
     /// <summary>
-    /// Data of Overwatch executed chat commands.
+    /// Data of an executed chat command.
     /// </summary>
     /// <seealso cref="ListenTo"/>
+    /// /// <seealso cref="Commands"/>
     public class CommandData
     {
         internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity, ChatIdentity chatIdentity, bool isFriend)
@@ -772,5 +725,7 @@ namespace Deltin.CustomGameAutomation
     /// Method to be executed when a command is executed.
     /// </summary>
     /// <param name="data">Data of the command executed.</param>
+    /// <seealso cref="CommandData"/>
+    /// <seealso cref="Commands"/>
     public delegate void CommandExecuted(CommandData data);
 }

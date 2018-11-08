@@ -232,7 +232,7 @@ namespace ZombieBot
                 Console.WriteLine("Resetting (1/4)...");
                 if (!cg.HasExited())
                 {
-                    cg.UsingOverwatchProcess.Close();
+                    cg.OverwatchProcess.Close();
                 }
                 Console.WriteLine("Resetting (2/4)...");
                 cg.Dispose();

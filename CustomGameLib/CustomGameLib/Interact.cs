@@ -39,7 +39,10 @@ namespace Deltin.CustomGameAutomation
 
         internal Point FindSlotLocation(int slot)
         {
-            cg.updateScreen();
+            if (!CustomGame.IsSlotValid(slot))
+                throw new InvalidSlotException(slot);
+
+            cg.UpdateScreen();
             int yoffset = 0;
             int xoffset = 0;
             if (cg.IsDeathmatch(true))
@@ -74,13 +77,23 @@ namespace Deltin.CustomGameAutomation
             return slotlocation;
         }
 
+        internal void CloseOptionMenu()
+        {
+            using (cg.LockHandler.SemiPassive)
+            {
+                cg.LeftClick(400, 500, 100);
+                cg.LeftClick(500, 500, 100);
+                //ResetMouse();
+            }
+        }
+
         // Selects an option in the slot menu.
         internal bool SelectMenuOption(Point point)
         {
             cg.MoveMouseTo(point); // Select the option
             Thread.Sleep(100);
             // <image url="$(ProjectDir)\ImageComments\Interact.cs\OptionSelect.png" scale="0.7" />
-            cg.updateScreen();
+            cg.UpdateScreen();
             if (Capture.CompareColor(point, new int[] { 75, 128, 150 }, new int[] { 110, 150, 170 })) // Detects if the blue color of the selected option is there, clicks then returns true
             {
                 cg.LeftClick(point, 0);
@@ -97,7 +110,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal Direction Getmenudirection(Point point)
         {
-            cg.updateScreen();
+            cg.UpdateScreen();
 
             // Tests for the blue outline for the first option selection.
             if (Capture.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 5))
@@ -154,7 +167,7 @@ namespace Deltin.CustomGameAutomation
                     yincrement = -yincrement;
                 }
 
-                cg.updateScreen();
+                cg.UpdateScreen();
                 List<int> percentResults = new List<int>();
                 /*
                 for (int mi = 0, yii = ystart;
@@ -264,7 +277,7 @@ namespace Deltin.CustomGameAutomation
 
                 // Close the menu.
                 if (flags.HasFlag(OptionScanFlags.CloseMenu) || (flags.HasFlag(OptionScanFlags.CloseIfNotFound) && optionLocation == Point.Empty))
-                    cg.CloseOptionMenu();
+                    CloseOptionMenu();
 
                 if (flags.HasFlag(OptionScanFlags.ReturnFound))
                     return optionLocation != Point.Empty;
@@ -442,7 +455,7 @@ namespace Deltin.CustomGameAutomation
 
                 //cg.//ResetMouse();
 
-                cg.updateScreen();
+                cg.UpdateScreen();
                 if (cg.DoesAddButtonExist())
                 {
                     cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 250);
@@ -498,7 +511,7 @@ namespace Deltin.CustomGameAutomation
 
         private void ExitMoveMenu()
         {
-            cg.updateScreen();
+            cg.UpdateScreen();
 
             // Can't use DoesAddButtonExist here because the color of the buttons change
 
@@ -512,39 +525,4 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
-    /// <summary>
-    /// Flags for scanning an option menu in Overwatch.
-    /// </summary>
-    [Flags]
-    public enum OptionScanFlags
-    {
-        /// <summary>
-        /// No flags.
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// Open the menu before scanning starts.
-        /// </summary>
-        OpenMenu = 1 << 0,
-        /// <summary>
-        /// Close the menu after scanning finishes.
-        /// </summary>
-        CloseMenu = 1 << 1,
-        /// <summary>
-        /// Close the menu if the option being scanned for is not found.
-        /// </summary>
-        CloseIfNotFound = 1 << 2,
-        /// <summary>
-        /// Click the option if it is found.
-        /// </summary>
-        Click = 1 << 3,
-        /// <summary>
-        /// Return the location of the option.
-        /// </summary>
-        ReturnLocation = 1 << 4,
-        /// <summary>
-        /// Return whether or not the option is found.
-        /// </summary>
-        ReturnFound = 1 << 5
-    }
 }

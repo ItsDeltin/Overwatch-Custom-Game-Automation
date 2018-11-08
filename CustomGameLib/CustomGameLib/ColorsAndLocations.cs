@@ -9,7 +9,6 @@ using Deltin.CustomGameAutomation.Properties;
 
 namespace Deltin.CustomGameAutomation
 {
-
     internal static class Colors
     {
         public static readonly int[] WHITE = new int[] { 191, 191, 191 };

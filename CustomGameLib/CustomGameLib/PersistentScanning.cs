@@ -43,7 +43,7 @@ namespace Deltin.CustomGameAutomation
             // The red team must have "*" on the start of their name.
             if (OnGameOver != null)
             {
-                updateScreen(); // Start
+                UpdateScreen(); // Start
 
                 Team? thisCheck = null;
 

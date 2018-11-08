@@ -45,7 +45,7 @@ namespace Deltin.CustomGameAutomation
         {
             using (LockHandler.Passive)
             {
-                updateScreen();
+                UpdateScreen();
                 return Capture.CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
             }
         }

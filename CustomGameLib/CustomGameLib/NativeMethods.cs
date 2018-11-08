@@ -237,7 +237,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct RGBQUAD
+        internal struct RGBQUAD
         {
             public byte rgbBlue;
             public byte rgbGreen;

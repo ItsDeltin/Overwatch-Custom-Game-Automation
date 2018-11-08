@@ -17,19 +17,20 @@ namespace Deltin.CustomGameAutomation
     {
         internal const string DebugHeader = "[CGL] ";
 
-        static int KeyPressWait = 50;
+        private IntPtr OverwatchHandle = IntPtr.Zero;
+        internal DefaultKeys DefaultKeys;
 
         internal DirectBitmap Capture = null;
+        internal bool Disposed = false;
 
         internal bool debugmode = false;
         internal Form debug;
         internal Graphics g;
 
-        IntPtr OverwatchHandle = IntPtr.Zero;
-        Process OverwatchProcess = null;
-        internal DefaultKeys DefaultKeys;
-
-        //internal object CustomGameLock = new object();
+        /// <summary>
+        /// The Overwatch Process being used in the CustomGame class.
+        /// </summary>
+        public Process OverwatchProcess { get; private set; } = null;
 
         /// <summary>
         /// Creates new CustomGame object.
@@ -99,7 +100,7 @@ namespace Deltin.CustomGameAutomation
             SetupWindow(OverwatchHandle, ScreenshotMethod);
         }
 
-        static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
+        private static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
         {
             if (!Validate(hWnd))
                 return;
@@ -134,7 +135,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void ResetMouse()
         {
-            lock (LockHandler.SemiPassive)
+            using (LockHandler.SemiPassive)
             {
                 // There is an Overwatch glitch where exiting some menus will cause the first slot to become highlighted.
                 // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
@@ -142,16 +143,6 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(100);
                 MoveMouseTo(Points.RESET_POINT);
                 Thread.Sleep(100);
-            }
-        }
-
-        internal void CloseOptionMenu()
-        {
-            lock (LockHandler.SemiPassive)
-            {
-                LeftClick(400, 500, 100);
-                LeftClick(500, 500, 100);
-                //ResetMouse();
             }
         }
 
@@ -165,9 +156,9 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns the state of the game.</returns>
         public GameState GetGameState()
         {
-            lock (LockHandler.Passive)
+            using (LockHandler.Passive)
             {
-                updateScreen();
+                UpdateScreen();
 
                 // Check if in lobby
                 if (Capture.CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
@@ -185,26 +176,14 @@ namespace Deltin.CustomGameAutomation
 
                 return GameState.Unknown;
             }
-        } 
-
-        /// <summary>
-        /// The Overwatch Process being used in the CustomGame class.
-        /// </summary>
-        public Process UsingOverwatchProcess
-        {
-            get
-            {
-                return OverwatchProcess;
-            }
         }
 
-        internal bool Disposed = false;
         /// <summary>
         /// Disposes of all resources being used by the CustomGame instance.
         /// </summary>
         public void Dispose()
         {
-            lock (LockHandler.Interactive)
+            using (LockHandler.Interactive)
             {
                 Disposed = true;
                 Commands.StopScanning();
@@ -215,6 +194,37 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        /// <summary>
+        /// Checks if a player account exists via battletag. Is case sensitive.
+        /// </summary>
+        /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
+        /// <returns>Returns true if player exists, else returns false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
+        public static bool PlayerExists(string battletag)
+        {
+            if (battletag == null)
+                throw new ArgumentNullException("battletag", "Battletag was null.");
+
+            // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
+            try
+            {
+                string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
+
+                using (var wc = new System.Net.WebClient())
+                {
+                    string pageinfo = wc.DownloadString(playerprofile);
+                    wc.Dispose();
+
+                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
+                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
+                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
+                        return true;
+                }
+            }
+            catch (System.Net.WebException) { }
+
+            return false;
+        }
     } // CustomGame class
 
     /// <summary>
@@ -271,115 +281,5 @@ namespace Deltin.CustomGameAutomation
         /// The default keys set in Overwatch's settings.
         /// </summary>
         public DefaultKeys DefaultKeys = new DefaultKeys();
-    }
-
-    /// <summary>
-    /// Teams in Overwatch.
-    /// </summary>
-    [Flags]
-    public enum Team
-    {
-        /// <summary>
-        /// The blue team.
-        /// </summary>
-        Blue = 1 << 0,
-        /// <summary>
-        /// The red team.
-        /// </summary>
-        Red = 1 << 1,
-        /// <summary>
-        /// The blue and red team.
-        /// </summary>
-        BlueAndRed = Blue | Red,
-        /// <summary>
-        /// The spectators.
-        /// </summary>
-        Spectator = 1 << 2,
-        /// <summary>
-        /// The queue.
-        /// </summary>
-        Queue = 1 << 3
-    }
-
-    /// <summary>
-    /// Teams in the queue.
-    /// </summary>
-    public enum QueueTeam
-    {
-        /// <summary>
-        /// Queueing for both blue and red.
-        /// </summary>
-        Neutral,
-        /// <summary>
-        /// Queueing for blue.
-        /// </summary>
-        Blue,
-        /// <summary>
-        /// Queueing for red.
-        /// </summary>
-        Red
-    }
-
-    /// <summary>
-    /// Options for who can join the game.
-    /// </summary>
-    public enum Join
-    {
-        /// <summary>
-        /// Everyone can join the game.
-        /// </summary>
-        Everyone,
-        /// <summary>
-        /// Only friends of the moderator can join the game.
-        /// </summary>
-        FriendsOnly,
-        /// <summary>
-        /// Only players invited can join the game.
-        /// </summary>
-        InviteOnly
-    }
-    /// <summary>
-    /// Gets the current state of the game.
-    /// </summary>
-    public enum GameState
-    {
-        /// <summary>
-        /// The custom game is in the lobby.
-        /// </summary>
-        InLobby,
-        /// <summary>
-        /// The custom game is waiting for players.
-        /// </summary>
-        Waiting,
-        /// <summary>
-        /// The custom game is currently ingame.
-        /// </summary>
-        Ingame,
-        /// <summary>
-        /// The custom game is at player commendation.
-        /// </summary>
-        Ending_Commend,
-        /// <summary>
-        /// Cannot recognize what state the game is on.
-        /// </summary>
-        Unknown
-    }
-    /// <summary>
-    /// Enables/disables settings before toggling them.
-    /// </summary>
-    public enum ToggleAction
-    {
-        /// <summary>
-        /// Do not enable/disable.
-        /// </summary>
-        None,
-        /// <summary>
-        /// Disable all options before toggling.
-        /// </summary>
-        DisableAll,
-        /// <summary>
-        /// Enable all options before toggling.
-        /// </summary>
-        EnableAll
     }
 }

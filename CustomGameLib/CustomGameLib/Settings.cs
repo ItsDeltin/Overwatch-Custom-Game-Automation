@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
             int min = 35;
             int max = 155;
 
-            updateScreen();
+            UpdateScreen();
             // Look for the highlighted option
             for (int y = 110; y < 436; y++)
                 if (Capture.CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
@@ -97,7 +97,7 @@ namespace Deltin.CustomGameAutomation
         /*
         public Bitmap GeneratePresetMarkup(int preset)
         {
-            lock (cg.CustomGameLock)
+            using (cg.CustomGameLock)
             {
                 if (preset < 0)
                     throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
@@ -134,7 +134,7 @@ namespace Deltin.CustomGameAutomation
                 int numPresets = 0;
                 while (true)
                 {
-                    cg.updateScreen();
+                    cg.UpdateScreen();
 
                     if (Capture.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
                     {
