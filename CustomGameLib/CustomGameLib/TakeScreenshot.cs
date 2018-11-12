@@ -109,7 +109,9 @@ namespace Deltin.CustomGameAutomation
             catch (ExternalException)
             {
                 // Failed to capture window, usually because it was closed.
-                Debug.WriteLine(DebugHeader + "Failed to capture window. Is it closed?");
+#if DEBUG
+                CustomGameDebug.WriteLine("Failed to capture window. Is it closed?");
+#endif
             }
         }
 
@@ -149,18 +151,18 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public class DirectBitmap : IDisposable
     {
-        #region Public Fields
+#region Public Fields
         public int Width { get; private set; }
         public int Height { get; private set; }
-        #endregion
+#endregion
 
-        #region Private Fields
+#region Private Fields
         private byte[] Bytes;
         private int BytesPerLine;
         private bool Inverted = false;
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
         // From bytes.
         internal DirectBitmap(byte[] bytes, int width, int height, bool inverted = false)
         {
@@ -216,9 +218,9 @@ namespace Deltin.CustomGameAutomation
             if (disposeBitmap)
                 bitmap.Dispose();
         }
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
         internal Color GetPixel(int x, int y)
         {
             GetInternalLocation(x, y, out x, out y);
@@ -395,13 +397,20 @@ namespace Deltin.CustomGameAutomation
             return bmp;
         }
 
+        public bool IsIdenticle(DirectBitmap other)
+        {
+            return Bytes.Length == other.Bytes.Length && 
+                Width == other.Width && Height == other.Height && 
+                Msvcrt.memcmp(Bytes, other.Bytes, Bytes.Length) == 0;
+        }
+
         public void Dispose()
         {
 
         }
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
         // Returns the internal location of the specified pixel as it is stored in the Bytes[] array.
         private void GetInternalLocation(int x, int y, out int resultX, out int resultY)
         {
@@ -459,7 +468,7 @@ namespace Deltin.CustomGameAutomation
         {
             BytesPerLine = Width * 4;
         }
-        #endregion
+#endregion
     }
 #pragma warning restore CS1591
 }

@@ -15,17 +15,11 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public partial class CustomGame : IDisposable
     {
-        internal const string DebugHeader = "[CGL] ";
-
         private IntPtr OverwatchHandle = IntPtr.Zero;
         internal DefaultKeys DefaultKeys;
 
         internal DirectBitmap Capture = null;
         internal bool Disposed = false;
-
-        internal bool debugmode = false;
-        internal Form debug;
-        internal Graphics g;
 
         /// <summary>
         /// The Overwatch Process being used in the CustomGame class.
@@ -61,18 +55,9 @@ namespace Deltin.CustomGameAutomation
             SetupWindow(OverwatchHandle, ScreenshotMethod);
             Thread.Sleep(500);
 
-            // Set up debug window if debugmode is set to true.
-            if (debugmode)
-                new Task(() => 
-                {
-                    debug = new Form();
-                    debug.Width = 1500;
-                    debug.Height = 1000;
-                    debug.Show();
-                    g = debug.CreateGraphics();
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    Application.Run(debug);
-                }).Start();
+#if DEBUG && DEBUG_WINDOW
+            SetupDebugWindow();
+#endif
 
             Commands = new Commands(this);
             AI = new AI(this);

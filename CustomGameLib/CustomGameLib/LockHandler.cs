@@ -52,9 +52,9 @@ namespace Deltin.CustomGameAutomation
         private const int SemiPassiveI = 2;
 
         private List<PassiveData> PassiveList = new List<PassiveData>(); // List of passive methods running.
-        private object AccessLock = new object(); // Lock for accessing the PassiveList list.
+        private readonly object AccessLock = new object(); // Lock for accessing the PassiveList list.
 
-        private object InteractiveLock = new object(); // Lock for semi-passive and interactive methods.
+        private readonly object InteractiveLock = new object(); // Lock for semi-passive and interactive methods.
         private int InteractiveThreadID = -1; // The ID of the interactive thread. -1 for no interactive threads.
 
         private void SetLock(Locker locker)
@@ -135,11 +135,28 @@ namespace Deltin.CustomGameAutomation
             }
             public int LockType { get; private set; }
             private LockHandler LockHandler;
+#if DEBUG
+            private bool Disposed = false;
+#endif
 
             public void Dispose()
             {
+#if DEBUG
+                Disposed = true;
+#endif
                 LockHandler.Unlock(this);
             }
+
+#if DEBUG
+            ~Locker()
+            {
+                if (!Disposed)
+                {
+                    CustomGameDebug.WriteLine("Error: locker was used outside of using statement at " + Environment.StackTrace);
+                    Dispose();
+                }
+            }
+#endif
         }
 
         private class PassiveData

@@ -84,7 +84,7 @@ namespace Deltin.CustomGameAutomation
             toggle,
             dropdown
         }
-        static HeroSettingData[][] HeroSettings = HeroSettingData.GetSettings(); // HeroSettings[hero][settingindex]
+        static List<HeroSettingData>[] HeroSettings = HeroSettingData.GetSettings(); // HeroSettings[hero][settingindex]
         private class HeroSettingData
         {
             public string setting;
@@ -94,7 +94,7 @@ namespace Deltin.CustomGameAutomation
                 this.setting = setting;
                 this.type = type;
             }
-            public static HeroSettingData[][] GetSettings()
+            public static List<HeroSettingData>[] GetSettings()
             {
                 // Read hero_settings resource. Each value in array is a line in hero_settings.txt.
                 string[] settings = Properties.Resources.hero_settings.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -121,13 +121,7 @@ namespace Deltin.CustomGameAutomation
                         }
                     }
                 }
-                // Convert from List<Setting>[] to Setting[][]
-                List<HeroSettingData[]> ret = new List<HeroSettingData[]>();
-                for (int i = 0; i < settinglist.Length; i++)
-                {
-                    ret.Add(settinglist[i].ToArray());
-                }
-                return ret.ToArray();
+                return settinglist;
             }
         }
 
@@ -137,7 +131,7 @@ namespace Deltin.CustomGameAutomation
             int heroid = 0;
             if (hero != null)
                 heroid = (int)hero + 1;
-            for (int i = 0; i < HeroSettings[heroid].Length; i++)
+            for (int i = 0; i < HeroSettings[heroid].Count; i++)
                 if (HeroSettings[heroid][i].setting == setting)
                     return HeroSettings[heroid][i].type;
             return null;
@@ -212,36 +206,21 @@ namespace Deltin.CustomGameAutomation
                     else
                     {
                         // *Everyone else
-                        // Open the hero in hero.Hero's settings.
-                        heroid = (int)hero.Hero; // Get int value of hero from the enum.
-                        int select = heroid;
-                        int y = 208; // Y coordinate of first hero row (Ana, Bastion, Dva, Doomfist). Increments by 33 for each row.
-                        while (true)
-                        {
-                            if (select > 3)
-                            {
-                                y += 33; // add y by length of hero selection row
-                                select -= 4;
-                            }
-                            else
-                            {
-                                // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\Column.png" scale="0.7" />
-                                // Select the first column
-                                if (select == 0)
-                                    LeftClick(80, y);
-                                // Select the second column
-                                else if (select == 1)
-                                    LeftClick(224, y);
-                                // Select the third column
-                                else if (select == 2)
-                                    LeftClick(368, y);
-                                // Select the fourth column
-                                else if (select == 3)
-                                    LeftClick(511, y);
-                                break;
-                            }
-                        }
-                        heroid++;
+                        // Open the hero's settings.
+                        heroid = (int)hero.Hero;
+
+                        KeyPress(Keys.Down, Keys.Down);
+
+                        int column = heroid % 4;
+                        int row = heroid / 4;
+
+                        for (int rowindex = 0; rowindex < row; rowindex++)
+                            KeyPress(keyPressWait, Keys.Down);
+                        for (int columnindex = 0; columnindex < column; columnindex++)
+                            KeyPress(keyPressWait, Keys.Right);
+                        KeyPress(500, Keys.Space);
+
+                        heroid += 1;
                     }
                     // heroid is now 0 = General, 1 = Ana, 2 = Bastion, etc.
 
@@ -280,7 +259,7 @@ namespace Deltin.CustomGameAutomation
 
                     // Get the last setting to change.
                     int max = 0;
-                    for (int si = 0; si < HeroSettings[heroid].Length; si++)
+                    for (int si = 0; si < HeroSettings[heroid].Count; si++)
                         if (hero.Set.Contains(HeroSettings[heroid][si].setting))
                             max = si;
                     max += 1;

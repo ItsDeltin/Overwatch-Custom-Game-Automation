@@ -322,6 +322,10 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         Ana,
         /// <summary>
+        /// Ashe hero.
+        /// </summary>
+        Ashe,
+        /// <summary>
         /// Bastion hero.
         /// </summary>
         Bastion,

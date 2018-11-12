@@ -47,6 +47,8 @@ namespace Deltin.CustomGameAutomation
 
         public static readonly int LOADING_ENTERING_GAME = 20;
 
+        public static readonly int SLOT_FADE = 20;
+
         public static readonly int LOBBY_START_GAME = 30;
         public static readonly int LOBBY_CHANGE = 50;
         public static readonly int LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = 15;
@@ -149,6 +151,109 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point ENDING_COMMEND_DEFEAT = new Point(53, 62);
 
         public static readonly Point EXIT_TO_DESKTOP = new Point(130, 505);
+
+        public static readonly Point[] SLOT_LOCATIONS = new Point[]
+        {
+            // Blue
+            new Point(51, 255), // Slot 0
+            new Point(51, 283), // Slot 1
+            new Point(51, 311), // Slot 2
+            new Point(51, 341), // Slot 3
+            new Point(51, 369), // Slot 4
+            new Point(51, 384), // Slot 5
+            // Red
+            new Point(621, 255), // Slot 6
+            new Point(621, 283), // Slot 7
+            new Point(621, 311), // Slot 8
+            new Point(621, 341), // Slot 9
+            new Point(621, 369), // Slot 10
+            new Point(621, 397), // Slot 11
+            // Spectator
+            new Point(896, 248), // slot 12
+            new Point(896, 264), // slot 13
+            new Point(896, 277), // slot 14
+            new Point(896, 290), // slot 15
+            new Point(896, 304), // slot 16
+            new Point(896, 317), // slot 17
+        };
+
+        public static readonly int[] KILLED_PLAYER_MARKERS = new int[]
+        {
+            66, // slot 0
+            115, // slot 1
+            164, // slot 2
+            214, // slot 3
+            263, // slot 4
+            312, // slot 5
+
+            633, // slot 6
+            682, // slot 7
+            731, // slot 8
+            780, // slot 9
+            830, // slot 10
+            879, // slot 11
+        };
+        public static readonly int KILLED_PLAYER_MARKER_Y = 98;
+
+        public static readonly Point[] MODERATOR_ICON_LOCATIONS = new Point[]
+        {
+            // blue
+            new Point(65, 257),
+            new Point(65, 286),
+            new Point(65, 315),
+            new Point(65, 343),
+            new Point(65, 372),
+            new Point(65, 400),
+            // red
+            new Point(607, 257),
+            new Point(607, 286),
+            new Point(607, 315),
+            new Point(607, 343),
+            new Point(607, 372),
+            new Point(607, 400),
+            // spectator
+            new Point(885, 252),
+            new Point(885, 265),
+            new Point(885, 279),
+            new Point(885, 292),
+            new Point(885, 305),
+            new Point(885, 318)
+        };
+
+        public static readonly Point[] ULTIMATE_LOCATIONS = new Point[]
+        {
+            new Point(59, 72),
+            new Point(108, 72),
+            new Point(157, 72),
+            new Point(207, 72),
+            new Point(255, 72),
+            new Point(305, 72),
+
+            new Point(612, 72),
+            new Point(661, 72),
+            new Point(710, 75),
+            new Point(759, 75),
+            new Point(808, 75),
+            new Point(857, 75)
+        };
+
+        public static readonly int[] HERO_LOCATIONS = new int[]
+        {
+            76,
+            125,
+            175,
+            224,
+            273,
+            322,
+
+            629,
+            678,
+            727,
+            777,
+            826,
+            875
+        };
+        public static readonly int HERO_Y = 73;
     }
 
     internal static class Rectangles
@@ -198,6 +303,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly DirectBitmap[] HERO_MARKUPS = new DirectBitmap[]
         {
             new DirectBitmap(Resources.ana_markup, true), // Ana
+            new DirectBitmap(Resources.ashe_markup, true), // Ashe
             new DirectBitmap(Resources.bastion_markup, true), // Bastion
             new DirectBitmap(Resources.brigitte_markup, true), // Brigitte
             new DirectBitmap(Resources.dva_markup, true), // Dva

@@ -27,7 +27,7 @@ namespace Deltin.CustomGameAutomation
     {
         internal AI(CustomGame cg) : base(cg) { }
 
-        private static int[,] DifficultyLocations = new int[,]
+        private static readonly int[,] DifficultyLocations = new int[,]
         {
             // X    Y  Length
             // Blue
@@ -45,8 +45,8 @@ namespace Deltin.CustomGameAutomation
             { 401, 373, 25 },
             { 401, 402, 25 }
         };
-        private static int DifficultyLocationQueueX = 686;
-        private static int[] DifficultyLocationsQueue = new int[]
+        private static readonly int DifficultyLocationQueueX = 686;
+        private static readonly int[] DifficultyLocationsQueue = new int[]
         {
             244,
             257,

@@ -265,4 +265,10 @@ namespace Deltin.CustomGameAutomation
         [DllImport("gdiplus.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
         internal static extern int GdipCreateBitmapFromHBITMAP(HandleRef hbitmap, HandleRef hpalette, out IntPtr bitmap);
     }
+
+    internal static class Msvcrt
+    {
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int memcmp(byte[] b1, byte[] b2, long count);
+    }
 }

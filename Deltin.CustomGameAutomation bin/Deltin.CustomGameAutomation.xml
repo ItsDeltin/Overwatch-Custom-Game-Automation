@@ -1161,10 +1161,24 @@
             Contains data for identifying players who executed a command.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.CompareIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Compares player identities.
+            </summary>
+            <param name="other">The other PlayerIdentity to compare to.</param>
+            <returns>Returns true if the player identities are equal.</returns>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
             <summary>
             Contains data for identifying players who executed a command.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
+            <summary>
+            Compares chat identity.
+            </summary>
+            <param name="other">The other ChatIdentity to compare to.</param>
+            <returns>Returns true if the chat identities are equal.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
@@ -1718,6 +1732,11 @@
         <member name="F:Deltin.CustomGameAutomation.Hero.Ana">
             <summary>
             Ana hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Ashe">
+            <summary>
+            Ashe hero.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.Hero.Bastion">
@@ -2532,6 +2551,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Antarctica">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ashe_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>

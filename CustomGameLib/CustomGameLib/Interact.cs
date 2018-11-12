@@ -63,7 +63,7 @@ namespace Deltin.CustomGameAutomation
             if (CustomGame.IsSlotSpectatorOrQueue(slot)) xoffset = -150; // Prevents the player context menu from orientating left for slots in the spectator and queue.
             if (CustomGame.IsSlotInQueue(slot)) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at.
 
-            return new Point(CustomGame.SlotLocations[slot].X + xoffset, CustomGame.SlotLocations[slot].Y + yoffset); // Blue, Red, Spectators, and all of queue except for the first slot.
+            return new Point(Points.SLOT_LOCATIONS[slot].X + xoffset, Points.SLOT_LOCATIONS[slot].Y + yoffset); // Blue, Red, Spectators, and all of queue except for the first slot.
         }
 
         internal Point OpenSlotMenu(int slot)

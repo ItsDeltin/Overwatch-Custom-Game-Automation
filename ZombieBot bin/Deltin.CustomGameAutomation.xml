@@ -50,6 +50,11 @@
             </summary>
             <returns>The running Overwatch process. Returns null if there are none.</returns>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.OverwatchProcess">
+            <summary>
+            The Overwatch Process being used in the CustomGame class.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.#ctor(Deltin.CustomGameAutomation.CustomGameBuilder)">
             <summary>
             Creates new CustomGame object.
@@ -85,15 +90,18 @@
             </summary>
             <returns>Returns the state of the game.</returns>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CustomGame.UsingOverwatchProcess">
-            <summary>
-            The Overwatch Process being used in the CustomGame class.
-            </summary>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.Dispose">
             <summary>
             Disposes of all resources being used by the CustomGame instance.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.PlayerExists(System.String)">
+            <summary>
+            Checks if a player account exists via battletag. Is case sensitive.
+            </summary>
+            <param name="battletag">Battletag of player to check. Is case sensitive.</param>
+            <returns>Returns true if player exists, else returns false.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
         </member>
         <member name="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver">
             <summary>
@@ -287,6 +295,11 @@
             The number where the spectator slots start.
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.SlotCount">
+            <summary>
+            The number where the slots end.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.Interact">
             <summary>
             Changes a player's state in Overwatch.
@@ -426,6 +439,25 @@
             Gets the current map being played.
             </summary>
             <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="F:Deltin.CustomGameAutomation.Map.E_Route66"/> and <see cref="F:Deltin.CustomGameAutomation.Map.SKIRM_Route66"/>.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)">
+            <summary>
+            Gets the slots that have changed.
+            </summary>
+            <param name="slotInfo">The data of the last scan.</param>
+            <returns>A List of slots that changed.</returns>
+            <remarks>
+            <para>The returned slots are slots that have been swapped, removed, or added to the game.</para>
+            <para>The data of the scan is saved in <paramref name="slotInfo"/>. It is compared to next time it is used with this method.
+            A new <see cref="T:Deltin.CustomGameAutomation.SlotInfo"/> object will return every slot.</para>
+            </remarks>
+            <seealso cref="T:Deltin.CustomGameAutomation.SlotInfo"/>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.TrackPlayers(Deltin.CustomGameAutomation.PlayerTracker)">
+            <summary>
+            Tracks player slots.
+            </summary>
+            <param name="playerTracker"></param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>
@@ -691,6 +723,21 @@
             <seealso cref="M:Deltin.CustomGameAutomation.Interact.RemoveAllBots(System.Int32)"/>
             <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)"/>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)">
+            <summary>
+            Safely removes a slot from the game if they are an AI.
+            </summary>
+            <param name="slot">Slot to remove from game.</param>
+            <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
+            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
+            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto" />
+            <seealso cref="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)" />
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.AI.CalibrateAIChecking">
+            <summary>
+            AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.AI.IsAI(System.Int32,System.Boolean)">
             <summary>
             Checks if the input slot is an AI.
@@ -712,22 +759,17 @@
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
             <seealso cref="M:Deltin.CustomGameAutomation.AI.IsAI(System.Int32,System.Boolean)" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.AI.GetAISlots(System.Boolean,System.Boolean)">
             <summary>
             Gets all slots that are AI.
             </summary>
             <returns>All AI slots.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.AI.GetPlayerSlots(System.Boolean,System.Boolean)">
             <summary>
             Gets all slots that are not AI.
             </summary>
             <returns>All player slots.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.CalibrateAIChecking">
-            <summary>
-            AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
-            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.AI.EditAI(System.Int32,Deltin.CustomGameAutomation.AIHero,Deltin.CustomGameAutomation.Difficulty)">
             <summary>
@@ -757,106 +799,6 @@
             <returns>Returns true on success.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.AI.RemoveFromGameIfAI(System.Int32)">
-            <summary>
-            Safely removes a slot from the game if they are an AI.
-            </summary>
-            <param name="slot">Slot to remove from game.</param>
-            <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
-            <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
-            <seealso cref="M:Deltin.CustomGameAutomation.AI.RemoveAllBotsAuto" />
-            <seealso cref="M:Deltin.CustomGameAutomation.Interact.RemoveFromGame(System.Int32)" />
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.AIHero">
-            <summary>
-            AI heroes.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Recommended">
-            <summary>
-            Overwatch's reccommended AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Ana">
-            <summary>
-            Ana AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Bastion">
-            <summary>
-            Bastion AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Lucio">
-            <summary>
-            Lucio AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.McCree">
-            <summary>
-            McCree AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Mei">
-            <summary>
-            Mei AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Reaper">
-            <summary>
-            Reaper AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Roadhog">
-            <summary>
-            Roadhog AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Soldier76">
-            <summary>
-            Soldier 76 AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Sombra">
-            <summary>
-            Sombra AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Torbjorn">
-            <summary>
-            Torbjorn AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Zarya">
-            <summary>
-            Zarya AI hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.AIHero.Zenyatta">
-            <summary>
-            Zenyatta AI hero.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.Difficulty">
-            <summary>
-            AI difficulties.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Difficulty.Easy">
-            <summary>
-            Easy AI difficulty.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Difficulty.Medium">
-            <summary>
-            Medium AI difficulty.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Difficulty.Hard">
-            <summary>
-            Hard AI difficulty.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.Chat">
             <summary>
             Chat for Overwatch.
@@ -864,6 +806,11 @@
             <remarks>
             The Chat class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Chat"/> field.
             </remarks>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Chat.BlockGeneralChat">
+            <summary>
+            Prevents chat messages from being sent to the general channel.
+            </summary>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Chat.SendChatMessage(System.String)">
             <summary>
@@ -899,11 +846,6 @@
       </code>
     </example>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Chat.BlockGeneralChat">
-            <summary>
-            Prevents chat messages from being sent to the general channel.
-            </summary>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.Chat.SwapChannel(Deltin.CustomGameAutomation.Channel)">
             <summary>
             Swaps to a chat channel.
@@ -930,36 +872,6 @@
         <member name="M:Deltin.CustomGameAutomation.Chat.ClosedChatIsDefault">
             <summary>
             Makes the chat closed by default.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.Channel">
-            <summary>
-            Chat channels for Overwatch.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Channel.Team">
-            <summary>
-            The team chat channel.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Channel.Match">
-            <summary>
-            The match chat channel.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Channel.General">
-            <summary>
-            The general chat channel.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Channel.Group">
-            <summary>
-            The group chat channel.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Channel.PrivateMessage">
-            <summary>
-            The private message chat channel.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Commands">
@@ -1176,7 +1088,9 @@
             <seealso cref="P:Deltin.CustomGameAutomation.CustomGame.Commands" />
             <seealso cref="T:Deltin.CustomGameAutomation.ListenTo" />
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData" />
+            <seealso cref="T:Deltin.CustomGameAutomation.CommandExecuted" />
             <seealso cref="T:Deltin.CustomGameAutomation.PlayerIdentity" />
+            <seealso cref="T:Deltin.CustomGameAutomation.ChatIdentity" />
         </member>
         <member name="F:Deltin.CustomGameAutomation.Commands.ListenTo">
             <summary>
@@ -1188,7 +1102,7 @@
             Set to true to start listening to commands. Set to false to stop.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Commands.GetSlotIdentity(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.Commands.GetPlayerIdentity(System.Int32)">
             <summary>
             Gets the player identity of a slot.
             </summary>
@@ -1200,6 +1114,7 @@
             Data for commands to listen to on the Commands class.
             </summary>
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
+            <seealso cref="T:Deltin.CustomGameAutomation.Commands"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean,Deltin.CustomGameAutomation.CommandExecuted)">
             <summary>
@@ -1246,46 +1161,31 @@
             Contains data for identifying players who executed a command.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity,Deltin.CustomGameAutomation.PlayerIdentity)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.CompareIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
             <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="pi1">First player identity</param>
-            <param name="pi2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.ComparePlayerIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
+            Compares player identities.
             </summary>
             <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are identicle.</returns>
+            <returns>Returns true if the player identities are equal.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
             <summary>
             Contains data for identifying players who executed a command.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity,Deltin.CustomGameAutomation.ChatIdentity)">
+        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
             <summary>
-            Returns true if the 2 player identities are identicle.
+            Compares chat identity.
             </summary>
-            <param name="ci1">First player identity</param>
-            <param name="ci2">Second player identity</param>
-            <returns>Returns true if the player identities are identicle.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareChatIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Returns true if the 2 player identities are identicle.
-            </summary>
-            <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are identicle.</returns>
+            <param name="other">The other ChatIdentity to compare to.</param>
+            <returns>Returns true if the chat identities are equal.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
-            Data of Overwatch executed chat commands.
+            Data of an executed chat command.
             </summary>
             <seealso cref="T:Deltin.CustomGameAutomation.ListenTo"/>
+            /// <seealso cref="T:Deltin.CustomGameAutomation.Commands"/>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.Command">
             <summary>
@@ -1297,26 +1197,28 @@
             Channel the command was executed on.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
+        <member name="P:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
             <summary>
             The identity of the player that executed the command.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
+        <member name="P:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
             <summary>
             The chat identity of the player that executed the command.
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.IsFriend">
             <summary>
-            Is the player that executed the command is a friend?
+            Is the player that executed the command a friend?
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandExecuted">
             <summary>
-            Method to be executed when the command is executed.
+            Method to be executed when a command is executed.
             </summary>
             <param name="data">Data of the command executed.</param>
+            <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
+            <seealso cref="T:Deltin.CustomGameAutomation.Commands"/>
         </member>
         <member name="T:Deltin.CustomGameAutomation.OverwatchProcessInfoManual">
             <summary>
@@ -1436,6 +1338,11 @@
             The <see cref="T:Deltin.CustomGameAutomation.CustomGame"/> object to use.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGameBase.Capture">
+            <summary>
+            The captured screen.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.DefaultKeys">
             <summary>
             Overwatch's keybinds.
@@ -1469,6 +1376,126 @@
         <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DefaultKeys">
             <summary>
             The default keys set in Overwatch's settings.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.AIHero">
+            <summary>
+            AI heroes.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Recommended">
+            <summary>
+            Overwatch's reccommended AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Ana">
+            <summary>
+            Ana AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Bastion">
+            <summary>
+            Bastion AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Lucio">
+            <summary>
+            Lucio AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.McCree">
+            <summary>
+            McCree AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Mei">
+            <summary>
+            Mei AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Reaper">
+            <summary>
+            Reaper AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Roadhog">
+            <summary>
+            Roadhog AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Soldier76">
+            <summary>
+            Soldier 76 AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Sombra">
+            <summary>
+            Sombra AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Torbjorn">
+            <summary>
+            Torbjorn AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Zarya">
+            <summary>
+            Zarya AI hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.AIHero.Zenyatta">
+            <summary>
+            Zenyatta AI hero.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Difficulty">
+            <summary>
+            AI difficulties.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Easy">
+            <summary>
+            Easy AI difficulty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Medium">
+            <summary>
+            Medium AI difficulty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Difficulty.Hard">
+            <summary>
+            Hard AI difficulty.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Channel">
+            <summary>
+            Chat channels for Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Team">
+            <summary>
+            The team chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Match">
+            <summary>
+            The match chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.General">
+            <summary>
+            The general chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.Group">
+            <summary>
+            The group chat channel.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Channel.PrivateMessage">
+            <summary>
+            The private message chat channel.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Team">
@@ -1591,6 +1618,312 @@
             Enable all options before toggling.
             </summary>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
+            <summary>
+            Result info of GetHero().
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.Success">
+            <summary>
+            The hero the player was playing was successfully found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.PlayerWasDead">
+            <summary>
+            Can't get the hero the player was playing because the player is dead. Try rescanning when the player is alive again.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoHeroChosen">
+            <summary>
+            The player did not choose a hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.SlotEmpty">
+            <summary>
+            The slot was empty.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoCompatibleHeroFound">
+            <summary>
+            Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.SlotFlags">
+            <summary>
+            Flags for obtaining slots.
+            </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)"/>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeam">
+            <summary>
+            Get blue slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedTeam">
+            <summary>
+            Get red slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Spectators">
+            <summary>
+            Get spectator slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NeutralQueue">
+            <summary>
+            Get neutral queue slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedQueue">
+            <summary>
+            Get red queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueQueue">
+            <summary>
+            Get blue queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Queue">
+            <summary>
+            Get queue slots
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeamAndRedTeam">
+            <summary>
+            Get blue and red slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.All">
+            <summary>
+            Gets blue, red, spectator, and queue slots.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.PlayersOnly">
+            <summary>
+            Players only, no AI.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AIOnly">
+            <summary>
+            AI only, no players.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.DeadOnly">
+            <summary>
+            Gets dead players only.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AliveOnly">
+            <summary>
+            Gets alive players only.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AccurateGetAI">
+            <summary>
+            Reliably gets the (non)AI, however is a lot slower.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Hero">
+            <summary>
+            All heroes in Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Ana">
+            <summary>
+            Ana hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Ashe">
+            <summary>
+            Ashe hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Bastion">
+            <summary>
+            Bastion hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Brigitte">
+            <summary>
+            Brigitte hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.DVA">
+            <summary>
+            DVA hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Doomfist">
+            <summary>
+            Doomfist hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Genji">
+            <summary>
+            Genji hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Hanzo">
+            <summary>
+            Hanzo hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Junkrat">
+            <summary>
+            Junkrat hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Lucio">
+            <summary>
+            Lucio hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.McCree">
+            <summary>
+            McCree hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Mei">
+            <summary>
+            Mei hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Mercy">
+            <summary>
+            Mercy hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Moira">
+            <summary>
+            Moira hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Orisa">
+            <summary>
+            Orisa hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Pharah">
+            <summary>
+            Pharah hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Reaper">
+            <summary>
+            Reaper hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Reinhardt">
+            <summary>
+            Reinhardt hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Roadhog">
+            <summary>
+            Roadhog hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Soldier76">
+            <summary>
+            Soldier 76 hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Sombra">
+            <summary>
+            Sombra hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Symmetra">
+            <summary>
+            Symmetra hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Torbjorn">
+            <summary>
+            Torbjorn hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Tracer">
+            <summary>
+            Tracer hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Widowmaker">
+            <summary>
+            Widowmaker hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Winston">
+            <summary>
+            Winston hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.WreckingBall">
+            <summary>
+            Wrecking Ball hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Zarya">
+            <summary>
+            Zarya hero.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.Hero.Zenyatta">
+            <summary>
+            Zenyatta hero.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.OptionScanFlags">
+            <summary>
+            Flags for scanning an option menu in Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.None">
+            <summary>
+            No flags.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.OpenMenu">
+            <summary>
+            Open the menu before scanning starts.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseMenu">
+            <summary>
+            Close the menu after scanning finishes.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseIfNotFound">
+            <summary>
+            Close the menu if the option being scanned for is not found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.Click">
+            <summary>
+            Click the option if it is found.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation">
+            <summary>
+            Return the location of the option.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound">
+            <summary>
+            Return whether or not the option is found.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Event">
+            <summary>
+            Overwatch's limited time events.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.Gamemode">
+            <summary>
+            Overwatch's gamemodes.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.InvalidSlotException">
             <summary>
             Thrown when slot is invalid or out of range.
@@ -1695,7 +2028,7 @@
             The PlayerInfo class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayersDead(System.Boolean)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetDeadSlots(System.Boolean)">
             <summary>
             Gets a list of players who died.
             </summary>
@@ -1786,12 +2119,11 @@
             <returns>Returns true if player as ultimate.</returns>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHeroMarkup(System.Int32,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHeroMarkup(System.Int32)">
             <summary>
             Obtains the markup of a hero icon.
             </summary>
             <param name="slot">Slot to get hero icon from.</param>
-            <param name="saveTo">Location on the file system to save it to.</param>
             <exception cref="T:Deltin.CustomGameAutomation.InvalidSlotException">Thrown if <paramref name="slot" /> is not a valid slot.</exception>
         </member>
         <member name="M:Deltin.CustomGameAutomation.PlayerInfo.GetHero(System.Int32)">
@@ -1818,100 +2150,6 @@
             <param name="slot"></param>
             <returns></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerInfo.PlayerExists(System.String)">
-            <summary>
-            Checks if a player account exists via battletag. Is case sensitive.
-            </summary>
-            <param name="battletag">Battletag of player to check. Is case sensitive.</param>
-            <returns>Returns true if player exists, else returns false.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.HeroResultInfo">
-            <summary>
-            Result info of GetHero().
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.Success">
-            <summary>
-            The hero the player was playing was successfully found.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.PlayerWasDead">
-            <summary>
-            Can't get the hero the player was playing because the player is dead. Try rescanning when the player is alive again.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoHeroChosen">
-            <summary>
-            The player did not choose a hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.SlotEmpty">
-            <summary>
-            The slot was empty.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.HeroResultInfo.NoCompatibleHeroFound">
-            <summary>
-            Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.SlotFlags">
-            <summary>
-            Flags for obtaining slots.
-            </summary>
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)"/>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeam">
-            <summary>
-            Get blue slots.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedTeam">
-            <summary>
-            Get red slots.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Spectators">
-            <summary>
-            Get spectator slots.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NeutralQueue">
-            <summary>
-            Get neutral queue slots.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedQueue">
-            <summary>
-            Get red queue slots
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueQueue">
-            <summary>
-            Get blue queue slots
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Queue">
-            <summary>
-            Get queue slots
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoPlayers">
-            <summary>
-            No players, only AI.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.NoAI">
-            <summary>
-            No AI, only players.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AccurateGetAI">
-            <summary>
-            Reliably gets the (non)AI, however is a lot slower.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.Interact">
             <summary>
             Changes a player's state in Overwatch.
@@ -1920,7 +2158,7 @@
             The Interact class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Interact"/> field.
             </remarks>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Drawing.Point,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Drawing.Point,Deltin.CustomGameAutomation.OptionScanFlags,System.String,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Scans for an option at the specified point.
             </summary>
@@ -1931,7 +2169,7 @@
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,Deltin.CustomGameAutomation.OptionScanFlags,System.String,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.MenuOptionScan(System.Int32,Deltin.CustomGameAutomation.OptionScanFlags,System.String,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Scans for an option at the specified point.
             </summary>
@@ -1942,7 +2180,7 @@
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Drawing.Point,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Drawing.Point,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Peaks for an option.
             </summary>
@@ -1950,7 +2188,7 @@
             <param name="markup">The markup of the option to peak for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Int32,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.PeakOption(System.Int32,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Peaks for an option.
             </summary>
@@ -1958,7 +2196,7 @@
             <param name="markup">The markup of the option to peak for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Drawing.Point,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Drawing.Point,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Clicks an option.
             </summary>
@@ -1966,7 +2204,7 @@
             <param name="markup">The markup of the option to scan for.</param>
             <returns>True if the option was found.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Int32,System.Drawing.Bitmap)">
+        <member name="M:Deltin.CustomGameAutomation.Interact.ClickOption(System.Int32,Deltin.CustomGameAutomation.DirectBitmap)">
             <summary>
             Clicks an option.
             </summary>
@@ -2048,46 +2286,6 @@
             Swaps players on both teams.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.OptionScanFlags">
-            <summary>
-            Flags for scanning an option menu in Overwatch.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.None">
-            <summary>
-            No flags.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.OpenMenu">
-            <summary>
-            Open the menu before scanning starts.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseMenu">
-            <summary>
-            Close the menu after scanning finishes.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.CloseIfNotFound">
-            <summary>
-            Close the menu if the option being scanned for is not found.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.Click">
-            <summary>
-            Click the option if it is found.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation">
-            <summary>
-            Return the location of the option.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound">
-            <summary>
-            Return whether or not the option is found.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.Map">
             <summary>
             Maps in Overwatch.
@@ -2141,15 +2339,38 @@
             <param name="owEvent">Filter by Overwatch event.</param>
             <returns>An array of maps in the <paramref name="gamemode"/>.</returns>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.Event">
+        <member name="T:Deltin.CustomGameAutomation.SlotInfo">
             <summary>
-            Overwatch's limited time events.
+            Data about the saved slots.
+            </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)"/>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.SlotInfo.#ctor">
+            <summary>
+            Creates a new SlotInfo object.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.Gamemode">
+        <member name="M:Deltin.CustomGameAutomation.SlotInfo.Dispose">
             <summary>
-            Overwatch's gamemodes.
+            Disposes data used by the object.
             </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerTracker">
+            <summary>
+            Tracks player's slots.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerTracker.#ctor">
+            <summary>
+            Tracks player's slots.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerTracker.SlotFromPlayerIdentity(Deltin.CustomGameAutomation.PlayerIdentity)">
+            <summary>
+            Gets the player's slot from a player's identity.
+            </summary>
+            <param name="identity">The identity of the player.</param>
+            <returns>The slot of the player.</returns>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
             <summary>
@@ -2166,6 +2387,11 @@
         <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.ScreenCopy">
             <summary>
             The ScreenCopy method of screen capturing.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.DirectBitmap">
+            <summary>
+            Stores Overwatch's capture data.
             </summary>
         </member>
         <member name="F:Deltin.CustomGameAutomation.User32.nCmdShow.SW_HIDE">
@@ -2235,6 +2461,22 @@
             Minimizes a window, even if the thread that owns the window is not responding. 
             This flag should only be used when minimizing windows from a different thread.
             </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Gdi32.GetDIBits(System.IntPtr,System.IntPtr,System.UInt32,System.UInt32,System.Byte[],Deltin.CustomGameAutomation.Gdi32.BITMAPINFO@,Deltin.CustomGameAutomation.Gdi32.DIB_Color_Mode)">
+            <summary>
+                   Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
+            </summary>
+            <param name="hdc">A handle to the device context.</param>
+            <param name="hbmp">A handle to the bitmap. This must be a compatible bitmap (DDB).</param>
+            <param name="uStartScan">The first scan line to retrieve.</param>
+            <param name="cScanLines">The number of scan lines to retrieve.</param>
+            <param name="lpvBits">A pointer to a buffer to receive the bitmap data. If this parameter is <see cref="F:System.IntPtr.Zero"/>, the function passes the dimensions and format of the bitmap to the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure pointed to by the <paramref name="lpbi"/> parameter.</param>
+            <param name="lpbi">A pointer to a <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure that specifies the desired format for the DIB data.</param>
+            <param name="uUsage">The format of the bmiColors member of the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure. It must be one of the following values.</param>
+            <returns>If the lpvBits parameter is non-NULL and the function succeeds, the return value is the number of scan lines copied from the bitmap.
+            If the lpvBits parameter is NULL and GetDIBits successfully fills the <see cref="T:Deltin.CustomGameAutomation.Gdi32.BITMAPINFO"/> structure, the return value is nonzero.
+            If the function fails, the return value is zero.
+            This function can return the following value: ERROR_INVALID_PARAMETER (87 (0×57))</returns>
         </member>
         <member name="F:Deltin.CustomGameAutomation.Gdi32.TernaryRasterOperations.SRCCOPY">
             <summary>dest = source</summary>
@@ -2309,6 +2551,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Antarctica">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ashe_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2790,151 +3037,6 @@
             <param name="set">Array of settings to change. Must be the same size as setto.</param>
             <param name="setto">Array to change settings to. Must be the same size as set.</param>
             <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.Hero">
-            <summary>
-            All heroes in Overwatch.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Ana">
-            <summary>
-            Ana hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Bastion">
-            <summary>
-            Bastion hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Brigitte">
-            <summary>
-            Brigitte hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.DVA">
-            <summary>
-            DVA hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Doomfist">
-            <summary>
-            Doomfist hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Genji">
-            <summary>
-            Genji hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Hanzo">
-            <summary>
-            Hanzo hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Junkrat">
-            <summary>
-            Junkrat hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Lucio">
-            <summary>
-            Lucio hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.McCree">
-            <summary>
-            McCree hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Mei">
-            <summary>
-            Mei hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Mercy">
-            <summary>
-            Mercy hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Moira">
-            <summary>
-            Moira hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Orisa">
-            <summary>
-            Orisa hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Pharah">
-            <summary>
-            Pharah hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Reaper">
-            <summary>
-            Reaper hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Reinhardt">
-            <summary>
-            Reinhardt hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Roadhog">
-            <summary>
-            Roadhog hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Soldier76">
-            <summary>
-            Soldier 76 hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Sombra">
-            <summary>
-            Sombra hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Symmetra">
-            <summary>
-            Symmetra hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Torbjorn">
-            <summary>
-            Torbjorn hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Tracer">
-            <summary>
-            Tracer hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Widowmaker">
-            <summary>
-            Widowmaker hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Winston">
-            <summary>
-            Winston hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.WreckingBall">
-            <summary>
-            Wrecking Ball hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Zarya">
-            <summary>
-            Zarya hero.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.Hero.Zenyatta">
-            <summary>
-            Zenyatta hero.
-            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Settings">
             <summary>

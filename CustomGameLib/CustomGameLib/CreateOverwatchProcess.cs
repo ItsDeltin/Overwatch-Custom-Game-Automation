@@ -31,7 +31,9 @@ namespace Deltin.CustomGameAutomation
             // If battle.net is not started, start it.
             if (Process.GetProcessesByName("battle.net").Length == 0)
             {
-                Debug.WriteLine(DebugHeader + "No battle.net process found, starting battle.net.");
+#if DEBUG
+                CustomGameDebug.WriteLine("No battle.net process found, starting battle.net.");
+#endif
 
                 Process battlenet = new Process();
                 battlenet.StartInfo.FileName = processInfo.BattlenetExecutableFilePath;
@@ -43,18 +45,23 @@ namespace Deltin.CustomGameAutomation
                 {
                     if (startTime.ElapsedMilliseconds >= processInfo.MaxBattlenetStartTime || processInfo.MaxBattlenetStartTime == -1)
                     {
-                        Debug.WriteLine(DebugHeader + "Error: Battle.net took too long to start.");
+#if DEBUG
+                        CustomGameDebug.WriteLine("Error: Battle.net took too long to start.");
+#endif
                         throw new OverwatchStartFailedException("Battle.net took too long to start.");
                     }
                     Thread.Sleep(200);
                 }
-
-                Debug.WriteLine(DebugHeader + "Finished starting Battle.net.");
+#if DEBUG
+                CustomGameDebug.WriteLine("Finished starting Battle.net.");
+#endif
             }
+#if DEBUG
             else
-                Debug.WriteLine(DebugHeader + "Battle.net process found.");
+                CustomGameDebug.WriteLine("Battle.net process found.");
 
-            Debug.WriteLine(DebugHeader + "Starting the Overwatch process.");
+            CustomGameDebug.WriteLine("Starting the Overwatch process.");
+#endif
 
             Process[] processList = Process.GetProcessesByName("Overwatch");
 
@@ -86,14 +93,18 @@ namespace Deltin.CustomGameAutomation
                         DirectBitmap bmp = null;
                         if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
                         {
-                            Debug.WriteLine(DebugHeader + "Finished starting Overwatch.");
+#if DEBUG
+                            CustomGameDebug.WriteLine("Finished starting Overwatch.");
+#endif
                             if (processInfo.AutomaticallyCreateCustomGame)
                                 CreateCustomGame(owProcess.MainWindowHandle);
                             return newProcessList[i];
                         }
                         else
                         {
-                            Debug.WriteLine(DebugHeader + "Could not start Overwatch, main menu did not load.");
+#if DEBUG
+                            CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
+#endif
                             if (bmp != null)
                                 bmp.Dispose();
                             if (processInfo.CloseOverwatchProcessOnFailure)
@@ -108,7 +119,9 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(200);
             }
 
-            Debug.WriteLine(DebugHeader + "Error: Overwatch took too long to start.");
+#if DEBUG
+            CustomGameDebug.WriteLine("Error: Overwatch took too long to start.");
+#endif
             RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
             throw new OverwatchStartFailedException("Overwatch took too long to start.");
         }

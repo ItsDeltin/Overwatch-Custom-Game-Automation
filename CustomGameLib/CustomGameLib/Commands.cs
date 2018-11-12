@@ -131,10 +131,6 @@ namespace Deltin.CustomGameAutomation
         {
             DirectBitmap bmp = null;
 
-            Stopwatch toggle = new Stopwatch();
-            if (cg.debugmode)
-                toggle.Start();
-
             while (KeepScanning)
             {
                 // Wait for listen to equal true
@@ -205,7 +201,9 @@ namespace Deltin.CustomGameAutomation
                             AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
                         }
                     }
+#if DEBUG && DEBUG_WINDOW
                     ShowScan(bmp, seed, seedfade, word);
+#endif
                 }
             } // while
 
@@ -429,26 +427,25 @@ namespace Deltin.CustomGameAutomation
             bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
         }
 
+#if DEBUG && DEBUG_WINDOW
         private void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
         {
             // Show valid seed pixels in debug mode
-            if (cg.debugmode)
-            {
-                DirectBitmap dbc = bmp.Clone();
+            DirectBitmap dbc = bmp.Clone();
 
-                for (int x = 0; x < dbc.Width; x++)
-                    for (int y = 0; y < dbc.Height; y++)
-                        if (dbc.CompareColor(x, y, seed, seedfade))
-                            dbc.SetPixel(x, y, Color.Purple);
-                Bitmap nb = dbc.ToBitmap();
-                dbc.Dispose();
+            for (int x = 0; x < dbc.Width; x++)
+                for (int y = 0; y < dbc.Height; y++)
+                    if (dbc.CompareColor(x, y, seed, seedfade))
+                        dbc.SetPixel(x, y, Color.Purple);
+            Bitmap nb = dbc.ToBitmap();
+            dbc.Dispose();
 
-                cg.g.Clear(Color.White);
-                cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * 5, nb.Height * 5));
-                cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * 5 * 1.1)));
-                nb.Dispose();
-            }
+            cg.g.Clear(Color.White);
+            cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * 5, nb.Height * 5));
+            cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * 5 * 1.1)));
+            nb.Dispose();
         }
+#endif
 
         // Gets chat color
         private int[] GetSeed(DirectBitmap bmp, int y)
@@ -645,6 +642,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void Dispose()
         {
+            Disposed = true;
             if (!Disposed && IdentityMarkup != null)
                 IdentityMarkup.Dispose();
         }
@@ -660,6 +658,11 @@ namespace Deltin.CustomGameAutomation
     {
         internal PlayerIdentity(DirectBitmap careerProfileMarkup) : base(careerProfileMarkup) { }
 
+        /// <summary>
+        /// Compares player identities.
+        /// </summary>
+        /// <param name="other">The other PlayerIdentity to compare to.</param>
+        /// <returns>Returns true if the player identities are equal.</returns>
         public bool CompareIdentities(PlayerIdentity other)
         {
             return CompareIdentities(this, other);
@@ -673,6 +676,11 @@ namespace Deltin.CustomGameAutomation
     {
         internal ChatIdentity(DirectBitmap chatMarkup) : base(chatMarkup) { }
 
+        /// <summary>
+        /// Compares chat identity.
+        /// </summary>
+        /// <param name="other">The other ChatIdentity to compare to.</param>
+        /// <returns>Returns true if the chat identities are equal.</returns>
         public bool CompareIdentities(ChatIdentity other)
         {
             return CompareIdentities(this, other);

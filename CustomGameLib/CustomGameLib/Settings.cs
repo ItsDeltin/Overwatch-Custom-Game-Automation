@@ -328,9 +328,8 @@ namespace Deltin.CustomGameAutomation
             {
                 if (values[i] != null)
                 {
-                    if (values[i] is bool)
+                    if (values[i] is bool option)
                     {
-                        bool option = (bool)values[i];
                         bool value = (bool)cg.GetHighlightedSettingValue(true);
                         if (option != value)
                         {
