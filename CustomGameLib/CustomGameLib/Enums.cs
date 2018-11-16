@@ -474,7 +474,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Overwatch's limited time events.
     /// </summary>
-    public enum Event
+    public enum OWEvent
     {
 #pragma warning disable CS1591
         None,

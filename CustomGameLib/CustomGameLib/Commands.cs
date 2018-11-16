@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -103,8 +102,8 @@ namespace Deltin.CustomGameAutomation
             new Letter(new int[,] {{0,0},{1,0},{2,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '9', 3), // Number 9
 
             // Other
-            new Letter(new int[,] {{0,1},{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{-1,-4},{2,0},{2,-3}}, ']', 1, 0, null, new int[,] {{0,-5},{1,0},{1,-1},{1,-2},{1,-3},{1,-4}}), // End square bracket ]
-            new Letter(new int[,] {{0,1},{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{2,0}}, ']', 1, 0, null, new int[,] {{0,-5},{1,0},{1,-1},{1,-2},{1,-3},{1,-4}}), // End square bracket ] for open chat
+            new Letter(new int[,] {{0,1},{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{-1,-4}/*,{2,0},{2,-3}*/}, ']', 1, 0, null, new int[,] {{0,-5},{1,0},{1,-1},{1,-2},{1,-3},{1,-4}}), // End square bracket ]
+            new Letter(new int[,] {{0,1},{0,0},{0,-1},{0,-2},{0,-3},{0,-4},/*{2,0}*/}, ']', 1, 0, null, new int[,] {{0,-5},{1,0},{1,-1},{1,-2},{1,-3},{1,-4}}), // End square bracket ] for open chat
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{3,-1},{2,-2},{1,-2},{0,-3},{0,-4},{1,-4},{2,-4},{3,-4},{1,-3},{1,-1},{1,1}}, '$', 3, 0, new int[] { 0,-1 }), // $ symbol
         };
         #endregion
@@ -112,7 +111,21 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Commands to listen to.
         /// </summary>
-        public List<ListenTo> ListenTo = new List<ListenTo>();
+        public List<ListenTo> ListenTo
+        {
+            get
+            {
+                lock (ListenToAccessLock)
+                    return _listenTo;
+            }
+            set
+            {
+                lock (ListenToAccessLock)
+                    _listenTo = value;
+            }
+        }
+        private List<ListenTo> _listenTo = new List<ListenTo>();
+        private readonly object ListenToAccessLock = new object();
         /// <summary>
         /// Set to true to start listening to commands. Set to false to stop.
         /// </summary>
@@ -135,7 +148,7 @@ namespace Deltin.CustomGameAutomation
             {
                 // Wait for listen to equal true
                 Thread.Sleep(5);
-                if (!Listen)
+                if (!Listen || ListenTo.Count == 0)
                     continue;
 
                 using (var sp = cg.LockHandler.SemiPassive)
@@ -177,7 +190,8 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     // Scan the second line in the chat.
-                    string word = null;
+                    string command = null;
+                    string realCommand = null;
 
                     var seed = GetSeed(bmp, 13);
                     var seedfade = GetSeedFade(bmp, 13);
@@ -186,8 +200,8 @@ namespace Deltin.CustomGameAutomation
                     {
                         // If the first line contains ], scan the second line.
                         LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
-                        word = linescan.Word + " " + secondlinescan.Word;
-                        AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, word);
+                        command = linescan.Word + " " + secondlinescan.Word;
+                        realCommand = AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, command);
                     }
                     else
                     {
@@ -197,12 +211,12 @@ namespace Deltin.CustomGameAutomation
                         linescan = ScanLine(bmp, 24, seed, seedfade);
                         if (linescan.Word.Contains("]"))
                         {
-                            word = linescan.Word;
-                            AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, word);
+                            command = linescan.Word;
+                            realCommand = AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, command);
                         }
                     }
-#if DEBUG && DEBUG_WINDOW
-                    ShowScan(bmp, seed, seedfade, word);
+#if DEBUG
+                    ShowScan(bmp, seed, seedfade, string.Format("{0} (from \"{1}\")", realCommand, command));
 #endif
                 }
             } // while
@@ -332,16 +346,29 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        private void AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
+        private string AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
         {
             // Clean up the word. makes something like "] $APPLE " into "$APPLE"
-            var wordtemp = word.Split(new char[] { ']' }, 2);
-            if (wordtemp.Length > 1)
-                word = wordtemp[1];
-            word = word.Trim();
+            int mr = -1;
+            ListenTo ltd = null;
 
-            string commandFirstWord = word.Split(' ')[0];
-            ListenTo ltd = ListenTo.FirstOrDefault(v => v.Command == commandFirstWord);
+            lock (ListenToAccessLock)
+            {
+                for (int i = 0; i < ListenTo.Count; i++)
+                {
+                    int wi = word.IndexOf(ListenTo[i].Command);
+                    if (wi != -1 && (wi < mr || mr == -1))
+                    {
+                        mr = wi;
+                        ltd = ListenTo[i];
+                    }
+                }
+            }
+
+            word = word.Substring(mr).Trim();
+
+            //string commandFirstWord = word.Split(' ')[0];
+            //ListenTo ltd = ListenTo.FirstOrDefault(v => v.Command == commandFirstWord);
 
             // See if command is being listened to. If it is, continue.
             if (word.Length > 0 && ltd != null && ltd.Listen)
@@ -417,6 +444,8 @@ namespace Deltin.CustomGameAutomation
 
                 System.Threading.Thread.Sleep(50);
             } // if command is being listened to
+
+            return word;
         }
 
         private void UpdateChatCapture(ref DirectBitmap bmp)
@@ -427,7 +456,7 @@ namespace Deltin.CustomGameAutomation
             bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
         }
 
-#if DEBUG && DEBUG_WINDOW
+#if DEBUG
         private void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
         {
             // Show valid seed pixels in debug mode
@@ -437,6 +466,7 @@ namespace Deltin.CustomGameAutomation
                 for (int y = 0; y < dbc.Height; y++)
                     if (dbc.CompareColor(x, y, seed, seedfade))
                         dbc.SetPixel(x, y, Color.Purple);
+            dbc.InvertYAxis();
             Bitmap nb = dbc.ToBitmap();
             dbc.Dispose();
 

@@ -55,7 +55,7 @@ namespace Deltin.CustomGameAutomation
             SetupWindow(OverwatchHandle, ScreenshotMethod);
             Thread.Sleep(500);
 
-#if DEBUG && DEBUG_WINDOW
+#if DEBUG
             SetupDebugWindow();
 #endif
 

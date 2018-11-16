@@ -73,7 +73,7 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.SemiPassive)
             {
                 cg.UpdateScreen();
-                // Check if the pause text is there.
+                // Check for the pause text.
                 return Capture.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
             }
         }

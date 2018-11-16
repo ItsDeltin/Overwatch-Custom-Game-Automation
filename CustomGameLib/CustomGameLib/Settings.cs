@@ -473,7 +473,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Assault, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Assault, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
 
                 cg.KeyPress(Keys.Up, Keys.Up);
@@ -506,7 +506,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.AssaultEscort, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.AssaultEscort, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -542,7 +542,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Control, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Control, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -572,7 +572,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Escort, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Escort, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);
@@ -604,7 +604,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Deathmatch, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Deathmatch, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -652,7 +652,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Elimination, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Elimination, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -688,7 +688,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Lucioball, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Lucioball, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
                 Thread.Sleep(100);
@@ -720,7 +720,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.JunkensteinsRevenge, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.JunkensteinsRevenge, cg.CurrentEvent);
                 Console.WriteLine(point);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
@@ -761,7 +761,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.TeamDeathmatch, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.TeamDeathmatch, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -787,7 +787,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Skirmish, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Skirmish, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);

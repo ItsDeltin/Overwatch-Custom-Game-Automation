@@ -434,7 +434,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Flips the Bytes[] array vertically so the image is flipped.
-        private void InvertYAxis()
+        internal void InvertYAxis()
         {
             for (int i = 0; i < Width * Height * 4 / 2; i += BytesPerLine)
                 for (int j = 0; j < BytesPerLine; j += 4)

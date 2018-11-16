@@ -333,12 +333,12 @@
             Modes enabled in custom games.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.CurrentOverwatchEvent">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.CurrentEvent">
             <summary>
             The current event occuring in Overwatch.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetCurrentOverwatchEvent">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetCurrentEvent">
             <summary>
             Gets the current Overwatch event. This compares the current date with past event's start and end times, so specific time may be a little off.
             </summary>
@@ -352,7 +352,7 @@
             <param name="maps">Maps that should be toggled.</param>
             <exception cref="T:System.ArgumentNullException">Thrown if <see cref="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled" /> is null.</exception>
             <remarks>
-            <see cref="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled" /> must be set to use this method. <see cref="F:Deltin.CustomGameAutomation.CustomGame.CurrentOverwatchEvent" /> must be set if a seasonal Overwatch event is on.
+            <see cref="F:Deltin.CustomGameAutomation.CustomGame.ModesEnabled" /> must be set to use this method. <see cref="F:Deltin.CustomGameAutomation.CustomGame.CurrentEvent" /> must be set if a seasonal Overwatch event is on.
             <getMaps>
     All maps:
     <div id="mapList" />
@@ -376,9 +376,9 @@
       </code>
     </example>
             <seealso cref="T:Deltin.CustomGameAutomation.Map" />
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.OWEvent,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.Event,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.OWEvent,Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])">
             <summary>
             Toggles maps in Overwatch.
             </summary>
@@ -414,7 +414,7 @@
             <seealso cref="T:Deltin.CustomGameAutomation.Map" />
             <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.ToggleMap(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Map[])" />
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetModesEnabled(Deltin.CustomGameAutomation.Event)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetModesEnabled(Deltin.CustomGameAutomation.OWEvent)">
             <summary>
             Gets the modes enabled in the Overwatch custom game.
             </summary>
@@ -1092,7 +1092,7 @@
             <seealso cref="T:Deltin.CustomGameAutomation.PlayerIdentity" />
             <seealso cref="T:Deltin.CustomGameAutomation.ChatIdentity" />
         </member>
-        <member name="F:Deltin.CustomGameAutomation.Commands.ListenTo">
+        <member name="P:Deltin.CustomGameAutomation.Commands.ListenTo">
             <summary>
             Commands to listen to.
             </summary>
@@ -1914,7 +1914,7 @@
             Return whether or not the option is found.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.Event">
+        <member name="T:Deltin.CustomGameAutomation.OWEvent">
             <summary>
             Overwatch's limited time events.
             </summary>
@@ -2331,7 +2331,7 @@
             </summary>
             <returns>Returns all maps.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Map.GetMapsInGamemode(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.Event)">
+        <member name="M:Deltin.CustomGameAutomation.Map.GetMapsInGamemode(Deltin.CustomGameAutomation.Gamemode,Deltin.CustomGameAutomation.OWEvent)">
             <summary>
             Gets all maps in a gamemode.
             </summary>
@@ -2370,7 +2370,12 @@
             Gets the player's slot from a player's identity.
             </summary>
             <param name="identity">The identity of the player.</param>
-            <returns>The slot of the player.</returns>
+            <returns>Returns the slot of the player. Returns -1 if it is not found.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerTracker.Dispose">
+            <summary>
+            Disposes data used by the object.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
             <summary>

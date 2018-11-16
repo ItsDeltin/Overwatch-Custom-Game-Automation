@@ -1,6 +1,4 @@
 ﻿#if DEBUG
-#undef DEBUG_WINDOW
-
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
@@ -25,7 +23,7 @@ namespace Deltin.CustomGameAutomation
 
     partial class CustomGame
     {
-#if DEBUG_WINDOW
+#if DEBUG
         private void SetupDebugWindow()
         {
             new Task(() =>

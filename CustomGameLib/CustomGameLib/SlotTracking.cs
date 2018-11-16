@@ -141,6 +141,9 @@ namespace Deltin.CustomGameAutomation
         /// <param name="playerTracker"></param>
         public void TrackPlayers(PlayerTracker playerTracker)
         {
+            if (playerTracker == null)
+                throw new ArgumentNullException("playerTracker");
+
             using (LockHandler.Interactive)
             {
                 List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo);
@@ -244,7 +247,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Tracks player's slots.
     /// </summary>
-    public class PlayerTracker
+    public class PlayerTracker : IDisposable
     {
         /// <summary>
         /// Tracks player's slots.
@@ -258,7 +261,7 @@ namespace Deltin.CustomGameAutomation
         /// Gets the player's slot from a player's identity.
         /// </summary>
         /// <param name="identity">The identity of the player.</param>
-        /// <returns>The slot of the player.</returns>
+        /// <returns>Returns the slot of the player. Returns -1 if it is not found.</returns>
         public int SlotFromPlayerIdentity(PlayerIdentity identity)
         {
             foreach (var player in Players)
@@ -269,6 +272,14 @@ namespace Deltin.CustomGameAutomation
 
         internal SlotInfo SlotInfo = new SlotInfo();
         internal List<PlayerTrackerSlot> Players = new List<PlayerTrackerSlot>();
+
+        /// <summary>
+        /// Disposes data used by the object.
+        /// </summary>
+        public void Dispose()
+        {
+            SlotInfo.Dispose();
+        }
     }
     internal class PlayerTrackerSlot
     {

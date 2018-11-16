@@ -60,7 +60,7 @@ namespace ZombieBot
             string name = "Zombies - Infection"; // Default name for the Abyxa server.
             string region = "us"; // Default region for the Abyxa server.
             bool local = false; // Determines if the Abyxa website is on the local server.
-            Event? owevent = null; // The current overwatch event
+            OWEvent? owevent = null; // The current overwatch event
             ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt;
             int preset = -1;
 
@@ -136,7 +136,7 @@ namespace ZombieBot
 
                             case "Event":
                                 {
-                                    if (Enum.TryParse(lineSplit[1], out Event setowevent))
+                                    if (Enum.TryParse(lineSplit[1], out OWEvent setowevent))
                                         owevent = setowevent;
                                 }
                                 break;
@@ -200,6 +200,7 @@ namespace ZombieBot
                     }),
                     ScreenshotMethod = screenshotMethod
                 });
+                cg.Commands.Listen = true;
 
                 // Set the mode enabled
                 if (version == 0)
@@ -213,9 +214,9 @@ namespace ZombieBot
 
                 // Set event
                 if (owevent == null)
-                    cg.CurrentOverwatchEvent = cg.GetCurrentOverwatchEvent();
+                    cg.CurrentEvent = cg.GetCurrentEvent();
                 else
-                    cg.CurrentOverwatchEvent = (Event)owevent;
+                    cg.CurrentEvent = (OWEvent)owevent;
 
                 var maps = version == 0 ? ElimMaps : TdmMaps;
 

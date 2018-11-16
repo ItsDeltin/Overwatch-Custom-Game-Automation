@@ -165,11 +165,6 @@ namespace Deltin.CustomGameAutomation
 
                 cg.UpdateScreen();
                 List<int> percentResults = new List<int>();
-                /*
-                for (int mi = 0, yii = ystart;
-                    mi < max && yii > 15 && yii < cg.bmp.Height - ymax - 15;
-                    mi++, yii = ystart + (int)(yincrement * mi)) // Mi is the line to scan, yii is the Y coordinate of line mi.
-                    */
 
                 List<Point> optionLocations = new List<Point>();
 
