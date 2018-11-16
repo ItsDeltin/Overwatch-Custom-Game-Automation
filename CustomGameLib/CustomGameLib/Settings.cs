@@ -119,7 +119,7 @@ namespace Deltin.CustomGameAutomation
         private Point GetPresetLocation(int preset)
         {
             // 86, 155 is the location of the first preset. There are 144 pixels between each column and 33 between each row. There are 4 presets in each column.
-            return new Point(86 + (144 * (preset % 4)), 155 + (33 * (preset / 4)));
+            return new Point(Points.PRESETS_FIRST_PRESET.X + (Distances.PRESET_DISTANCE_X * (preset % 4)), Points.PRESETS_FIRST_PRESET.Y + (Distances.PRESET_DISTANCE_Y * (preset / 4)));
         }
 
         private bool NavigateToPresets()
@@ -339,7 +339,7 @@ namespace Deltin.CustomGameAutomation
                     }
                     else if (values[i] is int)
                     {
-                        var set = cg.GetNumberKeys((int)values[i]);
+                        var set = CustomGame.GetNumberKeys((int)values[i]);
 
                         for (int k = 0; k < set.Length; k++)
                         {

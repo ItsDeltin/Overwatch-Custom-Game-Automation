@@ -47,7 +47,7 @@ namespace Deltin.CustomGameAutomation
         const uint WM_KEYDOWN = 0x100;
         const uint WM_KEYUP = 0x0101;
 
-        internal Keys[] GetNumberKeys(int value)
+        internal static Keys[] GetNumberKeys(int value)
         {
             Keys[] numberKeys = new Keys[] { Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9 };
 
@@ -63,7 +63,7 @@ namespace Deltin.CustomGameAutomation
             return keys.ToArray();
         }
 
-        static int MakeLParam(int LoWord, int HiWord)
+        private static int MakeLParam(int LoWord, int HiWord)
         {
             return (int)((HiWord << 16) | (LoWord & 0xFFFF));
         }

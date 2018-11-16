@@ -152,7 +152,7 @@ namespace Deltin.CustomGameAutomation
             {
                 if (!Disposed)
                 {
-                    CustomGameDebug.WriteLine("Error: locker was used outside of using statement at " + Environment.StackTrace);
+                    CustomGameDebug.WriteLine("Error: locker was used outside of using statement\n" + Environment.StackTrace);
                     Dispose();
                 }
             }
@@ -170,72 +170,3 @@ namespace Deltin.CustomGameAutomation
         }
     }
 }
-
-/* Alternate version (Doesn't support passive methods calling interactive methods)
-
-internal class LockHandler
-{
-    public LockHandler() { }
-
-    public Locker Passive { get { return new Locker(PassiveI, this); } }
-    public Locker Interactive { get { return new Locker(InteractiveI, this); } }
-    private const int PassiveI = 0;
-    private const int InteractiveI = 1;
-
-    private object InteractiveLock = new object();
-    private int PassiveCount = 0;
-    private int InteractiveWaitingCount = 0;
-
-    internal void SetLock(int lockType)
-    {
-        switch (lockType)
-        {
-            // Passive:
-            case PassiveI:
-                SpinWait.SpinUntil(() => { return InteractiveWaitingCount == 0; });
-                lock (InteractiveLock) ;
-                Interlocked.Increment(ref PassiveCount);
-                break;
-            // Interactive:
-            case InteractiveI:
-                Interlocked.Increment(ref InteractiveWaitingCount);
-                Monitor.Enter(InteractiveLock);
-                SpinWait.SpinUntil(() => { return PassiveCount == 0; });
-                Interlocked.Decrement(ref InteractiveWaitingCount);
-                break;
-        }
-    }
-    internal void Unlock(int lockType)
-    {
-        switch (lockType)
-        {
-            // Passive:
-            case PassiveI:
-                Interlocked.Decrement(ref PassiveCount);
-                break;
-
-            // Interactive:
-            case InteractiveI:
-                Monitor.Exit(InteractiveLock);
-                break;
-        }
-    }
-
-    internal class Locker : IDisposable
-    {
-        public Locker(int lockType, LockHandler lockHandler)
-        {
-            LockType = lockType;
-            LockHandler = lockHandler;
-            LockHandler.SetLock(lockType);
-        }
-        private int LockType;
-        private LockHandler LockHandler;
-
-        public void Dispose()
-        {
-            LockHandler.Unlock(LockType);
-        }
-    }
-}
-*/

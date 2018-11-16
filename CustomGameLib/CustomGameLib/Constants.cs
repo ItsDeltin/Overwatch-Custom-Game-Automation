@@ -125,6 +125,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_BACK = new Point(855, 507);
         public static readonly Point SETTINGS_DISCARD = new Point(436, 318);
 
+        public static readonly Point PRESETS_FIRST_PRESET = new Point(86, 155);
         public static readonly Point PRESETS_CONFIRM = new Point(480, 327);
 
         public static readonly Point SETTINGS_LOBBY_BLUE_MAX_PLAYERS = new Point(500, 269);
@@ -254,6 +255,35 @@ namespace Deltin.CustomGameAutomation
             875
         };
         public static readonly int HERO_Y = 73;
+
+        public static readonly Point[] DIFFICULTY_LOCATIONS = new Point[]
+        {
+            // X    Y  Length
+            // Blue
+            new Point(145, 259),
+            new Point(145, 288),
+            new Point(145, 316),
+            new Point(145, 345),
+            new Point(145, 373),
+            new Point(145, 402),
+            // Red
+            new Point(401, 259),
+            new Point(401, 288),
+            new Point(401, 316),
+            new Point(401, 345),
+            new Point(401, 373),
+            new Point(401, 402)
+        };
+        public static readonly int DIFFICULTY_QUEUE_X = 686;
+        public static readonly int[] DIFFICULTY_QUEUE_LOCATIONS = new int[]
+        {
+            244,
+            257,
+            270,
+            283,
+            297,
+            310
+        };
     }
 
     internal static class Rectangles
@@ -270,7 +300,7 @@ namespace Deltin.CustomGameAutomation
     internal static class Distances
     {
         public static readonly int LOBBY_SLOT_DISTANCE = 29;
-        public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 319; // 322
+        public static readonly int LOBBY_TEAM_SLOT_DISTANCE = 319;
         public static readonly int LOBBY_SPECTATOR_SLOT_DISTANCE = 13;
         public static readonly int LOBBY_QUEUE_OFFSET = 6; // Did you know that the queue list is 6 pixels higher than the spectator list?
         public static readonly int LOBBY_SLOT_HEIGHT = 26;
@@ -279,6 +309,9 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_SLOT_DM_BLUE_X_OFFSET = 17;
         public static readonly int LOBBY_SLOT_DM_RED_X_OFFSET = -17;
         public static readonly int LOBBY_SLOT_DM_Y_OFFSET = -20;
+
+        public static readonly int PRESET_DISTANCE_X = 144;
+        public static readonly int PRESET_DISTANCE_Y = 33;
     }
 
     internal static class Markups

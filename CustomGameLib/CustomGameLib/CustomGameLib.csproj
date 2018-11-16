@@ -72,7 +72,7 @@
     <Compile Include="Interact.cs" />
     <Compile Include="Invite.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="SlotIdentity.cs" />
+    <Compile Include="SlotTracking.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
@@ -148,26 +148,26 @@
     <None Include="ImageComments\GetInfo.cs\ModeratorSlot.xcf" />
     <None Include="ImageComments\GetInfo.cs\Offset.xcf" />
     <None Include="ImageComments\Interact.cs\OptionSelect.xcf" />
-    <None Include="ImageComments\SelectHero.cs\Column.xcf" />
-    <None Include="ImageComments\SelectHero.cs\SettingType.xcf" />
-    <None Include="ImageComments\SelectHero.cs\TopOption.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\Column.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\SettingType.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\TopOption.xcf" />
     <None Include="Resources\hero_settings.txt" />
-    <None Include="ImageComments\SelectHero.cs\TopOption.png" />
+    <None Include="ImageComments\HeroSettings.cs\TopOption.png" />
     <Content Include="docs.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ImageComments\AI.cs\EditAIDifficulty.png" />
     <Content Include="ImageComments\AI.cs\EditAIHero.png" />
-    <Content Include="ImageComments\ColorAndLocationData.cs\Error.png" />
-    <Content Include="ImageComments\ColorAndLocationData.cs\StartGame.png" />
+    <Content Include="ImageComments\Constants\Error.png" />
+    <Content Include="ImageComments\Constants\StartGame.png" />
     <Content Include="ImageComments\GetInfo.cs\DeadPlayers.png" />
     <Content Include="ImageComments\GetInfo.cs\InviteInfo2.png" />
     <Content Include="ImageComments\GetInfo.cs\MaxPlayers.png" />
     <Content Include="ImageComments\GetInfo.cs\ModeratorSlot.png" />
     <Content Include="ImageComments\GetInfo.cs\Offset.png" />
     <Content Include="ImageComments\Interact.cs\OptionSelect.png" />
-    <Content Include="ImageComments\SelectHero.cs\Column.png" />
-    <Content Include="ImageComments\SelectHero.cs\SettingType.png" />
+    <Content Include="ImageComments\HeroSettings.cs\Column.png" />
+    <Content Include="ImageComments\HeroSettings.cs\SettingType.png" />
     <None Include="Resources\ana_markup.png" />
     <None Include="Resources\bastion_markup.png" />
     <None Include="Resources\lucio_markup.png" />

@@ -273,24 +273,17 @@
             </example>
             <seealso cref="T:Deltin.CustomGameAutomation.SlotFlags"/>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
-            <summary>
-            Waits for the slots in overwatch to change.
-            </summary>
-            <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
-            <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
-        </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo">
             <summary>
             Info about players in an Overwatch custom game.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Queueid">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.QueueID">
             <summary>
             The number where the queue slots start.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGame.Spectatorid">
+        <member name="F:Deltin.CustomGameAutomation.CustomGame.SpectatorID">
             <summary>
             The number where the spectator slots start.
             </summary>
@@ -458,6 +451,13 @@
             Tracks player slots.
             </summary>
             <param name="playerTracker"></param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
+            <summary>
+            Waits for the slots in overwatch to change.
+            </summary>
+            <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+            <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SaveScreenshot(System.String)">
             <summary>

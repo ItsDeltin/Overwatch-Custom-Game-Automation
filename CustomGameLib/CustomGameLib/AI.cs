@@ -27,35 +27,6 @@ namespace Deltin.CustomGameAutomation
     {
         internal AI(CustomGame cg) : base(cg) { }
 
-        private static readonly int[,] DifficultyLocations = new int[,]
-        {
-            // X    Y  Length
-            // Blue
-            { 145, 259, 100 },
-            { 145, 288, 100 },
-            { 145, 316, 100 },
-            { 145, 345, 100 },
-            { 145, 373, 100 },
-            { 145, 402, 100 },
-            // Red
-            { 401, 259, 25 },
-            { 401, 288, 25 },
-            { 401, 316, 25 },
-            { 401, 345, 25 },
-            { 401, 373, 25 },
-            { 401, 402, 25 }
-        };
-        private static readonly int DifficultyLocationQueueX = 686;
-        private static readonly int[] DifficultyLocationsQueue = new int[]
-        {
-            244,
-            257,
-            270,
-            283,
-            297,
-            310
-        };
-
         /// <summary>
         /// Add AI to the game.
         /// </summary>
@@ -206,18 +177,20 @@ namespace Deltin.CustomGameAutomation
                     List<int> rl = new List<int>(); // Likelyhood in percent for difficulties.
                     List<Difficulty> dl = new List<Difficulty>(); // Difficulty
 
+                    int checkDistance = CustomGame.IsSlotBlue(slot) ? 100 : 25;
+
                     bool foundWhite = false;
                     int foundWhiteIndex = 0;
                     int maxWhite = 3;
                     // For each check length in IsAILocations
-                    for (int xi = 0; xi < DifficultyLocations[slot, 2] && foundWhiteIndex < maxWhite; xi++)
+                    for (int xi = Points.DIFFICULTY_LOCATIONS[slot].X; xi < Points.DIFFICULTY_LOCATIONS[slot].X + checkDistance && foundWhiteIndex < maxWhite; xi++)
                     {
                         if (foundWhite)
                             foundWhiteIndex++;
 
-                        Color cc = Capture.GetPixel(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
+                        Color cc = Capture.GetPixel(xi, Points.DIFFICULTY_LOCATIONS[slot].Y);
                         // Check for white color of text
-                        if (Capture.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
+                        if (Capture.CompareColor(xi, Points.DIFFICULTY_LOCATIONS[slot].Y, Colors.WHITE, 110)
                             && (slot > 5 || cc.B - cc.R < 20))
                         {
                             foundWhite = true;
@@ -225,7 +198,6 @@ namespace Deltin.CustomGameAutomation
                             // For each difficulty markup
                             for (int b = 0; b < Markups.DIFFICULTY_MARKUPS.Length; b++)
                             {
-
                                 // Check if bitmap matches checking area
                                 double success = 0;
                                 double total = 0;
@@ -241,7 +213,7 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (Capture.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
+                                            if (Capture.CompareColor(xi + x, Points.DIFFICULTY_LOCATIONS[slot].Y - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
                                                 success++;
                                         }
                                     }
@@ -272,8 +244,8 @@ namespace Deltin.CustomGameAutomation
 
                 else if (cg.QueueCount > 0)
                 {
-                    int y = DifficultyLocationsQueue[slot - CustomGame.Queueid];
-                    for (int x = DifficultyLocationQueueX; x < 150 + DifficultyLocationQueueX; x++)
+                    int y = Points.DIFFICULTY_QUEUE_LOCATIONS[slot - CustomGame.QueueID];
+                    for (int x = Points.DIFFICULTY_QUEUE_X; x < 150 + Points.DIFFICULTY_QUEUE_X; x++)
                         if (Capture.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
                             return null;
                     return Difficulty.Easy;
@@ -406,7 +378,7 @@ namespace Deltin.CustomGameAutomation
                 }
                 else if (CustomGame.IsSlotInQueue(slot))
                 {
-                    int checkslot = slot - CustomGame.Queueid;
+                    int checkslot = slot - CustomGame.QueueID;
 
                     // 245 is the Y location of the first commendation icon of the player in the first slot in queue. 14 is how many pixels it is to the next commendation icon on the next slot.
                     checkY = 245 + (checkslot * 14);// - Distances.LOBBY_QUEUE_OFFSET;

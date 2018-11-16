@@ -12,6 +12,69 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        private SlotIdentity GetSlotIdentity(int slot)
+        {
+            using (LockHandler.Passive)
+            {
+                if (!AllSlots.Contains(slot))
+                    return null;
+
+                if (slot == 5 && OpenChatIsDefault)
+                    Chat.CloseChat();
+                if (slot == 0)
+                    ResetMouse();
+
+                Point origin = Point.Empty;
+                int width = 0;
+                int height = 0;
+
+                if (IsSlotBlueOrRed(slot))
+                {
+                    width = 158;
+                    height = Distances.LOBBY_SLOT_HEIGHT;
+
+                    int comp = slot;
+                    if (IsSlotBlue(slot))
+                    {
+                        origin = new Point(145, 239);
+                    }
+                    else if (IsSlotRed(slot))
+                    {
+                        origin = new Point(372, 239);
+                        comp -= 6;
+                    }
+                    origin.Y += Distances.LOBBY_SLOT_DISTANCE * comp;
+                }
+                else if (IsSlotSpectatorOrQueue(slot))
+                {
+                    width = 158;
+                    height = Distances.LOBBY_SPECTATOR_SLOT_HEIGHT;
+                    origin = new Point(666, 245);
+
+                    int comp = slot;
+                    if (IsSlotSpectator(slot))
+                    {
+                        origin.Y += FindSpectatorOffset(true);
+                        comp -= SpectatorID;
+                    }
+                    else if (IsSlotInQueue(slot))
+                    {
+                        origin.Y -= Distances.LOBBY_QUEUE_OFFSET;
+                        comp -= QueueID;
+                    }
+                    origin.Y += Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * comp;
+                }
+
+                UpdateScreen();
+                DirectBitmap identity = Capture.Clone(origin.X, origin.Y, width, height);
+
+                if (slot == 5 && OpenChatIsDefault)
+                    Chat.OpenChat();
+
+                return new SlotIdentity(identity, slot);
+            }
+        }
+
         /// <summary>
         /// Gets the slots that have changed.
         /// </summary>
@@ -72,69 +135,6 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private SlotIdentity GetSlotIdentity(int slot)
-        {
-            using (LockHandler.Passive)
-            {
-                if (!AllSlots.Contains(slot))
-                    return null;
-
-                if (slot == 5 && OpenChatIsDefault)
-                    Chat.CloseChat();
-                if (slot == 0)
-                    ResetMouse();
-
-                Point origin = Point.Empty;
-                int width = 0;
-                int height = 0;
-
-                if (IsSlotBlueOrRed(slot))
-                {
-                    width = 158;
-                    height = Distances.LOBBY_SLOT_HEIGHT;
-
-                    int comp = slot;
-                    if (IsSlotBlue(slot))
-                    {
-                        origin = new Point(145, 239);
-                    }
-                    else if (IsSlotRed(slot))
-                    {
-                        origin = new Point(372, 239);
-                        comp -= 6;
-                    }
-                    origin.Y += Distances.LOBBY_SLOT_DISTANCE * comp;
-                }
-                else if (IsSlotSpectatorOrQueue(slot))
-                {
-                    width = 158;
-                    height = Distances.LOBBY_SPECTATOR_SLOT_HEIGHT;
-                    origin = new Point(666, 245);
-
-                    int comp = slot;
-                    if (IsSlotSpectator(slot))
-                    {
-                        origin.Y += FindSpectatorOffset(true);
-                        comp -= Spectatorid;
-                    }
-                    else if (IsSlotInQueue(slot))
-                    {
-                        origin.Y -= Distances.LOBBY_QUEUE_OFFSET;
-                        comp -= Queueid;
-                    }
-                    origin.Y += Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * comp;
-                }
-
-                UpdateScreen();
-                DirectBitmap identity = Capture.Clone(origin.X, origin.Y, width, height);
-
-                if (slot == 5 && OpenChatIsDefault)
-                    Chat.OpenChat();
-
-                return new SlotIdentity(identity, slot);
-            }
-        }
-
         /// <summary>
         /// Tracks player slots.
         /// </summary>
@@ -177,6 +177,30 @@ namespace Deltin.CustomGameAutomation
                         playerTracker.Players[i].PlayerIdentity.Dispose();
                         playerTracker.Players.RemoveAt(i);
                     }
+            }
+        }
+
+        /// <summary>
+        /// Waits for the slots in overwatch to change.
+        /// </summary>
+        /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+        /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
+        public bool WaitForSlotUpdate(int maxtime = 1000)
+        {
+            using (LockHandler.Passive)
+            {
+                SlotInfo slotInfo = new SlotInfo();
+                GetUpdatedSlots(slotInfo);
+
+                Stopwatch time = new Stopwatch();
+                time.Start();
+                while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+                {
+                    if (GetUpdatedSlots(slotInfo).Count > 0)
+                        return true;
+                    Thread.Sleep(10);
+                }
+                return false;
             }
         }
     }

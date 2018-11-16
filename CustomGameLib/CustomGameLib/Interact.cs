@@ -12,15 +12,15 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The number where the queue slots start.
         /// </summary>
-        public const int Queueid = 18;
+        public const int QueueID = 18;
         /// <summary>
         /// The number where the spectator slots start.
         /// </summary>
-        public const int Spectatorid = 12;
+        public const int SpectatorID = 12;
         /// <summary>
         /// The number where the slots end.
         /// </summary>
-        public const int SlotCount = Queueid + 6;
+        public const int SlotCount = QueueID + 6;
 
         /// <summary>
         /// Changes a player's state in Overwatch.
@@ -103,23 +103,20 @@ namespace Deltin.CustomGameAutomation
             return false;
         }
 
-        internal enum Direction
-        {
-            RightDown,
-            RightUp,
-        }
-        internal Direction Getmenudirection(Point point)
+        internal bool MenuPointsDown(Point point)
         {
             cg.UpdateScreen();
 
             // Tests for the blue outline for the first option selection.
             if (Capture.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 5))
-                return Direction.RightDown;
+                return true;
+
             // Tests for the border of the option menu for right/left-up
             else if (Capture.CompareColor(point.X + 5, point.Y - 5, new int[] { 166, 165, 166 }, 50))
-                return Direction.RightUp;
+                return false;
+
             else
-                return Direction.RightDown;
+                return true;
         }
 
         /// <summary>
@@ -148,20 +145,19 @@ namespace Deltin.CustomGameAutomation
                 if (flags.HasFlag(OptionScanFlags.OpenMenu))
                     cg.RightClick(scanLocation);
 
-                // Get direction opened menu is going.
-                Direction dir = Getmenudirection(scanLocation);
-
                 double yincrement = 11.65; // Pixel distance between options.
                 int xstart = scanLocation.X + 14,  // X position to start scanning
                     xmax = 79, // How far on the X axis to scan
                     ystart = 0, // Y position to start scanning
                     ymax = 6; // How far on the Y axis to scan.
 
-                if (dir == Direction.RightDown)
+                bool mpd = MenuPointsDown(scanLocation);
+
+                if (mpd)
                 {
                     ystart = scanLocation.Y + 12;
                 }
-                else if (dir == Direction.RightUp)
+                else
                 {
                     ystart = scanLocation.Y - 18;
                     yincrement = -yincrement;
@@ -189,7 +185,7 @@ namespace Deltin.CustomGameAutomation
                     // Test for menu split
                     if (optionIndex > 0)
                     {
-                        if (dir == Direction.RightDown)
+                        if (mpd)
                         {
                             if (Capture.CompareColor(xstart - 1, yii - 1, new int[] { 102, 102, 103 }, 25))
                             {
@@ -202,7 +198,7 @@ namespace Deltin.CustomGameAutomation
                                 yii += 2;
                             }
                         }
-                        else if (dir == Direction.RightUp)
+                        else
                         {
                             if (Capture.CompareColor(xstart - 1, yii + 8, new int[] { 102, 102, 103 }, 25))
                             {

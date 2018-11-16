@@ -226,11 +226,11 @@ namespace Deltin.CustomGameAutomation
             {
                 if (IsSlotSpectator(slot))
                 {
-                    newPoint.Y += FindSpectatorOffset(noUpdate) + (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - Spectatorid));
+                    newPoint.Y += FindSpectatorOffset(noUpdate) + (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - SpectatorID));
                 }
                 else if (IsSlotInQueue(slot))
                 {
-                    newPoint.Y += (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - Queueid)) - Distances.LOBBY_QUEUE_OFFSET;
+                    newPoint.Y += (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - QueueID)) - Distances.LOBBY_QUEUE_OFFSET;
                 }
             }
 

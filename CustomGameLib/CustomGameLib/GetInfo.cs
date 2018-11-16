@@ -203,7 +203,7 @@ namespace Deltin.CustomGameAutomation
                 }
                 else
                 {
-                    return GetQueueCount(false, noUpdate) + Queueid > slot;
+                    return GetQueueCount(false, noUpdate) + QueueID > slot;
                 }
             }
         }
@@ -277,7 +277,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public static bool IsSlotValid(int slot)
         {
-            return slot >= 0 && slot < Queueid + 6;
+            return slot >= 0 && slot < SlotCount;
         }
         /// <summary>
         /// Returns true if the slot is in blue.
@@ -313,7 +313,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public static bool IsSlotSpectator(int slot)
         {
-            return slot >= 12 && slot < Queueid;
+            return slot >= 12 && slot < QueueID;
         }
         /// <summary>
         /// Returns true if the slot is in queue.
@@ -322,7 +322,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public static bool IsSlotInQueue(int slot)
         {
-            return slot >= Queueid && slot < Queueid + 6;
+            return slot >= QueueID && slot < QueueID + 6;
         }
         /// <summary>
         /// Returns true if the slot is in spectator or queue.
@@ -421,33 +421,6 @@ namespace Deltin.CustomGameAutomation
                 }
 
                 return slots;
-            }
-        }
-
-        /// <summary>
-        /// Waits for the slots in overwatch to change.
-        /// </summary>
-        /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
-        /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
-        public bool WaitForSlotUpdate(int maxtime = 1000)
-        {
-            using (LockHandler.Passive)
-            {
-                Stopwatch time = new Stopwatch();
-                List<int> preslots = AllSlots;
-                time.Start();
-                while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
-                {
-                    List<int> newslots = AllSlots;
-                    if (preslots.Count != newslots.Count)
-                        return true;
-                    else
-                        for (int i = 0; i < preslots.Count; i++)
-                            if (preslots[i] != newslots[i])
-                                return true;
-                    Thread.Sleep(100);
-                }
-                return false;
             }
         }
 
@@ -616,7 +589,7 @@ namespace Deltin.CustomGameAutomation
 
                 // Spectators
                 int offset = cg.FindSpectatorOffset();
-                for (int i = 12; i < CustomGame.Queueid; i++)
+                for (int i = 12; i < CustomGame.QueueID; i++)
                     if (Capture.CompareColor(Points.MODERATOR_ICON_LOCATIONS[i].X, Points.MODERATOR_ICON_LOCATIONS[i].Y + offset, Colors.SPECTATOR_MODERATOR_ICON, fade))
                         return i;
 
