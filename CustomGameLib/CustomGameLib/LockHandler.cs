@@ -23,6 +23,19 @@ using (LockHandler.Interactive)
 using (cg.LockHandler.Interactive)
 
 A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiPassive are accessed outside of a using() statement.
+
+The following will also cause a deadlock:
+using (LockHandler.Interactive)
+{
+    Parallel.For(0, 10, (i) => 
+    {
+        using (LockHandler.Interactive)
+        {
+            // ...
+        }
+    });
+}
+Because the first using statement is waiting for Parallel.For to complete, and the second using statement is waiting for the first using statement to release the lock.
 */
 
 using System;

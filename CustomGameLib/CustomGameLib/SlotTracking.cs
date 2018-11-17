@@ -79,6 +79,7 @@ namespace Deltin.CustomGameAutomation
         /// Gets the slots that have changed.
         /// </summary>
         /// <param name="slotInfo">The data of the last scan.</param>
+        /// <param name="slotFlags">Flags for the slots to check.</param>
         /// <returns>A List of slots that changed.</returns>
         /// <remarks>
         /// <para>The returned slots are slots that have been swapped, removed, or added to the game.</para>
@@ -86,19 +87,19 @@ namespace Deltin.CustomGameAutomation
         /// A new <see cref="SlotInfo"/> object will return every slot.</para>
         /// </remarks>
         /// <seealso cref="SlotInfo"/>
-        public List<int> GetUpdatedSlots(SlotInfo slotInfo)
+        public List<int> GetUpdatedSlots(SlotInfo slotInfo, SlotFlags slotFlags = SlotFlags.All)
         {
             using (LockHandler.Passive)
             {
                 object listLock = new object();
                 List<int> changedSlots = new List<int>();
 
-                var allSlots = AllSlots;
+                var slots = GetSlots(slotFlags);
 
                 for (int slot = 0; slot < SlotCount; slot++)
                 //Parallel.For(0, SlotCount, (slot) =>
                 {
-                    SlotIdentity slotIdentity = allSlots.Contains(slot) ? GetSlotIdentity(slot) : null;
+                    SlotIdentity slotIdentity = slots.Contains(slot) ? GetSlotIdentity(slot) : null;
 
                     bool changed = true;
 
@@ -129,7 +130,7 @@ namespace Deltin.CustomGameAutomation
                     if (changed)
                         lock (listLock)
                             changedSlots.Add(slot);
-                };
+                }
 
                 return changedSlots;
             }
@@ -139,17 +140,17 @@ namespace Deltin.CustomGameAutomation
         /// Tracks player slots.
         /// </summary>
         /// <param name="playerTracker"></param>
-        public void TrackPlayers(PlayerTracker playerTracker)
+        /// <param name="slotFlags">Slots to track.</param>
+        public void TrackPlayers(PlayerTracker playerTracker, SlotFlags slotFlags = SlotFlags.All)
         {
             if (playerTracker == null)
                 throw new ArgumentNullException("playerTracker");
 
             using (LockHandler.Interactive)
             {
-                List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo);
+                List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo, slotFlags | SlotFlags.PlayersOnly & SlotFlags.AIOnly);
 
-                var slots = GetSlots(SlotFlags.All | SlotFlags.PlayersOnly);
-                var aiSlots = AllSlots; foreach (int slot in slots) aiSlots.Remove(slot);
+                var slots = GetSlots(slotFlags | SlotFlags.PlayersOnly & SlotFlags.AIOnly);
 
                 foreach (int slot in changedSlots)
                     if (slots.Contains(slot))
@@ -175,7 +176,7 @@ namespace Deltin.CustomGameAutomation
 
                 // Remove players that left the game.
                 for (int i = playerTracker.Players.Count - 1; i >= 0; i--)
-                    if (!slots.Contains(playerTracker.Players[i].Slot) && !aiSlots.Contains(playerTracker.Players[i].Slot))
+                    if (!slots.Contains(playerTracker.Players[i].Slot))
                     {
                         playerTracker.Players[i].PlayerIdentity.Dispose();
                         playerTracker.Players.RemoveAt(i);
@@ -211,7 +212,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Data about the saved slots.
     /// </summary>
-    /// <seealso cref="CustomGame.GetUpdatedSlots(SlotInfo)"/>
+    /// <seealso cref="CustomGame.GetUpdatedSlots(SlotInfo, SlotFlags)"/>
     public class SlotInfo : IDisposable
     {
         /// <summary>
@@ -247,6 +248,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Tracks player's slots.
     /// </summary>
+    /// <seealso cref="CustomGame.TrackPlayers(PlayerTracker, SlotFlags)"/>
     public class PlayerTracker : IDisposable
     {
         /// <summary>

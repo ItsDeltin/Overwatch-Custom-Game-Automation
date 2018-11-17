@@ -433,11 +433,12 @@
             </summary>
             <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="F:Deltin.CustomGameAutomation.Map.E_Route66"/> and <see cref="F:Deltin.CustomGameAutomation.Map.SKIRM_Route66"/>.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo,Deltin.CustomGameAutomation.SlotFlags)">
             <summary>
             Gets the slots that have changed.
             </summary>
             <param name="slotInfo">The data of the last scan.</param>
+            <param name="slotFlags">Flags for the slots to check.</param>
             <returns>A List of slots that changed.</returns>
             <remarks>
             <para>The returned slots are slots that have been swapped, removed, or added to the game.</para>
@@ -446,11 +447,12 @@
             </remarks>
             <seealso cref="T:Deltin.CustomGameAutomation.SlotInfo"/>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.TrackPlayers(Deltin.CustomGameAutomation.PlayerTracker)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.TrackPlayers(Deltin.CustomGameAutomation.PlayerTracker,Deltin.CustomGameAutomation.SlotFlags)">
             <summary>
             Tracks player slots.
             </summary>
             <param name="playerTracker"></param>
+            <param name="slotFlags">Slots to track.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
             <summary>
@@ -2343,7 +2345,7 @@
             <summary>
             Data about the saved slots.
             </summary>
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo)"/>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetUpdatedSlots(Deltin.CustomGameAutomation.SlotInfo,Deltin.CustomGameAutomation.SlotFlags)"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.SlotInfo.#ctor">
             <summary>
@@ -2359,6 +2361,7 @@
             <summary>
             Tracks player's slots.
             </summary>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.TrackPlayers(Deltin.CustomGameAutomation.PlayerTracker,Deltin.CustomGameAutomation.SlotFlags)"/>
         </member>
         <member name="M:Deltin.CustomGameAutomation.PlayerTracker.#ctor">
             <summary>

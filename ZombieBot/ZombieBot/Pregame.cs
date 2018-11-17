@@ -38,7 +38,7 @@ namespace ZombieBot
                     if (cg.IsDisconnected() || cg.HasExited())
                         return false;
 
-                    cg.TrackPlayers(PlayerTracker);
+                    cg.TrackPlayers(PlayerTracker, SlotFlags.BlueTeamAndRedTeam);
 
                     if (skirmish.ElapsedMilliseconds >= 300 * 1000)
                     {
@@ -310,10 +310,12 @@ namespace ZombieBot
 
         private static void OnSwapMe(CommandData commandData)
         {
-            cg.TrackPlayers(PlayerTracker);
+            cg.TrackPlayers(PlayerTracker, SlotFlags.BlueTeamAndRedTeam);
             int slot = PlayerTracker.SlotFromPlayerIdentity(commandData.PlayerIdentity);
             if (slot != -1)
                 cg.Interact.SwapTeam(slot);
+            else
+                Console.WriteLine("Could not find player");
         }
 
         // Makes each line of text a new line for Overwatch.

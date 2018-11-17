@@ -346,32 +346,30 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        private string AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string word)
+        private string AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string command)
         {
             // Clean up the word. makes something like "] $APPLE " into "$APPLE"
-            int mr = -1;
+            int lowestCommandIndex = -1;
             ListenTo ltd = null;
 
             lock (ListenToAccessLock)
             {
                 for (int i = 0; i < ListenTo.Count; i++)
                 {
-                    int wi = word.IndexOf(ListenTo[i].Command);
-                    if (wi != -1 && (wi < mr || mr == -1))
+                    int commandIndex = command.IndexOf(ListenTo[i].Command);
+                    if (commandIndex != -1 && (commandIndex < lowestCommandIndex || lowestCommandIndex == -1))
                     {
-                        mr = wi;
+                        lowestCommandIndex = commandIndex;
                         ltd = ListenTo[i];
                     }
                 }
             }
 
-            word = word.Substring(mr).Trim();
-
-            //string commandFirstWord = word.Split(' ')[0];
-            //ListenTo ltd = ListenTo.FirstOrDefault(v => v.Command == commandFirstWord);
+            if (lowestCommandIndex != -1)
+                command = command.Substring(lowestCommandIndex).Trim();
 
             // See if command is being listened to. If it is, continue.
-            if (word.Length > 0 && ltd != null && ltd.Listen)
+            if (command.Length > 0 && ltd != null && ltd.Listen)
             {
                 PlayerIdentity pi = null;
                 bool isFriend = false;
@@ -438,14 +436,14 @@ namespace Deltin.CustomGameAutomation
 
                 ChatIdentity ci = new ChatIdentity(executor);
 
-                CommandData commandData = new CommandData(word, GetChannelFromSeed(seed), pi, ci, isFriend);
+                CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), pi, ci, isFriend);
                 if (ltd?.Callback != null)
                     ltd.Callback.Invoke(commandData);
 
-                System.Threading.Thread.Sleep(50);
+                Thread.Sleep(50);
             } // if command is being listened to
 
-            return word;
+            return command;
         }
 
         private void UpdateChatCapture(ref DirectBitmap bmp)
