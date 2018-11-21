@@ -25,7 +25,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void TogglePause()
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (cg.OpenChatIsDefault)
                 {
@@ -48,7 +48,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void PauseGame()
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (!IsPaused())
                     TogglePause();
@@ -59,7 +59,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void UnpauseGame()
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (IsPaused())
                     TogglePause();
@@ -70,7 +70,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public bool IsPaused()
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 cg.UpdateScreen();
                 // Check for the pause text.

@@ -79,7 +79,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void CloseOptionMenu()
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 cg.LeftClick(400, 500, 100);
                 cg.LeftClick(500, 500, 100);
@@ -130,7 +130,7 @@ namespace Deltin.CustomGameAutomation
         /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
         public object MenuOptionScan(Point scanLocation, OptionScanFlags flags, string savelocation, DirectBitmap markup)
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (scanLocation == Point.Empty)
                 {

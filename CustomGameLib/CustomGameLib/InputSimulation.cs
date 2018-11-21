@@ -8,9 +8,25 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        const int WM_LBUTTONDOWN = 0x0201;
+        const int WM_LBUTTONUP = 0x0202;
+
+        const int WM_RBUTTONDOWN = 0x0204;
+        const int WM_RBUTTONUP = 0x0205;
+
+        const int WM_MOUSEMOVE = 0x0200;
+
+        const int WM_ACTIVATE = 0x0006;
+
+        const uint WM_KEYDOWN = 0x100;
+        const uint WM_KEYUP = 0x0101;
+
+        const int WM_CHAR = 0x0102;
+        const int WM_UNICHAR = 0x0109;
+
         // Some of Overwatch's input will not work unless Activate() is called beforehand.
         // The known instances are Opening chat and going to lobby after starting/restarting a game.
-        static internal void Activate(IntPtr hWnd)
+        internal static void Activate(IntPtr hWnd)
         {
             if (!Validate(hWnd))
                 return;
@@ -24,7 +40,7 @@ namespace Deltin.CustomGameAutomation
             Activate(OverwatchHandle);
         }
 
-        static void ScreenToClient(IntPtr hWnd, ref int x, ref int y)
+        private static void ScreenToClient(IntPtr hWnd, ref int x, ref int y)
         {
             if(!Validate(hWnd)) return;
 
@@ -33,19 +49,6 @@ namespace Deltin.CustomGameAutomation
             x = p.X;
             y = p.Y;
         }
-
-        const int WM_LBUTTONDOWN = 0x0201;
-        const int WM_LBUTTONUP = 0x0202;
-
-        const int WM_RBUTTONDOWN = 0x0204;
-        const int WM_RBUTTONUP = 0x0205;
-
-        const int WM_MOUSEMOVE = 0x0200;
-
-        const int WM_ACTIVATE = 0x0006;
-
-        const uint WM_KEYDOWN = 0x100;
-        const uint WM_KEYUP = 0x0101;
 
         internal static Keys[] GetNumberKeys(int value)
         {
@@ -230,9 +233,6 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, WM_KEYDOWN, keycode, 0);
             User32.PostMessage(hWnd, WM_KEYUP, keycode, 0);
         }
-
-        const int WM_CHAR = 0x0102;
-        const int WM_UNICHAR = 0x0109;
 
         internal void TextInput(string text)
         {

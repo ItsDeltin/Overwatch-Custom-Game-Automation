@@ -8,12 +8,12 @@ using (LockHandler.Passive)
 - Usage in CustomGameBase class:
 using (cg.LockHandler.Passive)
 
-Semi-Passive locks is for functions that interact with the Overwatch window but do not go into any other menues allowing scanning to continue as normal. 
-Only 1 semi-passive lock will run at a time.
+Semi-Interactive locks is for functions that interact with the Overwatch window but do not go into any other menues allowing scanning to continue as normal. 
+Only 1 semi-interactive lock will run at a time.
 - Usage in CustomGame class:
-using (LockHandler.SemiPassive)
+using (LockHandler.SemiInteractive)
 - Usage in CustomGameBase class:
-using (cg.LockHandler.SemiPassive)
+using (cg.LockHandler.SemiInteractive)
 
 Interactive locks is for functions that interact with the Overwatch window and go into new menus. This will block passive locks from running during the interactive lock.
 Only 1 interactive lock will run at a time.
@@ -22,14 +22,14 @@ using (LockHandler.Interactive)
 - Usage in CustomGameBase class:
 using (cg.LockHandler.Interactive)
 
-A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiPassive are accessed outside of a using() statement.
+A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiInteractive are accessed outside of a using() statement.
 
 The following will also cause a deadlock:
 using (LockHandler.Interactive)
 {
     Parallel.For(0, 10, (i) => 
     {
-        using (LockHandler.Interactive)
+        using (LockHandler...)
         {
             // ...
         }
@@ -49,25 +49,30 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        internal readonly LockHandler LockHandler = new LockHandler();
+        internal readonly LockHandler LockHandler;
     }
 
     internal class LockHandler
     {
-        public LockHandler() { }
+        private const int PassiveNum = 0;
+        private const int InteractiveNum = 1;
+        private const int SemiInteractiveNum = 2;
 
-        public Locker Passive { get { return new Locker(PassiveI, this); } }
-        public Locker Interactive { get { return new Locker(InteractiveI, this); } }
-        public Locker SemiPassive { get { return new Locker(SemiPassiveI, this); } }
+        public LockHandler(CustomGame cg)
+        {
+            this.cg = cg;
+        }
 
-        private const int PassiveI = 0;
-        private const int InteractiveI = 1;
-        private const int SemiPassiveI = 2;
+        private CustomGame cg;
+
+        public Locker Passive         { get { return new Locker(PassiveNum,         this); } }
+        public Locker Interactive     { get { return new Locker(InteractiveNum,     this); } }
+        public Locker SemiInteractive { get { return new Locker(SemiInteractiveNum, this); } }
 
         private List<PassiveData> PassiveList = new List<PassiveData>(); // List of passive methods running.
         private readonly object AccessLock = new object(); // Lock for accessing the PassiveList list.
 
-        private readonly object InteractiveLock = new object(); // Lock for semi-passive and interactive methods.
+        private readonly object InteractiveLock = new object(); // Lock for semi-interactive and interactive methods.
         private int InteractiveThreadID = -1; // The ID of the interactive thread. -1 for no interactive threads.
 
         private void SetLock(Locker locker)
@@ -76,7 +81,7 @@ namespace Deltin.CustomGameAutomation
             switch (locker.LockType)
             {
                 // Passive:
-                case PassiveI:
+                case PassiveNum:
                     // Add the thread id to the list of passive threads.
                     SpinWait.SpinUntil(() => { return InteractiveThreadID == -1 || InteractiveThreadID == threadID; });
                     lock (AccessLock)
@@ -84,7 +89,7 @@ namespace Deltin.CustomGameAutomation
                     break;
 
                 // Interactive:
-                case InteractiveI:
+                case InteractiveNum:
                     // Ignore calling thread if the calling thread is passive.
                     lock (AccessLock)
                         for (int i = 0; i < PassiveList.Count; i++)
@@ -97,11 +102,19 @@ namespace Deltin.CustomGameAutomation
                     Monitor.Enter(InteractiveLock);
                     SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != threadID && !p.Waiting); });
                     InteractiveThreadID = threadID;
+
+                    if (cg.DisableInputForInteractive)
+                        cg.EnableExternalInput(false);
+
                     break;
 
-                // Semi-Passive:
-                case SemiPassiveI:
+                // Semi-Interactive:
+                case SemiInteractiveNum:
                     Monitor.Enter(InteractiveLock);
+
+                    if (cg.DisableInputForSemiInteractive)
+                        cg.EnableExternalInput(false);
+
                     break;
             }
         }
@@ -111,14 +124,14 @@ namespace Deltin.CustomGameAutomation
             switch (locker.LockType)
             {
                 // Passive:
-                case PassiveI:
+                case PassiveNum:
                     // Remove from passive list.
                     lock (AccessLock)
                         PassiveList.RemoveAll(v => v.ThreadID == threadID);
                     break;
 
                 // Interactive:
-                case InteractiveI:
+                case InteractiveNum:
                     lock (AccessLock)
                         // Stop ignoring passive caller if it exists.
                         for (int i = 0; i < PassiveList.Count; i++)
@@ -128,11 +141,18 @@ namespace Deltin.CustomGameAutomation
                                 break;
                             }
                     InteractiveThreadID = -1;
+
+                    if (cg.DisableInputForInteractive)
+                        cg.EnableExternalInput(true);
+
                     Monitor.Exit(InteractiveLock);
                     break;
 
-                // Semi-Passive:
-                case SemiPassiveI:
+                // Semi-Interactive:
+                case SemiInteractiveNum:
+                    if (cg.DisableInputForSemiInteractive)
+                        cg.EnableExternalInput(true);
+
                     Monitor.Exit(InteractiveLock);
                     break;
             }

@@ -143,6 +143,26 @@ namespace Deltin.CustomGameAutomation
 
             Capture.Save(path);
         }
+
+        /// <summary>
+        /// Positions the Overwatch window to be usable by the CustomGame class.
+        /// </summary>
+        public void SetupOverwatchWindow()
+        {
+            SetupWindow(OverwatchHandle, ScreenshotMethod);
+        }
+
+        private static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
+        {
+            if (!Validate(hWnd))
+                return;
+
+            if (method == ScreenshotMethod.ScreenCopy)
+                User32.SetForegroundWindow(hWnd);
+            else
+                User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
+            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
+        }
     }
 
 #pragma warning disable CS1591
@@ -159,7 +179,7 @@ namespace Deltin.CustomGameAutomation
 #region Private Fields
         private byte[] Bytes;
         private int BytesPerLine;
-        private bool Inverted = false;
+        private readonly bool Inverted = false;
 #endregion
 
 #region Constructors

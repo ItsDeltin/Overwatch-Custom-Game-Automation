@@ -162,7 +162,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="setting">Join setting to select.</param>
         public void SetJoinSetting(Join setting)
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
                 if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
@@ -180,7 +180,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         public void SetGameName(string name)
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (name.Length < 3)
                     throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
@@ -205,7 +205,7 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         public void SetTeamName(Team team, string name)
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (name == null)
                     throw new ArgumentNullException("name", "name cannot be null.");

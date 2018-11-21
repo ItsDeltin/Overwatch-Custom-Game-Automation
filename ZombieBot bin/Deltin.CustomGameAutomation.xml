@@ -60,25 +60,11 @@
             Creates new CustomGame object.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.EnableExternalInput(System.Boolean)">
             <summary>
-            Positions the Overwatch window to be usable by the CustomGame class.
+            Enables or disables external input for the Overwatch window.
             </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput">
-            <summary>
-            Disables input for the Overwatch window.
-            </summary>
-            <remarks>
-            Input must be re-enabled with <see cref="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput"/>.
-            </remarks>
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput"/>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.EnableOverwatchWindowInput">
-            <summary>
-            Enables input for the Overwatch window after disabling it with <see cref="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput"/>.
-            </summary>
-            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.DisableOverwatchWindowInput"/>
+            <param name="enable">Determines if the overwatch window should accept external input.</param>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.GetGameState">
             <summary>
@@ -466,6 +452,11 @@
             Takes a screenshot of the Overwatch window and saves it as an image to the specified path.
             </summary>
             <param name="path">Path to save screenshot to.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
+            <summary>
+            Positions the Overwatch window to be usable by the CustomGame class.
+            </summary>
         </member>
         <member name="E:Deltin.CustomGameAutomation.CustomGame.OnExit">
             <summary>
@@ -1345,16 +1336,6 @@
             The captured screen.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.DefaultKeys">
-            <summary>
-            Overwatch's keybinds.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenCustomGameLobbyKey">
-            <summary>
-            The key used to open the Custom Game lobby. Is Keys.L by default.
-            </summary>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.CustomGameBuilder">
             <summary>
             CustomGame object builder.
@@ -1378,6 +1359,26 @@
         <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DefaultKeys">
             <summary>
             The default keys set in Overwatch's settings.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DisableInputForInteractive">
+            <summary>
+            Prevents the Overwatch window from recieving input during interactive statements.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DisableInputForSemiInteractive">
+            <summary>
+            Prevents the Overwatch window from recieving input during semi-interactive statements.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.DefaultKeys">
+            <summary>
+            Overwatch's keybinds.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenCustomGameLobbyKey">
+            <summary>
+            The key used to open the Custom Game lobby. Is <see cref="F:System.Windows.Forms.Keys.L"/> by default.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">

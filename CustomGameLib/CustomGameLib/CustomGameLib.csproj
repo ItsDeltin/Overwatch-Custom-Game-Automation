@@ -67,7 +67,7 @@
     <Compile Include="LockHandler.cs" />
     <Compile Include="PersistentScanning.cs" />
     <Compile Include="Pause.cs" />
-    <Compile Include="GetInfo.cs" />
+    <Compile Include="PlayerInfo.cs" />
     <Compile Include="InputSimulation.cs" />
     <Compile Include="Interact.cs" />
     <Compile Include="Invite.cs" />

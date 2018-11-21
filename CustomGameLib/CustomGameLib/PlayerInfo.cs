@@ -552,9 +552,6 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        // Private method to check if a hero is chosen.
-        // The screen is not updated, run updateScreen() beforehand.
-        // There is no argument checking.
         bool _HeroChosen(int slot)
         {
             if (CustomGame.IsSlotBlue(slot))
@@ -693,7 +690,7 @@ namespace Deltin.CustomGameAutomation
         {
             using (cg.LockHandler.Passive)
             {
-                if (!(CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot)))
+                if (!CustomGame.IsSlotBlueOrRed(slot))
                     throw new InvalidSlotException(string.Format("Slot {0} is out of range. Slot must be a player on blue or red team.", slot));
 
                 if (!cg.PlayerSlots.Contains(slot))

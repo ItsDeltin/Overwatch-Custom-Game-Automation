@@ -30,10 +30,6 @@ namespace Deltin.CustomGameAutomation
             });
             PersistentScanningTask.Start();
         }
-        private void DisposePersistentScanningThread()
-        {
-            PersistentScan = false;
-        }
         Task PersistentScanningTask = null;
         bool PersistentScan = true;
 

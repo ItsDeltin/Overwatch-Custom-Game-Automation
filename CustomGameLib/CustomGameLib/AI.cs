@@ -264,7 +264,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="RemoveFromGameIfAI(int)"/>
         public bool RemoveAllBotsAuto()
         {
-            using (cg.LockHandler.SemiPassive) // Interactive?
+            using (cg.LockHandler.SemiInteractive) // Interactive?
             {
                 cg.UpdateScreen();
 
@@ -289,7 +289,7 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="Interact.RemoveFromGame(int)"/>
         public bool RemoveFromGameIfAI(int slot)
         {
-            using (cg.LockHandler.SemiPassive)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);

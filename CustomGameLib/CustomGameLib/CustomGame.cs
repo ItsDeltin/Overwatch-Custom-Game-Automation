@@ -15,8 +15,10 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public partial class CustomGame : IDisposable
     {
-        private IntPtr OverwatchHandle = IntPtr.Zero;
-        internal DefaultKeys DefaultKeys;
+        private IntPtr OverwatchHandle { get { return OverwatchProcess.Handle; } }
+        internal readonly DefaultKeys DefaultKeys;
+        internal readonly bool DisableInputForInteractive = false;
+        internal readonly bool DisableInputForSemiInteractive = false;
 
         internal DirectBitmap Capture = null;
         internal bool Disposed = false;
@@ -24,7 +26,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The Overwatch Process being used in the CustomGame class.
         /// </summary>
-        public Process OverwatchProcess { get; private set; } = null;
+        public Process OverwatchProcess { get; private set; }
 
         /// <summary>
         /// Creates new CustomGame object.
@@ -34,31 +36,38 @@ namespace Deltin.CustomGameAutomation
             if (customGameBuilder == null)
                 customGameBuilder = new CustomGameBuilder();
 
+            // Get the overwatch process.
             if (customGameBuilder.OverwatchProcess != null)
-            {
                 OverwatchProcess = customGameBuilder.OverwatchProcess;
-            }
             else
-            {
-                // Get the overwatch process
                 OverwatchProcess = Process.GetProcessesByName("Overwatch").FirstOrDefault();
-            }
 
             if (OverwatchProcess == null)
                 throw new MissingOverwatchProcessException("Could not find any Overwatch processes running.");
 
-            OverwatchHandle = OverwatchProcess.MainWindowHandle;
+            // Initialize the LockHandler.
+            LockHandler = new LockHandler(this);
 
+            // Save the customGameBuilder values to the class.
+            ScreenshotMethod = customGameBuilder.ScreenshotMethod;
+            OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
+            DefaultKeys = customGameBuilder.DefaultKeys;
+            DisableInputForInteractive = customGameBuilder.DisableInputForInteractive;
+            DisableInputForSemiInteractive = customGameBuilder.DisableInputForSemiInteractive;
+
+            // Create a link between OnExit and OverwatchProcess.Exited.
             OverwatchProcess.EnableRaisingEvents = true;
             OverwatchProcess.Exited += InvokeOnExit;
 
+            // Move the window to the correct position on the desktop for scanning and input.
             SetupWindow(OverwatchHandle, ScreenshotMethod);
-            Thread.Sleep(500);
+            Thread.Sleep(250);
 
 #if DEBUG
             SetupDebugWindow();
 #endif
 
+            // Create subclass instances.
             Commands = new Commands(this);
             AI = new AI(this);
             Chat = new Chat(this);
@@ -67,10 +76,6 @@ namespace Deltin.CustomGameAutomation
             Interact = new Interact(this);
             Settings = new Settings(this);
 
-            ScreenshotMethod = customGameBuilder.ScreenshotMethod;
-            OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
-            DefaultKeys = customGameBuilder.DefaultKeys;
-
             if (OpenChatIsDefault)
                 Chat.OpenChat();
 
@@ -78,49 +83,17 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Positions the Overwatch window to be usable by the CustomGame class.
+        /// Enables or disables external input for the Overwatch window.
         /// </summary>
-        public void SetupOverwatchWindow()
+        /// <param name="enable">Determines if the overwatch window should accept external input.</param>
+        public void EnableExternalInput(bool enable)
         {
-            SetupWindow(OverwatchHandle, ScreenshotMethod);
-        }
-
-        private static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
-        {
-            if (!Validate(hWnd))
-                return;
-
-            if (method == ScreenshotMethod.ScreenCopy)
-                User32.SetForegroundWindow(hWnd);
-            else
-                User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
-            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
-        }
-
-        /// <summary>
-        /// Disables input for the Overwatch window.
-        /// </summary>
-        /// <remarks>
-        /// Input must be re-enabled with <see cref="EnableOverwatchWindowInput"/>.
-        /// </remarks>
-        /// <seealso cref="EnableOverwatchWindowInput"/>
-        public void DisableOverwatchWindowInput()
-        {
-            User32.EnableWindow(OverwatchHandle, false);
-        }
-
-        /// <summary>
-        /// Enables input for the Overwatch window after disabling it with <see cref="DisableOverwatchWindowInput"/>.
-        /// </summary>
-        /// <seealso cref="DisableOverwatchWindowInput"/>
-        public void EnableOverwatchWindowInput()
-        {
-            User32.EnableWindow(OverwatchHandle, true);
+            User32.EnableWindow(OverwatchHandle, enable);
         }
 
         internal void ResetMouse()
         {
-            using (LockHandler.SemiPassive)
+            using (LockHandler.SemiInteractive)
             {
                 // There is an Overwatch glitch where exiting some menus will cause the first slot to become highlighted.
                 // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
@@ -172,7 +145,7 @@ namespace Deltin.CustomGameAutomation
             {
                 Disposed = true;
                 Commands.StopScanning();
-                DisposePersistentScanningThread();
+                PersistentScan = false;
 
                 if (Capture != null)
                     Capture.Dispose();
@@ -220,29 +193,18 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Base type for CustomGame interaction members.
         /// </summary>
-        protected CustomGameBase(CustomGame cg)
+        protected internal CustomGameBase(CustomGame cg)
         {
             this.cg = cg;
         }
         /// <summary>
         /// The <see cref="CustomGame"/> object to use.
         /// </summary>
-        protected CustomGame cg;
+        internal CustomGame cg;
         /// <summary>
         /// The captured screen.
         /// </summary>
-        protected DirectBitmap Capture { get { return cg.Capture; } }
-    }
-
-    /// <summary>
-    /// Overwatch's keybinds.
-    /// </summary>
-    public class DefaultKeys
-    {
-        /// <summary>
-        /// The key used to open the Custom Game lobby. Is Keys.L by default.
-        /// </summary>
-        public Keys OpenCustomGameLobbyKey = Keys.L;
+        internal DirectBitmap Capture { get { return cg.Capture; } }
     }
 
     /// <summary>
@@ -266,5 +228,24 @@ namespace Deltin.CustomGameAutomation
         /// The default keys set in Overwatch's settings.
         /// </summary>
         public DefaultKeys DefaultKeys = new DefaultKeys();
+        /// <summary>
+        /// Prevents the Overwatch window from recieving input during interactive statements.
+        /// </summary>
+        public bool DisableInputForInteractive = false;
+        /// <summary>
+        /// Prevents the Overwatch window from recieving input during semi-interactive statements.
+        /// </summary>
+        public bool DisableInputForSemiInteractive = false;
+    }
+
+    /// <summary>
+    /// Overwatch's keybinds.
+    /// </summary>
+    public class DefaultKeys
+    {
+        /// <summary>
+        /// The key used to open the Custom Game lobby. Is <see cref="Keys.L"/> by default.
+        /// </summary>
+        public Keys OpenCustomGameLobbyKey = Keys.L;
     }
 }

@@ -44,16 +44,17 @@ namespace Deltin.CustomGameAutomation
 
         #region Letters
         /*  Each coordinate in the first argument represents the location of a pixel making the letters. For example, the letter C:
-                
+                        V This row is -1 because the first pixel on y0 is a pixel ahead
             -4□■■■□ | -4 ■■■ 
             -3■□□□■ | -3■   ■ 
             -2■□□□□ | -2■    
             -1■□□□■ | -1■   ■
-             0□■■■□ |  0 ■■■  0,0 being the first black pixel on the first row (y=0).
+             0□■■■□ |  0 ■■■  0,0 being the first pixel on the first row (y=0).
             -10123     -10123
                 
-            ScanCommands() scans for letters at the 0 Y coordinate. When it hits a color of the chat, for example orange/tan for match chat, it will
-            check for each letter in the "letters" array below. The most likely letter is chosen.
+            ScanCommands() scans for letters at the y0 coordinate. 
+            When it gets a color of the chat it will check for each letter in the "letters" array below. 
+            The most likely letter is chosen.
         */
         static internal readonly Letter[] letters = new Letter[]
         {
@@ -151,7 +152,7 @@ namespace Deltin.CustomGameAutomation
                 if (!Listen || ListenTo.Count == 0)
                     continue;
 
-                using (var sp = cg.LockHandler.SemiPassive)
+                using (var sp = cg.LockHandler.SemiInteractive)
                 {
                     UpdateChatCapture(ref bmp);
 
