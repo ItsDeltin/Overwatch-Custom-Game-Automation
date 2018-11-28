@@ -77,15 +77,14 @@ namespace Deltin.CustomGameAutomation
 
         private void SetLock(Locker locker)
         {
-            int threadID = Thread.CurrentThread.ManagedThreadId;
             switch (locker.LockType)
             {
                 // Passive:
                 case PassiveNum:
                     // Add the thread id to the list of passive threads.
-                    SpinWait.SpinUntil(() => { return InteractiveThreadID == -1 || InteractiveThreadID == threadID; });
+                    SpinWait.SpinUntil(() => { return InteractiveThreadID == -1 || InteractiveThreadID == locker.ThreadID; });
                     lock (AccessLock)
-                        PassiveList.Add(new PassiveData(threadID));
+                        PassiveList.Add(new PassiveData(locker.ThreadID));
                     break;
 
                 // Interactive:
@@ -93,15 +92,15 @@ namespace Deltin.CustomGameAutomation
                     // Ignore calling thread if the calling thread is passive.
                     lock (AccessLock)
                         for (int i = 0; i < PassiveList.Count; i++)
-                            if (PassiveList[i].ThreadID == threadID)
+                            if (PassiveList[i].ThreadID == locker.ThreadID)
                             {
                                 PassiveList[i].Waiting = true;
                                 break;
                             }
                     // Wait for all passive and interactive methods on other threads to finish.
                     Monitor.Enter(InteractiveLock);
-                    SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != threadID && !p.Waiting); });
-                    InteractiveThreadID = threadID;
+                    SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != locker.ThreadID && !p.Waiting); });
+                    InteractiveThreadID = locker.ThreadID;
 
                     if (cg.DisableInputForInteractive)
                         cg.EnableExternalInput(false);
@@ -120,14 +119,13 @@ namespace Deltin.CustomGameAutomation
         }
         private void Unlock(Locker locker)
         {
-            int threadID = Thread.CurrentThread.ManagedThreadId;
             switch (locker.LockType)
             {
                 // Passive:
                 case PassiveNum:
                     // Remove from passive list.
                     lock (AccessLock)
-                        PassiveList.RemoveAll(v => v.ThreadID == threadID);
+                        PassiveList.RemoveAll(v => v.ThreadID == locker.ThreadID);
                     break;
 
                 // Interactive:
@@ -135,7 +133,7 @@ namespace Deltin.CustomGameAutomation
                     lock (AccessLock)
                         // Stop ignoring passive caller if it exists.
                         for (int i = 0; i < PassiveList.Count; i++)
-                            if (PassiveList[i].ThreadID == threadID)
+                            if (PassiveList[i].ThreadID == locker.ThreadID)
                             {
                                 PassiveList[i].Waiting = false;
                                 break;
@@ -166,8 +164,10 @@ namespace Deltin.CustomGameAutomation
                 LockHandler = lockHandler;
                 LockHandler.SetLock(this);
             }
+            public int ThreadID { get; private set; } = Thread.CurrentThread.ManagedThreadId;
             public int LockType { get; private set; }
             private LockHandler LockHandler;
+
 #if DEBUG
             private bool Disposed = false;
 #endif

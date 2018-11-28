@@ -7,22 +7,9 @@ using Deltin.CustomGameAutomation;
 
 namespace ZombieBot
 {
-    enum JoinType
-    {
-        ServerBrowser,
-        Abyxa,
-        Private
-    }
-
     partial class Program
     {
-        public static int minimumPlayers = 5; // Minimum players before the game starts
-        public static JoinType? Join = null; // The way other players will join the game.
-        public static Abyxa a;
-        public static Random rnd = new Random();
-
-        public static int version = 0;
-        private static Map[] ElimMaps = new Map[]
+        private static readonly Map[] ElimMaps = new Map[]
         {
             Map.ELIM_Ayutthaya,
             Map.ELIM_Ilios_Well,
@@ -35,7 +22,7 @@ namespace ZombieBot
             Map.ELIM_Nepal_Village,
             Map.ELIM_Oasis_CityCenter,
         };
-        private static Map[] TdmMaps = new Map[]
+        private static readonly Map[] TdmMaps = new Map[]
         {
             Map.TDM_Dorado,
             Map.TDM_Eichenwalde,
@@ -49,198 +36,94 @@ namespace ZombieBot
             Map.TDM_Ilios_Ruins
         };
 
-        public static string[] ValidRegions = new string[] { "us", "eu", "kr" };
-
         static void Main(string[] args)
         {
-            string header = "Zombiebot v1.2";
+            string header = "Zombiebot - https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation";
             Console.Title = header;
             Console.WriteLine(header);
 
-            string name = "Zombies - Infection"; // Default name for the Abyxa server.
-            string region = "us"; // Default region for the Abyxa server.
-            bool local = false; // Determines if the Abyxa website is on the local server.
-            OWEvent? owevent = null; // The current overwatch event
-            ScreenshotMethod screenshotMethod = ScreenshotMethod.BitBlt;
-            int preset = -1;
+            Config config = Config.ParseConfig();
 
-            // Parse config file
-            string[] config = null;
-            string filecheck = Extra.GetExecutingDirectory() + "config.txt"; // File location of config file.
-            try
+            Abyxa abyxa = null;
+            if (config.DefaultMode == "abyxa")
             {
-                config = System.IO.File.ReadAllLines(filecheck);
+                abyxa = new Abyxa(config.Name, config.Region, config.Local);
+                abyxa.ZombieServer.MinimumPlayerCount = config.MinimumPlayers;
             }
-            catch (Exception ex)
+            bool serverBrowser = config.DefaultMode == "serverbrowser";
+
+            Task.Run(() =>
             {
-                if (ex is System.IO.DirectoryNotFoundException || ex is System.IO.FileNotFoundException)
-                    Console.WriteLine("Could not find configuration file at '{0}', using default settings.", filecheck);
-                else
-                    Console.WriteLine("Error getting configuration file at '{0}', using default settings.", filecheck);
-            }
-            if (config != null)
-                for (int i = 0; i < config.Length; i++) // For each line in the config file
+                while (true)
                 {
-                    string line = config[i].Trim(' ');
-                    if (line.Length >= 2)
-                        if (line[0] == '/' && line[1] == '/')
-                            continue;
-
-                    // Remove any text after "//"
-                    int index = line.IndexOf("//");
-                    if (index > 0)
-                        line = line.Substring(0, index);
-                    // Split line at "="
-                    string[] lineSplit = line.Split(new string[] { "=" }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    // Trim whitespace
-                    for (int lsi = 0; lsi < lineSplit.Length; lsi++)
-                        lineSplit[lsi] = lineSplit[lsi].Trim(' ');
-
-                    if (lineSplit.Length > 1)
+                    CustomGame cg = new CustomGame(new CustomGameBuilder()
                     {
-                        switch (lineSplit[0])
-                        {
-                            case "local":
-                                {
-                                    if (bool.TryParse(lineSplit[1], out bool set))
-                                        local = set;
-                                }
-                                break;
+                        OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(),
+                        ScreenshotMethod = config.ScreenshotMethod
+                    });
+                    cg.Commands.Listen = true;
 
-                            case "minimumPlayers":
-                                {
-                                    if (int.TryParse(lineSplit[1], out int set) && set >= 0 && set <= 7)
-                                        minimumPlayers = set;
-                                }
-                                break;
+                    cg.ModesEnabled = config.Version == 0 ? Gamemode.Elimination : Gamemode.TeamDeathmatch;
+                    cg.CurrentEvent = config.OverwatchEvent;
 
-                            case "name":
-                                {
-                                    name = lineSplit[1];
-                                }
-                                break;
+                    Map[] maps = config.Version == 0 ? ElimMaps : TdmMaps;
 
-                            case "region":
-                                {
-                                    if (lineSplit[0] == "region" && ValidRegions.Contains(lineSplit[1]))
-                                        region = lineSplit[1];
-                                }
-                                break;
+                    Setup(abyxa, serverBrowser, cg, maps, config.Preset, config.Name);
 
-                            case "DefaultMode":
-                                {
-                                    if (Enum.TryParse(lineSplit[1], out JoinType jointype))
-                                        Join = jointype;
-                                }
-                                break;
-
-                            case "Event":
-                                {
-                                    if (Enum.TryParse(lineSplit[1], out OWEvent setowevent))
-                                        owevent = setowevent;
-                                }
-                                break;
-
-                            case "ScreenshotMethod":
-                                {
-                                    if (Enum.TryParse(lineSplit[1], out ScreenshotMethod set))
-                                        screenshotMethod = set;
-                                }
-                                break;
-
-                            case "version":
-                                {
-                                    if (Int32.TryParse(lineSplit[1], out int set))
-                                        if (set == 0 || set == 1)
-                                            version = set;
-                                }
-                                break;
-
-                            case "presetNum":
-                                {
-                                    if (Int32.TryParse(lineSplit[1], out int set))
-                                        preset = set;
-                                }
-                                break;
-                        }
+                    while (true)
+                    {
+                        if (!Pregame(abyxa, serverBrowser, cg, maps, config.MinimumPlayers))
+                            break;
+                        if (!Ingame(abyxa, serverBrowser, cg, config.Version))
+                            break;
                     }
-                }
 
-            if (Join == null)
-            {
-                string joinmode = Extra.ConsoleInput("Abyxa or server browser (\"abyxa\"/\"sb\"/\"private\"): ", "abyxa", "sb", "private");
-                if (joinmode == "abyxa")
-                    Join = JoinType.Abyxa;
-                else if (joinmode == "sb")
-                    Join = JoinType.ServerBrowser;
-                else if (joinmode == "private")
-                    Join = JoinType.Private;
-            }
-
-            Console.WriteLine("Press return to start.");
-            Console.ReadLine();
-            Console.WriteLine("Starting...");
-
-            a = null;
-            if (Join == JoinType.Abyxa)
-            {
-                a = new Abyxa(name, region, local);
-                a.SetMinimumPlayerCount(minimumPlayers);
-            }
+                    Console.WriteLine("Resetting (1/4)...");
+                    if (!cg.HasExited())
+                    {
+                        cg.OverwatchProcess.Close();
+                    }
+                    Console.WriteLine("Resetting (2/4)...");
+                    cg.Dispose();
+                    Console.WriteLine("Resetting (3/4)...");
+                    Thread.Sleep(30000);
+                    Console.WriteLine("Resetting (4/4)...");
+                } // Bot loop
+            });
 
             while (true)
             {
-                CustomGame cg = new CustomGame(new CustomGameBuilder()
+                Console.Write(">");
+                string[] input = Console.ReadLine().Split(' ');
+                input[0] = input[0].ToLower();
+
+                switch(input[0])
                 {
-                    OverwatchProcess = CustomGame.GetOverwatchProcess() ?? CustomGame.CreateOverwatchProcessAutomatically(new OverwatchProcessInfoAuto()
-                    {
-                        MaxWaitForMenuTime = 30000,
-                        MaxBattlenetStartTime = 30000,
-                        MaxOverwatchStartTime = 30000
-                    }),
-                    ScreenshotMethod = screenshotMethod
-                });
-                cg.Commands.Listen = true;
-
-                // Set the mode enabled
-                if (version == 0)
-                {
-                    cg.ModesEnabled = Gamemode.Elimination;
-                }
-                else if (version == 1)
-                {
-                    cg.ModesEnabled = Gamemode.TeamDeathmatch;
-                }
-
-                // Set event
-                if (owevent == null)
-                    cg.CurrentEvent = cg.GetCurrentEvent();
-                else
-                    cg.CurrentEvent = (OWEvent)owevent;
-
-                var maps = version == 0 ? ElimMaps : TdmMaps;
-
-                Setup(cg, maps, preset, name);
-
-                while (true)
-                {
-                    if (!Pregame(cg, maps))
+                    case "help":
+                        Console.WriteLine("invite <battletag>");
                         break;
-                    if (!Ingame(cg))
+
+                    case "invite":
+                        string invitePlayer = input.ElementAtOrDefault(1);
+                        if (invitePlayer != null)
+                            cg.InvitePlayer(invitePlayer, Team.BlueAndRed);
+                        break;
+
+                    default:
                         break;
                 }
-
-                Console.WriteLine("Resetting (1/4)...");
-                if (!cg.HasExited())
-                {
-                    cg.OverwatchProcess.Close();
-                }
-                Console.WriteLine("Resetting (2/4)...");
-                cg.Dispose();
-                Console.WriteLine("Resetting (3/4)...");
-                Thread.Sleep(30000);
-                Console.WriteLine("Resetting (4/4)...");
-            } // Bot loop
+            }
         } // Main()
+
+        public static string UpdateMap(Abyxa abyxa, CustomGame cg)
+        {
+            string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
+            if (currentMap != null && abyxa != null)
+            {
+                abyxa.ZombieServer.Map = currentMap;
+                abyxa.Update();
+            }
+            return currentMap;
+        }
     }
 }

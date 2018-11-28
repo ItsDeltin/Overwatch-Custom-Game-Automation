@@ -370,11 +370,11 @@ namespace Deltin.CustomGameAutomation
                     UpdateScreen();
 
                 // Add the blue slots
-                if (flags.HasFlag(SlotFlags.BlueTeam))
+                if (flags.HasFlag(SlotFlags.Blue))
                     slots.AddRange(CheckRange(BlueRange, 0, true));
 
                 // Add the red slots
-                if (flags.HasFlag(SlotFlags.RedTeam))
+                if (flags.HasFlag(SlotFlags.Red))
                     slots.AddRange(CheckRange(RedRange, 0, true));
 
                 // Add the spectator slots
@@ -397,7 +397,7 @@ namespace Deltin.CustomGameAutomation
                 // Filter players/AI slots
                 if (flags.HasFlag(SlotFlags.PlayersOnly) || flags.HasFlag(SlotFlags.AIOnly))
                 {
-                    List<int> aiSlots = AI.GetAISlots(flags.HasFlag(SlotFlags.AccurateGetAI));
+                    List<int> aiSlots = AI.GetAISlots(false, true);
 
                     // Make the list AI only.
                     if (flags.HasFlag(SlotFlags.AIOnly))
@@ -420,8 +420,32 @@ namespace Deltin.CustomGameAutomation
                         slots = slots.Where(slot => !deadPlayers.Contains(slot)).ToList();
                 }
 
+                // Filter invited/ingame slots
+                if (flags.HasFlag(SlotFlags.InvitedOnly) || flags.HasFlag(SlotFlags.IngameOnly))
+                {
+                    List<int> invited = GetInvitedSlots();
+
+                    // Make the list invited slots only.
+                    if (flags.HasFlag(SlotFlags.InvitedOnly))
+                        slots = slots.Where(slot => invited.Contains(slot)).ToList();
+                    // Make the list ingame slots only.
+                    if (flags.HasFlag(SlotFlags.IngameOnly))
+                        slots = slots.Where(slot => !invited.Contains(slot)).ToList();
+                }
+
                 return slots;
             }
+        }
+
+        /// <summary>
+        /// Gets the number of slots in thegame.
+        /// </summary>
+        /// <param name="flags">Flags for counting slots.</param>
+        /// <param name="noUpdate"></param>
+        /// <returns></returns>
+        public int GetCount(SlotFlags flags, bool noUpdate = false)
+        {
+            return GetSlots(flags, noUpdate).Count;
         }
 
         internal bool IsDeathmatch(bool noUpdate = false)

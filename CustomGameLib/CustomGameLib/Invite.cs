@@ -131,7 +131,7 @@ namespace Deltin.CustomGameAutomation
             using (LockHandler.Interactive)
             {
                 // Get all non-AI players
-                List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue);
+                List<int> players = GetSlots(SlotFlags.Blue | SlotFlags.Red | SlotFlags.Spectators | SlotFlags.Queue);
 
                 // Close the chat if it is opened
                 if (OpenChatIsDefault && players.Contains(5))
@@ -174,12 +174,12 @@ namespace Deltin.CustomGameAutomation
                                         NotMatching = true;
                             */
 
-                            bool notMatching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, 100, DBCompareFlags.Multithread);
+                            bool matching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, 98, DBCompareFlags.Multithread);
 
                             previousSlotData.Markup.Dispose();
                             previousSlotData.Markup = markup;
 
-                            if (notMatching)
+                            if (!matching)
                             {
                                 previousSlotData.Changes++;
                             }
@@ -255,7 +255,6 @@ namespace Deltin.CustomGameAutomation
             public const int SpectatorRange = 6;
             public const int MarkupFade = 5;
             public const int MSToScan = 250;
-            public const int DifferenceToBeMarkedAsChanged = 100; // 100%
             public const int Player_MarkInvitedWithPercentageChanged = 50; // 50%
             public const int Spectator_MarkInvitedWithPercentageChanged = 20; // 25%
 

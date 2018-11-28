@@ -7,26 +7,15 @@ namespace ZombieBot
 {
     partial class Program
     {
-        public static void Setup(CustomGame cg, Map[] maps, int preset, string name)
+        public static void Setup(Abyxa abyxa, bool serverBrowser, CustomGame cg, Map[] maps, int preset, string name)
         {
             cg.AI.RemoveAllBotsAuto();
 
-            if (Join == JoinType.Abyxa)
-                cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
+            if (abyxa != null)
+                cg.Settings.SetJoinSetting(Join.InviteOnly);
 
             if (preset > -1)
                 cg.Settings.LoadPreset(preset);
-
-            try
-            {
-                cg.Settings.SetGameName(name);
-            }
-            catch (Exception)
-            {
-                cg.Settings.SetGameName("Zombies - Infection");
-            }
-            cg.Settings.SetTeamName(Team.Blue, "Survivors");
-            cg.Settings.SetTeamName(Team.Red, "Zombies");
 
             int moderatorSlot = cg.PlayerInfo.ModeratorSlot();
             if (moderatorSlot != -1)
@@ -45,31 +34,26 @@ namespace ZombieBot
             Thread.Sleep(500);
 
             // Update map on website if jointype is abyxa.
-            if (Join == JoinType.Abyxa)
-            {
-                string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
-                if (currentMap != null)
-                    a.SetMap(currentMap);
-            }
-
-            // Make game public if jointype is serverbrowser and there is less than 7 players.
-            if (Join == JoinType.ServerBrowser)
-            {
-                if (cg.AllCount < 7)
-                {
-                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
-                    MatchIsPublic = true;
-                }
-                else
-                {
-                    cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.InviteOnly);
-                    MatchIsPublic = false;
-                }
-            }
+            UpdateMap(abyxa, cg);
 
             cg.StartGame();
 
             cg.Chat.SwapChannel(Channel.Match);
+
+            // Make game publc if there is less than 7 players.
+            if (serverBrowser)
+            {
+                if (cg.AllCount < 7)
+                {
+                    cg.Settings.SetJoinSetting(Join.Everyone);
+                    MatchIsPublic = true;
+                }
+                else
+                {
+                    cg.Settings.SetJoinSetting(Join.InviteOnly);
+                    MatchIsPublic = false;
+                }
+            }
         }
     }
 }

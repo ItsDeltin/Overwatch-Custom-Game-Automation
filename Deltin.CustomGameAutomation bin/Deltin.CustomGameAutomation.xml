@@ -259,6 +259,14 @@
             </example>
             <seealso cref="T:Deltin.CustomGameAutomation.SlotFlags"/>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetCount(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)">
+            <summary>
+            Gets the number of slots in thegame.
+            </summary>
+            <param name="flags">Flags for counting slots.</param>
+            <param name="noUpdate"></param>
+            <returns></returns>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.PlayerInfo">
             <summary>
             Info about players in an Overwatch custom game.
@@ -1657,12 +1665,12 @@
             </summary>
             <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)"/>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeam">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Blue">
             <summary>
             Get blue slots.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.RedTeam">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.Red">
             <summary>
             Get red slots.
             </summary>
@@ -1692,7 +1700,7 @@
             Get queue slots
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueTeamAndRedTeam">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.BlueAndRed">
             <summary>
             Get blue and red slots.
             </summary>
@@ -1722,9 +1730,14 @@
             Gets alive players only.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.SlotFlags.AccurateGetAI">
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.InvitedOnly">
             <summary>
-            Reliably gets the (non)AI, however is a lot slower.
+            Gets the invited players only.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.SlotFlags.IngameOnly">
+            <summary>
+            Gets the ingame players only.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.Hero">

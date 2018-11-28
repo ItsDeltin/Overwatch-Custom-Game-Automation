@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <version>Elim</version> <!-- Elim/TDM -->
+  <minimumPlayers>5</minimumPlayers> <!-- Max of 7 -->
+  <defaultMode>Abyxa</defaultMode> <!-- Private, ServerBrowser, or Abyxa -->
+  <overwatchEvent>None</overwatchEvent> <!-- None, SummerGames, HalloweenTerror, WinterWonderland, LunarNewYear, Uprising, or Aniversary -->
+  <screenshotMethod>BitBlt</screenshotMethod> <!-- BitBlt or ScreenCopy -->
+  <preset>7</preset> <!-- The preset index of the Zombie gamemode. -->
+  
+  <name>Zombies - Infection</name> <!-- The name of the game that shows up at https://www.abyxa.net/zombie -->
+  <region>us</region> <!-- US, EU, or KR -->
+
+  <local />
+</config>

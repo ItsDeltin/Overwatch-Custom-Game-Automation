@@ -177,9 +177,10 @@ namespace Deltin.CustomGameAutomation
 #endregion
 
 #region Private Fields
-        private byte[] Bytes;
-        private int BytesPerLine;
+        private readonly byte[] Bytes;
+        private readonly int BytesPerLine;
         private readonly bool Inverted = false;
+        private bool Disposed = false;
 #endregion
 
 #region Constructors
@@ -190,7 +191,8 @@ namespace Deltin.CustomGameAutomation
             Width = width;
             Height = height;
             Inverted = inverted;
-            GetBytesPerLine();
+            BytesPerLine = width * 4;
+
         }
         // From hBitmap.
         internal DirectBitmap(IntPtr hdcSrc, IntPtr hBitmap)
@@ -209,17 +211,18 @@ namespace Deltin.CustomGameAutomation
 
             Width = bmi.bmiHeader.biWidth;
             Height = bmi.bmiHeader.biHeight;
-            GetBytesPerLine();
+            BytesPerLine = Width * 4;
 
             Inverted = true;
         }
         // From another db
         internal DirectBitmap(DirectBitmap other)
         {
+            //Msvcrt.memcpy(Bytes, other.Bytes, other.Bytes.Length);
             Bytes = other.Bytes;
             Width = other.Width;
             Height = other.Height;
-            GetBytesPerLine();
+            BytesPerLine = Width * 4;
         }
         // From a bitmap
         internal DirectBitmap(Bitmap bitmap, bool disposeBitmap = false)
@@ -233,7 +236,7 @@ namespace Deltin.CustomGameAutomation
 
             Width = bitmap.Width;
             Height = bitmap.Height;
-            GetBytesPerLine();
+            BytesPerLine = Width * 4;
 
             if (disposeBitmap)
                 bitmap.Dispose();
@@ -426,7 +429,7 @@ namespace Deltin.CustomGameAutomation
 
         public void Dispose()
         {
-
+            Disposed = true;
         }
 #endregion
 
@@ -481,12 +484,6 @@ namespace Deltin.CustomGameAutomation
                     inverted[i + j + 3] = Bytes[Bytes.Length - (i + BytesPerLine) + j + 3];
                 }
             return inverted;
-        }
-
-        // Sets the BytesPerLine field to the amount of bytes per line for the image in the Bytes[] array.
-        private void GetBytesPerLine()
-        {
-            BytesPerLine = Width * 4;
         }
 #endregion
     }

@@ -15,7 +15,6 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public partial class CustomGame : IDisposable
     {
-        private IntPtr OverwatchHandle { get { return OverwatchProcess.Handle; } }
         internal readonly DefaultKeys DefaultKeys;
         internal readonly bool DisableInputForInteractive = false;
         internal readonly bool DisableInputForSemiInteractive = false;
@@ -27,11 +26,12 @@ namespace Deltin.CustomGameAutomation
         /// The Overwatch Process being used in the CustomGame class.
         /// </summary>
         public Process OverwatchProcess { get; private set; }
+        private IntPtr OverwatchHandle { get { return OverwatchProcess.MainWindowHandle; } }
 
         /// <summary>
         /// Creates new CustomGame object.
         /// </summary>
-        public CustomGame(CustomGameBuilder customGameBuilder = default)
+        public CustomGame(CustomGameBuilder customGameBuilder = null)
         {
             if (customGameBuilder == null)
                 customGameBuilder = new CustomGameBuilder();

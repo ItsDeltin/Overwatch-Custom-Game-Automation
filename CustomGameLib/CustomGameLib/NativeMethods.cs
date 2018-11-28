@@ -270,5 +270,7 @@ namespace Deltin.CustomGameAutomation
     {
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern int memcmp(byte[] b1, byte[] b2, long count);
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        internal static extern IntPtr memcpy(byte[] dest, byte[] src, int count);
     }
 }

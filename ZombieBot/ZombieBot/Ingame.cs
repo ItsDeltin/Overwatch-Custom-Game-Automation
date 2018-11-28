@@ -10,8 +10,18 @@ namespace ZombieBot
 {
     partial class Program
     {
-        public static bool Ingame(CustomGame cg)
+        public static bool Ingame(Abyxa abyxa, bool serverBrowser, CustomGame cg, int version)
         {
+            if (abyxa != null)
+            {
+                abyxa.ZombieServer.GameStarted = DateTime.UtcNow.AddMinutes(5.5);
+                abyxa.ZombieServer.Mode = Abyxa.Ingame;
+                abyxa.ZombieServer.PlayerCount = cg.GetCount(SlotFlags.Blue | SlotFlags.Queue);
+                abyxa.Update();
+            }
+
+            cg.Chat.SendChatMessage("Zombies will be released in 30 seconds.");
+
             int[] messageStamps = new int[] { 300, 240, 180, 120, 60, 30, 15 };
             int[] timeStamps = new int[] { 30, 60, 60, 60, 60, 30, 15 };
             int ti = 0;
@@ -29,16 +39,11 @@ namespace ZombieBot
 
             while (true)
             {
-                Thread.Sleep(100);
-
-                if (Join == JoinType.Abyxa)
-                    a.Update();
-
                 if (cg.IsDisconnected() || cg.HasExited())
                     return false;
 
                 // Swap killed survivors to red
-                List<int> survivorsDead = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.DeadOnly);
+                List<int> survivorsDead = cg.GetSlots(SlotFlags.Blue | SlotFlags.DeadOnly);
                 for (int i = 0; i < survivorsDead.Count(); i++)
                     cg.Interact.SwapToRed(survivorsDead[i]);
 
@@ -71,22 +76,8 @@ namespace ZombieBot
 
                     cg.RestartGame();
 
-                    if (Join == JoinType.Abyxa)
-                    {
-                        string currentMap = cg.GetCurrentMap()?.FirstOrDefault()?.ShortName;
-                        if (currentMap != null)
-                            a.SetMap(currentMap);
-                    }
+                    UpdateMap(abyxa, cg);
 
-                    if (cg.AllCount < 7 && Join == JoinType.ServerBrowser)
-                    {
-                        MatchIsPublic = true;
-                        cg.Settings.SetJoinSetting(Deltin.CustomGameAutomation.Join.Everyone);
-                    }
-                    else
-                        MatchIsPublic = false;
-
-                    Thread.Sleep(1000);
                     return true;
                 }
 
@@ -106,14 +97,14 @@ namespace ZombieBot
                         {
                             // remove bots
                             cg.AI.RemoveAllBotsAuto();
-                            cg.Chat.SendChatMessage("Zombies have been released. Good luck.");
+                            cg.Chat.SendChatMessage("Zombies have been released.");
 
                             // Swap blue players who didn't choose a hero to red if the version is TDM.
                             if (version == 1)
                             {
                                 var blueslots = cg.BlueSlots;
                                 for (int i = 0; i < blueslots.Count; i++)
-                                    if (cg.PlayerInfo.IsHeroChosen(blueslots[i]) == false)
+                                    if (!cg.PlayerInfo.IsHeroChosen(blueslots[i]))
                                         cg.Interact.SwapToRed(blueslots[i]);
                             }
                         }
@@ -121,11 +112,13 @@ namespace ZombieBot
                     }
                 }
 
-                if (Join == JoinType.Abyxa)
+                if (abyxa != null)
                 {
-                    a.SetSurvivorCount(cg.BlueCount.ToString());
+                    abyxa.ZombieServer.Survivors = cg.BlueCount;
+                    abyxa.Update();
                 }
 
+                Thread.Sleep(10);
             }
         }
     }

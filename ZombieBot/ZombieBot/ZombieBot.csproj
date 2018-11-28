@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>12906027E36393CA5EC1F74052A36C73AF714A54</ManifestCertificateThumbprint>
@@ -88,12 +90,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abyxa.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Extra.cs" />
     <Compile Include="Ingame.cs" />
     <Compile Include="Pregame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup.cs" />
+    <Compile Include="VoteForMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -115,12 +119,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.txt">
+    <Content Include="config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="overwatch_customgame_infection_settings.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\visual studio 2017\Projects\CGL Testing\ZombieServer\ZombieServer.csproj">
+      <Project>{c0daad68-28fa-47ee-bbbd-ad9d700ce0f2}</Project>
+      <Name>ZombieServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -144,13 +144,13 @@ namespace Deltin.CustomGameAutomation
         public void TrackPlayers(PlayerTracker playerTracker, SlotFlags slotFlags = SlotFlags.All)
         {
             if (playerTracker == null)
-                throw new ArgumentNullException("playerTracker");
+                throw new ArgumentNullException(nameof(playerTracker));
 
             using (LockHandler.Interactive)
             {
-                List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo, slotFlags | SlotFlags.PlayersOnly & SlotFlags.AIOnly);
+                List<int> changedSlots = GetUpdatedSlots(playerTracker.SlotInfo, slotFlags);
 
-                var slots = GetSlots(slotFlags | SlotFlags.PlayersOnly & SlotFlags.AIOnly);
+                var slots = GetSlots(slotFlags);
 
                 foreach (int slot in changedSlots)
                     if (slots.Contains(slot))
@@ -193,18 +193,20 @@ namespace Deltin.CustomGameAutomation
         {
             using (LockHandler.Passive)
             {
-                SlotInfo slotInfo = new SlotInfo();
-                GetUpdatedSlots(slotInfo);
-
-                Stopwatch time = new Stopwatch();
-                time.Start();
-                while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+                using (SlotInfo slotInfo = new SlotInfo())
                 {
-                    if (GetUpdatedSlots(slotInfo).Count > 0)
-                        return true;
-                    Thread.Sleep(10);
+                    GetUpdatedSlots(slotInfo);
+
+                    Stopwatch time = new Stopwatch();
+                    time.Start();
+                    while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+                    {
+                        if (GetUpdatedSlots(slotInfo).Count > 0)
+                            return true;
+                        Thread.Sleep(10);
+                    }
+                    return false;
                 }
-                return false;
             }
         }
     }
@@ -227,7 +229,8 @@ namespace Deltin.CustomGameAutomation
         public void Dispose()
         {
             for (int i = 0; i < SlotIdentities.Length; i++)
-                SlotIdentities[i].Dispose();
+                if (SlotIdentities[i] != null)
+                    SlotIdentities[i].Dispose();
         }
     }
     internal class SlotIdentity : Identity

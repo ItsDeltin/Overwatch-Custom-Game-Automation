@@ -152,7 +152,7 @@ namespace Deltin.CustomGameAutomation
                 if (!Listen || ListenTo.Count == 0)
                     continue;
 
-                using (var sp = cg.LockHandler.SemiInteractive)
+                using (cg.LockHandler.SemiInteractive)
                 {
                     UpdateChatCapture(ref bmp);
 

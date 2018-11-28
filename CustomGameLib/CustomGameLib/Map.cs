@@ -22,7 +22,7 @@ namespace Deltin.CustomGameAutomation
         /// Gets the current Overwatch event. This compares the current date with past event's start and end times, so specific time may be a little off.
         /// </summary>
         /// <returns>The current Overwatch event as the Event enum.</returns>
-        public OWEvent GetCurrentEvent()
+        public static OWEvent GetCurrentEvent()
         {
             DateTime cdt = DateTime.UtcNow;
             DateTime currentdate = new DateTime(1, cdt.Month, cdt.Day);
@@ -301,6 +301,10 @@ namespace Deltin.CustomGameAutomation
         /// <returns>All Map values that are being played. For instance, if Route 66 is being played, this will return <see cref="Map.E_Route66"/> and <see cref="Map.SKIRM_Route66"/>.</returns>
         public Map[] GetCurrentMap()
         {
+            const int MapFade = 10;
+            const int MinimumMapRatio = 98;
+            int MaximumMapIncorrectCount = (int)(Rectangles.LOBBY_MAP.Width * Rectangles.LOBBY_MAP.Height * ((double)(100 - MinimumMapRatio) / 100));
+
             using (LockHandler.Passive)
             {
                 UpdateScreen();
@@ -337,9 +341,6 @@ namespace Deltin.CustomGameAutomation
                 return mostLikely?.Item2.Maps;
             }
         }
-        private static readonly int MapFade = 10;
-        private static readonly int MinimumMapRatio = 98;
-        private static readonly int MaximumMapIncorrectCount = (int)(Rectangles.LOBBY_MAP.Width * Rectangles.LOBBY_MAP.Height * ((double)(100 - MinimumMapRatio) / 100));
     }
 
     /// <summary>

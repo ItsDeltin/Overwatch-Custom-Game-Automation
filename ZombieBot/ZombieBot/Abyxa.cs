@@ -1,87 +1,115 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Net;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using ZombieBot;
 
 namespace ZombieBot
 {
     class Abyxa
     {
-        string abyxaurl = "http://localhost:80/zombie/";
+        private const string CouldNotConnect = "Error: Could not connected to host.";
 
-        string id;
+        public const int Pregame = 0;
+        public const int SettingUpNextGame = 1;
+        public const int Ingame = 2;
 
-        string crypt;
+        public readonly ZombieServer ZombieServer = new ZombieServer();
+        private readonly string URL;
+        private readonly string AccessInfo;
 
-        public Abyxa(string name, string region, bool local = false)
+        private bool Initialized = false;
+
+        public Abyxa(string name, int region, bool local)
         {
-            if (local == false)
-                abyxaurl = "http://www.abyxa.net/zombie/";
-            dynamic r = JsonConvert.DeserializeObject(new WebClient().DownloadString(abyxaurl + "create?name=" + name + "&region=" + region));
-            id = r.id;
-            crypt = r.crypt;
-        }
+            URL = !local ? "http://www.abyxa.net/zombie/" : "http://localhost:80/zombie/";
+            Log($"Server browser host: {URL}");
 
-        public string[] Queuelist()
-        {
-            return WebUtility.HtmlDecode(new WebClient().DownloadString(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&inqueue")).Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-        }
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    string createJson = webClient.DownloadString(string.Format("{0}create?name={1}&region={2}", URL, name, region));
+                    dynamic json = JsonConvert.DeserializeObject(createJson);
 
-        public void RemoveFromQueue(string battletag)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&remove=" + WebUtility.UrlEncode(battletag.Replace("#", "-")), true);
-        }
+                    AccessInfo = string.Format("?id={0}&crypt={1}", json.id, json.crypt);
 
-        public void SetPlayerCount(int playercount)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&playercount=" + playercount);
-        }
-
-        public void SetMode(int mode)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&mode=" + mode);
-        }
-
-        public void SetMap(string map)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&map=" + map);
-        }
-
-        public void SetSurvivorCount(string survivors)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&survivors=" + survivors);
-        }
-
-        public void SetGameEnd(DateTime time)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&gamestart=" + time.ToString());
+                    Initialized = true;
+                }
+                catch (WebException)
+                {
+                    Log(CouldNotConnect);
+                    return;
+                }
+            }
         }
 
         public void Update()
         {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&update");
-        }
+            if (!Initialized)
+                return;
 
-        public void SetInviteCount(int invited)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&invited=" + invited);
-        }
-
-        public void SetMinimumPlayerCount(int minimumPlayerCount)
-        {
-            Req(abyxaurl + "request?id=" + id + "&crypt=" + crypt + "&mpc=" + minimumPlayerCount);
-        }
-
-        private static void Req(string url, bool wait = false)
-        {
-            Task requestTask = Task.Run(() =>
+            using (WebClient webClient = new WebClient())
             {
-                WebClient webClient = new WebClient();
-                webClient.DownloadData(url);
-                webClient.Dispose();
-            });
-            if (wait)
-                requestTask.Wait();
+                try
+                {
+                    webClient.UploadString(FormatURL("serverupdate"), JsonConvert.SerializeObject(ZombieServer));
+                }
+                catch (WebException)
+                {
+                    Log(CouldNotConnect);
+                    return;
+                }
+            }
+        }
+
+        public List<QueueUser> GetQueue()
+        {
+            if (!Initialized)
+                return new List<QueueUser>();
+
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<List<QueueUser>>(webClient.DownloadString(FormatURL("getqueue")));
+                }
+                catch (WebException)
+                {
+                    Log(CouldNotConnect);
+                    return new List<QueueUser>();
+                }
+            }
+        }
+
+        public void RemoveFromQueue(string battletag)
+        {
+            if (!Initialized)
+                return;
+
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    webClient.DownloadData(FormatURL("removefromqueue") + "&battletag=" + WebUtility.UrlEncode(battletag));
+                }
+                catch (WebException)
+                {
+                    Log(CouldNotConnect);
+                    return;
+                }
+            }
+        }
+
+        private string FormatURL(string page)
+        {
+            return URL + page + AccessInfo;
+        }
+
+        private static void Log(string text)
+        {
+            Console.WriteLine("[Abyxa] " + text);
         }
     }
 }

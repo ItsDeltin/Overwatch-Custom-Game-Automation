@@ -257,11 +257,11 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Get blue slots.
         /// </summary>
-        BlueTeam = 1 << 0,
+        Blue = 1 << 0,
         /// <summary>
         /// Get red slots.
         /// </summary>
-        RedTeam = 1 << 1,
+        Red = 1 << 1,
         /// <summary>
         /// Get spectator slots.
         /// </summary>
@@ -285,11 +285,12 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Get blue and red slots.
         /// </summary>
-        BlueTeamAndRedTeam = BlueTeam | RedTeam,
+        BlueAndRed = Blue | Red,
         /// <summary>
         /// Gets blue, red, spectator, and queue slots.
         /// </summary>
-        All = BlueTeam | RedTeam | Spectators | Queue,
+        All = Blue | Red | Spectators | Queue,
+
         /// <summary>
         /// Players only, no AI.
         /// </summary>
@@ -298,6 +299,7 @@ namespace Deltin.CustomGameAutomation
         /// AI only, no players.
         /// </summary>
         AIOnly = 1 << 7,
+
         /// <summary>
         /// Gets dead players only.
         /// </summary>
@@ -306,10 +308,15 @@ namespace Deltin.CustomGameAutomation
         /// Gets alive players only.
         /// </summary>
         AliveOnly = 1 << 9,
+
         /// <summary>
-        /// Reliably gets the (non)AI, however is a lot slower.
+        /// Gets the invited players only.
         /// </summary>
-        AccurateGetAI = 1 << 10,
+        InvitedOnly = 1 << 10,
+        /// <summary>
+        /// Gets the ingame players only.
+        /// </summary>
+        IngameOnly = 1 << 11,
     }
 
     /// <summary>

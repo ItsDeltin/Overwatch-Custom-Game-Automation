@@ -26,16 +26,18 @@ namespace Deltin.CustomGameAutomation
 #if DEBUG
         private void SetupDebugWindow()
         {
-            new Task(() =>
+            Task.Run(() =>
             {
-                debug = new Form();
-                debug.Width = 1500;
-                debug.Height = 1000;
+                debug = new Form
+                {
+                    Width = 1500,
+                    Height = 1000
+                };
                 debug.Show();
                 g = debug.CreateGraphics();
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 Application.Run(debug);
-            }).Start();
+            });
         }
 
         internal Form debug;

@@ -506,7 +506,7 @@ namespace Deltin.CustomGameAutomation
             return EditAI(slot, null, setToDifficulty);
         }
 
-        bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
+        private bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
         {
             using (cg.LockHandler.Interactive)
             {
