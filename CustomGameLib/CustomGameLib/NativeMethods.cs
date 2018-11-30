@@ -138,6 +138,9 @@ namespace Deltin.CustomGameAutomation
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool IsWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
     }
 
     internal static class Gdi32

@@ -21,9 +21,9 @@ namespace Deltin.CustomGameAutomation
             using (LockHandler.Interactive)
             {
                 if (playerName == null)
-                    throw new ArgumentNullException("playerTeam");
+                    throw new ArgumentNullException(nameof(playerName));
                 if (team.HasFlag(Team.Queue))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Queue.");
 
                 UpdateScreen();
                 // check if the add AI button is there.
@@ -89,8 +89,12 @@ namespace Deltin.CustomGameAutomation
             using (LockHandler.Interactive)
             {
                 if (playerName == null)
-                    throw new ArgumentNullException("playerTeam");
-                if (!IsSlotValid(slot) || IsSlotInQueue(slot))
+                    throw new ArgumentNullException(nameof(playerName));
+
+                if (!IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
+
+                if (IsSlotInQueue(slot))
                     throw new InvalidSlotException("slot cannot be in queue.");
 
                 if (AllSlots.Contains(slot))
@@ -123,7 +127,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Gets the slots that are invited but are not ingame yet.
+        /// Gets the slots that are invited.
         /// </summary>
         /// <returns>The list of slots invited.</returns>
         public List<int> GetInvitedSlots()
@@ -203,7 +207,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Gets the number of slots that are invited but are not ingame yet.
+        /// Gets the number of slots that are invited.
         /// </summary>
         /// <returns>The number of slots invited.</returns>
         public int GetInvitedCount()

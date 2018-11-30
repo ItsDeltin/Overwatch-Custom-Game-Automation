@@ -20,13 +20,17 @@ namespace Deltin.CustomGameAutomation
         internal readonly bool DisableInputForSemiInteractive = false;
 
         internal DirectBitmap Capture = null;
-        internal bool Disposed = false;
 
         /// <summary>
         /// The Overwatch Process being used in the CustomGame class.
         /// </summary>
         public Process OverwatchProcess { get; private set; }
         private IntPtr OverwatchHandle { get { return OverwatchProcess.MainWindowHandle; } }
+
+        /// <summary>
+        /// Determines if the Custom Game object was disposed.
+        /// </summary>
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Creates new CustomGame object.
@@ -161,7 +165,7 @@ namespace Deltin.CustomGameAutomation
         public static bool PlayerExists(string battletag)
         {
             if (battletag == null)
-                throw new ArgumentNullException("battletag", "Battletag was null.");
+                throw new ArgumentNullException(nameof(battletag));
 
             // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
             try

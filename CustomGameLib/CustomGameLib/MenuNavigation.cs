@@ -168,5 +168,16 @@ namespace Deltin.CustomGameAutomation
             GoToSettings();
             LeftClick(Points.SETTINGS_MODES);
         }
+
+        internal void GridNavigator(int index, int columns = 4, int keyPressWait = 50)
+        {
+            int column = index % columns;
+            int row = index / columns;
+
+            for (int rowindex = 0; rowindex < row; rowindex++)
+                KeyPress(keyPressWait, Keys.Down);
+            for (int columnindex = 0; columnindex < column; columnindex++)
+                KeyPress(keyPressWait, Keys.Right);
+        }
     }
 }

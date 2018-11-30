@@ -19,7 +19,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public OWEvent CurrentEvent = OWEvent.None;
         /// <summary>
-        /// Gets the current Overwatch event. This compares the current date with past event's start and end times, so specific time may be a little off.
+        /// Gets the current Overwatch event.
         /// </summary>
         /// <returns>The current Overwatch event as the Event enum.</returns>
         public static OWEvent GetCurrentEvent()
@@ -27,7 +27,6 @@ namespace Deltin.CustomGameAutomation
             DateTime cdt = DateTime.UtcNow;
             DateTime currentdate = new DateTime(1, cdt.Month, cdt.Day);
 
-            // new DateTime(1, MONTH, DAY)
             // Summer Games
             DateTime sgStart = new DateTime(1, 8, 8);
             DateTime sgEnd = new DateTime(1, 8, 28);
@@ -40,12 +39,12 @@ namespace Deltin.CustomGameAutomation
             // Lunar New Year
             DateTime lnyStart = new DateTime(1, 2, 8);
             DateTime lnyEnd = new DateTime(1, 3, 5);
-            // Uprising
+            // Archives
             DateTime uStart = new DateTime(1, 4, 11);
             DateTime uEnd = new DateTime(1, 5, 1);
             // Aniversary
-            DateTime aStart = new DateTime(1, 5, 23);
-            DateTime aEnd = new DateTime(1, 6, 12);
+            DateTime aStart = new DateTime(1, 5, 22);
+            DateTime aEnd = new DateTime(1, 6, 11);
 
             if (currentdate >= sgStart && currentdate <= sgEnd)
                 return OWEvent.SummerGames;
@@ -60,7 +59,7 @@ namespace Deltin.CustomGameAutomation
                 return OWEvent.LunarNewYear;
 
             if (currentdate >= uStart && currentdate <= uEnd)
-                return OWEvent.Uprising;
+                return OWEvent.Archives;
 
             if (currentdate >= aStart && currentdate <= aEnd)
                 return OWEvent.Aniversary;
@@ -73,7 +72,6 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
         /// <param name="maps">Maps that should be toggled.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="ModesEnabled"/> is null.</exception>
         /// <remarks>
         /// <see cref="ModesEnabled"/> must be set to use this method. <see cref="CurrentEvent"/> must be set if a seasonal Overwatch event is on.
         /// <include file="docs.xml" path="doc/getMaps" />
@@ -90,17 +88,16 @@ namespace Deltin.CustomGameAutomation
         /// Toggles maps in Overwatch.
         /// </summary>
         /// <param name="modesEnabled">The modes enabled in the overwatch game.</param>
-        /// <param name="currentOverwatchEvent">The current Overwatch event.</param>
-        /// <param name="ta">Determines if all maps should be enabled, disabled or neither before toggling.</param>
+        /// <param name="currentEvent">The current Overwatch event.</param>
+        /// <param name="toggleAction">Determines if all maps should be enabled, disabled or neither before toggling.</param>
         /// <param name="maps">Maps that should be toggled.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="modesEnabled"/> is null.</exception>
         /// <remarks>
         /// <include file="docs.xml" path="doc/getMaps" />
         /// </remarks>
         /// <include file='docs.xml' path='doc/ToggleMap2/example'></include>
         /// <seealso cref="Map"/>
         /// <seealso cref="ToggleMap(ToggleAction, Map[])"/>
-        public void ToggleMap(Gamemode modesEnabled, OWEvent currentOverwatchEvent, ToggleAction ta, params Map[] maps)
+        public void ToggleMap(Gamemode modesEnabled, OWEvent currentEvent, ToggleAction toggleAction, params Map[] maps)
         {
             using (LockHandler.Interactive)
             {
@@ -111,9 +108,9 @@ namespace Deltin.CustomGameAutomation
                 LeftClick(Points.SETTINGS_MAPS, 1000); // Clicks "Maps" button (SETTINGS/MAPS/)
 
                 // Click Disable All or Enable All in custom games if ta doesnt equal ToggleAction.None.
-                if (ta == ToggleAction.DisableAll)
+                if (toggleAction == ToggleAction.DisableAll)
                     LeftClick(Points.SETTINGS_MAPS_DISABLE_ALL, 250);
-                else if (ta == ToggleAction.EnableAll)
+                else if (toggleAction == ToggleAction.EnableAll)
                     LeftClick(Points.SETTINGS_MAPS_ENABLE_ALL, 250);
 
                 // Get the modes enabled state in a bool in alphabetical order.
@@ -145,7 +142,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         Gamemode emi = (Gamemode)Enum.Parse(typeof(Gamemode), Enum.GetNames(typeof(Gamemode))[i]); //enabledmodesindex
 
-                        List<Map> allowedmaps = Map.GetMapsInGamemode(emi, currentOverwatchEvent).ToList();
+                        List<Map> allowedmaps = Map.GetMapsInGamemode(emi, currentEvent).ToList();
                         // ...And for each map...
                         for (int mi = 0; mi < maps.Length; mi++)
                             // ...Check if the maps mode equals the enabledModes index and check if the map is in allowed maps...

@@ -440,21 +440,17 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.Interactive)
             {
                 if (!CustomGame.IsSlotValid(targetSlot))
-                    throw new InvalidSlotException(string.Format("targetSlot argument '{0}' is out of range.", targetSlot));
+                    throw new InvalidSlotException($"{nameof(targetSlot)} '{targetSlot}' is out of range.");
                 if (!CustomGame.IsSlotValid(destinationSlot))
-                    throw new InvalidSlotException(string.Format("destinationSlot argument '{0}' is out of range.", destinationSlot));
+                    throw new InvalidSlotException($"{nameof(destinationSlot)} '{destinationSlot}' is out of range.");
 
                 //cg.//ResetMouse();
 
                 cg.UpdateScreen();
                 if (cg.DoesAddButtonExist())
-                {
                     cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 250);
-                }
                 else
-                {
                     cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 250);
-                }
 
                 Point targetSlotLoc = FindSlotLocation(targetSlot);
                 Point destinationSlotLoc = FindSlotLocation(destinationSlot);
@@ -478,23 +474,15 @@ namespace Deltin.CustomGameAutomation
 
                 // click move
                 if (aistatus)
-                {
                     cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 25);
-                }
                 else
-                {
                     cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 25);
-                }
 
                 // click swap all
                 if (aistatus)
-                {
                     cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_PRESENT, 25);
-                }
                 else
-                {
                     cg.LeftClick(Points.LOBBY_SWAP_ALL_IF_ADD_BUTTON_NOT_PRESENT, 25);
-                }
 
                 ExitMoveMenu();
             }
@@ -508,9 +496,9 @@ namespace Deltin.CustomGameAutomation
 
             Color color = Capture.GetPixel(661, 175);
             if (color.R - color.B > 40)
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 50);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 250);
             else
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 50);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 250);
 
             cg.ResetMouse();
         }

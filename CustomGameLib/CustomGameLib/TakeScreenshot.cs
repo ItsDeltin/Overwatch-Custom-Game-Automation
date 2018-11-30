@@ -37,8 +37,7 @@ namespace Deltin.CustomGameAutomation
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
 
-            if (!Validate())
-                return;
+            Validate(OverwatchHandle);
 
             // This will take a screenshot of the Overwatch window.
             if (Monitor.TryEnter(ScreenshotLock)) // (1) If another thread is already updating the screen...
@@ -63,7 +62,7 @@ namespace Deltin.CustomGameAutomation
 
         private static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
             SetupWindow(hWnd, method);
 
@@ -154,8 +153,7 @@ namespace Deltin.CustomGameAutomation
 
         private static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
         {
-            if (!Validate(hWnd))
-                return;
+            Validate(hWnd);
 
             if (method == ScreenshotMethod.ScreenCopy)
                 User32.SetForegroundWindow(hWnd);
@@ -180,7 +178,6 @@ namespace Deltin.CustomGameAutomation
         private readonly byte[] Bytes;
         private readonly int BytesPerLine;
         private readonly bool Inverted = false;
-        private bool Disposed = false;
 #endregion
 
 #region Constructors
@@ -429,7 +426,6 @@ namespace Deltin.CustomGameAutomation
 
         public void Dispose()
         {
-            Disposed = true;
         }
 #endregion
 

@@ -73,18 +73,46 @@ namespace Deltin.CustomGameAutomation
         /// Loads a preset saved in Overwatch.
         /// </summary>
         /// <param name="preset">Preset to load. 0 is the first preset</param>
-        /// <returns>Returns true if selecting the preset was successful.</returns>
+        /// <returns>Returns true if loading the preset was successful.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset)
         {
             using (cg.LockHandler.Interactive)
             {
                 if (preset < 0)
-                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
+                    throw new ArgumentOutOfRangeException(nameof(preset), preset, "Preset must be equal to or greater than 0.");
 
-                if (!NavigateToPresets()) return false;
+                if (NavigateToPresets() == -1) return false;
 
-                cg.LeftClick(GetPresetLocation(preset));
+                //cg.LeftClick(GetPresetLocation(preset));
+
+                cg.KeyPress(Keys.Tab, Keys.Tab);
+                cg.GridNavigator(preset);
+                cg.KeyPress(Keys.Space);
+                cg.LeftClick(Points.PRESETS_CONFIRM);
+
+                // Go back to lobby
+                cg.GoBack(2);
+                //cg.//ResetMouse();
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Loads a default preset in Overwatch.
+        /// </summary>
+        /// <param name="preset">Preset to load.</param>
+        /// <returns>Returns true if loading the preset was successful.</returns>
+        public bool LoadPreset(DefaultPreset preset)
+        {
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                cg.KeyPress(Keys.Tab, Keys.Tab);
+                cg.GridNavigator(numPresets + (int)preset);
+                cg.KeyPress(Keys.Space);
                 cg.LeftClick(Points.PRESETS_CONFIRM);
 
                 // Go back to lobby
@@ -122,7 +150,7 @@ namespace Deltin.CustomGameAutomation
             return new Point(Points.PRESETS_FIRST_PRESET.X + (Distances.PRESET_DISTANCE_X * (preset % 4)), Points.PRESETS_FIRST_PRESET.Y + (Distances.PRESET_DISTANCE_Y * (preset / 4)));
         }
 
-        private bool NavigateToPresets()
+        private int NavigateToPresets()
         {
             using (cg.LockHandler.Interactive)
             {
@@ -144,11 +172,11 @@ namespace Deltin.CustomGameAutomation
                     else if (numPresets == 0 && wait.ElapsedMilliseconds >= 5000)
                     {
                         cg.GoBack(2);
-                        return false;
+                        return -1;
                     }
                     else if (wait.ElapsedMilliseconds >= 1000)
                     {
-                        return true;
+                        return numPresets;
                     }
 
                     Thread.Sleep(100);
@@ -157,18 +185,30 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Changes who can join.
+        /// Gets and sets who can join the custom game.
         /// </summary>
-        /// <param name="setting">Join setting to select.</param>
-        public void SetJoinSetting(Join setting)
+        public Join JoinSetting
         {
-            using (cg.LockHandler.SemiInteractive)
+            get
             {
-                cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
-                if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
-                if (setting == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
-                if (setting == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
-                //cg.//ResetMouse();
+                using (cg.LockHandler.Passive)
+                {
+                    cg.WaitForColor(Points.LOBBY_JOIN_UPDATING_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX, 2000); // If the dropdown box is updating, wait for it to finish.
+                    if (!cg.Capture.CompareColor(Points.LOBBY_JOIN_FRIENDS_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX)) return Join.FriendsOnly;
+                    else if (!cg.Capture.CompareColor(Points.LOBBY_JOIN_INVITE_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX)) return Join.InviteOnly;
+                    else return Join.Everyone;
+                }
+            }
+            set
+            {
+                using (cg.LockHandler.SemiInteractive)
+                {
+                    cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
+                    if (value == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
+                    if (value == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
+                    if (value == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
+                    //cg.//ResetMouse();
+                }
             }
         }
 
@@ -183,11 +223,11 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.SemiInteractive)
             {
                 if (name.Length < 3)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too low, needs to be at least 3.");
                 if (name.Length > 64)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 64 or lower.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too high, needs to be 64 or lower.");
                 if (name.ToLower().Contains("admin"))
-                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                    throw new ArgumentException($"{nameof(name)} can not have the text \"admin\" in it.", nameof(name));
                 cg.LeftClick(209, 165); // click on game's name
                 cg.TextInput(name);
                 cg.KeyPress(Keys.Return);
@@ -208,15 +248,15 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.SemiInteractive)
             {
                 if (name == null)
-                    throw new ArgumentNullException("name", "name cannot be null.");
+                    throw new ArgumentNullException(nameof(name));
                 if (name.Length < 1)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 1.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too low, needs to be at least 1.");
                 if (name.Length > 15)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 15 or lower.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too high, needs to be 15 or lower.");
                 if (name.ToLower().Contains("admin"))
-                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                    throw new ArgumentException($"{nameof(name)} can not have the text \"admin\" in it.", nameof(name));
                 if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
 
                 if (team.HasFlag(Team.Blue))
                 {
@@ -254,16 +294,16 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(Points.SETTINGS_LOBBY, 100); // Click "lobby" option
 
                 if (blueCount < 0 || blueCount > 6)
-                    throw new ArgumentOutOfRangeException("blueCount", blueCount, "blueCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
+                    throw new ArgumentOutOfRangeException(nameof(blueCount), blueCount, $"{nameof(blueCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 6.");
 
                 if (redCount < 0 || redCount > 6)
-                    throw new ArgumentOutOfRangeException("redCount", redCount, "redCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
+                    throw new ArgumentOutOfRangeException(nameof(redCount), redCount, $"{nameof(redCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 6.");
 
                 if (ffaCount < 0 || ffaCount > 12)
-                    throw new ArgumentOutOfRangeException("ffaCount", ffaCount, "ffaCount is out of range. Value must be greater or equal to 1 and less than or equal to 12.");
+                    throw new ArgumentOutOfRangeException(nameof(ffaCount), ffaCount, $"{nameof(ffaCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
 
                 if (spectatorCount < 0 || spectatorCount > 12)
-                    throw new ArgumentOutOfRangeException("spectatorCount", spectatorCount, "spectatorCount is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
+                    throw new ArgumentOutOfRangeException(nameof(spectatorCount), spectatorCount, $"{nameof(spectatorCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
 
                 if (blueCount != null)
                 {

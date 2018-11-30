@@ -28,8 +28,7 @@ namespace Deltin.CustomGameAutomation
         // The known instances are Opening chat and going to lobby after starting/restarting a game.
         internal static void Activate(IntPtr hWnd)
         {
-            if (!Validate(hWnd))
-                return;
+            Validate(hWnd);
 
             User32.PostMessage(hWnd, 0x0006, 2, 0); // 0x0006 = WM_ACTIVATE 2 = WA_CLICKACTIVE
             User32.PostMessage(hWnd, 0x0086, 1, 0); // 0x0086 = WM_NCACTIVATE
@@ -42,7 +41,7 @@ namespace Deltin.CustomGameAutomation
 
         private static void ScreenToClient(IntPtr hWnd, ref int x, ref int y)
         {
-            if(!Validate(hWnd)) return;
+            Validate(hWnd);
 
             Point p = new Point(x, y);
             User32.ScreenToClient(hWnd, ref p);
@@ -81,7 +80,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void LeftClick(IntPtr hWnd, int x, int y, int waitTime = 500)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
 
             ScreenToClient(hWnd, ref x, ref y);
 
@@ -106,7 +105,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void RightClick(IntPtr hWnd, int x, int y, int waitTime = 500)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
 
             ScreenToClient(hWnd, ref x, ref y);
 
@@ -132,7 +131,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void MoveMouseTo(IntPtr hWnd, int x, int y)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
 
             ScreenToClient(hWnd, ref x, ref y);
             User32.PostMessage(hWnd, WM_MOUSEMOVE, 0, MakeLParam(x, y));
@@ -170,7 +169,7 @@ namespace Deltin.CustomGameAutomation
 
         internal static void KeyDown(IntPtr hWnd, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
@@ -178,7 +177,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void KeyUp(IntPtr hWnd, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYUP, (IntPtr)(key), IntPtr.Zero);
@@ -186,7 +185,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void KeyPress(IntPtr hWnd, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
@@ -196,7 +195,7 @@ namespace Deltin.CustomGameAutomation
         // With waitTime
         internal static void KeyDown(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
@@ -205,7 +204,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void KeyUp(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYUP, (IntPtr)(key), IntPtr.Zero);
@@ -214,7 +213,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void KeyPress(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             foreach (Keys key in keysToSend)
             {
                 User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
@@ -229,7 +228,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void AlternateInput(IntPtr hWnd, int keycode)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             User32.PostMessage(hWnd, WM_KEYDOWN, keycode, 0);
             User32.PostMessage(hWnd, WM_KEYUP, keycode, 0);
         }
@@ -240,7 +239,7 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void TextInput(IntPtr hWnd, string text)
         {
-            if (!Validate(hWnd)) return;
+            Validate(hWnd);
             for (int i = 0; i < text.Length; i++)
             {
                 char letter = text[i];

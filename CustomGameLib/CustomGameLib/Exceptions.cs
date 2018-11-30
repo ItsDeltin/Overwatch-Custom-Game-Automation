@@ -55,7 +55,7 @@ namespace Deltin.CustomGameAutomation
     }
 
     /// <summary>
-    /// Thrown when creating an Overwatch process using <see cref="CustomGame.CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto)"/> or <see cref="CustomGame.CreateOverwatchProcessManually(OverwatchProcessInfoManual)"/> fails.
+    /// Thrown when creating an Overwatch process using <see cref="CustomGame.StartOverwatch(OverwatchInfoAuto)"/> or <see cref="CustomGame.StartOverwatch(OverwatchInfoManual)"/> fails.
     /// </summary>
     public class OverwatchStartFailedException : Exception
     {
@@ -67,5 +67,17 @@ namespace Deltin.CustomGameAutomation
             : base(message)
         {
         }
+    }
+
+    /// <summary>
+    /// Thrown if the Overwatch window is closed.
+    /// </summary>
+    public class OverwatchClosedException : Exception
+    {
+        /// <summary>
+        /// Throws Overwatch closed exception.
+        /// </summary>
+        /// <param name="message">Message to display.</param>
+        public OverwatchClosedException(string message) : base(message) { }
     }
 }

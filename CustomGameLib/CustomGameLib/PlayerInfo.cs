@@ -359,6 +359,7 @@ namespace Deltin.CustomGameAutomation
         /// Console.WriteLine(string.Join(", ", redQueueAISlots));
         /// </code>
         /// </example>
+        /// <seealso cref="GetCount(SlotFlags, bool)"/>
         /// <seealso cref="SlotFlags"/>
         public List<int> GetSlots(SlotFlags flags, bool noUpdate = false)
         {
@@ -438,11 +439,13 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Gets the number of slots in thegame.
+        /// Gets the number of players in the game.
         /// </summary>
         /// <param name="flags">Flags for counting slots.</param>
         /// <param name="noUpdate"></param>
         /// <returns></returns>
+        /// <seealso cref="GetSlots(SlotFlags, bool)"/>
+        /// <seealso cref="SlotFlags"/>
         public int GetCount(SlotFlags flags, bool noUpdate = false)
         {
             return GetSlots(flags, noUpdate).Count;
@@ -476,7 +479,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="noUpdate"></param>
         /// <returns>List of players who are dead.</returns>
-        /// <include file='docs.xml' path='doc/AddAI/example'></include>
+        /// <include file='docs.xml' path='doc/PlayersDead/example'></include>
         public List<int> GetDeadSlots(bool noUpdate = false)
         {
             using (cg.LockHandler.Passive)

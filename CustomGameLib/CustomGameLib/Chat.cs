@@ -60,7 +60,7 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.SemiInteractive)
             {
                 if (text == null)
-                    throw new ArgumentNullException("text", "text was null.");
+                    throw new ArgumentNullException(nameof(text));
 
                 OpenChat();
                 cg.UpdateScreen();

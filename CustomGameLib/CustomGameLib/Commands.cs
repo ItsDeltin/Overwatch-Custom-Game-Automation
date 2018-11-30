@@ -130,7 +130,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Set to true to start listening to commands. Set to false to stop.
         /// </summary>
-        public bool Listen = false;
+        public bool Listen { get; set; }
 
         private Task ScanCommandsTask;
         private bool KeepScanning = true;
@@ -152,77 +152,82 @@ namespace Deltin.CustomGameAutomation
                 if (!Listen || ListenTo.Count == 0)
                     continue;
 
-                using (cg.LockHandler.SemiInteractive)
+                try
                 {
-                    UpdateChatCapture(ref bmp);
-
-                    int[][] chatColors = Chat.ChatColors;
-                    int chatFade = Chat.ChatFade + 10;
-                    DirectBitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height));
-                    for (int x = 0; x < chatMarkup.Width; x++)
-                        for (int y = 0; y < chatMarkup.Height; y++)
-                        {
-                            bool colorFound = false;
-                            for (int i = 0; i < chatColors.Length; i++)
-                                if (chatMarkup.CompareColor(x, y, chatColors[i], chatFade))
-                                {
-                                    colorFound = true;
-                                    break;
-                                }
-                            if (colorFound)
-                                chatMarkup.SetPixel(x, y, Color.Black);
-                            else
-                                chatMarkup.SetPixel(x, y, Color.White);
-                        }
-                    if (PreviousChatMarkup == null)
-                        PreviousChatMarkup = chatMarkup;
-                    else
+                    using (cg.LockHandler.SemiInteractive)
                     {
-                        if (PreviousChatMarkup.CompareTo(chatMarkup, 5, 98, DBCompareFlags.Multithread))
+                        UpdateChatCapture(ref bmp);
+
+                        int[][] chatColors = Chat.ChatColors;
+                        int chatFade = Chat.ChatFade + 10;
+                        DirectBitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height));
+                        for (int x = 0; x < chatMarkup.Width; x++)
+                            for (int y = 0; y < chatMarkup.Height; y++)
+                            {
+                                bool colorFound = false;
+                                for (int i = 0; i < chatColors.Length; i++)
+                                    if (chatMarkup.CompareColor(x, y, chatColors[i], chatFade))
+                                    {
+                                        colorFound = true;
+                                        break;
+                                    }
+                                if (colorFound)
+                                    chatMarkup.SetPixel(x, y, Color.Black);
+                                else
+                                    chatMarkup.SetPixel(x, y, Color.White);
+                            }
+                        if (PreviousChatMarkup == null)
+                            PreviousChatMarkup = chatMarkup;
+                        else
                         {
-                            chatMarkup.Dispose();
-                            continue;
+                            if (PreviousChatMarkup.CompareTo(chatMarkup, 5, 98, DBCompareFlags.Multithread))
+                            {
+                                chatMarkup.Dispose();
+                                continue;
+                            }
+                            else
+                            {
+                                PreviousChatMarkup.Dispose();
+                                PreviousChatMarkup = chatMarkup;
+                            }
+                        }
+
+                        // Scan the second line in the chat.
+                        string command = null;
+                        string realCommand = null;
+
+                        var seed = GetSeed(bmp, 13);
+                        var seedfade = GetSeedFade(bmp, 13);
+                        LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
+                        if (linescan.Word.Contains("]"))
+                        {
+                            // If the first line contains ], scan the second line.
+                            LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
+                            command = linescan.Word + " " + secondlinescan.Word;
+                            realCommand = AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, command);
                         }
                         else
                         {
-                            PreviousChatMarkup.Dispose();
-                            PreviousChatMarkup = chatMarkup;
+                            // Scan the first line in chat.
+                            seed = GetSeed(bmp, 24);
+                            seedfade = GetSeedFade(bmp, 24);
+                            linescan = ScanLine(bmp, 24, seed, seedfade);
+                            if (linescan.Word.Contains("]"))
+                            {
+                                command = linescan.Word;
+                                realCommand = AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, command);
+                            }
                         }
-                    }
-
-                    // Scan the second line in the chat.
-                    string command = null;
-                    string realCommand = null;
-
-                    var seed = GetSeed(bmp, 13);
-                    var seedfade = GetSeedFade(bmp, 13);
-                    LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
-                    if (linescan.Word.Contains("]"))
-                    {
-                        // If the first line contains ], scan the second line.
-                        LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
-                        command = linescan.Word + " " + secondlinescan.Word;
-                        realCommand = AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, command);
-                    }
-                    else
-                    {
-                        // Scan the first line in chat.
-                        seed = GetSeed(bmp, 24);
-                        seedfade = GetSeedFade(bmp, 24);
-                        linescan = ScanLine(bmp, 24, seed, seedfade);
-                        if (linescan.Word.Contains("]"))
-                        {
-                            command = linescan.Word;
-                            realCommand = AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, command);
-                        }
-                    }
 #if DEBUG
-                    ShowScan(bmp, seed, seedfade, string.Format("{0} (from \"{1}\")", realCommand, command));
+                        ShowScan(bmp, seed, seedfade, string.Format("{0} (from \"{1}\")", realCommand, command));
 #endif
+                    }
                 }
+                catch (OverwatchClosedException) { }
             } // while
 
-            bmp.Dispose();
+            if (bmp != null)
+                bmp.Dispose();
         }
 
         // Scans a chat line.

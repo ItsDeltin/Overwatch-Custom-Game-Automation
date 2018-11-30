@@ -22,6 +22,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] LOBBY_CHANGE = new int[] { 126, 158, 181 };
         public static readonly int[] LOBBY_INVITE_PLAYERS_TO_GROUP_MIN = new int[] { 77, 130, 165 };
         public static readonly int[] LOBBY_INVITE_PLAYERS_TO_GROUP_MAX = new int[] { 95, 145, 180 };
+        public static readonly int[] LOBBY_JOIN_BOX = new int[] { 92, 110, 124 };
 
         public static readonly int[] SETTINGS_PRESETS_LOADABLE_PRESET = new int[] { 126, 128, 134 };
 
@@ -52,6 +53,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int LOBBY_START_GAME = 30;
         public static readonly int LOBBY_CHANGE = 50;
         public static readonly int LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = 15;
+        public static readonly int LOBBY_JOIN_BOX = 15;
 
         public static readonly int SETTINGS_PRESETS_LOADABLE_PRESET = 30;
         public static readonly int SETTINGS_MODES_ENABLED = 30;
@@ -89,6 +91,9 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_JOIN_EVERYONE = new Point(280, 220);
         public static readonly Point LOBBY_JOIN_FRIENDS = new Point(280, 240);
         public static readonly Point LOBBY_JOIN_INVITE = new Point(280, 260);
+        public static readonly Point LOBBY_JOIN_FRIENDS_CHECK = new Point(273, 196);
+        public static readonly Point LOBBY_JOIN_INVITE_CHECK = new Point(264, 196);
+        public static readonly Point LOBBY_JOIN_UPDATING_CHECK = new Point(316, 196);
         public static readonly Point LOBBY_MOVE_IF_ADD_BUTTON_PRESENT = new Point(661, 180);
         public static readonly Point LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT = new Point(717, 180);
         public static readonly Point LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT = new Point(716, 180);

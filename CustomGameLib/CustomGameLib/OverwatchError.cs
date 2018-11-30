@@ -56,16 +56,13 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool HasExited()
         {
-            return !Validate();
+            return User32.IsWindowVisible(OverwatchHandle);
         }
 
-        internal bool Validate()
+        static internal void Validate(IntPtr hwnd)
         {
-            return User32.IsWindow(OverwatchHandle);
-        }
-        static internal bool Validate(IntPtr hwnd)
-        {
-            return User32.IsWindow(hwnd);
+            if (!User32.IsWindowVisible(hwnd))
+                throw new OverwatchClosedException("Overwatch was closed.");
         }
     }
 }

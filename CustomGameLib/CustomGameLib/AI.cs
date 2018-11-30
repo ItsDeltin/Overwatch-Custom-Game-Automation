@@ -42,10 +42,10 @@ namespace Deltin.CustomGameAutomation
             using (cg.LockHandler.Interactive)
             {
                 if (team.HasFlag(Team.Queue) || team.HasFlag(Team.Spectator))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
 
                 if (count < -1)
-                    throw new ArgumentOutOfRangeException("count", count, "AI count must be at least -1.");
+                    throw new ArgumentOutOfRangeException(nameof(count), count, "AI count must be at least -1.");
 
                 cg.UpdateScreen();
 

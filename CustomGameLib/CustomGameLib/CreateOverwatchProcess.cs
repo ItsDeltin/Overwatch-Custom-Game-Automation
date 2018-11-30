@@ -11,16 +11,15 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        // WIP way to create overwatch process without username and password.
         /// <summary>
         /// Creates an Overwatch process using the currently logged in battle.net account.
         /// </summary>
         /// <param name="processInfo">Parameters for creating the process.</param>
         /// <returns>The created Overwatch process.</returns>
-        public static Process CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto processInfo = null)
+        public static Process StartOverwatch(OverwatchInfoAuto processInfo = null)
         {
             if (processInfo == null)
-                processInfo = new OverwatchProcessInfoAuto();
+                processInfo = new OverwatchInfoAuto();
 
             if (!File.Exists(processInfo.BattlenetExecutableFilePath))
                 throw new FileNotFoundException(string.Format("Battle.net.exe's executable at {0} was not found. " +
@@ -127,14 +126,14 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Creates a new Overwatch process by logging into an account. I strongly reccommend using <see cref="CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto)"/> instead.
+        /// Creates a new Overwatch process by logging into an account. Since this requires your username and password, I recommend using <see cref="StartOverwatch(OverwatchInfoAuto)"/> instead.
         /// </summary>
         /// <param name="processInfo">Parameters for creating the process.</param>
         /// <returns>The created Overwatch process.</returns>
-        public static Process CreateOverwatchProcessManually(OverwatchProcessInfoManual processInfo)
+        public static Process StartOverwatch(OverwatchInfoManual processInfo)
         {
             if (processInfo == null)
-                throw new ArgumentNullException("processInfo");
+                throw new ArgumentNullException(nameof(processInfo));
 
             int maxWaitTime = 5000;
 
@@ -321,7 +320,7 @@ namespace Deltin.CustomGameAutomation
             ChangeVideoSettings(settingsFilePath, settings.ToArray(), setTo.ToArray());
         }
 
-        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, DirectBitmap bmp, Exception ex)
+        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchInfoManual info, Process process, DirectBitmap bmp, Exception ex)
         {
             if (info.CloseOverwatchProcessOnFailure)
             {
@@ -392,7 +391,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Data for creating an Overwatch process manually.
     /// </summary>
-    public class OverwatchProcessInfoManual
+    public class OverwatchInfoManual
     {
         /// <summary>
         /// Data for creating an Overwatch process manually.
@@ -400,7 +399,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="username">Username of the account for the new Overwatch process.</param>
         /// <param name="password">Password of the account for the new Overwatch process.</param>
         /// <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
-        public OverwatchProcessInfoManual(string username, string password, string authenticator = null)
+        public OverwatchInfoManual(string username, string password, string authenticator = null)
         {
             Username = username;
             Password = password;
@@ -449,46 +448,46 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Data for creating an Overwatch process automatically.
     /// </summary>
-    public class OverwatchProcessInfoAuto
+    public class OverwatchInfoAuto
     {
         /// <summary>
         /// Data for creating an Overwatch process automatically.
         /// </summary>
-        public OverwatchProcessInfoAuto()
+        public OverwatchInfoAuto()
         {
 
         }
 
         /// <summary>
-        /// If true, the Overwatch process will automatically create a Custom Game.
+        /// If true, the Overwatch process will automatically create a Custom Game. Default is true.
         /// </summary>
         public bool AutomaticallyCreateCustomGame = true;
         /// <summary>
-        /// Closes the Overwatch process if it fails to log in.
+        /// Closes the Overwatch process if it fails to log in. Default is true.
         /// </summary>
         public bool CloseOverwatchProcessOnFailure = true;
         /// <summary>
-        /// The path to the battle.net executable. Defaults to "C:\Program Files (x86)\Blizzard App\Battle.net.exe"
+        /// The path to the battle.net executable. Default is "C:\Program Files (x86)\Blizzard App\Battle.net.exe"
         /// </summary>
         public string BattlenetExecutableFilePath = @"C:\Program Files (x86)\Blizzard App\Battle.net.exe";
         /// <summary>
-        /// The path to Overwatch's settings file. Defaults to "C:\Users\(EnvironmentName)\Documents\Overwatch\Settings\Settings_v0.ini"
+        /// The path to Overwatch's settings file. Default is "C:\Users\(EnvironmentName)\Documents\Overwatch\Settings\Settings_v0.ini"
         /// </summary>
         public string OverwatchSettingsFilePath = @"C:\Users\" + Environment.UserName + @"\Documents\Overwatch\Settings\Settings_v0.ini";
         /// <summary>
-        /// The method that is used to take screenshots of the Overwatch window.
+        /// The method that is used to take screenshots of the Overwatch window. Default is <see cref="ScreenshotMethod.BitBlt"/>
         /// </summary>
         public ScreenshotMethod ScreenshotMethod = ScreenshotMethod.BitBlt;
         /// <summary>
-        /// The maximum amount of time to wait for the menu to load.
+        /// The maximum amount of time to wait for the menu to load. Default is 20000.
         /// </summary>
         public int MaxWaitForMenuTime = 20000;
         /// <summary>
-        /// The maximum amount of time to wait for Overwatch to start.
+        /// The maximum amount of time to wait for Overwatch to start. Default is 10000.
         /// </summary>
         public int MaxOverwatchStartTime = 10000;
         /// <summary>
-        /// The maximum amount of time to wait for Battle.net to start.
+        /// The maximum amount of time to wait for Battle.net to start. Default is 10000.
         /// </summary>
         public int MaxBattlenetStartTime = 10000;
     }

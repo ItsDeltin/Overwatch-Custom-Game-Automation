@@ -223,6 +223,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Result info of GetHero().
     /// </summary>
+    /// <seealso cref="PlayerInfo.GetHero(int, out HeroResultInfo)"/>
     public enum HeroResultInfo
     {
         /// <summary>
@@ -242,7 +243,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         SlotEmpty,
         /// <summary>
-        /// Could not tell what hero the player is playing. Chances are if you get this it is a bug with GetHero().
+        /// Could not tell what hero the player is playing. Usually if you get this it is a bug with <see cref="PlayerInfo.GetHero(int, out HeroResultInfo)"/>.
         /// </summary>
         NoCompatibleHeroFound
     }
@@ -251,6 +252,7 @@ namespace Deltin.CustomGameAutomation
     /// Flags for obtaining slots.
     /// </summary>
     /// <seealso cref="CustomGame.GetSlots(SlotFlags, bool)"/>
+    /// <seealso cref="CustomGame.GetCount(SlotFlags, bool)"/>
     [Flags]
     public enum SlotFlags
     {
@@ -445,6 +447,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Flags for scanning an option menu in Overwatch.
     /// </summary>
+    /// <seealso cref="Interact.MenuOptionScan(System.Drawing.Point, OptionScanFlags, string, DirectBitmap)"/>
     [Flags]
     public enum OptionScanFlags
     {
@@ -489,7 +492,7 @@ namespace Deltin.CustomGameAutomation
         HalloweenTerror,
         WinterWonderland,
         LunarNewYear,
-        Uprising,
+        Archives,
         Aniversary
 #pragma warning restore CS1591
     }
@@ -516,6 +519,35 @@ namespace Deltin.CustomGameAutomation
         YetiHunter = 1 << 12 // yh
 #pragma warning restore CS1591
     }
+
+    /// <summary>
+    /// Default presets in Overwatch.
+    /// </summary>
+    /// <seealso cref="Settings.LoadPreset(DefaultPreset)"/>
+    public enum DefaultPreset
+    {
+#pragma warning disable CS1591
+        Standard_1v1LimitedDuel,
+        Standard_1v1MysteryDuel,
+        Standard_3v3Elimination,
+        Standard_LockoutElimination,
+        Standard_4v4TeamDeatchmatch,
+        Standard_6v6LockoutElimination,
+        Standard_8PlayerFFADeathmatch,
+        Standard_Assault,
+        Standard_AssaultEscort,
+        Standard_CaptureTheFlag,
+        Standard_CaptureTheFlag2017,
+        Standard_Competitive,
+        Standard_Control,
+        Standard_Escort,
+        Standard_QuickPlay,
+
+        Brawl_MysteryHeroes,
+        Brawl_NoLimits,
+        Brawl_TotalMayhem
+#pragma warning restore CS1591
+    }
     #endregion
 
     #region Internal Enums
@@ -526,6 +558,12 @@ namespace Deltin.CustomGameAutomation
         Multithread = 1 << 1,
         IgnoreBlack = 1 << 2,
         IgnoreWhite = 1 << 3
+    }
+    internal enum SettingType
+    {
+        value,
+        toggle,
+        dropdown
     }
     #endregion
 }

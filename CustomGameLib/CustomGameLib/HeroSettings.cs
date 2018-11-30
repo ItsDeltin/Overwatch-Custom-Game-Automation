@@ -15,13 +15,17 @@ namespace Deltin.CustomGameAutomation
         /// <param name="team">Team to change roster for.</param>
         /// <param name="heroes">Heroes to toggle.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="heroes"/> is null.</exception>
         /// <include file='docs.xml' path='doc/setHeroRoster/example'></include>
         public void SetHeroRoster(ToggleAction ta, Team team, params Hero[] heroes)
         {
             using (LockHandler.Interactive)
             {
                 if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
+
+                if (heroes == null)
+                    throw new ArgumentNullException(nameof(heroes));
 
                 GoToSettings();
                 LeftClick(Points.SETTINGS_HEROES); // click heroes
@@ -78,65 +82,6 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private enum SettingType
-        {
-            value,
-            toggle,
-            dropdown
-        }
-        static List<HeroSettingData>[] HeroSettings = HeroSettingData.GetSettings(); // HeroSettings[hero][settingindex]
-        private class HeroSettingData
-        {
-            public string setting;
-            public SettingType type;
-            private HeroSettingData(string setting, SettingType type)
-            {
-                this.setting = setting;
-                this.type = type;
-            }
-            public static List<HeroSettingData>[] GetSettings()
-            {
-                // Read hero_settings resource. Each value in array is a line in hero_settings.txt.
-                string[] settings = Properties.Resources.hero_settings.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                // List of settings for each hero.                                                 V +1 due to general settings.
-                List<HeroSettingData>[] settinglist = new List<HeroSettingData>[Enum.GetNames(typeof(Hero)).Length + 1];
-                for (int i = 0, heroindex = -1; i < settings.Length; i++)
-                {
-                    if (settings[i].Length >= 1) // Make sure line is not empty
-                    {
-                        if (settings[i][0] == '-')
-                        {
-                            heroindex++; // Index of hero to add settings to. 0 = General, 1 = Ana, 2 = Bastion...27 = Zenyatta.
-                            settinglist[heroindex] = new List<HeroSettingData>();
-                        }
-                        if (heroindex != -1 && settings[i][0] != '-')
-                        {
-                            // Add setting to list
-                            string[] settingsData = settings[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                            HeroSettingData add = new HeroSettingData(
-                                    settingsData[0],
-                                    (SettingType)Enum.Parse(typeof(SettingType), settingsData[1])
-                                    );
-                            settinglist[heroindex].Add(add);
-                        }
-                    }
-                }
-                return settinglist;
-            }
-        }
-
-        private SettingType? GetSettingType(Hero? hero, string setting)
-        {
-            // Get the setting type for a setting for a hero. Return null if the setting does not exist.
-            int heroid = 0;
-            if (hero != null)
-                heroid = (int)hero + 1;
-            for (int i = 0; i < HeroSettings[heroid].Count; i++)
-                if (HeroSettings[heroid][i].setting == setting)
-                    return HeroSettings[heroid][i].type;
-            return null;
-        }
-
         /// <summary>
         /// Change individual hero settings.
         /// </summary>
@@ -152,45 +97,15 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="SetHero"/>
         public void SetHeroSettings(params SetHero[] herodata)
         {
-            int keyPressWait = 50;
+            const int keyPressWait = 50;
             using (LockHandler.Interactive)
             {
                 if (herodata == null)
-                    throw new ArgumentNullException("herodata", "herodata was null.");
-
-                // Throw exception if any of the set or setto values in herodata are not the same length.
-                for (int i = 0; i < herodata.Length; i++)
-                    if (herodata[i].Set.Length != herodata[i].SetTo.Length)
-                        throw new ArgumentOutOfRangeException("herodata", "The values \"set\" and \"setto\" must be equal length.");
-                // Throw exception if any of the settings do not exist for their respective heros or if a set's respective setto is not the correct type.
-                foreach (SetHero hero in herodata)
-                    for (int i = 0; i < hero.Set.Length; i++)
-                    {
-                        SettingType? st = GetSettingType(hero.Hero, hero.Set[i]);
-                        // If the setting does not exist.
-                        if (st == null)
-                        {
-                            if (hero.Hero != null)
-                                throw new InvalidSetheroException(string.Format("The setting \"{0}\" does not exist in {1}'s settings.", hero.Set[i], hero.Hero.ToString()));
-                            else
-                                throw new InvalidSetheroException(string.Format("The setting \"{0}\" does not exist in the general settings.", hero.Set[i]));
-                        }
-                        // For setting types that require a boolean.
-                        if (st == SettingType.toggle)
-                        {
-                            if (hero.SetTo[i] is bool == false)
-                                throw new InvalidSetheroException(string.Format("The setting \"{0}\" requires a boolean on index '{1}' of setto.", hero.Set[i], i));
-                        }
-                        // For setting types that require an integer.
-                        else if (st == SettingType.value || st == SettingType.dropdown)
-                        {
-                            if (hero.SetTo[i] is int == false)
-                                throw new InvalidSetheroException(string.Format("The setting \"{0}\" requires a integer on index '{1}' of setto.", hero.Set[i], i));
-                        }
-                    }
+                    throw new ArgumentNullException(nameof(herodata));
 
                 if (OpenChatIsDefault)
                     Chat.CloseChat();
+
                 GoToSettings(); // Open settings (SETTINGS/)
                 LeftClick(Points.SETTINGS_HEROES); // click heroes (SETTINGS/HEROES/)
                                                    // For each hero to change settings for
@@ -210,14 +125,7 @@ namespace Deltin.CustomGameAutomation
                         heroid = (int)hero.Hero;
 
                         KeyPress(Keys.Down, Keys.Down);
-
-                        int column = heroid % 4;
-                        int row = heroid / 4;
-
-                        for (int rowindex = 0; rowindex < row; rowindex++)
-                            KeyPress(keyPressWait, Keys.Down);
-                        for (int columnindex = 0; columnindex < column; columnindex++)
-                            KeyPress(keyPressWait, Keys.Right);
+                        GridNavigator(heroid);
                         KeyPress(500, Keys.Space);
 
                         heroid += 1;
@@ -246,7 +154,7 @@ namespace Deltin.CustomGameAutomation
                         // Make topmost option highlighted
                         KeyPress(Keys.Down);
                         Thread.Sleep(keyPressWait);
-                        // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\TopOption.png" scale="0.55" />
+                        // <image url="$(ProjectDir)\ImageComments\HeroSettings.cs\TopOption.png" scale="0.55" />
                         UpdateScreen();
                         // Check if the second option is highlighted.
                         if (Capture.CompareColor(422, 200, Colors.WHITE, 10))
@@ -259,8 +167,8 @@ namespace Deltin.CustomGameAutomation
 
                     // Get the last setting to change.
                     int max = 0;
-                    for (int si = 0; si < HeroSettings[heroid].Count; si++)
-                        if (hero.Set.Contains(HeroSettings[heroid][si].setting))
+                    for (int si = 0; si < HeroSettings.HeroSettingsList[heroid].Count; si++)
+                        if (hero.Set.Contains(HeroSettings.HeroSettingsList[heroid][si].Setting))
                             max = si;
                     max += 1;
 
@@ -269,11 +177,11 @@ namespace Deltin.CustomGameAutomation
                     {
                         // Test if current setting selected is a setting that needs to be changed.
                         for (int setSettingIndex = 0; setSettingIndex < hero.Set.Length; setSettingIndex++)
-                            if (hero.Set[setSettingIndex] == HeroSettings[heroid][si].setting)
+                            if (hero.Set[setSettingIndex] == HeroSettings.HeroSettingsList[heroid][si].Setting)
                             {
-                                // <image url="$(ProjectDir)\ImageComments\SelectHero.cs\SettingType.png" scale="0.5" />
+                                // <image url="$(ProjectDir)\ImageComments\HeroSettings.cs\SettingType.png" scale="0.5" />
                                 // If the setting selected a toggle setting...
-                                if (HeroSettings[heroid][si].type == SettingType.toggle)
+                                if (HeroSettings.HeroSettingsList[heroid][si].Type == SettingType.toggle)
                                 {
                                     // Check what the toggle setting selected is set to.
                                     bool value = (bool)GetHighlightedSettingValue(true);
@@ -286,7 +194,7 @@ namespace Deltin.CustomGameAutomation
                                     }
                                 }
                                 // If the selected setting is a dropdown menu...
-                                else if (HeroSettings[heroid][si].type == SettingType.dropdown)
+                                else if (HeroSettings.HeroSettingsList[heroid][si].Type == SettingType.dropdown)
                                 {
                                     KeyPress(Keys.Space);
                                     Thread.Sleep(keyPressWait);
@@ -360,17 +268,107 @@ namespace Deltin.CustomGameAutomation
         /// <param name="hero">Hero to change settings for. Set to null for general settings.</param>
         /// <param name="team">Team to change hero settings for.</param>
         /// <param name="set">Array of settings to change. Must be the same size as setto.</param>
-        /// <param name="setto">Array to change settings to. Must be the same size as set.</param>
+        /// <param name="setTo">Array to change settings to. Must be the same size as set.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="team"/> is Spectator or Queue.</exception>
-        public SetHero(Hero? hero, Team team, string[] set, object[] setto)
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="set"/> or <paramref name="setTo"/> is null.</exception>
+        public SetHero(Hero? hero, Team team, string[] set, object[] setTo)
         {
             if (Team.HasFlag(Team.Spectator) || Team.HasFlag(Team.Queue))
-                throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
+
+            if (set == null)
+                throw new ArgumentNullException(nameof(set));
+
+            if (setTo == null)
+                throw new ArgumentNullException(nameof(setTo));
+
+            if (set.Length != setTo.Length)
+                throw new ArgumentException($"{nameof(set)} and {nameof(setTo)} must be the same length.");
+
+            for (int i = 0; i < set.Length; i++)
+            {
+                SettingType? settingType = HeroSettings.GetSettingType(hero, set[i]);
+                // If the setting does not exist.
+                if (settingType == null)
+                {
+                    if (hero != null)
+                        throw new InvalidSetheroException($"The setting \"{set[i]}\" does not exist in {hero.ToString()}'s settings.");
+                    else
+                        throw new InvalidSetheroException($"The setting \"{set[i]}\" does not exist in the general settings.");
+                }
+                // For setting types that require a boolean.
+                if (settingType == SettingType.toggle)
+                {
+                    if (setTo[i] is bool == false)
+                        throw new InvalidSetheroException($"The setting \"{set[i]}\" requires a boolean.");
+                }
+                // For setting types that require an integer.
+                else if (settingType == SettingType.value || settingType == SettingType.dropdown)
+                {
+                    if (setTo[i] is int == false)
+                        throw new InvalidSetheroException($"The setting \"{set[i]}\" requires a integer.");
+                }
+            }
 
             Hero = hero;
             Team = team;
             Set = set;
-            SetTo = setto;
+            SetTo = setTo;
+        }
+    }
+
+    internal class HeroSettings
+    {
+        public static List<HeroSettings>[] HeroSettingsList = GetSettings(); // HeroSettings[hero][settingindex]
+
+        private HeroSettings(string setting, SettingType type)
+        {
+            Setting = setting;
+            Type = type;
+        }
+        public string Setting { get; private set; }
+        public SettingType Type { get; private set; }
+        
+        public static List<HeroSettings>[] GetSettings()
+        {
+            // Read hero_settings resource. Each value in array is a line in hero_settings.txt.
+            string[] settings = Properties.Resources.hero_settings.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            // List of settings for each hero.                                                 V +1 due to general settings.
+            List<HeroSettings>[] settinglist = new List<HeroSettings>[Enum.GetNames(typeof(Hero)).Length + 1];
+            for (int i = 0, heroindex = -1; i < settings.Length; i++)
+            {
+                if (settings[i].Length >= 1) // Make sure line is not empty
+                {
+                    if (settings[i][0] == '-')
+                    {
+                        heroindex++; // Index of hero to add settings to. 0 = General, 1 = Ana, 2 = Bastion...27 = Zenyatta.
+                        settinglist[heroindex] = new List<HeroSettings>();
+                    }
+                    if (heroindex != -1 && settings[i][0] != '-')
+                    {
+                        // Add setting to list
+                        string[] settingsData = settings[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                        HeroSettings add = new HeroSettings(
+                                settingsData[0],
+                                (SettingType)Enum.Parse(typeof(SettingType), settingsData[1])
+                                );
+                        settinglist[heroindex].Add(add);
+                    }
+                }
+            }
+            return settinglist;
+        }
+
+        public static SettingType? GetSettingType(Hero? hero, string setting)
+        {
+            // Get the setting type for a setting for a hero. Return null if the setting does not exist.
+            int heroid = 0;
+            if (hero != null)
+                heroid = (int)hero + 1;
+            for (int i = 0; i < HeroSettingsList[heroid].Count; i++)
+                if (HeroSettingsList[heroid][i].Setting == setting)
+                    return HeroSettingsList[heroid][i].Type;
+            return null;
         }
     }
 }
