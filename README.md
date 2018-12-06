@@ -48,19 +48,7 @@ cg.InvitePlayer("Tracer#1234", Team.BlueAndRed);
 
 // ...And more!
 ```
-#### Not working?
-Overwatch's colorblind, gamma, and brightness settings must be set to default. Contrast must be set to the minimum.
 
-The default method for capturing the Overwatch screen is BitBlt. If the library doesn't work for you, use ScreenCopy.
-```C#
-CustomGame cg = new CustomGame(
-	new CustomGameBuilder()
-	{
-		ScreenshotMethod = ScreenshotMethod.ScreenCopy
-	});
-```
-
----
 <details>
 <summary>The library can...</summary>
 
@@ -104,6 +92,17 @@ CustomGame cg = new CustomGame(
 - Get the current game state.
 </details>
 
+#### Not working?
+Overwatch's colorblind, gamma, and brightness settings must be set to default. Contrast must be set to the minimum.
+
+The default method for capturing the Overwatch screen is BitBlt. If the library doesn't work for you, use ScreenCopy.
+```C#
+CustomGame cg = new CustomGame(
+	new CustomGameBuilder()
+	{
+		ScreenshotMethod = ScreenshotMethod.ScreenCopy
+	});
+```
 
 ## Examples
-- [ZombieBot]()
+- [ZombieBot](https://github.com/ItsDeltin/ZombieBot) ([Play](https://www.abyxa.net/zombie))
