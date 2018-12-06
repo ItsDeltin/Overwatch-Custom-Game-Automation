@@ -89,30 +89,39 @@ namespace Deltin.CustomGameAutomation
                         WaitForVisibleProcessWindow(owProcess);
                         RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
 
-                        DirectBitmap bmp = null;
-                        if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
+                        if (processInfo.AutomaticallyCreateCustomGame)
                         {
+                            DirectBitmap bmp = null;
+                            if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
+                            {
 #if DEBUG
+                                CustomGameDebug.WriteLine("Finished starting Overwatch.");
+#endif
+                                CreateCustomGame(owProcess.MainWindowHandle);
+                                if (bmp != null)
+                                    bmp.Dispose();
+                            }
+                            else
+                            {
+#if DEBUG
+                                CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
+#endif
+                                if (bmp != null)
+                                    bmp.Dispose();
+                                if (processInfo.CloseOverwatchProcessOnFailure)
+                                {
+                                    owProcess.CloseMainWindow();
+                                    owProcess.Close();
+                                }
+                                throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
+                            }
+                        }
+#if DEBUG
+                        else
                             CustomGameDebug.WriteLine("Finished starting Overwatch.");
 #endif
-                            if (processInfo.AutomaticallyCreateCustomGame)
-                                CreateCustomGame(owProcess.MainWindowHandle);
-                            return newProcessList[i];
-                        }
-                        else
-                        {
-#if DEBUG
-                            CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
-#endif
-                            if (bmp != null)
-                                bmp.Dispose();
-                            if (processInfo.CloseOverwatchProcessOnFailure)
-                            {
-                                owProcess.CloseMainWindow();
-                                owProcess.Close();
-                            }
-                            throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
-                        }
+
+                        return newProcessList[i];
                     }
 
                 Thread.Sleep(200);

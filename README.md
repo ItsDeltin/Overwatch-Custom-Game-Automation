@@ -60,5 +60,50 @@ CustomGame cg = new CustomGame(
 	});
 ```
 
+---
+<details>
+<summary>The library can...</summary>
+
+- Get the player count.
+- Get the slots filled.
+- Get the current Overwatch event.
+- Change the enabled maps.
+- Get the current map.
+- Get the enabled modes.
+- Invite a player to the game using their battletag.
+- Get the slots that are invited to the game.
+- Start the map, start the gamemode, restart, and send the custom game server to the lobby. 
+- Set the hero roster.
+- Set the hero settings.
+- Swap 2 players' slots.
+- Swap both teams.
+- Swap a player's team.
+- Swap a player to spectators.
+- Check if a slot is an AI.
+- Add an AI.
+- Remove an AI.
+- Remove all AIs.
+- Edit an AI.
+- Get an AI's difficulty.
+- Send a chat message.
+- Join a chat channel. (All,Match,Team,Group,PM)
+- Listen for a chat command.
+- Pause/unpause the game
+- Get the dead players' slots.
+- Get the hero a slot is playing.
+- Check if a slot is a friend.
+- Check if a slot chose a hero.
+- Check if a slot's ultimate ability is ready.
+- Get the max player count.
+- Get the slot the moderator is in.
+- Load a preset.
+- Set the game name.
+- Set the max players.
+- Set a team's name.
+- Track when a slot updates.
+- Get the current game state.
+</details>
+
+
 ## Examples
 - [ZombieBot]()

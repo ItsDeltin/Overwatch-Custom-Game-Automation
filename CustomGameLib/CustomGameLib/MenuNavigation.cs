@@ -16,9 +16,9 @@ namespace Deltin.CustomGameAutomation
             if (!IsLobbyOpened())
             {
                 Activate();
-                Thread.Sleep(250);
+                Thread.Sleep(100);
                 KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
-                Thread.Sleep(250);
+                Thread.Sleep(1000);
             }
 
             //ResetMouse();

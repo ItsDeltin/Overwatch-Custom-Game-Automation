@@ -34,10 +34,7 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, 0x0086, 1, 0); // 0x0086 = WM_NCACTIVATE
             User32.PostMessage(hWnd, 0x0007, 0, 0); // 0x0007 = WM_DEVICECHANGE
         }
-        internal void Activate()
-        {
-            Activate(OverwatchHandle);
-        }
+        internal void Activate() => Activate(OverwatchHandle);
 
         private static void ScreenToClient(IntPtr hWnd, ref int x, ref int y)
         {
@@ -70,14 +67,7 @@ namespace Deltin.CustomGameAutomation
             return (int)((HiWord << 16) | (LoWord & 0xFFFF));
         }
 
-        internal void LeftClick(int x, int y, int waitTime = 500)
-        {
-            LeftClick(OverwatchHandle, x, y, waitTime);
-        }
-        internal void LeftClick(Point point, int waitTime = 500)
-        {
-            LeftClick(point.X, point.Y, waitTime);
-        }
+        // Left Click
         internal static void LeftClick(IntPtr hWnd, int x, int y, int waitTime = 500)
         {
             Validate(hWnd);
@@ -90,19 +80,11 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, WM_LBUTTONUP, 0, MakeLParam(x, y));
             Thread.Sleep(waitTime);
         }
-        internal static void LeftClick(IntPtr hWnd, Point point, int waitTime = 500)
-        {
-            LeftClick(hWnd, point.X, point.Y, waitTime);
-        }
+        internal static void LeftClick(IntPtr hWnd, Point point, int waitTime = 500) => LeftClick(hWnd,            point.X, point.Y, waitTime);
+        internal void LeftClick(int x, int y, int waitTime = 500)                    => LeftClick(OverwatchHandle, x,             y, waitTime);
+        internal void LeftClick(Point point, int waitTime = 500)                     => LeftClick(OverwatchHandle, point.X, point.Y, waitTime);
 
-        internal void RightClick(int x, int y, int waitTime = 500)
-        {
-            RightClick(OverwatchHandle, x, y, waitTime);
-        }
-        internal void RightClick(Point point, int waitTime = 500)
-        {
-            RightClick(point.X, point.Y, waitTime);
-        }
+        // Right Click
         internal static void RightClick(IntPtr hWnd, int x, int y, int waitTime = 500)
         {
             Validate(hWnd);
@@ -116,19 +98,11 @@ namespace Deltin.CustomGameAutomation
             User32.PostMessage(hWnd, WM_RBUTTONUP, 0, MakeLParam(x, y));
             Thread.Sleep(waitTime);
         }
-        internal static void RightClick(IntPtr hWnd, Point point, int waitTime = 500)
-        {
-            RightClick(hWnd, point.X, point.Y, waitTime);
-        }
+        internal static void RightClick(IntPtr hWnd, Point point, int waitTime = 500) => RightClick(hWnd,            point.X, point.Y, waitTime);
+        internal void RightClick(int x, int y, int waitTime = 500)                    => RightClick(OverwatchHandle, x,       y,       waitTime);
+        internal void RightClick(Point point, int waitTime = 500)                     => RightClick(OverwatchHandle, point.X, point.Y, waitTime);
 
-        internal void MoveMouseTo(int x, int y)
-        {
-            MoveMouseTo(OverwatchHandle, x, y);
-        }
-        internal void MoveMouseTo(Point point)
-        {
-            MoveMouseTo(point.X, point.Y);
-        }
+        // Move Mouse
         internal static void MoveMouseTo(IntPtr hWnd, int x, int y)
         {
             Validate(hWnd);
@@ -136,63 +110,26 @@ namespace Deltin.CustomGameAutomation
             ScreenToClient(hWnd, ref x, ref y);
             User32.PostMessage(hWnd, WM_MOUSEMOVE, 0, MakeLParam(x, y));
         }
-        internal static void MoveMouseTo(IntPtr hWnd, Point point)
-        {
-            MoveMouseTo(hWnd, point.X, point.Y);
-        }
+        internal static void MoveMouseTo(IntPtr hWnd, Point point) => MoveMouseTo(hWnd,            point.X, point.Y);
+        internal void MoveMouseTo(int x, int y)                    => MoveMouseTo(OverwatchHandle, x,       y);
+        internal void MoveMouseTo(Point point)                     => MoveMouseTo(OverwatchHandle, point.X, point.Y);
 
-        internal void KeyDown(params Keys[] keysToSend)
-        {
-            KeyDown(OverwatchHandle, keysToSend);
-        }
-        internal void KeyUp(params Keys[] keysToSend)
-        {
-            KeyUp(OverwatchHandle, keysToSend);
-        }
-        internal void KeyPress(params Keys[] keysToSend)
-        {
-            KeyPress(OverwatchHandle, keysToSend);
-        }
-        // With waitTime
-        internal void KeyDown(int waitTime, params Keys[] keysToSend)
-        {
-            KeyDown(OverwatchHandle, waitTime, keysToSend);
-        }
-        internal void KeyUp(int waitTime, params Keys[] keysToSend)
-        {
-            KeyUp(OverwatchHandle, waitTime, keysToSend);
-        }
-        internal void KeyPress(int waitTime, params Keys[] keysToSend)
-        {
-            KeyPress(OverwatchHandle, waitTime, keysToSend);
-        }
-
-        internal static void KeyDown(IntPtr hWnd, params Keys[] keysToSend)
+        // Key Press
+        internal static void KeyPress(IntPtr hWnd, int waitTime, params Keys[] keys)
         {
             Validate(hWnd);
-            foreach (Keys key in keysToSend)
-            {
-                User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
-            }
-        }
-        internal static void KeyUp(IntPtr hWnd, params Keys[] keysToSend)
-        {
-            Validate(hWnd);
-            foreach (Keys key in keysToSend)
-            {
-                User32.PostMessage(hWnd, WM_KEYUP, (IntPtr)(key), IntPtr.Zero);
-            }
-        }
-        internal static void KeyPress(IntPtr hWnd, params Keys[] keysToSend)
-        {
-            Validate(hWnd);
-            foreach (Keys key in keysToSend)
+            foreach (Keys key in keys)
             {
                 User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
                 User32.PostMessage(hWnd, WM_KEYUP, (IntPtr)(key), IntPtr.Zero);
+                Thread.Sleep(waitTime);
             }
         }
-        // With waitTime
+        internal static void KeyPress(IntPtr hWnd, params Keys[] keysToSend) => KeyPress(hWnd,            0,        keysToSend);
+        internal void KeyPress(int waitTime, params Keys[] keysToSend)       => KeyPress(OverwatchHandle, waitTime, keysToSend);
+        internal void KeyPress(params Keys[] keysToSend)                     => KeyPress(OverwatchHandle, 0,        keysToSend);
+
+        // Key Down
         internal static void KeyDown(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
         {
             Validate(hWnd);
@@ -202,6 +139,11 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(waitTime);
             }
         }
+        internal static void KeyDown(IntPtr hWnd, params Keys[] keysToSend) => KeyDown(hWnd,            0,        keysToSend);
+        internal void KeyDown(int waitTime, params Keys[] keysToSend)       => KeyDown(OverwatchHandle, waitTime, keysToSend);
+        internal void KeyDown(params Keys[] keysToSend)                     => KeyDown(OverwatchHandle, 0,        keysToSend);
+
+        // Key Up
         internal static void KeyUp(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
         {
             Validate(hWnd);
@@ -211,32 +153,20 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(waitTime);
             }
         }
-        internal static void KeyPress(IntPtr hWnd, int waitTime, params Keys[] keysToSend)
-        {
-            Validate(hWnd);
-            foreach (Keys key in keysToSend)
-            {
-                User32.PostMessage(hWnd, WM_KEYDOWN, (IntPtr)(key), IntPtr.Zero);
-                User32.PostMessage(hWnd, WM_KEYUP, (IntPtr)(key), IntPtr.Zero);
-                Thread.Sleep(waitTime);
-            }
-        }
+        internal static void KeyUp(IntPtr hWnd, params Keys[] keysToSend) => KeyUp(hWnd,            0,        keysToSend);
+        internal void KeyUp(int waitTime, params Keys[] keysToSend)       => KeyUp(OverwatchHandle, waitTime, keysToSend);
+        internal void KeyUp(params Keys[] keysToSend)                     => KeyUp(OverwatchHandle, 0,        keysToSend);
 
-        internal void AlternateInput(int keycode)
-        {
-            AlternateInput(OverwatchHandle, keycode);
-        }
+        // Alternate Key Input
         internal static void AlternateInput(IntPtr hWnd, int keycode)
         {
             Validate(hWnd);
             User32.PostMessage(hWnd, WM_KEYDOWN, keycode, 0);
             User32.PostMessage(hWnd, WM_KEYUP, keycode, 0);
         }
+        internal void AlternateInput(int keycode) => AlternateInput(OverwatchHandle, keycode);
 
-        internal void TextInput(string text)
-        {
-            TextInput(OverwatchHandle, text);
-        }
+        // Text input
         internal static void TextInput(IntPtr hWnd, string text)
         {
             Validate(hWnd);
@@ -246,5 +176,6 @@ namespace Deltin.CustomGameAutomation
                 User32.PostMessage(hWnd, WM_UNICHAR, (int)letter, 0);
             }
         }
+        internal void TextInput(string text) => TextInput(OverwatchHandle, text);
     }
 }
