@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Deltin.CustomGameAutomation
@@ -23,9 +24,9 @@ namespace Deltin.CustomGameAutomation
 
     partial class CustomGame
     {
-#if DEBUG
         private void SetupDebugWindow()
         {
+            bool ready = false;
             Task.Run(() =>
             {
                 debug = new Form
@@ -36,13 +37,16 @@ namespace Deltin.CustomGameAutomation
                 debug.Show();
                 g = debug.CreateGraphics();
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                ready = true;
                 Application.Run(debug);
             });
+
+            SpinWait.SpinUntil(() => { return ready; });
+            Thread.Sleep(500);
         }
 
         internal Form debug;
         internal Graphics g;
-#endif
     }
 }
 #endif

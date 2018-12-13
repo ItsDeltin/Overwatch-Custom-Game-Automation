@@ -42,6 +42,7 @@ namespace Deltin.CustomGameAutomation
             ScanCommandsTask.Start();
         }
 
+        #region Constants
         #region Letters
         /*  Each coordinate in the first argument represents the location of a pixel making the letters. For example, the letter C:
                         V This row is -1 because the first pixel on y0 is a pixel ahead
@@ -109,6 +110,27 @@ namespace Deltin.CustomGameAutomation
         };
         #endregion
 
+        private const int MarkerX = 50;
+        private const int TextStart = 54;
+        private const int ChatLength = 200;
+
+        private static readonly LineInfo[] lineInfo = new LineInfo[]
+        {
+            // One line command
+            new LineInfo(marker:483,
+                485),
+            // Two line command
+            new LineInfo(marker:472,
+                474, 484),
+            // Three line command
+            new LineInfo(marker:463,
+                465, 475, 485),
+            // Four line command
+            new LineInfo(marker:453,
+                455, 465, 475, 485)
+        };
+        #endregion
+
         /// <summary>
         /// Commands to listen to.
         /// </summary>
@@ -143,8 +165,6 @@ namespace Deltin.CustomGameAutomation
 
         private void ScanCommands()
         {
-            DirectBitmap bmp = null;
-
             while (KeepScanning)
             {
                 // Wait for listen to equal true
@@ -156,26 +176,12 @@ namespace Deltin.CustomGameAutomation
                 {
                     using (cg.LockHandler.SemiInteractive)
                     {
-                        UpdateChatCapture(ref bmp);
+                        cg.UpdateScreen();
 
-                        int[][] chatColors = Chat.ChatColors;
-                        int chatFade = Chat.ChatFade + 10;
-                        DirectBitmap chatMarkup = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height));
-                        for (int x = 0; x < chatMarkup.Width; x++)
-                            for (int y = 0; y < chatMarkup.Height; y++)
-                            {
-                                bool colorFound = false;
-                                for (int i = 0; i < chatColors.Length; i++)
-                                    if (chatMarkup.CompareColor(x, y, chatColors[i], chatFade))
-                                    {
-                                        colorFound = true;
-                                        break;
-                                    }
-                                if (colorFound)
-                                    chatMarkup.SetPixel(x, y, Color.Black);
-                                else
-                                    chatMarkup.SetPixel(x, y, Color.White);
-                            }
+                        // Check if the chat updated
+                        #region Check For Chat Update
+                        DirectBitmap chatMarkup = Capture.Clone(Rectangles.LOBBY_CHATBOX);
+
                         if (PreviousChatMarkup == null)
                             PreviousChatMarkup = chatMarkup;
                         else
@@ -191,76 +197,75 @@ namespace Deltin.CustomGameAutomation
                                 PreviousChatMarkup = chatMarkup;
                             }
                         }
+                        #endregion
 
-                        // Scan the second line in the chat.
-                        string command = null;
+                        string command = "";
                         string realCommand = null;
 
-                        var seed = GetSeed(bmp, 13);
-                        var seedfade = GetSeedFade(bmp, 13);
-                        LineScanResult linescan = ScanLine(bmp, 13, seed, seedfade);
-                        if (linescan.Word.Contains("]"))
-                        {
-                            // If the first line contains ], scan the second line.
-                            LineScanResult secondlinescan = ScanLine(bmp, 23, seed, seedfade);
-                            command = linescan.Word + " " + secondlinescan.Word;
-                            realCommand = AddExecutedCommand(bmp, 13, linescan.NameLength, seed, seedfade, command);
-                        }
-                        else
-                        {
-                            // Scan the first line in chat.
-                            seed = GetSeed(bmp, 24);
-                            seedfade = GetSeedFade(bmp, 24);
-                            linescan = ScanLine(bmp, 24, seed, seedfade);
-                            if (linescan.Word.Contains("]"))
-                            {
-                                command = linescan.Word;
-                                realCommand = AddExecutedCommand(bmp, 24, linescan.NameLength, seed, seedfade, command);
-                            }
-                        }
+                        foreach (LineInfo line in lineInfo)
+                            foreach (int[] color in Chat.ChatColors)
+                                if (Capture.CompareColor(MarkerX, line.Marker, color, Chat.ChatFade))
+                                {
+                                    int nameLength = -1;
+                                    for (int i = 0; i < line.Lines.Length; i++)
+                                    {
+                                        LineScanResult linescan = ScanLine(TextStart, ChatLength, line.Lines[i], color);
+
+                                        command += linescan.Word;
+
+                                        if (i == 0)
+                                            nameLength = linescan.NameLength;
+                                    }
+                                    
+                                    realCommand = AddExecutedCommand(line.Lines[0], nameLength, color, command);
+
+                                    break;
+                                }
+
 #if DEBUG
-                        ShowScan(bmp, seed, seedfade, string.Format("{0} (from \"{1}\")", realCommand, command));
+                        ShowScan(string.Format("{0} (from \"{1}\")", realCommand, command));
 #endif
                     }
                 }
                 catch (OverwatchClosedException) { }
             } // while
 
-            if (bmp != null)
-                bmp.Dispose();
+            // Dispose of resources used by this class.
+            if (PreviousChatMarkup != null)
+                PreviousChatMarkup.Dispose();
         }
 
         // Scans a chat line.
-        private LineScanResult ScanLine(DirectBitmap bmp, int y, int[] seed, int seedfade)
+        private LineScanResult ScanLine(int xStart, int length, int y, int[] color)
         {
             int namelength = 0; // Length of the name of the player that sent a chat message.
             bool namefound = false; // Determines if the name of the player that sent the chat message has been found.
             int space = 0; // Space in pixels between letters.
             string word = ""; // Text of chat message
             // For each pixel for the width of the chat message box.
-            for (int i = 0; i < bmp.Width; i++)
+            for (int x = xStart; x < xStart + length; x++)
             {
-                // Test if pixel color is near seed color. if it is, scan for all the letters.
-                if (bmp.CompareColor(i, y, seed, seedfade))
+                // Test if pixel color is near the chat color. if it is, scan for all the letters.
+                if (Capture.CompareColor(x, y, color, Chat.ChatFade))
                 {
-                    var bestletter = CheckLetter(bmp, i, y, seed, seedfade); // Scan for letter.
+                    var bestletter = CheckLetter(x, y, color); // Scan for letter.
 
                     // bestletter will equal null if no letters is possible.
                     if (bestletter != null)
                     {
                         // If space is 2 or higher, add a space to the word.
-                        if (i + bestletter.Least - space >= 2)
+                        if (x + bestletter.Least - space >= 2)
                             word += " ";
                         // Add the letter to the word
                         word += bestletter.Letter;
                         // Increment i to letter length to prevent pixels being checked that don't need to be checked because a confirmed letter is there.
-                        i += bestletter.Length;
-                        space = i + 1;
+                        x += bestletter.Length;
+                        space = x + 1;
                         // If the bestletter is ] for the first time, then the name length in pixels has been found. 
                         if (bestletter.Letter == ']' && namefound == false)
                         {
                             namefound = true;
-                            namelength = i;
+                            namelength = x;
                         }
                     }
                 }
@@ -269,7 +274,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Checks for a chat letter at the input X and Y value.
-        private LetterResult CheckLetter(DirectBitmap bmp, int x, int y, int[] seed, int seedfade)
+        private LetterResult CheckLetter(int x, int y, int[] color)
         {
             // Possible letters
             List<LetterResult> letterresult = new List<LetterResult>();
@@ -285,18 +290,15 @@ namespace Deltin.CustomGameAutomation
                     int checkX = x + letters[li].Pixel[pi, 0],
                         checkY = y + letters[li].Pixel[pi, 1];
 
-                    if (checkX >= 0 && checkY >= 0 && checkX < Rectangles.LOBBY_CHATBOX.Width && checkY < Rectangles.LOBBY_CHATBOX.Height)
+                    if (letters[li].Optional == null || letters[li].Optional.Contains(pi) == false)
                     {
-                        if (letters[li].Optional == null || letters[li].Optional.Contains(pi) == false)
-                        {
-                            totalpixels++;
-                            if (bmp.CompareColor(checkX, y + letters[li].Pixel[pi, 1], seed, seedfade))
-                                successcount++;
-                        }
-                        // Check optional pixels
-                        else if (bmp.CompareColor(x + letters[li].Pixel[pi, 0], y + letters[li].Pixel[pi, 1], seed, seedfade))
-                            optional++;
+                        totalpixels++;
+                        if (Capture.CompareColor(checkX, checkY, color, Chat.ChatFade))
+                            successcount++;
                     }
+                    // Check optional pixels
+                    else if (Capture.CompareColor(checkX, checkY, color, Chat.ChatFade))
+                        optional++;
                 }
 
                 // Check for ignore. These are pixels that shouldn't equal the seed.
@@ -305,8 +307,7 @@ namespace Deltin.CustomGameAutomation
                     {
                         int checkX = x + letters[li].Ignore[pi, 0],
                             checkY = y + letters[li].Ignore[pi, 1];
-                        if (checkX >= 0 && checkY >= 0 && checkX < Rectangles.LOBBY_CHATBOX.Width && checkY < Rectangles.LOBBY_CHATBOX.Height
-                            && bmp.CompareColor(checkX, checkY, seed, seedfade))
+                        if (Capture.CompareColor(checkX, checkY, color, Chat.ChatFade))
                                 totalpixels++;
                     }
 
@@ -317,7 +318,7 @@ namespace Deltin.CustomGameAutomation
                     LetterResult connected = null;
                     // The letter L can connect to other letters. LM can be confused for U1. This checks for the letter that the L could be connected to.
                     if (letters[li].LetterChar == 'L')
-                        connected = CheckLetter(bmp, x + letters[li].Length + 1, y, seed, seedfade);
+                        connected = CheckLetter(x + letters[li].Length + 1, y, color);
                     letterresult.Add(new LetterResult(letters[li].LetterChar, (int)percent, letters[li].Pixel.GetLength(0), letters[li].Length, letters[li].Least, connected, optional)); // Add letter to possible letters.
                 }
             }
@@ -352,7 +353,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        private string AddExecutedCommand(DirectBitmap bmp, int y, int namelength, int[] seed, int seedfade, string command)
+        private string AddExecutedCommand(int y, int namelength, int[] seed, string command)
         {
             // Clean up the word. makes something like "] $APPLE " into "$APPLE"
             int lowestCommandIndex = -1;
@@ -383,7 +384,7 @@ namespace Deltin.CustomGameAutomation
                 // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
                 if (ltd.RegisterProfile || ltd.CheckIfFriend)
                 {
-                    Point openMenuAt = new Point(54, Rectangles.LOBBY_CHATBOX.Y + y);
+                    Point openMenuAt = new Point(56, y);
 
                     // Open the chat
                     cg.Chat.OpenChat();
@@ -429,12 +430,12 @@ namespace Deltin.CustomGameAutomation
 
                 // Store executor noise data in a bitmap.
                 var executorscan = new Rectangle(0, y - 4, namelength, 6);
-                DirectBitmap executor = bmp.Clone(executorscan);
+                DirectBitmap executor = Capture.Clone(executorscan);
                 // Set name pixels to black and everything else to white
                 for (int xi = 0; xi < executor.Width; xi++)
                     for (int yi = 0; yi < executor.Height; yi++)
                     {
-                        if (executor.CompareColor(xi, yi, seed, seedfade))
+                        if (executor.CompareColor(xi, yi, seed, Chat.ChatFade))
                             executor.SetPixel(xi, yi, Color.Black);
                         else
                             executor.SetPixel(xi, yi, Color.White);
@@ -443,8 +444,13 @@ namespace Deltin.CustomGameAutomation
                 ChatIdentity ci = new ChatIdentity(executor);
 
                 CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), pi, ci, isFriend);
-                if (ltd?.Callback != null)
+                if (ltd.Callback != null)
                     ltd.Callback.Invoke(commandData);
+                else
+                {
+                    commandData.ChatIdentity.Dispose();
+                    commandData.PlayerIdentity?.Dispose();
+                }
 
                 Thread.Sleep(50);
             } // if command is being listened to
@@ -461,16 +467,19 @@ namespace Deltin.CustomGameAutomation
         }
 
 #if DEBUG
-        private void ShowScan(DirectBitmap bmp, int[] seed, int seedfade, string word)
+        private void ShowScan(string word)
         {
             // Show valid seed pixels in debug mode
-            DirectBitmap dbc = bmp.Clone();
+            DirectBitmap dbc = Capture.Clone(Rectangles.LOBBY_CHATBOX);
 
             for (int x = 0; x < dbc.Width; x++)
                 for (int y = 0; y < dbc.Height; y++)
-                    if (dbc.CompareColor(x, y, seed, seedfade))
-                        dbc.SetPixel(x, y, Color.Purple);
-            dbc.InvertYAxis();
+                    for (int i = 0; i < Chat.ChatColors.Length; i++)
+                        if (dbc.CompareColor(x, y, Chat.ChatColors[i], Chat.ChatFade))
+                        {
+                            dbc.SetPixel(x, y, Color.Purple);
+                            break;
+                        }
             Bitmap nb = dbc.ToBitmap();
             dbc.Dispose();
 
@@ -481,32 +490,12 @@ namespace Deltin.CustomGameAutomation
         }
 #endif
 
-        // Gets chat color
-        private int[] GetSeed(DirectBitmap bmp, int y)
-        {
-            var seedpix = bmp.GetPixel(0, y);
-            return new int[] { seedpix.R, seedpix.G, seedpix.B };
-        }
-
-        // Gets chat color seed fade.
-        private int GetSeedFade(DirectBitmap bmp, int y)
-        {
-            var seedpix = bmp.GetPixel(0, y);
-            var antipix = bmp.GetPixel(1, y);
-            // Get seedfade by getting the average numbers of the RGB of the first pixel and the second pixel divided by 2.2 (2.5?). Default is 50 
-            return (int)((((seedpix.R + seedpix.G + seedpix.B) / 3) + ((antipix.R + antipix.G + antipix.B) / 3)) / 2 / 2.2);
-        }
-
         private Channel GetChannelFromSeed(int[] seed)
         {
             for (int i = 0; i < Chat.ChatColors.Length; i++)
-                if (Math.Abs(Chat.ChatColors[i][0] - seed[0]) < Chat.ChatFade &&
-                    Math.Abs(Chat.ChatColors[i][1] - seed[1]) < Chat.ChatFade &&
-                    Math.Abs(Chat.ChatColors[i][2] - seed[2]) < Chat.ChatFade)
-                {
+                if (Chat.ChatColors[i] == seed)
                     return (Channel)i;
-                }
-            return Channel.General;
+            return Channel.Match;
         }
 
         internal class Letter
@@ -558,6 +547,22 @@ namespace Deltin.CustomGameAutomation
             }
             public string Word { get; private set; }
             public int NameLength { get; private set; }
+        }
+
+        private class LineInfo
+        {
+            // As of Winter Wonderland 2018, chat messages are preceded by a dot. Marker determines the Y location of the dot.
+            public LineInfo(int marker, params int[] lines)
+            {
+                if (lines.Length == 0)
+                    throw new Exception("There must be at least one line.");
+
+                Marker = marker;
+                Lines = lines;
+            }
+
+            public int Marker { get; private set; }
+            public int[] Lines { get; private set; }
         }
 
         /// <summary>

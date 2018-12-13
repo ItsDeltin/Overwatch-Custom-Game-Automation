@@ -168,28 +168,10 @@ namespace Deltin.CustomGameAutomation
             public int LockType { get; private set; }
             private LockHandler LockHandler;
 
-#if DEBUG
-            private bool Disposed = false;
-#endif
-
             public void Dispose()
             {
-#if DEBUG
-                Disposed = true;
-#endif
                 LockHandler.Unlock(this);
             }
-
-#if DEBUG
-            ~Locker()
-            {
-                if (!Disposed)
-                {
-                    CustomGameDebug.WriteLine("Error: locker was used outside of using statement\n" + Environment.StackTrace);
-                    Dispose();
-                }
-            }
-#endif
         }
 
         private class PassiveData

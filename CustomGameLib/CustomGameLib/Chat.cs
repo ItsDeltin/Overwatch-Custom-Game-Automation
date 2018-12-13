@@ -25,13 +25,13 @@ namespace Deltin.CustomGameAutomation
     {
         internal Chat(CustomGame cg) : base(cg) { }
 
-        internal static readonly int ChatFade = 20;
+        internal static readonly int ChatFade = 20 + 35;
         internal static readonly int[] TeamChatColor = new int[] { 65, 139, 162 };
         internal static readonly int[] MatchChatColor = new int[] { 161, 122, 91 };
         internal static readonly int[] GeneralChatColor = new int[] { 161, 161, 162 };
         internal static readonly int[] GroupChatColor = new int[] { 0, 0, 0 }; // TODO: Get this color
         internal static readonly int[] PrivateMessageChatColor = new int[] { 160, 118, 167 };
-        // Must be the same order as the Channel enum below
+        // Must be the same order as the Channel enum
         internal static readonly int[][] ChatColors = new int[][]
         {
                 TeamChatColor,
@@ -169,7 +169,7 @@ namespace Deltin.CustomGameAutomation
         {
             using (cg.LockHandler.SemiInteractive)
             {
-                cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+                cg.LeftClick(Points.LOBBY_CHATBOX, 250);
                 /*
                  * There was a month where clicking on the chat didn't open it. This was the old workaround.
                  * cg.DefaultKeys.OpenChat had to be a key that registered when the chat was closed but not when it was opened. ex: Delete, Page Up, Page Down, etc.

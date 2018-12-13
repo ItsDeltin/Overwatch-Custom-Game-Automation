@@ -295,7 +295,7 @@ namespace Deltin.CustomGameAutomation
     {
         public static readonly Rectangle ENTIRE_SCREEN = new Rectangle(0, 0, 960, 540);
 
-        public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 461, 169, 26);
+        public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 461, 200, 26);
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);
         public static readonly Rectangle LOBBY_MAP = new Rectangle(52, 153, 139, 56);
 

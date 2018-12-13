@@ -173,81 +173,45 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        internal Point GetModeLocation(Gamemode mode, OWEvent owevent)
+        internal Point GetModeLocation(Gamemode mode, OWEvent owevent) // Gets the location of a gamemode in Settings/Modes
         {
-            List<Gamemode> enabledGamemodes = new List<Gamemode>();
-
-            Gamemode[] gamemodeOrder = new Gamemode[]
+            // Ordered by how the gamemodes are listed in Overwatch at Settings/Modes
+            var gamemodes = new Tuple<Gamemode, OWEvent>[]
             {
-                // Core gamemodes
-                Gamemode.Assault,
-                Gamemode.AssaultEscort,
-                Gamemode.Control,
-                Gamemode.Escort,
+                // Default modes are listed first in alphabetical order.
+                new Tuple<Gamemode, OWEvent>(Gamemode.Assault,               OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.AssaultEscort,         OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.Control,               OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.Escort,                OWEvent.None),
 
-                // Followed by arcade gamemodes
-                Gamemode.CaptureTheFlag,
-                Gamemode.Deathmatch,
-                Gamemode.Elimination,
-                Gamemode.JunkensteinsRevenge, // < Fix later when Junkensteins revenge is live, the position is a guess
-                Gamemode.Lucioball,           // < Fix later when lucioball is live, the position is a guess
-                Gamemode.MeisSnowballOffensive, // < Fix later when winter wonderland is live, the position is a guess
-                Gamemode.TeamDeathmatch,
-                Gamemode.YetiHunter, // < Fix later when winter wonderland is live, the position is a guess
+                // Followed by Mei's Snowball Offensive, which goes against the normal order for some reason.
+                new Tuple<Gamemode, OWEvent>(Gamemode.MeisSnowballOffensive, OWEvent.WinterWonderland),
 
-                // Followed by skirmish
-                Gamemode.Skirmish
+                // Then the rest in alphabetical order, except for skirmish.
+                new Tuple<Gamemode, OWEvent>(Gamemode.CaptureTheFlag,        OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.Deathmatch,            OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.Elimination,           OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.JunkensteinsRevenge,   OWEvent.HalloweenTerror),
+                new Tuple<Gamemode, OWEvent>(Gamemode.Lucioball,             OWEvent.SummerGames),
+                new Tuple<Gamemode, OWEvent>(Gamemode.TeamDeathmatch,        OWEvent.None),
+                new Tuple<Gamemode, OWEvent>(Gamemode.YetiHunter,            OWEvent.WinterWonderland),
+
+                // Skirmish is always last.
+                new Tuple<Gamemode, OWEvent>(Gamemode.Skirmish,              OWEvent.None)
             };
 
-            OWEvent[] gamemodeEvents = new OWEvent[]
-            {
-                OWEvent.None,             // Assault
-                OWEvent.None,             // AssaultEscort
-                OWEvent.None,             // Control
-                OWEvent.None,             // Escort
+            int modeIndex = Array.IndexOf(gamemodes
+                .Where(m => m.Item2 == OWEvent.None || m.Item2 == owevent)
+                .Select(m => m.Item1)
+                .ToArray()
+                , mode) + 1;
 
-                OWEvent.None,             // CaptureTheFlag
-                OWEvent.None,             // Deathmatch
-                OWEvent.None,             // Elimination
-                OWEvent.HalloweenTerror,  // JunkensteinsRevenge
-                OWEvent.SummerGames,      // Lucioball
-                OWEvent.WinterWonderland, // MeisSnowballOffensive
-                OWEvent.None,             // TeamDeathmatch
-                OWEvent.WinterWonderland, // YetiHunter
-
-                OWEvent.None,             // Skirmish
-            };
-
-            for (int i = 0; i < gamemodeEvents.Length; i++)
-                if (gamemodeEvents[i] == OWEvent.None || gamemodeEvents[i] == owevent)
-                    enabledGamemodes.Add(gamemodeOrder[i]);
-
-            int eventModeIndex = Array.IndexOf(enabledGamemodes.ToArray(), mode) + 1;
-
-            if (eventModeIndex == 0)
+            if (modeIndex == 0)
                 return Point.Empty;
 
-            int y = 129;
-            int x = -1;
-
             int[] columns = new int[] { 83, 227, 370, 515 };
-            int rowHeight = 107;
-            
-            while (true)
-            {
-                if (eventModeIndex < 4)
-                {
-                    x = columns[eventModeIndex];
-                    break;
-                }
-                else
-                {
-                    y += rowHeight;
-                    eventModeIndex -= 4;
-                }
-            }
 
-            return new Point(x, y);
+            return new Point(columns[modeIndex % 4], 129 + modeIndex / 4 * 107);
         }
 
         /// <summary>

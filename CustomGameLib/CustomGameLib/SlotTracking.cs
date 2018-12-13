@@ -269,6 +269,9 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns the slot of the player. Returns -1 if it is not found.</returns>
         public int SlotFromPlayerIdentity(PlayerIdentity identity)
         {
+            if (identity == null)
+                throw new ArgumentNullException(nameof(identity), $"{nameof(identity)} was null.");
+
             foreach (var player in Players)
                 if (player.PlayerIdentity.CompareIdentities(identity))
                     return player.Slot;
