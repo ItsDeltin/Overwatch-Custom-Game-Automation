@@ -238,6 +238,10 @@ namespace Deltin.CustomGameAutomation
             if (disposeBitmap)
                 bitmap.Dispose();
         }
+        // From a file
+        internal DirectBitmap(string file) : this(new Bitmap(file), true)
+        {
+        }
 #endregion
 
 #region Public Methods
@@ -340,6 +344,27 @@ namespace Deltin.CustomGameAutomation
         internal bool CompareTo(DirectBitmap other, int fade, int min, DBCompareFlags flags)
         {
             return CompareTo(new Rectangle(0, 0, Width, Height), other, fade, min, flags);
+        }
+
+        internal bool CompareTo(Rectangle rectangle, DirectBitmap markup, int[] blackColor, int fade, int min)
+        {
+            if (rectangle.Width != markup.Width || rectangle.Height != markup.Height)
+                return false;
+
+            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((double)(100 - min) / 100));
+            int pixelsFailed = 0;
+            bool failed = false;
+
+            for (int x = 0; x < rectangle.Width && !failed; x++)
+                for (int y = 0; y < rectangle.Height && !failed; y++)
+                {
+                    if (markup.GetPixel(x, y) == Color.FromArgb(0, 0, 0) == CompareColor(rectangle.X + x, rectangle.Y + y, blackColor, fade) == false)
+                        pixelsFailed++;
+
+                    failed = pixelsFailed >= maxFail;
+                }
+
+            return !failed;
         }
 
         internal DirectBitmap Clone()

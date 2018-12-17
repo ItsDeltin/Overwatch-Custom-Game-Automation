@@ -321,6 +321,7 @@ namespace Deltin.CustomGameAutomation
 
         // AssaultEscort
         public static readonly Map AE_BlizzardWorld                 = new Map(Gamemode.AssaultEscort,         "AE_BlizzardWorld",                 OWEvent.None);
+        public static readonly Map AE_BlizzardWorld_Winter          = new Map(Gamemode.AssaultEscort,         "AE_BlizzardWorld_Winter",          OWEvent.WinterWonderland);
         public static readonly Map AE_Eichenwalde                   = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde",                   OWEvent.None);
         public static readonly Map AE_Eichenwalde_Halloween         = new Map(Gamemode.AssaultEscort,         "AE_Eichenwalde_Halloween",         OWEvent.HalloweenTerror);
         public static readonly Map AE_Hollywood                     = new Map(Gamemode.AssaultEscort,         "AE_Hollywood",                     OWEvent.None);
@@ -359,6 +360,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map DM_BlackForest                   = new Map(Gamemode.Deathmatch,            "DM_BlackForest",                   OWEvent.None);
         public static readonly Map DM_BlackForest_Winter            = new Map(Gamemode.Deathmatch,            "DM_BlackForest_Winter",            OWEvent.WinterWonderland);
         public static readonly Map DM_BlizzardWorld                 = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld",                 OWEvent.None);
+        public static readonly Map DM_BlizzardWorld_Winter          = new Map(Gamemode.Deathmatch,            "DM_BlizzardWorld_Winter",          OWEvent.WinterWonderland);
         public static readonly Map DM_Castillo                      = new Map(Gamemode.Deathmatch,            "DM_Castillo",                      OWEvent.None);
         public static readonly Map DM_ChateauGuillard               = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard",               OWEvent.None);
         public static readonly Map DM_ChateauGuillard_Halloween     = new Map(Gamemode.Deathmatch,            "DM_ChateauGuillard_Halloween",     OWEvent.HalloweenTerror);
@@ -438,6 +440,7 @@ namespace Deltin.CustomGameAutomation
 
         // Skirmish
         public static readonly Map SKIRM_BlizzardWorld              = new Map(Gamemode.Skirmish,              "SKIRM_BlizzardWorld",              OWEvent.None);
+        public static readonly Map SKIRM_BlizzardWorld_Winter       = new Map(Gamemode.Skirmish,              "SKIRM_BlizzardWorld_Winter",       OWEvent.WinterWonderland);
         public static readonly Map SKIRM_Busan                      = new Map(Gamemode.Skirmish,              "SKIRM_Busan",                      OWEvent.None);
         public static readonly Map SKIRM_Dorado                     = new Map(Gamemode.Skirmish,              "SKIRM_Dorado",                     OWEvent.None);
         public static readonly Map SKIRM_Eichenwalde                = new Map(Gamemode.Skirmish,              "SKIRM_Eichenwalde",                OWEvent.None);
@@ -466,6 +469,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map TDM_BlackForest                  = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest",                  OWEvent.None);
         public static readonly Map TDM_BlackForest_Winter           = new Map(Gamemode.TeamDeathmatch,        "TDM_BlackForest_Winter",           OWEvent.WinterWonderland);
         public static readonly Map TDM_BlizzardWorld                = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld",                OWEvent.None);
+        public static readonly Map TDM_BlizzardWorld_Winter         = new Map(Gamemode.TeamDeathmatch,        "TDM_BlizzardWorld_Winter",         OWEvent.WinterWonderland);
         public static readonly Map TDM_Castillo                     = new Map(Gamemode.TeamDeathmatch,        "TDM_Castillo",                     OWEvent.None);
         public static readonly Map TDM_ChateauGuillard              = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard",              OWEvent.None);
         public static readonly Map TDM_ChateauGuillard_Halloween    = new Map(Gamemode.TeamDeathmatch,        "TDM_ChateauGuillard_Halloween",    OWEvent.HalloweenTerror);
@@ -502,6 +506,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map TDM_VolskayaIndustries           = new Map(Gamemode.TeamDeathmatch,        "TDM_VolskayaIndustries",           OWEvent.None);
 
         // Yeti Hunter
+        // public static readonly Map YH_BlackForest_Winter            = new Map(Gamemode.YetiHunter,            "YH_BlackForest_winter",            OWEvent.WinterWonderland);
         public static readonly Map YH_Nepal_Village                 = new Map(Gamemode.YetiHunter,            "YH_Nepal_Village",                 OWEvent.WinterWonderland);
 #pragma warning restore CS1591
         #endregion

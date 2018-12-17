@@ -69,10 +69,9 @@ namespace Deltin.CustomGameAutomation
                 {
                     cg.TextInput(text);
                 }
-                cg.KeyPress(Keys.Return);
+                Send();
                 if (cg.OpenChatIsDefault)
                 {
-                    Thread.Sleep(250);
                     OpenChat();
                 }
                 //cg.//ResetMouse();
@@ -89,12 +88,12 @@ namespace Deltin.CustomGameAutomation
             {
                 OpenChat();
                 cg.TextInput(GetChannelJoinCommand(channel));
-                cg.KeyPress(Keys.Return);
-                // Open chat if it is default to be opened
-                if (cg.OpenChatIsDefault)
-                    OpenChat();
-                else
-                    cg.KeyPress(Keys.Return);
+                Send();
+
+                // Unlike other commands, SwapChannel doesn't close the chat.
+
+                if (!cg.OpenChatIsDefault)
+                    CloseChat();
 
                 //cg.//ResetMouse();
             }
@@ -108,24 +107,26 @@ namespace Deltin.CustomGameAutomation
         {
             using (cg.LockHandler.SemiInteractive)
             {
-                if (!cg.OpenChatIsDefault)
-                    OpenChat();
-                cg.TextInput(GetChannelJoinCommand(channel));
-                cg.KeyPress(Keys.Return);
-                Thread.Sleep(250);
+                // Join the channel selected.
+                SwapChannel(channel);
+
+                OpenChat();
+
+                // Check if the channel was joined.
                 cg.UpdateScreen();
                 if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
                 {
-                    SendChatMessage("/leavechannel");
+                    // If it was, leave the channel.
+                    cg.TextInput("/leavechannel");
+                    Send();
+
                     if (cg.OpenChatIsDefault)
                     {
-                        cg.UpdateScreen();
-                        if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
-                            cg.KeyPress(Keys.Tab);
+                        OpenChat();
                     }
                 }
                 else if (!cg.OpenChatIsDefault)
-                    cg.KeyPress(Keys.Return);
+                    CloseChat();
             }
         }
 
@@ -194,6 +195,12 @@ namespace Deltin.CustomGameAutomation
                 cg.KeyPress(Keys.Return);
                 Thread.Sleep(200);
             }
+        }
+
+        internal void Send()
+        {
+            cg.KeyPress(Keys.Return);
+            Thread.Sleep(250);
         }
 
         internal Channel? GetCurrentChannel()

@@ -83,6 +83,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AntarcticaWinter {
+            get {
+                object obj = ResourceManager.GetObject("AntarcticaWinter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ashe_markup {
             get {
                 object obj = ResourceManager.GetObject("ashe_markup", resourceCulture);
@@ -123,9 +133,29 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BlackForestWinter {
+            get {
+                object obj = ResourceManager.GetObject("BlackForestWinter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BlizzardWorld {
             get {
                 object obj = ResourceManager.GetObject("BlizzardWorld", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BlizzardWorldWinter {
+            get {
+                object obj = ResourceManager.GetObject("BlizzardWorldWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +296,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         internal static System.Drawing.Bitmap Hanamura {
             get {
                 object obj = ResourceManager.GetObject("Hanamura", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HanamuraWinter {
+            get {
+                object obj = ResourceManager.GetObject("HanamuraWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -417,6 +457,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         internal static System.Drawing.Bitmap KingsRow {
             get {
                 object obj = ResourceManager.GetObject("KingsRow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap KingsRowWinter {
+            get {
+                object obj = ResourceManager.GetObject("KingsRowWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -734,6 +784,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap round_over_markup {
+            get {
+                object obj = ResourceManager.GetObject("round_over_markup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Route66 {
             get {
                 object obj = ResourceManager.GetObject("Route66", resourceCulture);
@@ -927,6 +987,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         internal static System.Drawing.Bitmap wreckingball_markup {
             get {
                 object obj = ResourceManager.GetObject("wreckingball_markup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap YH_Nepal_Village {
+            get {
+                object obj = ResourceManager.GetObject("YH_Nepal_Village", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -110,10 +110,13 @@ namespace Deltin.CustomGameAutomation
         };
         #endregion
 
-        private const int MarkerX = 50;
-        private const int TextStart = 54;
-        private const int ChatLength = 200;
+        private const int MarkerX = 50; // The X location of the chat marker.
+        private const int TextStart = 54; // The X location that the chat text starts.
+        private const int ChatLength = 200; // The amount of pixels to scan after TextStart (preferably the width of the chatbox)
 
+        // As of Winter Wonderland 2018, chat messages are preceeded by dots.
+        // Marker determines the Y location of the dot, which gets moved lower if it is a multiline chat message.
+        // The preceding values determine each Y coordinate of the lines in the chat message.
         private static readonly LineInfo[] lineInfo = new LineInfo[]
         {
             // One line command

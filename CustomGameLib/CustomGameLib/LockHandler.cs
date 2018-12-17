@@ -49,16 +49,16 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        internal readonly LockHandler LockHandler;
+        public LockHandler LockHandler { get; private set; }
     }
 
-    internal class LockHandler
+    public class LockHandler
     {
         private const int PassiveNum = 0;
         private const int InteractiveNum = 1;
         private const int SemiInteractiveNum = 2;
 
-        public LockHandler(CustomGame cg)
+        internal LockHandler(CustomGame cg)
         {
             this.cg = cg;
         }
@@ -158,14 +158,14 @@ namespace Deltin.CustomGameAutomation
 
         public class Locker : IDisposable
         {
-            public Locker(int lockType, LockHandler lockHandler)
+            internal Locker(int lockType, LockHandler lockHandler)
             {
                 LockType = lockType;
                 LockHandler = lockHandler;
                 LockHandler.SetLock(this);
             }
-            public int ThreadID { get; private set; } = Thread.CurrentThread.ManagedThreadId;
-            public int LockType { get; private set; }
+            internal int ThreadID { get; private set; } = Thread.CurrentThread.ManagedThreadId;
+            internal int LockType { get; private set; }
             private LockHandler LockHandler;
 
             public void Dispose()

@@ -30,8 +30,8 @@ namespace Deltin.CustomGameAutomation
         {
             if (OnDisconnect != null && IsDisconnected() && !OnDisconnectInvoked)
             {
-                    OnDisconnect.Invoke(this, new EventArgs());
-                    OnDisconnectInvoked = true;
+                OnDisconnect.Invoke(this, new EventArgs());
+                OnDisconnectInvoked = true;
             }
             else
                 OnDisconnectInvoked = false;

@@ -72,10 +72,22 @@
     <Compile Include="Interact.cs" />
     <Compile Include="Invite.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SlotTracking.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <None Include="Resources\YH_Nepal_Village.png" />
+    <None Include="Resources\KingsRowWinter.png" />
+    <None Include="Resources\HanamuraWinter.png" />
+    <None Include="Resources\BlizzardWorldWinter.png" />
+    <None Include="Resources\AntarcticaWinter.png" />
+    <None Include="Resources\BlackForestWinter.png" />
+    <None Include="Resources\roundover.png" />
     <None Include="Resources\ashe_markup.png" />
     <None Include="Resources\Oasis_University.png" />
     <None Include="Resources\Oasis_Gardens.png" />
@@ -179,19 +191,14 @@
     <None Include="Resources\brigitte_markup.png" />
     <Compile Include="MenuNavigation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="HeroSettings.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -10,18 +10,20 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        GameOverScan GameOverData = new GameOverScan();
-        //List<InviteScanData> InviteData = new List<InviteScanData>();
-
         private void StartPersistentScanning()
         {
             PersistentScanningTask = new Task(() =>
             {
+                GameOverScan gameOverData = new GameOverScan();
+                RoundOverScan roundOverData = new RoundOverScan();
+
                 while (PersistentScan)
                 {
                     using (LockHandler.Passive)
                     {
-                        ScanGameOver(GameOverData);
+                        UpdateScreen();
+                        ScanGameOver(gameOverData);
+                        ScanRoundOver(roundOverData);
                         InvokeOnDisconnect();
                     }
 
@@ -33,14 +35,13 @@ namespace Deltin.CustomGameAutomation
         Task PersistentScanningTask = null;
         bool PersistentScan = true;
 
+        #region On Game Over
         private void ScanGameOver(GameOverScan data)
         {
             // The blue team must have "\" on the start of their name.
             // The red team must have "*" on the start of their name.
             if (OnGameOver != null)
             {
-                UpdateScreen(); // Start
-
                 Team? thisCheck = null;
 
                 for (int x = 110; x < 450; x++)
@@ -95,6 +96,56 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/OnGameOver/example'></include>
         /// <seealso cref="GameOverArgs.GetWinningTeam"/>
         public event EventHandler<GameOverArgs> OnGameOver;
+
+        private class GameOverScan
+        {
+            public const int CheckLength = (int)(1.5 * 1000); // 1.5 seconds in milliseconds
+
+            public Team? CurrentWinningTeamCheck = null;
+            public Stopwatch CheckTime = new Stopwatch();
+            public bool Executed = false;
+        }
+        #endregion
+
+        #region On Round Over
+        private void ScanRoundOver(RoundOverScan roundOverScan)
+        {
+            const int startX = 464;
+            const int length = 100;
+            const int y = 105;
+
+            bool isOver = false;
+
+            Parallel.For(startX, startX + length, (x, loop) =>
+            {
+                if (Capture.CompareTo(new Rectangle(x, y, Markups.ROUND_OVER.Width, Markups.ROUND_OVER.Height), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
+                {
+                    isOver = true;
+                    loop.Break();
+                }
+            });
+
+            if (isOver && !roundOverScan.Executed)
+            {
+                OnRoundOver.Invoke(this, new EventArgs());
+                roundOverScan.Executed = true;
+            }
+            else if (!isOver && roundOverScan.Executed)
+            {
+                roundOverScan.Executed = false;
+            }
+        }
+
+        /// <summary>
+        /// Events that are executed when the round ends.
+        /// </summary>
+        public event EventHandler<EventArgs> OnRoundOver;
+
+        private class RoundOverScan
+        {
+            public bool Executed = false;
+        }
+        #endregion
     }
 
     /// <summary>
@@ -122,14 +173,5 @@ namespace Deltin.CustomGameAutomation
         {
             return WinningTeam;
         }
-    }
-
-    internal class GameOverScan
-    {
-        public const int CheckLength = (int)(1.5 * 1000); // 1.5 seconds in milliseconds
-
-        public Team? CurrentWinningTeamCheck = null;
-        public Stopwatch CheckTime = new Stopwatch();
-        public bool Executed = false;
     }
 }

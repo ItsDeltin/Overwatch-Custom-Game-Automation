@@ -379,4 +379,25 @@
   <data name="ashe_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ashe_markup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="round_over_markup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\roundover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BlackForestWinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BlackForestWinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AntarcticaWinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AntarcticaWinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BlizzardWorldWinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BlizzardWorldWinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HanamuraWinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HanamuraWinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="KingsRowWinter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\KingsRowWinter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="YH_Nepal_Village" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\YH_Nepal_Village.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
