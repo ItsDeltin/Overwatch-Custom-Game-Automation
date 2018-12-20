@@ -425,6 +425,11 @@ namespace Deltin.CustomGameAutomation
         };
     }
 
+    internal static class Timing
+    {
+        public static readonly int OPTION_MENU = 250;
+    }
+
     internal class MapMarkup
     {
         public MapMarkup(Bitmap markup, params Map[] maps) : this(new DirectBitmap(markup, true), maps)

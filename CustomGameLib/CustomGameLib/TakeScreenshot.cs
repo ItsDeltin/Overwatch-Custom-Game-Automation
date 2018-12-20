@@ -29,7 +29,7 @@ namespace Deltin.CustomGameAutomation
     partial class CustomGame
     {
         private ScreenshotMethod ScreenshotMethod;
-        private object ScreenshotLock = new object();
+        internal object ScreenshotLock = new object();
 
         // This grabs a screenshot of the Overwatch handle
         internal void UpdateScreen()

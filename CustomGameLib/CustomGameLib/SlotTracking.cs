@@ -96,8 +96,8 @@ namespace Deltin.CustomGameAutomation
 
                 var slots = GetSlots(slotFlags);
 
-                for (int slot = 0; slot < SlotCount; slot++)
-                //Parallel.For(0, SlotCount, (slot) =>
+                //for (int slot = 0; slot < SlotCount; slot++)
+                Parallel.For(0, SlotCount, (slot) =>
                 {
                     SlotIdentity slotIdentity = slots.Contains(slot) ? GetSlotIdentity(slot) : null;
 
@@ -130,7 +130,7 @@ namespace Deltin.CustomGameAutomation
                     if (changed)
                         lock (listLock)
                             changedSlots.Add(slot);
-                }
+                });
 
                 return changedSlots;
             }
@@ -159,12 +159,12 @@ namespace Deltin.CustomGameAutomation
                         if (newIdentity == null)
                             continue;
 
-                        var pi = playerTracker.Players.FirstOrDefault(p => newIdentity.CompareIdentities(p.PlayerIdentity));
+                        var pi = playerTracker._players.FirstOrDefault(p => newIdentity.CompareIdentities(p.PlayerIdentity));
 
                         // New player joined the game
                         if (pi == null)
                         {
-                            playerTracker.Players.Add(new PlayerTrackerSlot(newIdentity, slot));
+                            playerTracker._players.Add(new PlayerTrackerSlot(newIdentity, slot));
                         }
                         // Player swapped slots
                         else
@@ -175,11 +175,11 @@ namespace Deltin.CustomGameAutomation
                     }
 
                 // Remove players that left the game.
-                for (int i = playerTracker.Players.Count - 1; i >= 0; i--)
-                    if (!slots.Contains(playerTracker.Players[i].Slot))
+                for (int i = playerTracker._players.Count - 1; i >= 0; i--)
+                    if (!slots.Contains(playerTracker._players[i].Slot))
                     {
-                        playerTracker.Players[i].PlayerIdentity.Dispose();
-                        playerTracker.Players.RemoveAt(i);
+                        playerTracker._players[i].PlayerIdentity.Dispose();
+                        playerTracker._players.RemoveAt(i);
                     }
             }
         }
@@ -272,14 +272,16 @@ namespace Deltin.CustomGameAutomation
             if (identity == null)
                 throw new ArgumentNullException(nameof(identity), $"{nameof(identity)} was null.");
 
-            foreach (var player in Players)
+            foreach (var player in _players)
                 if (player.PlayerIdentity.CompareIdentities(identity))
                     return player.Slot;
             return -1;
         }
 
         internal SlotInfo SlotInfo = new SlotInfo();
-        internal List<PlayerTrackerSlot> Players = new List<PlayerTrackerSlot>();
+        internal List<PlayerTrackerSlot> _players = new List<PlayerTrackerSlot>();
+
+        public IReadOnlyList<PlayerTrackerSlot> Players { get { return _players.AsReadOnly(); } }
 
         /// <summary>
         /// Disposes data used by the object.
@@ -289,7 +291,7 @@ namespace Deltin.CustomGameAutomation
             SlotInfo.Dispose();
         }
     }
-    internal class PlayerTrackerSlot
+    public class PlayerTrackerSlot
     {
         public PlayerTrackerSlot(PlayerIdentity identity, int slot)
         {

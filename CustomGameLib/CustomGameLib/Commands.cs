@@ -358,115 +358,109 @@ namespace Deltin.CustomGameAutomation
         // Checks if an executed command should be added to the list of commands, then adds it.
         private string AddExecutedCommand(int y, int namelength, int[] seed, string command)
         {
-            // Clean up the word. makes something like "] $APPLE " into "$APPLE"
-            int lowestCommandIndex = -1;
+            #region Command Cleanup
             ListenTo ltd = null;
 
+            int nameSeperator = command.IndexOf(']');
+
+            if (nameSeperator == -1 || nameSeperator + 2 > command.Length)
+                return command;
+
+            command = command.Substring(nameSeperator + 2)
+                .Trim();
+            string firstWord = command.Split(' ')[0];
+
             lock (ListenToAccessLock)
-            {
-                for (int i = 0; i < ListenTo.Count; i++)
-                {
-                    int commandIndex = command.IndexOf(ListenTo[i].Command);
-                    if (commandIndex != -1 && (commandIndex < lowestCommandIndex || lowestCommandIndex == -1))
+                foreach (ListenTo listenData in ListenTo)
+                    if (listenData.Command == firstWord)
                     {
-                        lowestCommandIndex = commandIndex;
-                        ltd = ListenTo[i];
+                        ltd = listenData;
+                        break;
+                    }
+
+            if (ltd == null || !ltd.Listen)
+                return command;
+            #endregion
+
+            #region Chat Identity
+            // Store executor noise data in a bitmap.
+            var executorscan = new Rectangle(0, y - 4, namelength, 6);
+            DirectBitmap executor = Capture.Clone(executorscan);
+            // Set name pixels to black and everything else to white
+            for (int xi = 0; xi < executor.Width; xi++)
+                for (int yi = 0; yi < executor.Height; yi++)
+                {
+                    if (executor.CompareColor(xi, yi, seed, Chat.ChatFade))
+                        executor.SetPixel(xi, yi, Color.Black);
+                    else
+                        executor.SetPixel(xi, yi, Color.White);
+                }
+
+            ChatIdentity ci = new ChatIdentity(executor);
+            #endregion
+
+            #region Profile and Friend Check
+            PlayerIdentity pi = null;
+            bool isFriend = false;
+
+            // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
+            if (ltd.RegisterProfile || ltd.CheckIfFriend)
+            {
+                Point openMenuAt = new Point(56, y);
+
+                // Open the chat
+                cg.Chat.OpenChat();
+
+                // Open the career profile
+                cg.RightClick(openMenuAt, Timing.OPTION_MENU);
+
+                // If the Send Friend Request option exists, they are not a friend.
+                isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
+
+                if (ltd.RegisterProfile)
+                {
+                    using (cg.LockHandler.Interactive)
+                    {
+                        // By default, the career profile option is selected and we can just press enter to open it.
+                        cg.KeyPress(Keys.Enter);
+
+                        // Wait for the career profile to load.
+                        WaitForCareerProfileToLoad();
+
+                        // Take a screenshot of the career profile.
+                        cg.UpdateScreen();
+                        DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
+
+                        // Register the player identity.
+                        pi = new PlayerIdentity(careerProfileSnapshot);
+
+                        // Go back to the lobby.
+                        cg.GoBack(1);
+                        //cg.//ResetMouse();
+
+                        // If opening the career profile failed, the state of the chat could be incorrect, 
+                        // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
+                        // This will fix it.
+                        cg.Chat.OpenChat();
+                        if (!cg.OpenChatIsDefault)
+                            cg.KeyPress(Keys.Enter);
                     }
                 }
+                else
+                    cg.Interact.CloseOptionMenu();
+            }
+            #endregion
+
+            CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), pi, ci, isFriend);
+            if (ltd.Callback != null)
+                ltd.Callback.Invoke(commandData);
+            else
+            {
+                commandData.ChatIdentity.Dispose();
+                commandData.PlayerIdentity?.Dispose();
             }
 
-            if (lowestCommandIndex != -1)
-                command = command.Substring(lowestCommandIndex).Trim();
-
-            // See if command is being listened to. If it is, continue.
-            if (command.Length > 0 && ltd != null && ltd.Listen)
-            {
-                PlayerIdentity pi = null;
-                bool isFriend = false;
-
-                // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
-                if (ltd.RegisterProfile || ltd.CheckIfFriend)
-                {
-                    Point openMenuAt = new Point(56, y);
-
-                    // Open the chat
-                    cg.Chat.OpenChat();
-
-                    // Open the career profile
-                    cg.RightClick(openMenuAt, 500);
-
-                    // If the Send Friend Request option exists, they are not a friend.
-                    isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
-
-                    if (ltd.RegisterProfile)
-                    {
-                        using (cg.LockHandler.Interactive)
-                        {
-                            // By default, the career profile option is selected and we can just press enter to open it.
-                            cg.KeyPress(Keys.Enter);
-
-                            // Wait for the career profile to load.
-                            WaitForCareerProfileToLoad();
-
-                            // Take a screenshot of the career profile.
-                            cg.UpdateScreen();
-                            DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
-
-                            // Register the player identity.
-                            pi = new PlayerIdentity(careerProfileSnapshot);
-
-                            // Go back to the lobby.
-                            cg.GoBack(1);
-                            //cg.//ResetMouse();
-
-                            // If opening the career profile failed, the state of the chat could be incorrect, 
-                            // like being wrongly opened or wrongly closed because of when enter was pressed earlier.
-                            // This will fix it.
-                            cg.Chat.OpenChat();
-                            if (!cg.OpenChatIsDefault)
-                                cg.KeyPress(Keys.Enter);
-                        }
-                    }
-                    else
-                        cg.Interact.CloseOptionMenu();
-                }
-
-                // Store executor noise data in a bitmap.
-                var executorscan = new Rectangle(0, y - 4, namelength, 6);
-                DirectBitmap executor = Capture.Clone(executorscan);
-                // Set name pixels to black and everything else to white
-                for (int xi = 0; xi < executor.Width; xi++)
-                    for (int yi = 0; yi < executor.Height; yi++)
-                    {
-                        if (executor.CompareColor(xi, yi, seed, Chat.ChatFade))
-                            executor.SetPixel(xi, yi, Color.Black);
-                        else
-                            executor.SetPixel(xi, yi, Color.White);
-                    }
-
-                ChatIdentity ci = new ChatIdentity(executor);
-
-                CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), pi, ci, isFriend);
-                if (ltd.Callback != null)
-                    ltd.Callback.Invoke(commandData);
-                else
-                {
-                    commandData.ChatIdentity.Dispose();
-                    commandData.PlayerIdentity?.Dispose();
-                }
-
-                Thread.Sleep(50);
-            } // if command is being listened to
-
             return command;
-        }
-
-        private void UpdateChatCapture(ref DirectBitmap bmp)
-        {
-            cg.UpdateScreen();
-            if (bmp != null)
-                bmp.Dispose();
-            bmp = Capture.Clone(Rectangles.LOBBY_CHATBOX);
         }
 
 #if DEBUG
@@ -483,6 +477,7 @@ namespace Deltin.CustomGameAutomation
                             dbc.SetPixel(x, y, Color.Purple);
                             break;
                         }
+
             Bitmap nb = dbc.ToBitmap();
             dbc.Dispose();
 

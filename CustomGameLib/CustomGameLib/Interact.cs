@@ -73,7 +73,7 @@ namespace Deltin.CustomGameAutomation
                 return Point.Empty;
             
             // Open slot menu by right clicking on slot.
-            cg.RightClick(slotlocation);
+            cg.RightClick(slotlocation, Timing.OPTION_MENU);
             return slotlocation;
         }
 

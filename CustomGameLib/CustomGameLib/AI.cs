@@ -115,6 +115,8 @@ namespace Deltin.CustomGameAutomation
 
                     //cg.//ResetMouse();
 
+                    Thread.Sleep(50);
+
                     if (cg.OpenChatIsDefault)
                         cg.Chat.OpenChat();
 

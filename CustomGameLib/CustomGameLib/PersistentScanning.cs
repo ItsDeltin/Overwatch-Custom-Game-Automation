@@ -19,6 +19,8 @@ namespace Deltin.CustomGameAutomation
 
                 while (PersistentScan)
                 {
+                    SpinWait.SpinUntil(() => { return OnGameOver != null || OnRoundOver != null || OnDisconnect != null; });
+
                     using (LockHandler.Passive)
                     {
                         UpdateScreen();
@@ -110,29 +112,32 @@ namespace Deltin.CustomGameAutomation
         #region On Round Over
         private void ScanRoundOver(RoundOverScan roundOverScan)
         {
-            const int startX = 464;
-            const int length = 100;
-            const int y = 105;
-
-            bool isOver = false;
-
-            Parallel.For(startX, startX + length, (x, loop) =>
+            if (OnRoundOver != null)
             {
-                if (Capture.CompareTo(new Rectangle(x, y, Markups.ROUND_OVER.Width, Markups.ROUND_OVER.Height), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
+                const int startX = 464;
+                const int length = 100;
+                const int y = 105;
+
+                bool isOver = false;
+
+                Parallel.For(startX, startX + length, (x, loop) =>
                 {
-                    isOver = true;
-                    loop.Break();
-                }
-            });
+                    if (Capture.CompareTo(new Rectangle(x, y, Markups.ROUND_OVER.Width, Markups.ROUND_OVER.Height), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
+                    {
+                        isOver = true;
+                        loop.Break();
+                    }
+                });
 
-            if (isOver && !roundOverScan.Executed)
-            {
-                OnRoundOver.Invoke(this, new EventArgs());
-                roundOverScan.Executed = true;
-            }
-            else if (!isOver && roundOverScan.Executed)
-            {
-                roundOverScan.Executed = false;
+                if (isOver && !roundOverScan.Executed)
+                {
+                    OnRoundOver.Invoke(this, new EventArgs());
+                    roundOverScan.Executed = true;
+                }
+                else if (!isOver && roundOverScan.Executed)
+                {
+                    roundOverScan.Executed = false;
+                }
             }
         }
 
