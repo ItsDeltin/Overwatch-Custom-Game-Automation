@@ -91,17 +91,21 @@ namespace Deltin.CustomGameAutomation
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{1,-1},{2,-2},{3,-3},{4,-4},{3,-4},{2,-4},{1,-4},{0,-4}}, 'Z', 4), // uppercase Z
 
             // Numbers
-            new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{3,-3},{3,-4},{2,-4},{1,-4},{0,-4},{0,-3},{0,-2},{0,-1}}, '0', 3, 0, new int[] {3, 7, 10}, new int[,] {{2,-2}}), // Number 0
-            new Letter(new int[,] {{0,0},{1,0},{2,0},{2,-1},{2,-2},{2,-3},{2,-4},{1,-4},{0,-4},{-1,-4},{-1,-3},{-1,-2},{-1,-1}}, '0', 3, -1, new int[] {2,6,9}), // Number 0
+            new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{3,-3},{3,-4},{2,-4},{1,-4},{0,-4},{0,-3},{0,-2},{0,-1}}, '0', 3, 0, null, new int[,] {{1,-3},{2,-3}}), // Number 0
+            new Letter(new int[,] {{0,0},{1,0},{2,0},{2,-1},{2,-2},{2,-3},{2,-4},{1,-4},{0,-4},{-1,-4},{-1,-3},{-1,-2},{-1,-1}}, '0', 3, -1, new int[] {2,6,9}, new int[,] {{0,-3},{1,-3}}), // Number 0
             new Letter(new int[,] {{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{-1,-3}}, '1', 2), // Number 1
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{1,-1},{2,-2},{3,-3},{3,-4},{2,-4},{1,-4},{0,-4},{0,-3}}, '2', 3), // Number 2
-            new Letter(new int[,] {{0,-1},{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{2,-2},{3,-3},{3,-4},{2,-4},{1,-4},{0,-4},{0,-3}}, '3', 5), // Number 3
+            new Letter(new int[,] {{0,-1},{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{2,-2},{3,-3},{3,-4},{2,-4},{1,-4},{0,-4},{0,-3}}, '3', 4), // Number 3
             new Letter(new int[,] {{0,0},{0,-1},{-1,-1},{-2,-1},{-2,-2},{-1,-3},{0,-2},{0,-3},{0,-4},{1,-1}}, '4', 1, -2), // Number 4
-            new Letter(new int[,] {{0,-1},{0,0},{1,0},{2,0},{3,-1},{3,-2},{2,-3},{1,-3},{0,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '5', 4), // Number 5
+            new Letter(new int[,] {{0,-1},{0,0},{1,0},{2,0},{3,-1},{3,-2},{2,-3},{1,-3},{0,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '5', 3), // Number 5
             new Letter(new int[,] {{0,0},{1,0},{-1,-1},{-1,-2},{2,-1},{2,-2},{0,-3},{1,-3},{-1,-3},{0,-4},{1,-4}}, '6', 3), // Number 6
-            new Letter(new int[,] {{0,0},{0,-1},{1,-2},{2,-3},{2,-4},{1,-4},{0,-4},{-1,-4}}, '7', 3), // Number 7
-            new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{1,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '8', 4), // Number 8
+            new Letter(new int[,] {{-1,-3},{-1,-2},{-1,-1},{0,-4},{0,-3},{0,0},{1,-4},{1,-3},{1,0},{2,-4},{2,-3},{2,-2},{2,-1}}, '6', 2, -1),
+            new Letter(new int[,] {{0,0},{0,-1},{1,-2},{2,-3},{2,-4},{1,-4},{0,-4},{-1,-4}}, '7', 2, -1), // Number 7
+            new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{1,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '8', 3), // Number 8
+            new Letter(new int[,] {{0,-3},{0,-1},{0,0},{1,-4},{1,-3},{1,-2},{1,0},{2,-4},{2,-2},{2,0},{3,-3},{3,-1},{3,0}}, '8', 3, 0),
+            new Letter(new int[,] {{0,-3},{0,-1},{0,0},{1,-4},{1,-3},{1,-2},{1,0},{2,-4},{2,-2},{2,0},{3,-3},{3,-2},{3,-1},{3,0}}, '8', 3, 0),
             new Letter(new int[,] {{0,0},{1,0},{2,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '9', 3), // Number 9
+            new Letter(new int[,] {{-1,-4},{-1,-3},{-1,-1},{0,-4},{0,-2},{0,0},{1,-4},{1,-2},{1,0},{2,-3},{2,-2},{2,-1}}, '9', 3, -1),
 
             // Other
             new Letter(new int[,] {{0,1},{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{-1,-4}/*,{2,0},{2,-3}*/}, ']', 1, 0, null, new int[,] {{0,-5},{1,0},{1,-1},{1,-2},{1,-3},{1,-4}}), // End square bracket ]
@@ -224,10 +228,6 @@ namespace Deltin.CustomGameAutomation
 
                                     break;
                                 }
-
-#if DEBUG
-                        ShowScan(string.Format("{0} (from \"{1}\")", realCommand, command));
-#endif
                     }
                 }
                 catch (OverwatchClosedException) { }
@@ -311,7 +311,9 @@ namespace Deltin.CustomGameAutomation
                         int checkX = x + letters[li].Ignore[pi, 0],
                             checkY = y + letters[li].Ignore[pi, 1];
                         if (Capture.CompareColor(checkX, checkY, color, Chat.ChatFade))
-                                totalpixels++;
+                        {
+                            totalpixels++;
+                        }
                     }
 
                 double percent = Convert.ToDouble(successcount) / Convert.ToDouble(totalpixels) * 100;
@@ -462,31 +464,6 @@ namespace Deltin.CustomGameAutomation
 
             return command;
         }
-
-#if DEBUG
-        private void ShowScan(string word)
-        {
-            // Show valid seed pixels in debug mode
-            DirectBitmap dbc = Capture.Clone(Rectangles.LOBBY_CHATBOX);
-
-            for (int x = 0; x < dbc.Width; x++)
-                for (int y = 0; y < dbc.Height; y++)
-                    for (int i = 0; i < Chat.ChatColors.Length; i++)
-                        if (dbc.CompareColor(x, y, Chat.ChatColors[i], Chat.ChatFade))
-                        {
-                            dbc.SetPixel(x, y, Color.Purple);
-                            break;
-                        }
-
-            Bitmap nb = dbc.ToBitmap();
-            dbc.Dispose();
-
-            cg.g.Clear(Color.White);
-            cg.g.DrawImage(nb, new Rectangle(0, 0, nb.Width * 5, nb.Height * 5));
-            cg.g.DrawString(word, new Font("Arial", 16), Brushes.Black, new PointF(0, (float)(nb.Height * 5 * 1.1)));
-            nb.Dispose();
-        }
-#endif
 
         private Channel GetChannelFromSeed(int[] seed)
         {

@@ -60,7 +60,10 @@
     <Compile Include="Commands.cs" />
     <Compile Include="CreateOverwatchProcess.cs" />
     <Compile Include="CustomGame.cs" />
-    <Compile Include="Debug.cs" />
+    <Compile Include="DebugMenu.cs" />
+    <Compile Include="DebugMenu.Designer.cs">
+      <DependentUpon>DebugMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extras.cs" />
@@ -195,6 +198,9 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DebugMenu.resx">
+      <DependentUpon>DebugMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>

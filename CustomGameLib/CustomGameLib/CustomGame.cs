@@ -240,6 +240,12 @@ namespace Deltin.CustomGameAutomation
         /// Prevents the Overwatch window from recieving input during semi-interactive statements.
         /// </summary>
         public bool DisableInputForSemiInteractive = false;
+
+#if DEBUG
+#pragma warning disable CS1591
+        public bool DebugMode = false;
+#pragma warning restore CS1591
+#endif
     }
 
     /// <summary>

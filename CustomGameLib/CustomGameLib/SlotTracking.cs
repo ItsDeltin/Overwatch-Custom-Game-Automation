@@ -281,6 +281,9 @@ namespace Deltin.CustomGameAutomation
         internal SlotInfo SlotInfo = new SlotInfo();
         internal List<PlayerTrackerSlot> _players = new List<PlayerTrackerSlot>();
 
+        /// <summary>
+        /// List of players in the game, including their slot and player identity.
+        /// </summary>
         public IReadOnlyList<PlayerTrackerSlot> Players { get { return _players.AsReadOnly(); } }
 
         /// <summary>
@@ -291,6 +294,7 @@ namespace Deltin.CustomGameAutomation
             SlotInfo.Dispose();
         }
     }
+
     public class PlayerTrackerSlot
     {
         public PlayerTrackerSlot(PlayerIdentity identity, int slot)

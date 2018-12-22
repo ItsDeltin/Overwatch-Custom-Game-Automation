@@ -2906,6 +2906,11 @@
             <param name="identity">The identity of the player.</param>
             <returns>Returns the slot of the player. Returns -1 if it is not found.</returns>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.PlayerTracker.Players">
+            <summary>
+            List of players in the game, including their slot and player identity.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.PlayerTracker.Dispose">
             <summary>
             Disposes data used by the object.
