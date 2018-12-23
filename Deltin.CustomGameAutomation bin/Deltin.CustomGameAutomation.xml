@@ -1115,6 +1115,13 @@
             <param name="checkIfFriend">Should the player who executes this command be checked to see if they are a friend?</param>
             <param name="callback">Method to be executed when the command is executed.</param>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.ListenTo.#ctor(System.String,Deltin.CustomGameAutomation.CommandExecuted)">
+            <summary>
+            Data for commands to listen to on the Commands class.
+            </summary>
+            <param name="command">Command to listen to.</param>
+            <param name="callback">Method to be executed when the command is executed.</param>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.ListenTo.Command">
             <summary>
             Command to listen to.

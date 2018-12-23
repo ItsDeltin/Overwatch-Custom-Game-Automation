@@ -68,7 +68,8 @@ namespace Deltin.CustomGameAutomation
             Thread.Sleep(250);
 
 #if DEBUG
-            SetupDebugWindow();
+            if (customGameBuilder.DebugMode)
+                SetupDebugWindow();
 #endif
 
             // Create subclass instances.

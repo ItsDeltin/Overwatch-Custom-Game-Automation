@@ -84,7 +84,7 @@ namespace Deltin.CustomGameAutomation
             new Letter(new int[,] {{0,0},{0,-1},{0,-2},{0,-3},{0,-4},{1,0},{2,0},{3,0},{4,0},{4,-1},{4,-2},{4,-3},{4,-4}}, 'U', 5, 0, new int[] {0, 8}, new int[,] {{1,-4},{2,-4},{3,-4}}), // uppercase U
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{-1,-1},{-1,-2},{-1,-3},{-1,-4},{3,-1},{3,-2},{3,-3},{3,-4}}, 'U', 4, -1, new int[] {3}, new int[,] {{1,-4},{2,-4},{3,-4}}), // uppercase U
             new Letter(new int[,] {{0,0},{1,0},{2,0},{-1,-1},{-1,-2},{-1,-3},{-1,-4},{3,-1},{3,-2},{3,-3},{3,-4}}, 'U', 4, -1), // uppercase U for open chat
-            new Letter(new int[,] {{0,0},{0,-1},{-1,-2},{-1,-3},{-2,-4},{1,0},{1,-1},{1,-2},{2,-3},{2,-4}}, 'V', 2, -2), // uppercase V
+            new Letter(new int[,] {{0,0},{0,-1},{-1,-2},{-1,-3},{-2,-4},{1,0},{1,-1},{1,-2},{2,-3},{2,-4}}, 'V', 2, -1), // uppercase V
             new Letter(new int[,] {{0,0},{0,-1},{0,-2},{0,-3},{-1,-3},{-1,-4},{1,0},{1,-1},{1,-2},{2,-3},{2,-4},{3,-4},{3,-3},{3,-2},{3,-1},{4,-1},{4,0},{5,-1},{5,-2},{5,-3},{5,-4}}, 'W', 5, 0), // uppercase W
             new Letter(new int[,] {{0,0},{1,-1},{2,-2},{3,-3},{4,-4},{3,-1},{4,0},{1,-3}}, 'X', 4), // uppercase X
             new Letter(new int[,] {{0,0},{0,-1},{0,-2},{1,-3},{2,-4},{-1,-3},{-2,-4}}, 'Y', 2, -2), // uppercase Y
@@ -113,6 +113,8 @@ namespace Deltin.CustomGameAutomation
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{3,-1},{2,-2},{1,-2},{0,-3},{0,-4},{1,-4},{2,-4},{3,-4},{1,-3},{1,-1},{1,1}}, '$', 3, 0, new int[] { 0,-1 }), // $ symbol
         };
         #endregion
+
+        private static readonly char[] TouchingCharacters = new char[] { 'M', 'N', 'X', 'L', 'U' };
 
         private const int MarkerX = 50; // The X location of the chat marker.
         private const int TextStart = 54; // The X location that the chat text starts.
@@ -206,25 +208,35 @@ namespace Deltin.CustomGameAutomation
                         }
                         #endregion
 
-                        string command = "";
-                        string realCommand = null;
-
                         foreach (LineInfo line in lineInfo)
                             foreach (int[] color in Chat.ChatColors)
                                 if (Capture.CompareColor(MarkerX, line.Marker, color, Chat.ChatFade))
                                 {
+                                    string command = "";
                                     int nameLength = -1;
+#if DEBUG
+                                    List<LetterResult> letterInfos = new List<LetterResult>();
+#endif
+
                                     for (int i = 0; i < line.Lines.Length; i++)
                                     {
                                         LineScanResult linescan = ScanLine(TextStart, ChatLength, line.Lines[i], color);
 
                                         command += linescan.Word;
 
+#if DEBUG
+                                        letterInfos.AddRange(linescan.LetterInfos);
+#endif
+
                                         if (i == 0)
                                             nameLength = linescan.NameLength;
                                     }
                                     
-                                    realCommand = AddExecutedCommand(line.Lines[0], nameLength, color, command);
+                                    AddExecutedCommand(line.Lines[0], nameLength, color, command
+#if DEBUG
+                                        , letterInfos
+#endif
+                                        );
 
                                     break;
                                 }
@@ -241,10 +253,12 @@ namespace Deltin.CustomGameAutomation
         // Scans a chat line.
         private LineScanResult ScanLine(int xStart, int length, int y, int[] color)
         {
-            int namelength = 0; // Length of the name of the player that sent a chat message.
-            bool namefound = false; // Determines if the name of the player that sent the chat message has been found.
+            int namelength = -1; // Length of the name of the player that sent a chat message.
             int space = 0; // Space in pixels between letters.
             string word = ""; // Text of chat message
+#if DEBUG
+            List<LetterResult> letterInfos = new List<LetterResult>();
+#endif
             // For each pixel for the width of the chat message box.
             for (int x = xStart; x < xStart + length; x++)
             {
@@ -257,23 +271,34 @@ namespace Deltin.CustomGameAutomation
                     if (bestletter != null)
                     {
                         // If space is 2 or higher, add a space to the word.
-                        if (x + bestletter.Least - space >= 2)
+                        if (x + bestletter.Letter.Least - space >= 2)
+                        {
                             word += " ";
+#if DEBUG
+                            letterInfos.Add(null);
+#endif
+                        }
                         // Add the letter to the word
-                        word += bestletter.Letter;
+                        word += bestletter.Letter.Char;
+#if DEBUG
+                        letterInfos.Add(bestletter);
+#endif
                         // Increment i to letter length to prevent pixels being checked that don't need to be checked because a confirmed letter is there.
-                        x += bestletter.Length;
+                        x += bestletter.Letter.Length;
                         space = x + 1;
                         // If the bestletter is ] for the first time, then the name length in pixels has been found. 
-                        if (bestletter.Letter == ']' && namefound == false)
-                        {
-                            namefound = true;
+                        if (bestletter.Letter.Char == ']' && namelength == -1)
                             namelength = x;
-                        }
                     }
                 }
             }
-            return new LineScanResult(word, namelength);
+            return new LineScanResult(word, namelength)
+#if DEBUG
+            {
+                LetterInfos = letterInfos
+            }
+#endif
+                ;
         }
 
         // Checks for a chat letter at the input X and Y value.
@@ -316,15 +341,21 @@ namespace Deltin.CustomGameAutomation
                         }
                     }
 
-                double percent = Convert.ToDouble(successcount) / Convert.ToDouble(totalpixels) * 100;
+                float result = (float)successcount / totalpixels;
 
-                if (percent == 100)
+                if (result == 1)
                 {
                     LetterResult connected = null;
                     // The letter L can connect to other letters. LM can be confused for U1. This checks for the letter that the L could be connected to.
-                    if (letters[li].LetterChar == 'L')
+                    if (letters[li].Char == 'L')
                         connected = CheckLetter(x + letters[li].Length + 1, y, color);
-                    letterresult.Add(new LetterResult(letters[li].LetterChar, (int)percent, letters[li].Pixel.GetLength(0), letters[li].Length, letters[li].Least, connected, optional)); // Add letter to possible letters.
+                    letterresult.Add(new LetterResult(letters[li], letters[li].Pixel.GetLength(0) + optional, connected)
+#if DEBUG
+                    {
+                        Location = new Point(x, y)
+                    }
+#endif
+                        ); // Add letter to possible letters.
                 }
             }
 
@@ -336,12 +367,12 @@ namespace Deltin.CustomGameAutomation
 
                 // If letterresult[bi]'s pixel count is higher than bestletter's pixel count, make bestletter letterresult[bi] 
                 // Also, make sure LM/LN/LX/LL/LU isn't confused for something else.
-                if (letterresult[bi].TotalPixels + letterresult[bi].Optional > bestletter.TotalPixels + bestletter.Optional)
+                if (letterresult[bi].TotalPixels > bestletter.TotalPixels)
                 {
                     if (bestletter.Connected != null)
                     {
                         // M, N, X, L, U are the letters L can connect to.
-                        if ((bestletter.Letter == 'L' && letterresult[bi].Letter == 'U' && new char[] { 'M', 'N', 'X', 'L', 'U' }.Contains(bestletter.Connected.Letter)) == false)
+                        if ((bestletter.Letter.Char == 'L' && letterresult[bi].Letter.Char == 'U' && TouchingCharacters.Contains(bestletter.Connected.Letter.Char)) == false)
                             bestletter = letterresult[bi];
                     }
                     else
@@ -349,28 +380,32 @@ namespace Deltin.CustomGameAutomation
                 }
             }
 
-            // Return the best possible letter.
-            if (bestletter != null)
-            {
-                return bestletter;
-            }
-            return null;
+            return bestletter;
         }
 
         // Checks if an executed command should be added to the list of commands, then adds it.
-        private string AddExecutedCommand(int y, int namelength, int[] seed, string command)
+        private string AddExecutedCommand(int y, int namelength, int[] seed, string command
+#if DEBUG
+            , List<LetterResult> letterInfos
+#endif
+            )
         {
             #region Command Cleanup
             ListenTo ltd = null;
 
-            int nameSeperator = command.IndexOf(']');
+            int nameSeperator = command.IndexOf(']') + 2;
 
-            if (nameSeperator == -1 || nameSeperator + 2 > command.Length)
+            if (nameSeperator == 1 || nameSeperator > command.Length)
                 return command;
 
-            command = command.Substring(nameSeperator + 2)
+            command = command.Substring(nameSeperator)
                 .Trim();
             string firstWord = command.Split(' ')[0];
+
+#if DEBUG
+            letterInfos.RemoveRange(0, nameSeperator);
+            cg.DebugMenu.ShowScan(letterInfos);
+#endif
 
             lock (ListenToAccessLock)
                 foreach (ListenTo listenData in ListenTo)
@@ -478,39 +513,34 @@ namespace Deltin.CustomGameAutomation
             public Letter(int[,] pixel, char letter, int length, int least = 0, int[] optional = null, int[,] ignore = null)
             {
                 Pixel = pixel;
-                LetterChar = letter;
+                Char = letter;
                 Length = length;
                 Least = least;
                 Optional = optional;
                 Ignore = ignore;
             }
             public int[,] Pixel { get; private set; }
-            public char LetterChar { get; private set; }
+            public char Char { get; private set; }
             public int Length { get; private set; }
             public int Least { get; private set; }
             public int[] Optional { get; private set; }
             public int[,] Ignore { get; private set; }
         }
 
-        private class LetterResult
+        internal class LetterResult
         {
-            public LetterResult(char letter, int percent, int totalPixels, int length, int least, LetterResult connected, int optional)
+            public LetterResult(Letter letter, int totalPixels, LetterResult connected)
             {
                 Letter = letter;
-                Percent = percent;
                 TotalPixels = totalPixels;
-                Length = length;
-                Least = least;
                 Connected = connected;
-                Optional = optional;
             }
-            public char Letter { get; private set; }
-            public int Percent { get; private set; }
+            public Letter Letter { get; private set; }
             public int TotalPixels { get; private set; }
-            public int Length { get; private set; }
-            public int Least { get; private set; }
             public LetterResult Connected { get; private set; }
-            public int Optional { get; private set; }
+#if DEBUG
+            public Point Location { get; set; }
+#endif
         }
 
         private class LineScanResult
@@ -522,6 +552,9 @@ namespace Deltin.CustomGameAutomation
             }
             public string Word { get; private set; }
             public int NameLength { get; private set; }
+#if DEBUG
+            public List<LetterResult> LetterInfos { get; set; }
+#endif
         }
 
         private class LineInfo
@@ -596,7 +629,7 @@ namespace Deltin.CustomGameAutomation
                 bool characterFound = false;
 
                 for (int l = 0; l < Commands.letters.Length; l++)
-                    if (command[c] == Commands.letters[l].LetterChar)
+                    if (command[c] == Commands.letters[l].Char)
                         characterFound = true;
 
                 if (!characterFound)
@@ -610,6 +643,13 @@ namespace Deltin.CustomGameAutomation
             CheckIfFriend = checkIfFriend;
             Callback = callback;
         }
+
+        /// <summary>
+        /// Data for commands to listen to on the Commands class.
+        /// </summary>
+        /// <param name="command">Command to listen to.</param>
+        /// <param name="callback">Method to be executed when the command is executed.</param>
+        public ListenTo(string command, CommandExecuted callback) : this(command, true, false, false, callback) { }
 
         /// <summary>
         /// Command to listen to.

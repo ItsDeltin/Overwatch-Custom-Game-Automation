@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
-    internal partial class DebugMenu : Form
+    partial class DebugMenu : Form
     {
         #region Fields
         private readonly CustomGame cg;
@@ -31,7 +31,7 @@ namespace Deltin.CustomGameAutomation
         #endregion
 
         #region Initialization
-        internal DebugMenu(CustomGame cg)
+        public DebugMenu(CustomGame cg)
         {
             this.cg = cg;
             InitializeComponent();
@@ -69,6 +69,20 @@ namespace Deltin.CustomGameAutomation
 
                 if (SetLineRect != null)
                     e.Graphics.FillRectangle(SetLineIndicator, ChatboxToContainer(SetLineRect));
+
+                if (LettersScanned != null && previousIndex != -1 && previousIndex < LettersScanned.Length && LettersScanned[previousIndex] != null)
+                {
+                    Rectangle[] rectangles = new Rectangle[LettersScanned[previousIndex].Letter.Pixel.GetLength(0)];
+                    for (int r = 0; r < rectangles.Length; r++)
+                        rectangles[r] = ChatboxToContainer(new Rectangle
+                            (
+                            x: LettersScanned[previousIndex].Location.X - Rectangles.LOBBY_CHATBOX.X + LettersScanned[previousIndex].Letter.Pixel[r, 0],
+                            y: LettersScanned[previousIndex].Location.Y - Rectangles.LOBBY_CHATBOX.Y + LettersScanned[previousIndex].Letter.Pixel[r, 1],
+                            width: 1, height: 1
+                            ));
+
+                    e.Graphics.FillRectangles(Brushes.IndianRed, rectangles);
+                }
             }
         }
 
@@ -90,48 +104,32 @@ namespace Deltin.CustomGameAutomation
             if (Chatbox == null)
                 return;
 
-            Point chatboxLocation = ContainerToChatbox(e.Location);
-            chatboxLocation.Offset(1, 0);
+            Point selectLocation = ContainerToChatbox(e.Location);
+            selectLocation.Offset(1, 0);
+            selectLocation.X = Math.Min(Math.Max(selectLocation.X, 0), Chatbox.Width);
+            selectLocation.Y = Math.Min(Math.Max(selectLocation.Y, 0), Chatbox.Height);
 
-            cursorLocation.Text = $"{chatboxLocation.X}, {chatboxLocation.Y}. Line location: {SetLineRect.Y}";
+            cursorLocation.Text = $"{selectLocation.X}, {selectLocation.Y}. Line location: {SetLineRect.Y}";
 
             if (!SetLineMode)
             {
                 if (e.Button != MouseButtons.Left)
                     return;
-                /*
+
                 SelectRect.Location = new Point(
-                    Math.Max(Math.Min(SelectStartPoint.X, chatboxLocation.X), 0),
-                    Math.Max(Math.Min(SelectStartPoint.Y, chatboxLocation.Y), 0));
+                    Math.Min(SelectStartPoint.X, selectLocation.X),
+                    Math.Min(SelectStartPoint.Y, selectLocation.Y));
                 SelectRect.Size = new Size(
-                    Math.Abs(SelectStartPoint.X - Math.Min(chatboxLocation.X, Chatbox.Width)),
-                    Math.Abs(SelectStartPoint.Y - Math.Min(chatboxLocation.Y, Chatbox.Height)));
-                */
-                SelectRect.Location = new Point(
-                    Math.Min(SelectStartPoint.X, chatboxLocation.X),
-                    Math.Min(SelectStartPoint.Y, chatboxLocation.Y));
-                SelectRect.Size = new Size(
-                    Math.Abs(SelectStartPoint.X - chatboxLocation.X),
-                    Math.Abs(SelectStartPoint.Y - chatboxLocation.Y));
+                    Math.Abs(SelectStartPoint.X - selectLocation.X),
+                    Math.Abs(SelectStartPoint.Y - selectLocation.Y));
 
                 Chat.Invalidate();
             }
             else
             {
-                SetLineRect = new Rectangle(0, chatboxLocation.Y, Chat.Width, 1);
+                SetLineRect = new Rectangle(0, selectLocation.Y, Chat.Width, 1);
                 Chat.Invalidate();
             }
-        }
-
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
-        {
-            /*
-            if (SelectRect != null && SelectRect.Width > 0 && SelectRect.Height > 0)
-            {
-                int width  = SelectRect.Width  / (pictureBox1.Width  / chatbox.Width ),
-                    height = SelectRect.Height / (pictureBox1.Height / chatbox.Height);
-            }
-            */
         }
         #endregion
 
@@ -295,6 +293,78 @@ namespace Deltin.CustomGameAutomation
             clipboardThread.SetApartmentState(ApartmentState.STA);
             clipboardThread.IsBackground = false;
             clipboardThread.Start();
+        }
+
+        private void richTextBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            int index = richTextBox1.GetCharIndexFromPosition(e.Location);
+
+            if (previousIndex == index)
+                return;
+
+            int selectStart = richTextBox1.SelectionStart,
+                selectLength = richTextBox1.SelectionLength;
+
+            if (previousIndex != -1)
+            {
+                richTextBox1.Select(previousIndex, 1);
+                richTextBox1.SelectionColor = Color.Black;
+            }
+
+            richTextBox1.Select(index, 1);
+            richTextBox1.SelectionColor = Color.DarkOrange;
+
+            previousIndex = index;
+
+            richTextBox1.Select(selectStart, selectLength);
+
+            Chat.Invalidate();
+        }
+
+        private void richTextBox1_MouseLeave(object sender, EventArgs e)
+        {
+            if (previousIndex == -1)
+                return;
+
+            int selectStart = richTextBox1.SelectionStart,
+                selectLength = richTextBox1.SelectionLength;
+
+            richTextBox1.Select(previousIndex, 1);
+            richTextBox1.SelectionColor = Color.Black;
+
+            richTextBox1.Select(selectStart, selectLength);
+            previousIndex = -1;
+            Chat.Invalidate();
+        }
+
+        int previousIndex = -1;
+
+        public void ShowScan(List<Commands.LetterResult> letterInfos)
+        {
+            string command = new string(letterInfos.Select(info => info?.Letter.Char ?? ' ').ToArray());
+
+            LettersScanned = new Commands.LetterResult[command.Length];
+            for (int i = 0; i < LettersScanned.Length; i++)
+                LettersScanned[i] = letterInfos[i];
+
+            SetTextBox(command);
+        }
+
+        private void SetTextBox(string value)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<string>(SetTextBox), new object[] { value });
+                return;
+            }
+            richTextBox1.Text = value;
+        }
+
+        private Commands.LetterResult[] LettersScanned;
+
+        private void richTextBox1_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            ((RichTextBox)sender).Height = e.NewRectangle.Height + 5;
         }
     }
 
