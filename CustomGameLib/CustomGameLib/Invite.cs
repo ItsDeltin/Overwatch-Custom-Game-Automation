@@ -18,14 +18,14 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         public bool InvitePlayer(string playerName, Team team)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (playerName == null)
-                    throw new ArgumentNullException("playerTeam");
+                    throw new ArgumentNullException(nameof(playerName));
                 if (team.HasFlag(Team.Queue))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Queue.");
 
-                updateScreen();
+                UpdateScreen();
                 // check if the add AI button is there.
                 // because the invite button gets moved if it is/isnt there.
                 if (DoesAddButtonExist())
@@ -60,9 +60,9 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(200);
 
-                updateScreen();
+                UpdateScreen();
 
-                if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
+                if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     LeftClick(Points.INVITE_INVITE); // invite player
                     //ResetMouse();
@@ -86,11 +86,15 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="playerName"/> is null.</exception>
         public bool InvitePlayer(string playerName, int slot)
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (playerName == null)
-                    throw new ArgumentNullException("playerTeam");
-                if (!IsSlotValid(slot) || IsSlotInQueue(slot))
+                    throw new ArgumentNullException(nameof(playerName));
+
+                if (!IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
+
+                if (IsSlotInQueue(slot))
                     throw new InvalidSlotException("slot cannot be in queue.");
 
                 if (AllSlots.Contains(slot))
@@ -105,9 +109,9 @@ namespace Deltin.CustomGameAutomation
 
                 Thread.Sleep(200);
 
-                updateScreen();
+                UpdateScreen();
 
-                if (CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
+                if (Capture.CompareColor(Points.INVITE_INVITE, Colors.CONFIRM, Fades.CONFIRM))
                 {
                     LeftClick(Points.INVITE_INVITE); // invite player
                     //ResetMouse();
@@ -123,15 +127,15 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Gets the slots that are invited but are not ingame yet.
+        /// Gets the slots that are invited.
         /// </summary>
         /// <returns>The list of slots invited.</returns>
         public List<int> GetInvitedSlots()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 // Get all non-AI players
-                List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue);
+                List<int> players = GetSlots(SlotFlags.Blue | SlotFlags.Red | SlotFlags.Spectators | SlotFlags.Queue);
 
                 // Close the chat if it is opened
                 if (OpenChatIsDefault && players.Contains(5))
@@ -146,7 +150,7 @@ namespace Deltin.CustomGameAutomation
 
                 while (sw.ElapsedMilliseconds <= InviteScanData.MSToScan)
                 {
-                    updateScreen();
+                    UpdateScreen();
                     foreach (int slot in players)
                     {
                         // Get the data relating to the slot.
@@ -155,7 +159,7 @@ namespace Deltin.CustomGameAutomation
                         // Copy a 20x20 (10x10 if spectator) pixel square of the invite icon animation.
                         Point scanAt = AddToSlotOrigin(IsSlotBlueOrRed(slot) ? InviteScanData.Origin : InviteScanData.SpectatorOrigin, slot, true);
                         int range = IsSlotBlueOrRed(slot) ? InviteScanData.PlayerRange : InviteScanData.SpectatorRange;
-                        Bitmap markup = BmpClone(scanAt.X - range, scanAt.Y - range, range * 2, range * 2);
+                        DirectBitmap markup = Capture.Clone(scanAt.X - range, scanAt.Y - range, range * 2, range * 2);
 
                         // If there is no previous record of the animation for the slot, create it.
                         if (previousSlotData == null)
@@ -166,16 +170,20 @@ namespace Deltin.CustomGameAutomation
                         {
                             // If there is, compare it to the previous one.
 
+                            /*
                             bool NotMatching = false;
                             for (int x = 0; x < markup.Width && !NotMatching; x++)
                                 for (int y = 0; y < markup.Height && !NotMatching; y++)
                                     if (!previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
                                         NotMatching = true;
+                            */
+
+                            bool matching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, 98, DBCompareFlags.Multithread);
 
                             previousSlotData.Markup.Dispose();
                             previousSlotData.Markup = markup;
 
-                            if (NotMatching)
+                            if (!matching)
                             {
                                 previousSlotData.Changes++;
                             }
@@ -199,7 +207,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Gets the number of slots that are invited but are not ingame yet.
+        /// Gets the number of slots that are invited.
         /// </summary>
         /// <returns>The number of slots invited.</returns>
         public int GetInvitedCount()
@@ -222,11 +230,11 @@ namespace Deltin.CustomGameAutomation
             {
                 if (IsSlotSpectator(slot))
                 {
-                    newPoint.Y += FindSpectatorOffset(noUpdate) + (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - Spectatorid));
+                    newPoint.Y += FindSpectatorOffset(noUpdate) + (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - SpectatorID));
                 }
                 else if (IsSlotInQueue(slot))
                 {
-                    newPoint.Y += (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - Queueid)) - Distances.LOBBY_QUEUE_OFFSET;
+                    newPoint.Y += (Distances.LOBBY_SPECTATOR_SLOT_DISTANCE * (slot - QueueID)) - Distances.LOBBY_QUEUE_OFFSET;
                 }
             }
 
@@ -235,14 +243,14 @@ namespace Deltin.CustomGameAutomation
 
         internal class InviteScanData
         {
-            public InviteScanData(int slot, Bitmap markup)
+            public InviteScanData(int slot, DirectBitmap markup)
             {
                 Slot = slot;
                 Markup = markup;
             }
 
             public int Slot;
-            public Bitmap Markup;
+            public DirectBitmap Markup;
             public double Changes = 0;
 
             public static readonly Point Origin = new Point(176, 252);
@@ -251,7 +259,6 @@ namespace Deltin.CustomGameAutomation
             public const int SpectatorRange = 6;
             public const int MarkupFade = 5;
             public const int MSToScan = 250;
-            public const int DifferenceToBeMarkedAsChanged = 100; // 100%
             public const int Player_MarkInvitedWithPercentageChanged = 50; // 50%
             public const int Spectator_MarkInvitedWithPercentageChanged = 20; // 25%
 

@@ -1,56 +1,108 @@
 # Overwatch Custom Game Automation
 A library for automating Overwatch custom games.
-[Click here for tutorial and documentation](https://www.abyxa.net/Library/Library.html)
 
-## Getting Started
-
-### Prerequisites
-- [Overwatch](http://playoverwatch.com/en-us/) 
+## Prerequisites
+- [Overwatch](http://playoverwatch.com/en-us/)
 - .Net Framework 4.7.1 or later.
 
-### Usage
-
-Add a reference to Deltin.CustomGameAutomation.
+## Getting Started
+Add a reference to `Deltin.CustomGameAutomation` and create a `CustomGame` object.
 ```C#
 using Deltin.CustomGameAutomation;
-```
-Create a CustomGame object. By default, it uses the first Overwatch process it finds.
-```C#
+...
 CustomGame cg = new CustomGame();
 ```
-If you want it to use a specific Overwatch process, you can use the main window handle as an argument.
+#### Usage Example:
 ```C#
-Process overwatchProcess = ...
-CustomGame cg = new CustomGame(overwatchProcess.MainWindowHandle);
+// Writes to the console the number of players in the custom game server.
+int allPlayers = cg.AllCount;
+Console.WriteLine("Total player count: " + allPlayers);
+
+// Writes to the console the number of players in the blue team.
+int blueCount = cg.BlueCount;
+Console.WriteLine("Players in blue: " + blueCount);
+
+// Sends a message to the chat.
+cg.Chat.SendChatMessage("Welcome to my custom game!");
+
+// Moves all players in blue to red.
+var slots = cg.GetSlots(SlotFlags.Blue);
+foreach (int slot in slots)
+{
+	cg.Interact.SwapToRed(slot);
+}
+
+// Adds 3 hard AI Bastions to the red team.
+cg.AI.AddAI(AIHero.Bastion, Difficulty.Hard, Team.Red, 3);
+
+// Sets the selected map to Volskaya Industries, Hollywood, and Busan.
+cg.ToggleMap(
+	modesEnabled: Gamemode.Assault | Gamemode.AssaultEscort | Gamemode.Control | Gamemode.Escort,
+	currentEvent: OWEvent.None,
+	toggleAction: ToggleAction.DisableAll,
+	Map.A_VolskayaIndustries, Map.AE_Hollywood, Map.C_Busan
+	);
+	
+// Invites a player to the game.
+cg.InvitePlayer("Tracer#1234", Team.BlueAndRed);
+
+// ...And more!
 ```
-By default the CustomGame class uses BitBlt to capture screenshots of the Overwatch process. Since this method doesn't work on some systems, you can choose the screenshot method to use.
+
+<details>
+<summary>The library can...</summary>
+
+- Get the player count.
+- Get the slots filled.
+- Get the current Overwatch event.
+- Change the enabled maps.
+- Get the current map.
+- Get the enabled modes.
+- Invite a player to the game using their battletag.
+- Get the slots that are invited to the game.
+- Start the map, start the gamemode, restart, and send the custom game server to the lobby. 
+- Set the hero roster.
+- Set the hero settings.
+- Swap 2 players' slots.
+- Swap both teams.
+- Swap a player's team.
+- Swap a player to spectators.
+- Check if a slot is an AI.
+- Add an AI.
+- Remove an AI.
+- Remove all AIs.
+- Edit an AI.
+- Get an AI's difficulty.
+- Send a chat message.
+- Join a chat channel. (All,Match,Team,Group,PM)
+- Listen for a chat command.
+- Pause/unpause the game
+- Get the dead players' slots.
+- Get the hero a slot is playing.
+- Check if a slot is a friend.
+- Check if a slot chose a hero.
+- Check if a slot's ultimate ability is ready.
+- Get the max player count.
+- Get the slot the moderator is in.
+- Load a preset.
+- Set the game name.
+- Set the max players.
+- Set a team's name.
+- Track when a slot updates.
+- Get the current game state.
+</details>
+
+#### Not working?
+Overwatch's colorblind, gamma, and brightness settings must be set to default. Contrast must be set to the minimum.
+
+The default method for capturing the Overwatch screen is BitBlt. If the library doesn't work for you, use ScreenCopy.
 ```C#
-CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethods.BitBlt);
-// or
-CustomGame cg = new CustomGame(default(IntPtr), ScreenshotMethods.ScreenCopy);
+CustomGame cg = new CustomGame(
+	new CustomGameBuilder()
+	{
+		ScreenshotMethod = ScreenshotMethod.ScreenCopy
+	});
 ```
-- BitBlt does not require to be on top. You can have other windows over the Overwatch window and it will still work.
-- ScreenCopy needs to be on top and have no windows overlapping the Overwatch window. Does not work with all border styles right now.
 
-The Overwatch window the CustomGame class is using must have default colorblind, brightness, and gamma settings with contrast at the minimum. Some methods may not work unless you are the moderator of the custom game and/or you are in spectator.
-
-It is possible to run your application and play Overwatch at the same time by starting 2 Overwatch processes directly from the Overwatch.exe file, which is by default at C:/Program Files (x86)/Overwatch/Overwatch.exe. Create the CustomGame object with the main window handle of the Overwatch process you want the CustomGame class to use. If you are using ScreenCopy, which requires the Overwatch window the CustomGame class is using to be on top, I recommend using a virtual machine.
-
-### Slots
-You can target a specific player on the server with their slot.
-
-![](https://raw.githubusercontent.com/ItsDeltin/Overwatch-Custom-Game-Automation/master/Documentation/Library/Assets/slots.jpg "slots")
-
-`CustomGame.BlueSlots`, for the example above, will return a List<int> containing only the number 0.
-
-`CustomGame.CG_Interact.Move(0, 8)` will move the player Deltin from slot 0 on the blue team to slot 8 on the red team.
-
-`CustomGame.CG_PlayerInfo.IsUltimateReady(5)` will check if the player in slot 5's ultimate ability is ready.
-
-### Examples
-
-- [ZombieBot](https://github.com/ItsDeltin/Overwatch-Custom-Game-Automation/tree/master/ZombieBot "ZombieBot")
-
-- [1. Creating a game of tag](https://www.abyxa.net/Library/Tag.html "1. Creating a game of tag")
-
-- [2. Map voting system](https://www.abyxa.net/Library/MapVoting.html "2. Map voting system")
+## Examples
+- [ZombieBot](https://github.com/ItsDeltin/ZombieBot) ([Play](https://www.abyxa.net/zombie))

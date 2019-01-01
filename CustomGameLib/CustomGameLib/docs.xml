@@ -14,35 +14,21 @@
       The code below will allow the players in the server to vote for a map.
       <code>
       using System;
+      using System.Collections.Generic;
       using System.Linq;
       using System.Threading;
-      using System.Collections.Generic;
       using Deltin.CustomGameAutomation;
 
-      public class MapVoting
+      class MapVoting
       {
-          private static Map[] Maps = new Map[]
-          {
-              Map.TDM_Antarctica,
-              Map.TDM_Dorado,
-              Map.TDM_Lijiang_Garden,
-              Map.TDM_Petra,
-              Map.TDM_Nepal_Shrine,
-              Map.TDM_Hanamura
-          };
-          private static string[] MapNames = new string[]
-          {
-              "Antarctica",
-              "Dorado",
-              "Lijiang Garden",
-              "Petra",
-              "Nepal Shrine",
-              "Hanamura"
-          };
+          private static readonly ListenTo VoteCommand = new ListenTo(&quot;$VOTE&quot;, true, false, false, OnVote);
 
-          public static void VoteForMap(CustomGame cg, ModesEnabled modesEnabled, Event overwatchEvent)
+          public static Map VoteForMap(CustomGame cg, Map[] maps)
           {
+              cg.Commands.Listen = true;
+
               Random rnd = new Random();
+
               int[] votemap = new int[VoteCount]; // The index of maps that can be voted for. 3 is the amount of maps chosen that can be voted for.
               for (int i = 0; i &lt; votemap.Length; i++)
               {
@@ -50,7 +36,7 @@
                   while (true)
                   {
                       // Make sure there are no duplicates when choosing the next map to be added to the votemap array
-                      choose = rnd.Next(Maps.Length);
+                      choose = rnd.Next(maps.Length);
                       if (votemap.Contains(choose))
                           continue;
                       break;
@@ -58,25 +44,23 @@
                   votemap[i] = choose;
               }
 
-              string type = FormatMessage(
-                  "Vote for map! (15 seconds)",
-                  MapNames[votemap[0]] + " - $VOTE 1",
-                  MapNames[votemap[1]] + " - $VOTE 2",
-                  MapNames[votemap[2]] + " - $VOTE 3");
-              cg.Chat.SendChatMessage(type);
+              // Send the maps to vote for to the chat.
+              cg.Chat.SendChatMessage(FormatMessage(
+                  &quot;Vote for map! (15 seconds)&quot;,
+                  maps[votemap[0]].ShortName + &quot; - $VOTE 1&quot;,
+                  maps[votemap[1]].ShortName + &quot; - $VOTE 2&quot;,
+                  maps[votemap[2]].ShortName + &quot; - $VOTE 3&quot;));
 
-              // Start listening to the "$VOTE" command.
-              cg.Commands.ListenTo.Add(new ListenTo("$VOTE", true, false, OnVote));
-              // Listen for chat commands for 15 seconds.
-              cg.Commands.Listen = true;
+              // Listen to the &quot;$VOTE&quot; command for 15 seconds.
+              cg.Commands.ListenTo.Add(VoteCommand);
               Thread.Sleep(15000);
-              cg.Commands.Listen = false;
+              cg.Commands.ListenTo.Remove(VoteCommand);
               // Get results
               int[] results = new int[VoteCount]
               {
-                  VoteResults.Count(vr =&gt; vr.VotingFor == 1),
-                  VoteResults.Count(vr =&gt; vr.VotingFor == 2),
-                  VoteResults.Count(vr =&gt; vr.VotingFor == 3),
+              VoteResults.Count(vr =&gt; vr.VotingFor == 1),
+              VoteResults.Count(vr =&gt; vr.VotingFor == 2),
+              VoteResults.Count(vr =&gt; vr.VotingFor == 3)
               };
 
               int winningmap = votemap[Array.IndexOf(results, results.Max())];
@@ -86,28 +70,55 @@
               VoteResults = new List&lt;Vote&gt;();
 
               // Print the results to the chat
-              cg.Chat.SendChatMessage(String.Format("{0}: {1} votes, {2}: {3} votes, {4}: {5} votes", MapNames[votemap[0]], results[0], MapNames[votemap[1]], results[1], MapNames[votemap[2]], results[2]));
-              cg.Chat.SendChatMessage("Next map: " + MapNames[winningmap]);
-              cg.ToggleMap(modesEnabled, overwatchEvent, ToggleAction.DisableAll, Maps[winningmap]);
+              string mapResults = String.Format(&quot;{0}: {1} votes, {2}: {3} votes, {4}: {5} votes&quot;,
+                  maps[votemap[0]].ShortName, results[0],
+                  maps[votemap[1]].ShortName, results[1],
+                  maps[votemap[2]].ShortName, results[2]);
+              cg.Chat.SendChatMessage(mapResults);
+
+              Console.WriteLine(mapResults);
+              cg.Chat.SendChatMessage(&quot;Next map: &quot; + maps[winningmap].ShortName);
+              cg.ToggleMap(ToggleAction.DisableAll, maps[winningmap]);
+
+              return maps[winningmap];
           }
 
           private static void OnVote(CommandData commandData)
           {
-              // converts a string like "$VOTE 2" to an integer 2.
+              // converts a string like &quot;$VOTE 2&quot; to an integer 2.
               if (int.TryParse(commandData.Command.Split(' ').ElementAtOrDefault(1), out int voteFor)
-                  &amp;&amp; 1 &lt;= voteFor &amp;&amp; voteFor &lt;= VoteCount)
+                  &amp;&amp; 1 &lt;= voteFor &amp;&amp; voteFor &lt;= VoteCount) // If the number is a valid map to vote for.
               {
+                  // Test if the player already voted for a map. If they did, update the map they are voting for.
                   for (int i = 0; i &lt; VoteResults.Count; i++)
-                      if (ChatIdentity.CompareChatIdentities(commandData.ChatIdentity, VoteResults[i].ChatIdentity))
+                      if (commandData.ChatIdentity.CompareIdentities(VoteResults[i].ChatIdentity))
                       {
-                          Console.WriteLine(string.Format("Player #{0} changing their vote to: {1}", i, voteFor));
+                          Console.WriteLine(string.Format(&quot;Player #{0} changing their vote to: {1}&quot;, i, voteFor));
                           VoteResults[i].VotingFor = voteFor;
                           return;
                       }
 
-                  Console.WriteLine(string.Format("New vote from player #{0}: {1}", VoteResults.Count, voteFor));
+                  // If they didn't already vote for a map, add their vote to the VoteResults list.
+
+                  Console.WriteLine(string.Format(&quot;New vote from player #{0}: {1}&quot;, VoteResults.Count, voteFor));
                   VoteResults.Add(new Vote(voteFor, commandData.ChatIdentity));
               }
+          }
+
+          private static string FormatMessage(params string[] text)
+          {
+              string newLine = string.Concat(Enumerable.Repeat(&quot;\u3000&quot;, 30));
+
+              string result = &quot;&quot;;
+              for (int i = 0; i &lt; text.Length; i++)
+              {
+                  if (i &lt; text.Length - 1)
+                      result += text[i] + &quot; &quot; + (text[i].Length * 0.80 &lt; newLine.Length ? newLine.Substring((int)(text[i].Length * 0.80)) : &quot;&quot;);
+                  else
+                      result += text[i];
+              }
+
+              return result;
           }
 
           private const int VoteCount = 3;
@@ -123,94 +134,59 @@
               public int VotingFor = -1;
               public ChatIdentity ChatIdentity;
           }
-
-          private static string FormatMessage(params string[] text)
-          {
-              string newLine = string.Concat(Enumerable.Repeat("\u3000", 30));
-
-              string result = "";
-              for (int i = 0; i &lt; text.Length; i++)
-              {
-                  if (i &lt; text.Length - 1)
-                      result += text[i] + " " + (text[i].Length * 0.80 &lt; newLine.Length ? newLine.Substring((int)(text[i].Length * 0.80)) : "");
-                  else
-                      result += text[i];
-              }
-
-              return result;
-          }
       }
       </code>
       The code below will allow a player to volunteer for a team
       <code>
       using System;
       using System.Collections.Generic;
+      using System.Threading;
+      using System.Threading.Tasks;
       using Deltin.CustomGameAutomation;
 
       public class Volunteer
       {
-          public static void VolunteerForTeam(CustomGame cg, PlayerTeam team)
+          public static void VolunteerForTeam(CustomGame cg, Team team)
           {
-              CG = cg;
-              Team = team;
               // Get the player identities.
-              Players = GetPlayers(cg);
+              PlayerTracker playerTracker = new PlayerTracker();
 
-              cg.Chat.SendChatMessage("Teams are unbalanced, type \"$VOLUNTEER\" (case sensitive) to join the " + Team.ToString() + " team.");
+              Task.Run(() =&gt; 
+              {
+                  while (true)
+                  {
+                      cg.TrackPlayers(playerTracker);
+                      Thread.Sleep(10);
+                  }
+              });
+
+              cg.Chat.SendChatMessage(&quot;Teams are unbalanced, type \&quot;$VOLUNTEER\&quot; (case sensitive) to join the &quot; + team.ToString() + &quot; team.&quot;);
 
               // Add the $VOLUNTEER command
               cg.Commands.ListenTo.Add(new ListenTo(
-                  command:"$VOLUNTEER", 
+                  command:&quot;$VOLUNTEER&quot;, 
                   listen:true, 
                   registerProfile:true, 
-                  callback:OnVolunteer));
+                  checkIfFriend:false,
+                  callback:(commandData) =&gt; OnVolunteer(commandData, cg, team, playerTracker)));
 
               cg.Commands.Listen = true;
 
-              Console.WriteLine("Now listening for volunteers. Press enter to exit.");
+              Console.WriteLine(&quot;Now listening for volunteers. Press enter to exit.&quot;);
               Console.ReadLine();
           }
 
-          private static void OnVolunteer(CommandData commandData)
+          private static void OnVolunteer(CommandData commandData, CustomGame cg, Team team, PlayerTracker playerTracker)
           {
-              for (int i = 0; i &lt; Players.Length; i++)
-                  // If the executor is found
-                  if (PlayerIdentity.ComparePlayerIdentities(Players[i].Identity, commandData.PlayerIdentity)
-                      &amp;&amp; ((Team == PlayerTeam.Blue &amp;&amp; !CustomGame.IsSlotBlue(Players[i].Slot)) || (Team == PlayerTeam.Red &amp;&amp; !CustomGame.IsSlotRed(Players[i].Slot)))
-                      )
-                  {
-                      if (Team == PlayerTeam.Blue)
-                          CG.Interact.SwapToBlue(Players[i].Slot);
-                      else if (Team == PlayerTeam.Red)
-                          CG.Interact.SwapToRed(Players[i].Slot);
-                  }
+              int slot = playerTracker.SlotFromPlayerIdentity(commandData.PlayerIdentity);
+              if (slot == -1)
+                  return;
+            
+              if ((team == Team.Blue &amp;&amp; !CustomGame.IsSlotBlue(slot)) || (team == Team.Red &amp;&amp; !CustomGame.IsSlotRed(slot)))
+              {
+                  cg.Interact.SwapTeam(slot);
+              }
           }
-
-          private static Player[] GetPlayers(CustomGame cg)
-          {
-              List&lt;int&gt; slotsToGet = cg.GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.NoAI);
-              List&lt;Player&gt; players = new List&lt;Player&gt;();
-
-              for (int i = 0; i &lt; slotsToGet.Count; i++)
-                  players.Add(new Player(slotsToGet[i], cg.Commands.GetSlotIdentity(slotsToGet[i])));
-
-              return players.ToArray();
-          }
-
-          static CustomGame CG;
-          static Player[] Players;
-          static PlayerTeam Team;
-      }
-
-      class Player
-      {
-          public Player(int slot, PlayerIdentity identity)
-          {
-              Slot = slot;
-              Identity = identity;
-          }
-          public int Slot;
-          public PlayerIdentity Identity;
       }
       </code>
     </example>
@@ -403,7 +379,7 @@
         
               while (true)
               {
-                  List&lt;int&gt; playersdead = cg.PlayerInfo.PlayersDead();
+                  List&lt;int&gt; playersdead = cg.PlayerInfo.GetDeadSlots();
                   for (int i = 0; i &lt; 12; i++)
                   {
                       if (playersdead.Contains(i) &amp;&amp; awarded[i] == false)

@@ -32,25 +32,13 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\Deltin.CustomGameAutomation bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
-    <DocumentationFile>bin\Release\Deltin.CustomGameAutomation.xml</DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Final|AnyCPU'">
-    <OutputPath>..\..\Deltin.CustomGameAutomation bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\..\Deltin.CustomGameAutomation bin\Deltin.CustomGameAutomation.xml</DocumentationFile>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>latest</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,23 +55,43 @@
   <ItemGroup>
     <Compile Include="AI.cs" />
     <Compile Include="Chat.cs" />
-    <Compile Include="ColorsAndLocations.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ColorChecking.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="CreateOverwatchProcess.cs" />
     <Compile Include="CustomGame.cs" />
+    <Compile Include="DebugMenu.cs" />
+    <Compile Include="DebugMenu.Designer.cs">
+      <DependentUpon>DebugMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enums.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extras.cs" />
+    <Compile Include="LockHandler.cs" />
     <Compile Include="PersistentScanning.cs" />
     <Compile Include="Pause.cs" />
-    <Compile Include="GetInfo.cs" />
+    <Compile Include="PlayerInfo.cs" />
     <Compile Include="InputSimulation.cs" />
     <Compile Include="Interact.cs" />
     <Compile Include="Invite.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SlotTracking.cs" />
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <None Include="Resources\YH_Nepal_Village.png" />
+    <None Include="Resources\KingsRowWinter.png" />
+    <None Include="Resources\HanamuraWinter.png" />
+    <None Include="Resources\BlizzardWorldWinter.png" />
+    <None Include="Resources\AntarcticaWinter.png" />
+    <None Include="Resources\BlackForestWinter.png" />
+    <None Include="Resources\roundover.png" />
+    <None Include="Resources\ashe_markup.png" />
     <None Include="Resources\Oasis_University.png" />
     <None Include="Resources\Oasis_Gardens.png" />
     <None Include="Resources\Oasis_CityCenter.png" />
@@ -155,26 +163,26 @@
     <None Include="ImageComments\GetInfo.cs\ModeratorSlot.xcf" />
     <None Include="ImageComments\GetInfo.cs\Offset.xcf" />
     <None Include="ImageComments\Interact.cs\OptionSelect.xcf" />
-    <None Include="ImageComments\SelectHero.cs\Column.xcf" />
-    <None Include="ImageComments\SelectHero.cs\SettingType.xcf" />
-    <None Include="ImageComments\SelectHero.cs\TopOption.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\Column.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\SettingType.xcf" />
+    <None Include="ImageComments\HeroSettings.cs\TopOption.xcf" />
     <None Include="Resources\hero_settings.txt" />
-    <None Include="ImageComments\SelectHero.cs\TopOption.png" />
+    <None Include="ImageComments\HeroSettings.cs\TopOption.png" />
     <Content Include="docs.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ImageComments\AI.cs\EditAIDifficulty.png" />
     <Content Include="ImageComments\AI.cs\EditAIHero.png" />
-    <Content Include="ImageComments\ColorAndLocationData.cs\Error.png" />
-    <Content Include="ImageComments\ColorAndLocationData.cs\StartGame.png" />
+    <Content Include="ImageComments\Constants\Error.png" />
+    <Content Include="ImageComments\Constants\StartGame.png" />
     <Content Include="ImageComments\GetInfo.cs\DeadPlayers.png" />
     <Content Include="ImageComments\GetInfo.cs\InviteInfo2.png" />
     <Content Include="ImageComments\GetInfo.cs\MaxPlayers.png" />
     <Content Include="ImageComments\GetInfo.cs\ModeratorSlot.png" />
     <Content Include="ImageComments\GetInfo.cs\Offset.png" />
     <Content Include="ImageComments\Interact.cs\OptionSelect.png" />
-    <Content Include="ImageComments\SelectHero.cs\Column.png" />
-    <Content Include="ImageComments\SelectHero.cs\SettingType.png" />
+    <Content Include="ImageComments\HeroSettings.cs\Column.png" />
+    <Content Include="ImageComments\HeroSettings.cs\SettingType.png" />
     <None Include="Resources\ana_markup.png" />
     <None Include="Resources\bastion_markup.png" />
     <None Include="Resources\lucio_markup.png" />
@@ -186,19 +194,17 @@
     <None Include="Resources\brigitte_markup.png" />
     <Compile Include="MenuNavigation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="HeroSettings.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DebugMenu.resx">
+      <DependentUpon>DebugMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

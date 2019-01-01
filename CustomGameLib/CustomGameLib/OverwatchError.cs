@@ -28,13 +28,10 @@ namespace Deltin.CustomGameAutomation
 
         private void InvokeOnDisconnect()
         {
-            if (IsDisconnected())
+            if (OnDisconnect != null && IsDisconnected() && !OnDisconnectInvoked)
             {
-                if (OnDisconnect != null && !OnDisconnectInvoked)
-                {
-                    OnDisconnect.Invoke(this, new EventArgs());
-                    OnDisconnectInvoked = true;
-                }
+                OnDisconnect.Invoke(this, new EventArgs());
+                OnDisconnectInvoked = true;
             }
             else
                 OnDisconnectInvoked = false;
@@ -46,10 +43,10 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsDisconnected()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
-                updateScreen();
-                return CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
+                UpdateScreen();
+                return Capture.CompareColor(Points.EXIT_TO_DESKTOP, Colors.EXIT_TO_DESKTOP, Fades.EXIT_TO_DESKTOP);
             }
         }
 
@@ -59,16 +56,13 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool HasExited()
         {
-            return !Validate();
+            return User32.IsWindowVisible(OverwatchHandle);
         }
 
-        internal bool Validate()
+        static internal void Validate(IntPtr hwnd)
         {
-            return User32.IsWindow(OverwatchHandle);
-        }
-        static internal bool Validate(IntPtr hwnd)
-        {
-            return User32.IsWindow(hwnd);
+            if (!User32.IsWindowVisible(hwnd))
+                throw new OverwatchClosedException("Overwatch was closed.");
         }
     }
 }

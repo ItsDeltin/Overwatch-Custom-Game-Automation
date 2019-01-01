@@ -11,14 +11,14 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Go back to executing position.
         /// </summary>
-        void BackToMenu()
+        private void BackToMenu()
         {
             if (!IsLobbyOpened())
             {
                 Activate();
-                Thread.Sleep(250);
+                Thread.Sleep(100);
                 KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
-                Thread.Sleep(250);
+                Thread.Sleep(1000);
             }
 
             //ResetMouse();
@@ -27,9 +27,9 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Stalls the program to wait for the map to finish loading.
         /// </summary>
-        void LoadStall()
+        private void LoadStall()
         {
-            updateScreen();
+            UpdateScreen();
             Stopwatch sw = new Stopwatch();
             Stopwatch sc = new Stopwatch();
             sw.Start();
@@ -37,9 +37,9 @@ namespace Deltin.CustomGameAutomation
             while (true)
             {
                 if (
-                    CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) || // Test for "START" button color
-                    CompareColor(Points.LOADING_ENTERING_GAME, Colors.LOADING_ENTERING_GAME, Fades.LOADING_ENTERING_GAME) || // Test for "ENTERING GAME" color
-                    CompareColor(400, 300, Colors.LOADING_BLACK, 15) // Test for black screen color
+                    Capture.CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME) || // Test for "START" button color
+                    Capture.CompareColor(Points.LOADING_ENTERING_GAME, Colors.LOADING_ENTERING_GAME, Fades.LOADING_ENTERING_GAME) || // Test for "ENTERING GAME" color
+                    Capture.CompareColor(400, 300, Colors.LOADING_BLACK, 15) // Test for black screen color
                     //CompareColor(853, 483, new int[] { 154, 157, 157 }, 15) // Test for overwatch loading logo
                     )
                 {
@@ -52,7 +52,7 @@ namespace Deltin.CustomGameAutomation
                 if (sc.ElapsedMilliseconds > 3 * 1000 || sw.ElapsedMilliseconds >= 15 * 1000) break;
                 //Console.WriteLine(sc.ElapsedMilliseconds / 1000 + "\n"); // for debugging
                 Thread.Sleep(1000);
-                updateScreen();
+                UpdateScreen();
             }
             Thread.Sleep(1000);
         }
@@ -62,7 +62,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void RestartGame()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (OpenChatIsDefault)
                     Chat.CloseChat();
@@ -81,7 +81,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGame()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 if (OpenChatIsDefault)
                     Chat.CloseChat();
@@ -100,7 +100,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SendServerToLobby()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 LeftClick(Points.LOBBY_BACK_TO_LOBBY, 750);
                 WaitForColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME, 5000);
@@ -113,7 +113,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void StartGamemode()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
             }
@@ -121,7 +121,7 @@ namespace Deltin.CustomGameAutomation
 
         internal void GoToSettings()
         {
-            updateScreen();
+            UpdateScreen();
             if (DoesAddButtonExist())
             {
                 LeftClick(Points.LOBBY_SETTINGS_IF_ADD_BUTTON_PRESENT, 250);
@@ -134,9 +134,9 @@ namespace Deltin.CustomGameAutomation
 
         internal bool DoesAddButtonExist()
         {
-            updateScreen();
+            UpdateScreen();
 
-            return CompareColor(
+            return Capture.CompareColor(
                 700, 182, // Location of the "MOVE" button
                 715, 182, // Location of the "SETTINGS" button
                 20);
@@ -149,8 +149,8 @@ namespace Deltin.CustomGameAutomation
                 LeftClick(Points.SETTINGS_BACK); // Clicks the back button
                 if (checkForErrorsAt.Contains(i))
                 {
-                    updateScreen();
-                    if (CompareColor(Points.SETTINGS_ERROR, Colors.SETTINGS_ERROR, Fades.SETTINGS_ERROR))
+                    UpdateScreen();
+                    if (Capture.CompareColor(Points.SETTINGS_ERROR, Colors.SETTINGS_ERROR, Fades.SETTINGS_ERROR))
                         LeftClick(Points.SETTINGS_DISCARD);
                 }
             }
@@ -158,15 +158,26 @@ namespace Deltin.CustomGameAutomation
 
         internal bool IsLobbyOpened()
         {
-            updateScreen();
-            return CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MIN, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MAX) // Test for invite players to group button
-                && !CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Points.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE, Fades.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE); // Compare the invite players to group button with the area above it.
+            UpdateScreen();
+            return Capture.CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MIN, Colors.LOBBY_INVITE_PLAYERS_TO_GROUP_MAX) // Test for invite players to group button
+                && !Capture.CompareColor(Points.LOBBY_INVITE_PLAYERS_TO_GROUP, Points.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE, Fades.LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE); // Compare the invite players to group button with the area above it.
         }
 
         internal void NavigateToModesMenu()
         {
             GoToSettings();
             LeftClick(Points.SETTINGS_MODES);
+        }
+
+        internal void GridNavigator(int index, int columns = 4, int keyPressWait = 50)
+        {
+            int column = index % columns;
+            int row = index / columns;
+
+            for (int rowindex = 0; rowindex < row; rowindex++)
+                KeyPress(keyPressWait, Keys.Down);
+            for (int columnindex = 0; columnindex < column; columnindex++)
+                KeyPress(keyPressWait, Keys.Right);
         }
     }
 }

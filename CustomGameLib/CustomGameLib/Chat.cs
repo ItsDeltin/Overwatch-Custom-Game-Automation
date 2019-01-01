@@ -25,6 +25,30 @@ namespace Deltin.CustomGameAutomation
     {
         internal Chat(CustomGame cg) : base(cg) { }
 
+        internal static readonly int ChatFade = 20 + 35;
+        internal static readonly int[] TeamChatColor = new int[] { 65, 139, 162 };
+        internal static readonly int[] MatchChatColor = new int[] { 161, 122, 91 };
+        internal static readonly int[] GeneralChatColor = new int[] { 161, 161, 162 };
+        internal static readonly int[] GroupChatColor = new int[] { 0, 0, 0 }; // TODO: Get this color
+        internal static readonly int[] PrivateMessageChatColor = new int[] { 160, 118, 167 };
+        // Must be the same order as the Channel enum
+        internal static readonly int[][] ChatColors = new int[][]
+        {
+                TeamChatColor,
+                MatchChatColor,
+                GeneralChatColor,
+                GroupChatColor,
+                PrivateMessageChatColor
+        };
+        // These are commands when typed into the chat will join their respective channels.
+        // Must be the same order as the Channel enum below
+        internal static readonly string[] ChannelJoinCommands = new string[] { "/t", "/m", "/all", "/g", "/r" };
+
+        /// <summary>
+        /// Prevents chat messages from being sent to the general channel.
+        /// </summary>
+        private const bool BlockGeneralChat = true;
+
         /// <summary>
         /// Send message to chat.
         /// </summary>
@@ -33,22 +57,21 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/SendChatMessage/example'></include>
         public void SendChatMessage(string text)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (text == null)
-                    throw new ArgumentNullException("text", "text was null.");
+                    throw new ArgumentNullException(nameof(text));
 
                 OpenChat();
-                cg.updateScreen();
+                cg.UpdateScreen();
                 // To prevent abuse, make sure that the channel is not general.
-                if (!cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
+                if (!Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GeneralChatColor, ChatFade) || !BlockGeneralChat)
                 {
                     cg.TextInput(text);
                 }
-                cg.KeyPress(Keys.Return);
+                Send();
                 if (cg.OpenChatIsDefault)
                 {
-                    Thread.Sleep(250);
                     OpenChat();
                 }
                 //cg.//ResetMouse();
@@ -56,26 +79,21 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Prevents chat messages from being sent to the general channel.
-        /// </summary>
-        const bool BlockGeneralChat = true;
-
-        /// <summary>
         /// Swaps to a chat channel.
         /// </summary>
         /// <param name="channel">Channel to join</param>
         public void SwapChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 OpenChat();
                 cg.TextInput(GetChannelJoinCommand(channel));
-                cg.KeyPress(Keys.Return);
-                // Open chat if it is default to be opened
-                if (cg.OpenChatIsDefault)
-                    OpenChat();
-                else
-                    cg.KeyPress(Keys.Return);
+                Send();
+
+                // Unlike other commands, SwapChannel doesn't close the chat.
+
+                if (!cg.OpenChatIsDefault)
+                    CloseChat();
 
                 //cg.//ResetMouse();
             }
@@ -87,26 +105,28 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to leave.</param>
         public void LeaveChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
-                if (!cg.OpenChatIsDefault)
-                    OpenChat();
-                cg.TextInput(GetChannelJoinCommand(channel));
-                cg.KeyPress(Keys.Return);
-                Thread.Sleep(250);
-                cg.updateScreen();
-                if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
+                // Join the channel selected.
+                SwapChannel(channel);
+
+                OpenChat();
+
+                // Check if the channel was joined.
+                cg.UpdateScreen();
+                if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
                 {
-                    SendChatMessage("/leavechannel");
+                    // If it was, leave the channel.
+                    cg.TextInput("/leavechannel");
+                    Send();
+
                     if (cg.OpenChatIsDefault)
                     {
-                        cg.updateScreen();
-                        if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, GetChannelColor(channel), ChatFade))
-                            cg.KeyPress(Keys.Tab);
+                        OpenChat();
                     }
                 }
                 else if (!cg.OpenChatIsDefault)
-                    cg.KeyPress(Keys.Return);
+                    CloseChat();
             }
         }
 
@@ -116,7 +136,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="channel">Channel to rejoin.</param>
         public void JoinChannel(Channel channel)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 SendChatMessage("/joinchannel " + channel.ToString());
             }
@@ -127,7 +147,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void OpenChatIsDefault()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 OpenChat();
                 cg.OpenChatIsDefault = true;
@@ -139,7 +159,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void ClosedChatIsDefault()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 CloseChat();
                 cg.OpenChatIsDefault = false;
@@ -148,9 +168,9 @@ namespace Deltin.CustomGameAutomation
 
         internal void OpenChat()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
-                cg.LeftClick(Points.LOBBY_CHATBOX, 100);
+                cg.LeftClick(Points.LOBBY_CHATBOX, 250);
                 /*
                  * There was a month where clicking on the chat didn't open it. This was the old workaround.
                  * cg.DefaultKeys.OpenChat had to be a key that registered when the chat was closed but not when it was opened. ex: Delete, Page Up, Page Down, etc.
@@ -167,25 +187,31 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        internal Channel? GetCurrentChannel()
-        {
-            lock (cg.CustomGameLock)
-            {
-                cg.updateScreen();
-                for (int i = 0; i < ChatColors.Length; i++)
-                    if (cg.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
-                        return (Channel)i;
-                return null;
-            }
-        }
-
         internal void CloseChat()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 OpenChat();
                 cg.KeyPress(Keys.Return);
-                Thread.Sleep(250);
+                Thread.Sleep(200);
+            }
+        }
+
+        internal void Send()
+        {
+            cg.KeyPress(Keys.Return);
+            Thread.Sleep(250);
+        }
+
+        internal Channel? GetCurrentChannel()
+        {
+            using (cg.LockHandler.SemiInteractive)
+            {
+                cg.UpdateScreen();
+                for (int i = 0; i < ChatColors.Length; i++)
+                    if (Capture.CompareColor(Points.LOBBY_CHAT_TYPE_INDICATOR, ChatColors[i], ChatFade))
+                        return (Channel)i;
+                return null;
             }
         }
 
@@ -201,50 +227,5 @@ namespace Deltin.CustomGameAutomation
 
         // <image url="$(ProjectDir)\ImageComments\Chat.cs\ChatLocation.png" scale="2" />
         // The color of the pixel at 50, 505 changes depending on which channel the overwatch client is in.
-        internal static int ChatFade = 20;
-        internal static int[] TeamChatColor = new int[] { 65, 139, 162 };
-        internal static int[] MatchChatColor = new int[] { 161, 122, 91 };
-        internal static int[] GeneralChatColor = new int[] { 161, 161, 162 };
-        internal static int[] GroupChatColor = new int[] { 0, 0, 0 }; // TODO: Get this color
-        internal static int[] PrivateMessageChatColor = new int[] { 160, 118, 167 };
-        // Must be the same order as the Channel enum below
-        internal static int[][] ChatColors = new int[][]
-        {
-                TeamChatColor,
-                MatchChatColor,
-                GeneralChatColor,
-                GroupChatColor,
-                PrivateMessageChatColor
-        };
-        // These are commands when typed into the chat will join their respective channels.
-        // Must be the same order as the Channel enum below
-        internal static string[] ChannelJoinCommands = new string[] { "/t", "/m", "/all", "/g", "/r" };
-    }
-
-    /// <summary>
-    /// Chat channels for Overwatch.
-    /// </summary>
-    public enum Channel
-    {
-        /// <summary>
-        /// The team chat channel.
-        /// </summary>
-        Team,
-        /// <summary>
-        /// The match chat channel.
-        /// </summary>
-        Match,
-        /// <summary>
-        /// The general chat channel.
-        /// </summary>
-        General,
-        /// <summary>
-        /// The group chat channel.
-        /// </summary>
-        Group,
-        /// <summary>
-        /// The private message chat channel.
-        /// </summary>
-        PrivateMessage
     }
 }

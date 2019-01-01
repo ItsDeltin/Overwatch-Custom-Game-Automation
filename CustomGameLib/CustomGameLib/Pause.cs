@@ -25,7 +25,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void TogglePause()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (cg.OpenChatIsDefault)
                 {
@@ -48,7 +48,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void PauseGame()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (!IsPaused())
                     TogglePause();
@@ -59,7 +59,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void UnpauseGame()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (IsPaused())
                     TogglePause();
@@ -70,11 +70,11 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public bool IsPaused()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
-                cg.updateScreen();
-                // Check if the pause text is there.
-                return cg.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
+                cg.UpdateScreen();
+                // Check for the pause text.
+                return Capture.CompareColor(Points.LOBBY_PAUSED, new int[] { 187, 138, 79 }, 10);
             }
         }
     }

@@ -19,30 +19,30 @@ namespace Deltin.CustomGameAutomation
             int min = 35;
             int max = 155;
 
-            updateScreen();
+            UpdateScreen();
             // Look for the highlighted option
             for (int y = 110; y < 436; y++)
-                if (CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
-                    && CompareColor(649, y, Colors.WHITE, 20))
+                if (Capture.CompareColor(652, y, new int[] { 127, 127, 127 }, 20)
+                    && Capture.CompareColor(649, y, Colors.WHITE, 20))
                 {
                     int checkY = y + 2;
 
                     bool? settingValue = null;
 
                     // If the setting is set to DISABLED
-                    if (CompareColor(564, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    if (Capture.CompareColor(564, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = false;
 
                     // If the setting is set to ENABLED
-                    else if (CompareColor(599, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(599, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = true;
 
                     // If the setting is set to OFF
-                    else if (CompareColor(589, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(589, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = false;
 
                     // If the setting is set to ON
-                    else if (CompareColor(588, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
+                    else if (Capture.CompareColor(588, checkY, new int[] { min, min, min }, new int[] { max, max, max }))
                         settingValue = true;
 
                     if (settingValue != null)
@@ -73,18 +73,22 @@ namespace Deltin.CustomGameAutomation
         /// Loads a preset saved in Overwatch.
         /// </summary>
         /// <param name="preset">Preset to load. 0 is the first preset</param>
-        /// <returns>Returns true if selecting the preset was successful.</returns>
+        /// <returns>Returns true if loading the preset was successful.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset)
         {
-            lock (cg.CustomGameLock)
+            if (preset < 0)
+                throw new ArgumentOutOfRangeException(nameof(preset), preset, "Preset cannot be less than 0.");
+
+            using (cg.LockHandler.Interactive)
             {
-                if (preset < 0)
-                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
+                if (NavigateToPresets() == -1) return false;
 
-                if (!NavigateToPresets()) return false;
+                //cg.LeftClick(GetPresetLocation(preset));
 
-                cg.LeftClick(GetPresetLocation(preset));
+                cg.KeyPress(Keys.Tab, Keys.Tab);
+                cg.GridNavigator(preset);
+                cg.KeyPress(Keys.Space);
                 cg.LeftClick(Points.PRESETS_CONFIRM);
 
                 // Go back to lobby
@@ -94,37 +98,135 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        /*
-        public Bitmap GeneratePresetMarkup(int preset)
+        /// <summary>
+        /// Loads a default preset in Overwatch.
+        /// </summary>
+        /// <param name="preset">Preset to load.</param>
+        /// <returns>Returns true if loading the preset was successful.</returns>
+        public bool LoadPreset(DefaultPreset preset)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
-                if (preset < 0)
-                    throw new ArgumentOutOfRangeException("preset", preset, "Argument preset must be equal or greater than 0.");
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
 
-                if (!NavigateToPresets()) return null;
+                cg.KeyPress(Keys.Tab, Keys.Tab);
+                cg.GridNavigator(numPresets + (int)preset);
+                cg.KeyPress(Keys.Space);
+                cg.LeftClick(Points.PRESETS_CONFIRM);
 
-                Point presetLocation = GetPresetLocation(preset);
-                Bitmap presetMarkup = cg.BmpClone(presetLocation.X, presetLocation.Y, Rectangles.SETTINGS_PRESET_OPTION.Width, Rectangles.SETTINGS_PRESET_OPTION.Height);
-
-                presetMarkup.ConvertToMarkup(Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET, true);
-
+                // Go back to lobby
                 cg.GoBack(2);
-
-                return presetMarkup;
+                //cg.//ResetMouse();
+                return true;
             }
         }
-        */
+
+        /// <summary>
+        /// Loads a preset saved in Overwatch.
+        /// </summary>
+        /// <param name="preset">Markup of the preset to load. Generated from <see cref="Settings.GeneratePresetMarkup(int)"/></param>
+        /// <returns>Returns true if loading the preset was successful.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="preset"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="preset"/> is an invalid markup.</exception>
+        /// <seealso cref="GeneratePresetMarkup(int)"/>
+        public bool LoadPreset(Bitmap preset)
+        {
+            if (preset == null)
+                throw new ArgumentNullException(nameof(preset));
+
+            if (preset.Width != Rectangles.SETTINGS_PRESET_OPTION.Width || preset.Height != Rectangles.SETTINGS_PRESET_OPTION.Height)
+                throw new ArgumentException("Preset markup is not a valid markup.", nameof(preset));
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                int minimum = (int)(Rectangles.SETTINGS_PRESET_OPTION.Width * Rectangles.SETTINGS_PRESET_OPTION.Height * 0.05);
+
+                for (int i = 0; i < numPresets; i++)
+                {
+                    Point presetLocation = GetPresetLocation(i);
+
+                    int failCount = 0;
+                    bool failed = false;
+                    for (int x = 0; x < preset.Width && !failed; x++)
+                        for (int y = 0; y < preset.Height && !failed; y++)
+                        {
+                            // If the pixel in the preset does not equal the pixel in the capture.
+                            if (preset.GetPixel(x, y) == Color.FromArgb(255, 255, 255) == Capture.CompareColor(x + presetLocation.X, y + presetLocation.Y, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET) == false)
+                                failCount++;
+
+                            failed = failCount > minimum;
+                        }
+
+                    if (!failed)
+                    {
+                        cg.LeftClick(presetLocation);
+                        cg.LeftClick(Points.PRESETS_CONFIRM);
+
+                        cg.GoBack(2);
+                        //cg.//ResetMouse();
+                        return true;
+                    }
+                }
+
+                cg.GoBack(2);
+                //cg.//ResetMouse();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Generates a markup for use with <see cref="LoadPreset(Bitmap)"/>
+        /// </summary>
+        /// <param name="preset">The index of the preset to create a markup from.</param>
+        /// <returns>A <see cref="Bitmap"/> containing the markup.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
+        /// <seealso cref="LoadPreset(Bitmap)"/>
+        public Bitmap GeneratePresetMarkup(int preset)
+        {
+            if (preset < 0)
+                throw new ArgumentOutOfRangeException("preset", preset, "Preset cannot be less than 0.");
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return null;
+                if (numPresets < preset)
+                {
+                    cg.GoBack(2);
+                    return null;
+                }
+
+                Point presetLocation = GetPresetLocation(preset);
+                using (DirectBitmap presetMarkup = cg.Capture.Clone(presetLocation.X, presetLocation.Y, Rectangles.SETTINGS_PRESET_OPTION.Width, Rectangles.SETTINGS_PRESET_OPTION.Height))
+                {
+
+                    for (int x = 0; x < presetMarkup.Width; x++)
+                        for (int y = 0; y < presetMarkup.Height; y++)
+                            if (!presetMarkup.GetPixel(x, y).CompareColor(Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                                presetMarkup.SetPixel(x, y, Color.Black);
+                            else
+                                presetMarkup.SetPixel(x, y, Color.White);
+
+                    cg.GoBack(2);
+
+                    return presetMarkup.ToBitmap();
+                }
+            }
+        }
 
         private Point GetPresetLocation(int preset)
         {
             // 86, 155 is the location of the first preset. There are 144 pixels between each column and 33 between each row. There are 4 presets in each column.
-            return new Point(86 + (144 * (preset % 4)), 155 + (33 * (preset / 4)));
+            return new Point(Points.PRESETS_FIRST_PRESET.X + (Distances.PRESET_DISTANCE_X * (preset % 4)), Points.PRESETS_FIRST_PRESET.Y + (Distances.PRESET_DISTANCE_Y * (preset / 4)));
         }
 
-        private bool NavigateToPresets()
+        private int NavigateToPresets()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 cg.GoToSettings();
                 cg.LeftClick(Points.SETTINGS_PRESETS, 2000); // Clicks "Preset" button
@@ -134,9 +236,9 @@ namespace Deltin.CustomGameAutomation
                 int numPresets = 0;
                 while (true)
                 {
-                    cg.updateScreen();
+                    cg.UpdateScreen();
 
-                    if (cg.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
+                    if (Capture.CompareColor(GetPresetLocation(numPresets), Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
                     {
                         numPresets++;
                         wait.Restart();
@@ -144,11 +246,11 @@ namespace Deltin.CustomGameAutomation
                     else if (numPresets == 0 && wait.ElapsedMilliseconds >= 5000)
                     {
                         cg.GoBack(2);
-                        return false;
+                        return -1;
                     }
                     else if (wait.ElapsedMilliseconds >= 1000)
                     {
-                        return true;
+                        return numPresets;
                     }
 
                     Thread.Sleep(100);
@@ -157,18 +259,30 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Changes who can join.
+        /// Gets and sets who can join the custom game.
         /// </summary>
-        /// <param name="setting">Join setting to select.</param>
-        public void SetJoinSetting(Join setting)
+        public Join JoinSetting
         {
-            lock (cg.CustomGameLock)
+            get
             {
-                cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
-                if (setting == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
-                if (setting == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
-                if (setting == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
-                //cg.//ResetMouse();
+                using (cg.LockHandler.Passive)
+                {
+                    cg.WaitForColor(Points.LOBBY_JOIN_UPDATING_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX, 2000); // If the dropdown box is updating, wait for it to finish.
+                    if (!cg.Capture.CompareColor(Points.LOBBY_JOIN_FRIENDS_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX)) return Join.FriendsOnly;
+                    else if (!cg.Capture.CompareColor(Points.LOBBY_JOIN_INVITE_CHECK, Colors.LOBBY_JOIN_BOX, Fades.LOBBY_JOIN_BOX)) return Join.InviteOnly;
+                    else return Join.Everyone;
+                }
+            }
+            set
+            {
+                using (cg.LockHandler.SemiInteractive)
+                {
+                    cg.LeftClick(Points.LOBBY_JOIN_DROPDOWN);
+                    if (value == Join.Everyone) cg.LeftClick(Points.LOBBY_JOIN_EVERYONE);
+                    if (value == Join.FriendsOnly) cg.LeftClick(Points.LOBBY_JOIN_FRIENDS);
+                    if (value == Join.InviteOnly) cg.LeftClick(Points.LOBBY_JOIN_INVITE);
+                    //cg.//ResetMouse();
+                }
             }
         }
 
@@ -180,14 +294,14 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentException">Thrown if <paramref name="name"/> has the text "admin" in it.</exception>
         public void SetGameName(string name)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (name.Length < 3)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 3.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too low, needs to be at least 3.");
                 if (name.Length > 64)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 64 or lower.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too high, needs to be 64 or lower.");
                 if (name.ToLower().Contains("admin"))
-                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                    throw new ArgumentException($"{nameof(name)} can not have the text \"admin\" in it.", nameof(name));
                 cg.LeftClick(209, 165); // click on game's name
                 cg.TextInput(name);
                 cg.KeyPress(Keys.Return);
@@ -205,18 +319,18 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         public void SetTeamName(Team team, string name)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive)
             {
                 if (name == null)
-                    throw new ArgumentNullException("name", "name cannot be null.");
+                    throw new ArgumentNullException(nameof(name));
                 if (name.Length < 1)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too low, needs to be at least 1.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too low, needs to be at least 1.");
                 if (name.Length > 15)
-                    throw new ArgumentOutOfRangeException("name", name, "The length of name is too high, needs to be 15 or lower.");
+                    throw new ArgumentOutOfRangeException(nameof(name), name, $"The length of {nameof(name)} is too high, needs to be 15 or lower.");
                 if (name.ToLower().Contains("admin"))
-                    throw new ArgumentException("name can not have the text \"admin\" in it.", "name");
+                    throw new ArgumentException($"{nameof(name)} can not have the text \"admin\" in it.", nameof(name));
                 if (team.HasFlag(Team.Spectator) || team.HasFlag(Team.Queue))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
 
                 if (team.HasFlag(Team.Blue))
                 {
@@ -248,22 +362,22 @@ namespace Deltin.CustomGameAutomation
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="blueCount"/>, <paramref name="redCount"/>, <paramref name="ffaCount"/>, or <paramref name="spectatorCount"/> is less than 0 or greater than their max values.</exception>
         public void SetMaxPlayers(int? blueCount, int? redCount, int? ffaCount, int? spectatorCount)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 cg.GoToSettings();
                 cg.LeftClick(Points.SETTINGS_LOBBY, 100); // Click "lobby" option
 
                 if (blueCount < 0 || blueCount > 6)
-                    throw new ArgumentOutOfRangeException("blueCount", blueCount, "blueCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
+                    throw new ArgumentOutOfRangeException(nameof(blueCount), blueCount, $"{nameof(blueCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 6.");
 
                 if (redCount < 0 || redCount > 6)
-                    throw new ArgumentOutOfRangeException("redCount", redCount, "redCount is out of range. Value must be greater or equal to 1 and less than or equal to 6.");
+                    throw new ArgumentOutOfRangeException(nameof(redCount), redCount, $"{nameof(redCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 6.");
 
                 if (ffaCount < 0 || ffaCount > 12)
-                    throw new ArgumentOutOfRangeException("ffaCount", ffaCount, "ffaCount is out of range. Value must be greater or equal to 1 and less than or equal to 12.");
+                    throw new ArgumentOutOfRangeException(nameof(ffaCount), ffaCount, $"{nameof(ffaCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
 
                 if (spectatorCount < 0 || spectatorCount > 12)
-                    throw new ArgumentOutOfRangeException("spectatorCount", spectatorCount, "spectatorCount is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
+                    throw new ArgumentOutOfRangeException(nameof(spectatorCount), spectatorCount, $"{nameof(spectatorCount)} is out of range. Value must be greater or equal to 0 and less than or equal to 12.");
 
                 if (blueCount != null)
                 {
@@ -304,7 +418,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="settings">Settings to change.</param>
         public void SetSettings(GameSettings settings)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 settings.SetSettings(cg);
             }
@@ -328,9 +442,8 @@ namespace Deltin.CustomGameAutomation
             {
                 if (values[i] != null)
                 {
-                    if (values[i] is bool)
+                    if (values[i] is bool option)
                     {
-                        bool option = (bool)values[i];
                         bool value = (bool)cg.GetHighlightedSettingValue(true);
                         if (option != value)
                         {
@@ -340,7 +453,7 @@ namespace Deltin.CustomGameAutomation
                     }
                     else if (values[i] is int)
                     {
-                        var set = cg.GetNumberKeys((int)values[i]);
+                        var set = CustomGame.GetNumberKeys((int)values[i]);
 
                         for (int k = 0; k < set.Length; k++)
                         {
@@ -474,7 +587,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Assault, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Assault, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
 
                 cg.KeyPress(Keys.Up, Keys.Up);
@@ -507,7 +620,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.AssaultEscort, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.AssaultEscort, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -543,7 +656,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Control, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Control, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -573,7 +686,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Escort, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Escort, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);
@@ -605,7 +718,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Deathmatch, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Deathmatch, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -653,7 +766,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Elimination, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Elimination, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -689,7 +802,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Lucioball, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Lucioball, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up, Keys.Up);
                 Thread.Sleep(100);
@@ -721,7 +834,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.JunkensteinsRevenge, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.JunkensteinsRevenge, cg.CurrentEvent);
                 Console.WriteLine(point);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
@@ -762,7 +875,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.TeamDeathmatch, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.TeamDeathmatch, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Down, Keys.Up);
                 Thread.Sleep(100);
@@ -788,7 +901,7 @@ namespace Deltin.CustomGameAutomation
             internal override void Navigate(CustomGame cg)
             {
                 cg.NavigateToModesMenu();
-                Point point = cg.GetModeLocation(Gamemode.Skirmish, cg.CurrentOverwatchEvent);
+                Point point = cg.GetModeLocation(Gamemode.Skirmish, cg.CurrentEvent);
                 cg.LeftClick(point.X, point.Y, 250);
                 cg.KeyPress(Keys.Left);
                 Thread.Sleep(100);

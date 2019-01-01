@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -37,15 +39,15 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/AddAI/example'></include>
         public bool AddAI(AIHero hero, Difficulty difficulty, Team team, int count = -1)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (team.HasFlag(Team.Queue) || team.HasFlag(Team.Spectator))
-                    throw new ArgumentOutOfRangeException("team", team, "Team cannot be Spectator or Queue.");
+                    throw new ArgumentOutOfRangeException(nameof(team), team, "Team cannot be Spectator or Queue.");
 
                 if (count < -1)
-                    throw new ArgumentOutOfRangeException("count", count, "AI count must be at least -1.");
+                    throw new ArgumentOutOfRangeException(nameof(count), count, "AI count must be at least -1.");
 
-                cg.updateScreen();
+                cg.UpdateScreen();
 
                 if (cg.DoesAddButtonExist())
                 /*
@@ -113,6 +115,8 @@ namespace Deltin.CustomGameAutomation
 
                     //cg.//ResetMouse();
 
+                    Thread.Sleep(50);
+
                     if (cg.OpenChatIsDefault)
                         cg.Chat.OpenChat();
 
@@ -130,11 +134,11 @@ namespace Deltin.CustomGameAutomation
         /// <param name="saveAt">Location to save markup at.</param>
         public void GetAIDifficultyMarkup(int scalar, string saveAt)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
-                cg.updateScreen();
+                cg.UpdateScreen();
                 int[] scales = new int[] { 33, 49, 34 };
-                Bitmap tmp = cg.BmpClone(402, 244, scales[scalar], 16);
+                DirectBitmap tmp = Capture.Clone(402, 244, scales[scalar], 16);
                 for (int x = 0; x < tmp.Width; x++)
                     for (int y = 0; y < tmp.Height; y++)
                     {
@@ -143,11 +147,6 @@ namespace Deltin.CustomGameAutomation
                         else
                             tmp.SetPixel(x, y, Color.White);
                     }
-                if (cg.debugmode)
-                {
-                    int scale = 5;
-                    cg.g.DrawImage(tmp, new Rectangle(750, 0, tmp.Width * scale, tmp.Height * scale));
-                }
                 tmp.Save(saveAt);
                 tmp.Dispose();
             }
@@ -164,7 +163,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public Difficulty? GetAIDifficulty(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
@@ -173,25 +172,27 @@ namespace Deltin.CustomGameAutomation
                     cg.Chat.CloseChat();
 
                 if (!noUpdate)
-                    cg.updateScreen();
+                    cg.UpdateScreen();
 
                 if (CustomGame.IsSlotBlue(slot) || CustomGame.IsSlotRed(slot))
                 {
                     List<int> rl = new List<int>(); // Likelyhood in percent for difficulties.
                     List<Difficulty> dl = new List<Difficulty>(); // Difficulty
 
+                    int checkDistance = CustomGame.IsSlotBlue(slot) ? 100 : 25;
+
                     bool foundWhite = false;
                     int foundWhiteIndex = 0;
                     int maxWhite = 3;
                     // For each check length in IsAILocations
-                    for (int xi = 0; xi < DifficultyLocations[slot, 2] && foundWhiteIndex < maxWhite; xi++)
+                    for (int xi = Points.DIFFICULTY_LOCATIONS[slot].X; xi < Points.DIFFICULTY_LOCATIONS[slot].X + checkDistance && foundWhiteIndex < maxWhite; xi++)
                     {
                         if (foundWhite)
                             foundWhiteIndex++;
 
-                        Color cc = cg.GetPixelAt(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1]);
+                        Color cc = Capture.GetPixel(xi, Points.DIFFICULTY_LOCATIONS[slot].Y);
                         // Check for white color of text
-                        if (cg.CompareColor(DifficultyLocations[slot, 0] + xi, DifficultyLocations[slot, 1], Colors.WHITE, 110)
+                        if (Capture.CompareColor(xi, Points.DIFFICULTY_LOCATIONS[slot].Y, Colors.WHITE, 110)
                             && (slot > 5 || cc.B - cc.R < 20))
                         {
                             foundWhite = true;
@@ -199,7 +200,6 @@ namespace Deltin.CustomGameAutomation
                             // For each difficulty markup
                             for (int b = 0; b < Markups.DIFFICULTY_MARKUPS.Length; b++)
                             {
-
                                 // Check if bitmap matches checking area
                                 double success = 0;
                                 double total = 0;
@@ -215,7 +215,7 @@ namespace Deltin.CustomGameAutomation
 
                                             total++; // Indent the total
                                                      // If the checking color in the bmp bitmap is equal to the pc color, add to success.
-                                            if (cg.CompareColor(DifficultyLocations[slot, 0] + xi + x, DifficultyLocations[slot, 1] - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
+                                            if (Capture.CompareColor(xi + x, Points.DIFFICULTY_LOCATIONS[slot].Y - Extensions.InvertNumber(y, Markups.DIFFICULTY_MARKUPS[b].Height - 1), Colors.WHITE, 50) == tc)
                                                 success++;
                                         }
                                     }
@@ -246,9 +246,9 @@ namespace Deltin.CustomGameAutomation
 
                 else if (cg.QueueCount > 0)
                 {
-                    int y = DifficultyLocationsQueue[slot - CustomGame.Queueid];
-                    for (int x = DifficultyLocationQueueX; x < 150 + DifficultyLocationQueueX; x++)
-                        if (cg.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
+                    int y = Points.DIFFICULTY_QUEUE_LOCATIONS[slot - CustomGame.QueueID];
+                    for (int x = Points.DIFFICULTY_QUEUE_X; x < 150 + Points.DIFFICULTY_QUEUE_X; x++)
+                        if (Capture.CompareColor(x, y, new int[] { 180, 186, 191 }, 10))
                             return null;
                     return Difficulty.Easy;
                 }
@@ -258,36 +258,6 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        static int[,] DifficultyLocations = new int[,]
-        {
-            // X    Y  Length
-            // Blue
-            { 145, 259, 100 },
-            { 145, 288, 100 },
-            { 145, 316, 100 },
-            { 145, 345, 100 },
-            { 145, 373, 100 },
-            { 145, 402, 100 },
-            // Red
-            { 401, 259, 25 },
-            { 401, 288, 25 },
-            { 401, 316, 25 },
-            { 401, 345, 25 },
-            { 401, 373, 25 },
-            { 401, 402, 25 }
-        };
-
-        static int DifficultyLocationQueueX = 686;
-        static int[] DifficultyLocationsQueue = new int[]
-        {
-            244,
-            257,
-            270,
-            283,
-            297,
-            310
-        };
-
         /// <summary>
         /// Removes all AI from the game.
         /// </summary>
@@ -296,9 +266,9 @@ namespace Deltin.CustomGameAutomation
         /// <seealso cref="RemoveFromGameIfAI(int)"/>
         public bool RemoveAllBotsAuto()
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.SemiInteractive) // Interactive?
             {
-                cg.updateScreen();
+                cg.UpdateScreen();
 
                 var allSlots = cg.AllSlots;
 
@@ -312,6 +282,45 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
+        /// Safely removes a slot from the game if they are an AI.
+        /// </summary>
+        /// <param name="slot">Slot to remove from game.</param>
+        /// <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
+        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
+        /// <seealso cref="RemoveAllBotsAuto"/>
+        /// <seealso cref="Interact.RemoveFromGame(int)"/>
+        public bool RemoveFromGameIfAI(int slot)
+        {
+            using (cg.LockHandler.SemiInteractive)
+            {
+                if (!CustomGame.IsSlotValid(slot))
+                    throw new InvalidSlotException(slot);
+
+                bool optionFound = (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.OpenMenu | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_ALL_BOTS);
+
+                if (!optionFound)
+                    return false;
+
+                return (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.Click | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_FROM_GAME);
+            }
+        }
+
+        /// <summary>
+        /// AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
+        /// </summary>
+        public void CalibrateAIChecking()
+        {
+            using (cg.LockHandler.Interactive)
+            {
+                cg.RightClick(Points.LOBBY_MY_PLAYER_ICON, 250);
+                cg.KeyPress(Keys.Enter);
+                Thread.Sleep(250);
+                cg.GoBack(1);
+                //cg.//ResetMouse();
+            }
+        }
+
+        /// <summary>
         /// Checks if the input slot is an AI.
         /// </summary>
         /// <param name="slot">Slot to check.</param>
@@ -320,7 +329,7 @@ namespace Deltin.CustomGameAutomation
         /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
         public bool IsAI(int slot, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Passive)
             {
                 // Look for the commendation icon for the slot chosen.
 
@@ -329,15 +338,15 @@ namespace Deltin.CustomGameAutomation
                     throw new InvalidSlotException(slot);
 
                 if (CustomGame.IsSlotSpectator(slot) // Since AI cannot join spectator, return false if the slot is a spectator slot.
-                    || !cg.AllSlots.Contains(slot)) // Return false if the slot is empty.
+                    || !cg.GetSlots(SlotFlags.All, true).Contains(slot)) // Return false if the slot is empty.
                     return false;
 
                 // The chat covers blue slot 5. Close the chat so the scanning will work accurately.
-                if (slot == 5)
+                if (slot == 5 && cg.OpenChatIsDefault)
                     cg.Chat.CloseChat();
 
-                if (!noUpdate)
-                    cg.updateScreen();
+                if (!noUpdate || slot == 5)
+                    cg.UpdateScreen();
 
                 int checkY = 0; // The potential Y locations of the commendation icon
                 int checkX = 0; // Where to start scanning on the X axis for the commendation icon
@@ -358,14 +367,23 @@ namespace Deltin.CustomGameAutomation
                     else if (CustomGame.IsSlotRed(slot))
                         checkX = 399; // The start of the red slots on the X axis
 
+                    if (cg.IsDeathmatch(true))
+                    {
+                        checkY += Distances.LOBBY_SLOT_DM_Y_OFFSET - 9;
+                        if (CustomGame.IsSlotBlue(slot))
+                            checkX += Distances.LOBBY_SLOT_DM_BLUE_X_OFFSET;
+                        else if (CustomGame.IsSlotRed(slot))
+                            checkX += Distances.LOBBY_SLOT_DM_RED_X_OFFSET;
+                    }
+
                     checkXLength = 195; // The length of the slots.
                 }
                 else if (CustomGame.IsSlotInQueue(slot))
                 {
-                    int checkslot = slot - CustomGame.Queueid;
+                    int checkslot = slot - CustomGame.QueueID;
 
                     // 245 is the Y location of the first commendation icon of the player in the first slot in queue. 14 is how many pixels it is to the next commendation icon on the next slot.
-                    checkY = 245 + (checkslot * 14) - Distances.LOBBY_QUEUE_OFFSET;
+                    checkY = 245 + (checkslot * 14);// - Distances.LOBBY_QUEUE_OFFSET;
 
                     checkX = 707; // The start of the queue slots on this X axis
                     checkXLength = 163; // The length of the queue slots.
@@ -373,13 +391,11 @@ namespace Deltin.CustomGameAutomation
 
                 bool isAi = true;
 
-                for (double x = checkX; x < checkX + checkXLength; x += 1.5)
+                for (int x = checkX; x < checkX + checkXLength && isAi; x += 1)
+                {
                     // Check for the commendation icon.
-                    if (cg.CompareColor(Convert.ToInt32(x), checkY, new int[] { 85, 140, 140 }, new int[] { 115, 175, 175 }))
-                    {
-                        isAi = false;
-                        break;
-                    }
+                    isAi = !Capture.CompareColor(Convert.ToInt32(x), checkY, new int[] { 75, 130, 130 }, new int[] { 115, 175, 175 });
+                }
 
                 if (slot == 5 && cg.OpenChatIsDefault)
                     cg.Chat.OpenChat();
@@ -407,75 +423,54 @@ namespace Deltin.CustomGameAutomation
         /// Gets all slots that are AI.
         /// </summary>
         /// <returns>All AI slots.</returns>
-        public List<int> GetAISlots(bool accurate = false)
+        public List<int> GetAISlots(bool accurate = false, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            List<int> AISlots = new List<int>();
+
+            List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
+
+            for (int i = 0; i < allPlayers.Count; i++)
             {
-                List<int> AISlots = new List<int>();
-
-                List<int> allPlayers = cg.AllSlots;
-
-                for (int i = 0; i < allPlayers.Count; i++)
+                if (!accurate)
                 {
-                    if (!accurate)
-                    {
-                        if (IsAI(allPlayers[i], true))
-                            AISlots.Add(allPlayers[i]);
-                    }
-                    else
-                    {
-                        if (AccurateIsAI(allPlayers[i]))
-                            AISlots.Add(allPlayers[i]);
-                    }
+                    if (IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
                 }
-
-                return AISlots;
+                else
+                {
+                    if (AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
             }
+
+            return AISlots;
         }
 
         /// <summary>
         /// Gets all slots that are not AI.
         /// </summary>
         /// <returns>All player slots.</returns>
-        public List<int> GetPlayerSlots(bool accurate = false)
+        public List<int> GetPlayerSlots(bool accurate = false, bool noUpdate = false)
         {
-            lock (cg.CustomGameLock)
+            List<int> AISlots = new List<int>();
+
+            List<int> allPlayers = cg.GetSlots(SlotFlags.All, noUpdate);
+
+            for (int i = 0; i < allPlayers.Count; i++)
             {
-                List<int> AISlots = new List<int>();
-
-                List<int> allPlayers = cg.AllSlots;
-
-                for (int i = 0; i < allPlayers.Count; i++)
+                if (!accurate)
                 {
-                    if (!accurate)
-                    {
-                        if (!IsAI(allPlayers[i], true))
-                            AISlots.Add(allPlayers[i]);
-                    }
-                    else
-                    {
-                        if (!AccurateIsAI(allPlayers[i]))
-                            AISlots.Add(allPlayers[i]);
-                    }
+                    if (!IsAI(allPlayers[i], true))
+                        AISlots.Add(allPlayers[i]);
                 }
-
-                return AISlots;
+                else
+                {
+                    if (!AccurateIsAI(allPlayers[i]))
+                        AISlots.Add(allPlayers[i]);
+                }
             }
-        }
 
-        /// <summary>
-        /// AI checking is determined by looking for the commendation icon of players. Sometimes, this icon is missing. This fixes it.
-        /// </summary>
-        public void CalibrateAIChecking()
-        {
-            lock (cg.CustomGameLock)
-            {
-                cg.RightClick(Points.LOBBY_MY_PLAYER_ICON, 250);
-                cg.KeyPress(Keys.Enter);
-                Thread.Sleep(250);
-                cg.GoBack(1);
-                //cg.//ResetMouse();
-            }
+            return AISlots;
         }
 
         /// <summary>
@@ -513,9 +508,9 @@ namespace Deltin.CustomGameAutomation
             return EditAI(slot, null, setToDifficulty);
         }
 
-        bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
+        private bool EditAI(int slot, AIHero? setToHero, Difficulty? setToDifficulty)
         {
-            lock (cg.CustomGameLock)
+            using (cg.LockHandler.Interactive)
             {
                 if (!CustomGame.IsSlotValid(slot))
                     throw new InvalidSlotException(slot);
@@ -530,8 +525,8 @@ namespace Deltin.CustomGameAutomation
                     var slotlocation = cg.Interact.FindSlotLocation(slot);
                     cg.LeftClick(slotlocation.X, slotlocation.Y);
                     // Check if Edit AI window has opened by checking if the confirm button exists.
-                    cg.updateScreen();
-                    if (cg.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
+                    cg.UpdateScreen();
+                    if (Capture.CompareColor(Points.EDIT_AI_CONFIRM, Colors.CONFIRM, 20))
                     {
                         var sim = new List<Keys>();
                         // Set hero if setToHero does not equal null.
@@ -592,106 +587,5 @@ namespace Deltin.CustomGameAutomation
                 }
             }
         }
-
-        /// <summary>
-        /// Safely removes a slot from the game if they are an AI.
-        /// </summary>
-        /// <param name="slot">Slot to remove from game.</param>
-        /// <returns>Returns true if the slot is an AI and removing them from the game was successful.</returns>
-        /// <include file='docs.xml' path='doc/exceptions/invalidslot/exception'/>
-        /// <seealso cref="RemoveAllBotsAuto"/>
-        /// <seealso cref="Interact.RemoveFromGame(int)"/>
-        public bool RemoveFromGameIfAI(int slot)
-        {
-            lock (cg.CustomGameLock)
-            {
-                if (!CustomGame.IsSlotValid(slot))
-                    throw new InvalidSlotException(slot);
-
-                bool optionFound = (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.OpenMenu | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_ALL_BOTS);
-
-                if (!optionFound)
-                    return false;
-
-                return (bool)cg.Interact.MenuOptionScan(slot, OptionScanFlags.Click | OptionScanFlags.CloseIfNotFound | OptionScanFlags.ReturnFound, null, Markups.REMOVE_FROM_GAME);
-            }
-        }
-    }
-
-    /// <summary>
-    /// AI heroes.
-    /// </summary>
-    public enum AIHero
-    {
-        /// <summary>
-        /// Overwatch's reccommended AI hero.
-        /// </summary>
-        Recommended,
-        /// <summary>
-        /// Ana AI hero.
-        /// </summary>
-        Ana,
-        /// <summary>
-        /// Bastion AI hero.
-        /// </summary>
-        Bastion,
-        /// <summary>
-        /// Lucio AI hero.
-        /// </summary>
-        Lucio,
-        /// <summary>
-        /// McCree AI hero.
-        /// </summary>
-        McCree,
-        /// <summary>
-        /// Mei AI hero.
-        /// </summary>
-        Mei,
-        /// <summary>
-        /// Reaper AI hero.
-        /// </summary>
-        Reaper,
-        /// <summary>
-        /// Roadhog AI hero.
-        /// </summary>
-        Roadhog,
-        /// <summary>
-        /// Soldier 76 AI hero.
-        /// </summary>
-        Soldier76,
-        /// <summary>
-        /// Sombra AI hero.
-        /// </summary>
-        Sombra,
-        /// <summary>
-        /// Torbjorn AI hero.
-        /// </summary>
-        Torbjorn,
-        /// <summary>
-        /// Zarya AI hero.
-        /// </summary>
-        Zarya,
-        /// <summary>
-        /// Zenyatta AI hero.
-        /// </summary>
-        Zenyatta
-    }
-    /// <summary>
-    /// AI difficulties.
-    /// </summary>
-    public enum Difficulty
-    {
-        /// <summary>
-        /// Easy AI difficulty.
-        /// </summary>
-        Easy,
-        /// <summary>
-        /// Medium AI difficulty.
-        /// </summary>
-        Medium,
-        /// <summary>
-        /// Hard AI difficulty.
-        /// </summary>
-        Hard
     }
 }

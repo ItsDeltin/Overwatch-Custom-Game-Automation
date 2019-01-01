@@ -15,64 +15,64 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public partial class CustomGame : IDisposable
     {
-        internal const string DebugHeader = "[CGL] ";
+        internal readonly DefaultKeys DefaultKeys;
+        internal readonly bool DisableInputForInteractive = false;
+        internal readonly bool DisableInputForSemiInteractive = false;
 
-        static int KeyPressWait = 50;
+        internal DirectBitmap Capture = null;
 
-        internal Bitmap bmp = null;
+        /// <summary>
+        /// The Overwatch Process being used in the CustomGame class.
+        /// </summary>
+        public Process OverwatchProcess { get; private set; }
+        private IntPtr OverwatchHandle { get { return OverwatchProcess.MainWindowHandle; } }
 
-        internal bool debugmode = false;
-        internal Form debug;
-        internal Graphics g;
-
-        IntPtr OverwatchHandle = IntPtr.Zero;
-        Process OverwatchProcess = null;
-        internal DefaultKeys DefaultKeys;
-
-        internal object CustomGameLock = new object();
+        /// <summary>
+        /// Determines if the Custom Game object was disposed.
+        /// </summary>
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Creates new CustomGame object.
         /// </summary>
-        public CustomGame(CustomGameBuilder customGameBuilder = default)
+        public CustomGame(CustomGameBuilder customGameBuilder = null)
         {
             if (customGameBuilder == null)
                 customGameBuilder = new CustomGameBuilder();
 
+            // Get the overwatch process.
             if (customGameBuilder.OverwatchProcess != null)
-            {
                 OverwatchProcess = customGameBuilder.OverwatchProcess;
-            }
             else
-            {
-                // Get the overwatch process
                 OverwatchProcess = Process.GetProcessesByName("Overwatch").FirstOrDefault();
-            }
 
             if (OverwatchProcess == null)
                 throw new MissingOverwatchProcessException("Could not find any Overwatch processes running.");
 
-            OverwatchHandle = OverwatchProcess.MainWindowHandle;
+            // Initialize the LockHandler.
+            LockHandler = new LockHandler(this);
 
+            // Save the customGameBuilder values to the class.
+            ScreenshotMethod = customGameBuilder.ScreenshotMethod;
+            OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
+            DefaultKeys = customGameBuilder.DefaultKeys;
+            DisableInputForInteractive = customGameBuilder.DisableInputForInteractive;
+            DisableInputForSemiInteractive = customGameBuilder.DisableInputForSemiInteractive;
+
+            // Create a link between OnExit and OverwatchProcess.Exited.
             OverwatchProcess.EnableRaisingEvents = true;
             OverwatchProcess.Exited += InvokeOnExit;
 
+            // Move the window to the correct position on the desktop for scanning and input.
             SetupWindow(OverwatchHandle, ScreenshotMethod);
-            Thread.Sleep(500);
+            Thread.Sleep(250);
 
-            // Set up debug window if debugmode is set to true.
-            if (debugmode)
-                new Task(() => 
-                {
-                    debug = new Form();
-                    debug.Width = 1500;
-                    debug.Height = 1000;
-                    debug.Show();
-                    g = debug.CreateGraphics();
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    Application.Run(debug);
-                }).Start();
+#if DEBUG
+            if (customGameBuilder.DebugMode)
+                SetupDebugWindow();
+#endif
 
+            // Create subclass instances.
             Commands = new Commands(this);
             AI = new AI(this);
             Chat = new Chat(this);
@@ -81,10 +81,6 @@ namespace Deltin.CustomGameAutomation
             Interact = new Interact(this);
             Settings = new Settings(this);
 
-            ScreenshotMethod = customGameBuilder.ScreenshotMethod;
-            OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
-            DefaultKeys = customGameBuilder.DefaultKeys;
-
             if (OpenChatIsDefault)
                 Chat.OpenChat();
 
@@ -92,49 +88,17 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Positions the Overwatch window to be usable by the CustomGame class.
+        /// Enables or disables external input for the Overwatch window.
         /// </summary>
-        public void SetupOverwatchWindow()
+        /// <param name="enable">Determines if the overwatch window should accept external input.</param>
+        public void EnableExternalInput(bool enable)
         {
-            SetupWindow(OverwatchHandle, ScreenshotMethod);
-        }
-
-        static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
-        {
-            if (!Validate(hWnd))
-                return;
-
-            if (method == ScreenshotMethod.ScreenCopy)
-                User32.SetForegroundWindow(hWnd);
-            else
-                User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
-            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
-        }
-
-        /// <summary>
-        /// Disables input for the Overwatch window.
-        /// </summary>
-        /// <remarks>
-        /// Input must be re-enabled with <see cref="EnableOverwatchWindowInput"/>.
-        /// </remarks>
-        /// <seealso cref="EnableOverwatchWindowInput"/>
-        public void DisableOverwatchWindowInput()
-        {
-            User32.EnableWindow(OverwatchHandle, false);
-        }
-
-        /// <summary>
-        /// Enables input for the Overwatch window after disabling it with <see cref="DisableOverwatchWindowInput"/>.
-        /// </summary>
-        /// <seealso cref="DisableOverwatchWindowInput"/>
-        public void EnableOverwatchWindowInput()
-        {
-            User32.EnableWindow(OverwatchHandle, true);
+            User32.EnableWindow(OverwatchHandle, enable);
         }
 
         internal void ResetMouse()
         {
-            lock (CustomGameLock)
+            using (LockHandler.SemiInteractive)
             {
                 // There is an Overwatch glitch where exiting some menus will cause the first slot to become highlighted.
                 // This will mess with some color detection, so this will move the mouse to an unused spot on the Overwatch window
@@ -142,16 +106,6 @@ namespace Deltin.CustomGameAutomation
                 Thread.Sleep(100);
                 MoveMouseTo(Points.RESET_POINT);
                 Thread.Sleep(100);
-            }
-        }
-
-        internal void CloseOptionMenu()
-        {
-            lock (CustomGameLock)
-            {
-                LeftClick(400, 500, 100);
-                LeftClick(500, 500, 100);
-                //ResetMouse();
             }
         }
 
@@ -165,56 +119,75 @@ namespace Deltin.CustomGameAutomation
         /// <returns>Returns the state of the game.</returns>
         public GameState GetGameState()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Passive)
             {
-                updateScreen();
+                UpdateScreen();
 
                 // Check if in lobby
-                if (CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
+                if (Capture.CompareColor(Points.LOBBY_START_GAME, Colors.LOBBY_START_GAME, Fades.LOBBY_START_GAME)) // Get "START GAME" color
                     return GameState.InLobby;
 
                 // Check if waiting
-                if (CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
+                if (Capture.CompareColor(Points.LOBBY_START_GAMEMODE, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if "START GAMEMODE" button exists.
                     return GameState.Waiting;
 
-                if (CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
+                if (Capture.CompareColor(Points.ENDING_COMMEND_DEFEAT, Colors.ENDING_COMMEND_DEFEAT, Fades.ENDING_COMMEND_DEFEAT)) // Check if commending by testing red color of defeat at top left corner
                     return GameState.Ending_Commend;
 
-                if (CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
+                if (Capture.CompareColor(Points.LOBBY_BACK_TO_LOBBY, Colors.LOBBY_CHANGE, Fades.LOBBY_CHANGE)) // Check if ingame by checking if "START GAMEMODE" button does not exist and the "BACK TO LOBBY" button does.
                     return GameState.Ingame;
 
                 return GameState.Unknown;
             }
-        } 
-
-        /// <summary>
-        /// The Overwatch Process being used in the CustomGame class.
-        /// </summary>
-        public Process UsingOverwatchProcess
-        {
-            get
-            {
-                return OverwatchProcess;
-            }
         }
 
-        internal bool Disposed = false;
         /// <summary>
         /// Disposes of all resources being used by the CustomGame instance.
         /// </summary>
         public void Dispose()
         {
-            lock (CustomGameLock)
+            using (LockHandler.Interactive)
             {
                 Disposed = true;
                 Commands.StopScanning();
-                DisposePersistentScanningThread();
+                PersistentScan = false;
 
-                if (bmp != null)
-                    bmp.Dispose();
+                if (Capture != null)
+                    Capture.Dispose();
             }
         }
 
+        /// <summary>
+        /// Checks if a player account exists via battletag. Is case sensitive.
+        /// </summary>
+        /// <param name="battletag">Battletag of player to check. Is case sensitive.</param>
+        /// <returns>Returns true if player exists, else returns false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
+        public static bool PlayerExists(string battletag)
+        {
+            if (battletag == null)
+                throw new ArgumentNullException(nameof(battletag));
+
+            // If the website "https://playoverwatch.com/en-us/career/pc/(BATTLETAGNAME)-(BATTLETAGID)" exists, then the player exists.
+            try
+            {
+                string playerprofile = "https://playoverwatch.com/en-us/career/pc/" + battletag.Replace('#', '-');
+
+                using (var wc = new System.Net.WebClient())
+                {
+                    string pageinfo = wc.DownloadString(playerprofile);
+                    wc.Dispose();
+
+                    // Check if the career profile page exists by checking if the title of the page starts with C in Career profile.
+                    // If it doesn't, it will be a "page doesn't exist" page with the title starting with O in Overwatch.
+                    if (pageinfo[pageinfo.IndexOf("<title>") + 7] == 'C')
+                        return true;
+                }
+            }
+            catch (System.Net.WebException) { }
+
+            return false;
+        }
     } // CustomGame class
 
     /// <summary>
@@ -225,25 +198,18 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Base type for CustomGame interaction members.
         /// </summary>
-        protected CustomGameBase(CustomGame cg)
+        protected internal CustomGameBase(CustomGame cg)
         {
             this.cg = cg;
         }
         /// <summary>
         /// The <see cref="CustomGame"/> object to use.
         /// </summary>
-        protected CustomGame cg;
-    }
-
-    /// <summary>
-    /// Overwatch's keybinds.
-    /// </summary>
-    public class DefaultKeys
-    {
+        internal CustomGame cg;
         /// <summary>
-        /// The key used to open the Custom Game lobby. Is Keys.L by default.
+        /// The captured screen.
         /// </summary>
-        public Keys OpenCustomGameLobbyKey = Keys.L;
+        internal DirectBitmap Capture { get { return cg.Capture; } }
     }
 
     /// <summary>
@@ -267,115 +233,30 @@ namespace Deltin.CustomGameAutomation
         /// The default keys set in Overwatch's settings.
         /// </summary>
         public DefaultKeys DefaultKeys = new DefaultKeys();
+        /// <summary>
+        /// Prevents the Overwatch window from recieving input during interactive statements.
+        /// </summary>
+        public bool DisableInputForInteractive = false;
+        /// <summary>
+        /// Prevents the Overwatch window from recieving input during semi-interactive statements.
+        /// </summary>
+        public bool DisableInputForSemiInteractive = false;
+
+#if DEBUG
+#pragma warning disable CS1591
+        public bool DebugMode = false;
+#pragma warning restore CS1591
+#endif
     }
 
     /// <summary>
-    /// Teams in Overwatch.
+    /// Overwatch's keybinds.
     /// </summary>
-    [Flags]
-    public enum Team
+    public class DefaultKeys
     {
         /// <summary>
-        /// The blue team.
+        /// The key used to open the Custom Game lobby. Is <see cref="Keys.L"/> by default.
         /// </summary>
-        Blue = 1 << 0,
-        /// <summary>
-        /// The red team.
-        /// </summary>
-        Red = 1 << 1,
-        /// <summary>
-        /// The blue and red team.
-        /// </summary>
-        BlueAndRed = Blue | Red,
-        /// <summary>
-        /// The spectators.
-        /// </summary>
-        Spectator = 1 << 2,
-        /// <summary>
-        /// The queue.
-        /// </summary>
-        Queue = 1 << 3
-    }
-
-    /// <summary>
-    /// Teams in the queue.
-    /// </summary>
-    public enum QueueTeam
-    {
-        /// <summary>
-        /// Queueing for both blue and red.
-        /// </summary>
-        Neutral,
-        /// <summary>
-        /// Queueing for blue.
-        /// </summary>
-        Blue,
-        /// <summary>
-        /// Queueing for red.
-        /// </summary>
-        Red
-    }
-
-    /// <summary>
-    /// Options for who can join the game.
-    /// </summary>
-    public enum Join
-    {
-        /// <summary>
-        /// Everyone can join the game.
-        /// </summary>
-        Everyone,
-        /// <summary>
-        /// Only friends of the moderator can join the game.
-        /// </summary>
-        FriendsOnly,
-        /// <summary>
-        /// Only players invited can join the game.
-        /// </summary>
-        InviteOnly
-    }
-    /// <summary>
-    /// Gets the current state of the game.
-    /// </summary>
-    public enum GameState
-    {
-        /// <summary>
-        /// The custom game is in the lobby.
-        /// </summary>
-        InLobby,
-        /// <summary>
-        /// The custom game is waiting for players.
-        /// </summary>
-        Waiting,
-        /// <summary>
-        /// The custom game is currently ingame.
-        /// </summary>
-        Ingame,
-        /// <summary>
-        /// The custom game is at player commendation.
-        /// </summary>
-        Ending_Commend,
-        /// <summary>
-        /// Cannot recognize what state the game is on.
-        /// </summary>
-        Unknown
-    }
-    /// <summary>
-    /// Enables/disables settings before toggling them.
-    /// </summary>
-    public enum ToggleAction
-    {
-        /// <summary>
-        /// Do not enable/disable.
-        /// </summary>
-        None,
-        /// <summary>
-        /// Disable all options before toggling.
-        /// </summary>
-        DisableAll,
-        /// <summary>
-        /// Enable all options before toggling.
-        /// </summary>
-        EnableAll
+        public Keys OpenCustomGameLobbyKey = Keys.L;
     }
 }

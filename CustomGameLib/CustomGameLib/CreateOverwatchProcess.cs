@@ -11,16 +11,15 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        // WIP way to create overwatch process without username and password.
         /// <summary>
         /// Creates an Overwatch process using the currently logged in battle.net account.
         /// </summary>
         /// <param name="processInfo">Parameters for creating the process.</param>
         /// <returns>The created Overwatch process.</returns>
-        public static Process CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto processInfo = null)
+        public static Process StartOverwatch(OverwatchInfoAuto processInfo = null)
         {
             if (processInfo == null)
-                processInfo = new OverwatchProcessInfoAuto();
+                processInfo = new OverwatchInfoAuto();
 
             if (!File.Exists(processInfo.BattlenetExecutableFilePath))
                 throw new FileNotFoundException(string.Format("Battle.net.exe's executable at {0} was not found. " +
@@ -31,7 +30,9 @@ namespace Deltin.CustomGameAutomation
             // If battle.net is not started, start it.
             if (Process.GetProcessesByName("battle.net").Length == 0)
             {
-                Debug.WriteLine(DebugHeader + "No battle.net process found, starting battle.net.");
+#if DEBUG
+                CustomGameDebug.WriteLine("No battle.net process found, starting battle.net.");
+#endif
 
                 Process battlenet = new Process();
                 battlenet.StartInfo.FileName = processInfo.BattlenetExecutableFilePath;
@@ -43,18 +44,23 @@ namespace Deltin.CustomGameAutomation
                 {
                     if (startTime.ElapsedMilliseconds >= processInfo.MaxBattlenetStartTime || processInfo.MaxBattlenetStartTime == -1)
                     {
-                        Debug.WriteLine(DebugHeader + "Error: Battle.net took too long to start.");
+#if DEBUG
+                        CustomGameDebug.WriteLine("Error: Battle.net took too long to start.");
+#endif
                         throw new OverwatchStartFailedException("Battle.net took too long to start.");
                     }
                     Thread.Sleep(200);
                 }
-
-                Debug.WriteLine(DebugHeader + "Finished starting Battle.net.");
+#if DEBUG
+                CustomGameDebug.WriteLine("Finished starting Battle.net.");
+#endif
             }
+#if DEBUG
             else
-                Debug.WriteLine(DebugHeader + "Battle.net process found.");
+                CustomGameDebug.WriteLine("Battle.net process found.");
 
-            Debug.WriteLine(DebugHeader + "Starting the Overwatch process.");
+            CustomGameDebug.WriteLine("Starting the Overwatch process.");
+#endif
 
             Process[] processList = Process.GetProcessesByName("Overwatch");
 
@@ -83,45 +89,60 @@ namespace Deltin.CustomGameAutomation
                         WaitForVisibleProcessWindow(owProcess);
                         RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
 
-                        Bitmap bmp = null;
-                        if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
+                        if (processInfo.AutomaticallyCreateCustomGame)
                         {
-                            Debug.WriteLine(DebugHeader + "Finished starting Overwatch.");
-                            if (processInfo.AutomaticallyCreateCustomGame)
-                                CreateCustomGame(owProcess.MainWindowHandle);
-                            return newProcessList[i];
-                        }
-                        else
-                        {
-                            Debug.WriteLine(DebugHeader + "Could not start Overwatch, main menu did not load.");
-                            if (bmp != null)
-                                bmp.Dispose();
-                            if (processInfo.CloseOverwatchProcessOnFailure)
+                            DirectBitmap bmp = null;
+                            if (WaitForMainMenu(processInfo.ScreenshotMethod, owProcess.MainWindowHandle, bmp, processInfo.MaxWaitForMenuTime))
                             {
-                                owProcess.CloseMainWindow();
-                                owProcess.Close();
+#if DEBUG
+                                CustomGameDebug.WriteLine("Finished starting Overwatch.");
+#endif
+                                CreateCustomGame(owProcess.MainWindowHandle);
+                                if (bmp != null)
+                                    bmp.Dispose();
                             }
-                            throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
+                            else
+                            {
+#if DEBUG
+                                CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
+#endif
+                                if (bmp != null)
+                                    bmp.Dispose();
+                                if (processInfo.CloseOverwatchProcessOnFailure)
+                                {
+                                    owProcess.CloseMainWindow();
+                                    owProcess.Close();
+                                }
+                                throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
+                            }
                         }
+#if DEBUG
+                        else
+                            CustomGameDebug.WriteLine("Finished starting Overwatch.");
+#endif
+
+                        return newProcessList[i];
                     }
 
                 Thread.Sleep(200);
             }
 
-            Debug.WriteLine(DebugHeader + "Error: Overwatch took too long to start.");
+#if DEBUG
+            CustomGameDebug.WriteLine("Error: Overwatch took too long to start.");
+#endif
             RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
             throw new OverwatchStartFailedException("Overwatch took too long to start.");
         }
 
         /// <summary>
-        /// Creates a new Overwatch process by logging into an account. I strongly reccommend using <see cref="CreateOverwatchProcessAutomatically(OverwatchProcessInfoAuto)"/> instead.
+        /// Creates a new Overwatch process by logging into an account. Since this requires your username and password, I recommend using <see cref="StartOverwatch(OverwatchInfoAuto)"/> instead.
         /// </summary>
         /// <param name="processInfo">Parameters for creating the process.</param>
         /// <returns>The created Overwatch process.</returns>
-        public static Process CreateOverwatchProcessManually(OverwatchProcessInfoManual processInfo)
+        public static Process StartOverwatch(OverwatchInfoManual processInfo)
         {
             if (processInfo == null)
-                throw new ArgumentNullException("processInfo");
+                throw new ArgumentNullException(nameof(processInfo));
 
             int maxWaitTime = 5000;
 
@@ -149,7 +170,7 @@ namespace Deltin.CustomGameAutomation
 
             Stopwatch elapsed = new Stopwatch();
            
-            Bitmap bmp = null;
+            DirectBitmap bmp = null;
             elapsed.Start();
             while (true)
             {
@@ -308,7 +329,7 @@ namespace Deltin.CustomGameAutomation
             ChangeVideoSettings(settingsFilePath, settings.ToArray(), setTo.ToArray());
         }
 
-        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchProcessInfoManual info, Process process, Bitmap bmp, Exception ex)
+        private static void ProcessCreateError(List<Tuple<string, string>> initialSettings, OverwatchInfoManual info, Process process, DirectBitmap bmp, Exception ex)
         {
             if (info.CloseOverwatchProcessOnFailure)
             {
@@ -330,7 +351,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, Bitmap bmp, int maxTime)
+        private static bool WaitForMainMenu(ScreenshotMethod screenshotMethod, IntPtr hwnd, DirectBitmap bmp, int maxTime)
         {
             Stopwatch elapsed = new Stopwatch();
             elapsed.Start();
@@ -379,7 +400,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Data for creating an Overwatch process manually.
     /// </summary>
-    public class OverwatchProcessInfoManual
+    public class OverwatchInfoManual
     {
         /// <summary>
         /// Data for creating an Overwatch process manually.
@@ -387,7 +408,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="username">Username of the account for the new Overwatch process.</param>
         /// <param name="password">Password of the account for the new Overwatch process.</param>
         /// <param name="authenticator">Authenticator number from the Authenticator app. Only required if the account is hooked up to the Blizzard Authenticator app.</param>
-        public OverwatchProcessInfoManual(string username, string password, string authenticator = null)
+        public OverwatchInfoManual(string username, string password, string authenticator = null)
         {
             Username = username;
             Password = password;
@@ -436,47 +457,47 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Data for creating an Overwatch process automatically.
     /// </summary>
-    public class OverwatchProcessInfoAuto
+    public class OverwatchInfoAuto
     {
         /// <summary>
         /// Data for creating an Overwatch process automatically.
         /// </summary>
-        public OverwatchProcessInfoAuto()
+        public OverwatchInfoAuto()
         {
 
         }
 
         /// <summary>
-        /// If true, the Overwatch process will automatically create a Custom Game.
+        /// If true, the Overwatch process will automatically create a Custom Game. Default is true.
         /// </summary>
         public bool AutomaticallyCreateCustomGame = true;
         /// <summary>
-        /// Closes the Overwatch process if it fails to log in.
+        /// Closes the Overwatch process if it fails to log in. Default is true.
         /// </summary>
         public bool CloseOverwatchProcessOnFailure = true;
         /// <summary>
-        /// The path to the battle.net executable. Defaults to "C:\Program Files (x86)\Blizzard App\Battle.net.exe"
+        /// The path to the battle.net executable. Default is "C:\Program Files (x86)\Blizzard App\Battle.net.exe"
         /// </summary>
         public string BattlenetExecutableFilePath = @"C:\Program Files (x86)\Blizzard App\Battle.net.exe";
         /// <summary>
-        /// The path to Overwatch's settings file. Defaults to "C:\Users\(EnvironmentName)\Documents\Overwatch\Settings\Settings_v0.ini"
+        /// The path to Overwatch's settings file. Default is "C:\Users\(EnvironmentName)\Documents\Overwatch\Settings\Settings_v0.ini"
         /// </summary>
         public string OverwatchSettingsFilePath = @"C:\Users\" + Environment.UserName + @"\Documents\Overwatch\Settings\Settings_v0.ini";
         /// <summary>
-        /// The method that is used to take screenshots of the Overwatch window.
+        /// The method that is used to take screenshots of the Overwatch window. Default is <see cref="ScreenshotMethod.BitBlt"/>
         /// </summary>
         public ScreenshotMethod ScreenshotMethod = ScreenshotMethod.BitBlt;
         /// <summary>
-        /// The maximum amount of time to wait for the menu to load.
+        /// The maximum amount of time to wait for the menu to load. Default is 20000.
         /// </summary>
-        public int MaxWaitForMenuTime = 20000;
+        public int MaxWaitForMenuTime = 60000;
         /// <summary>
-        /// The maximum amount of time to wait for Overwatch to start.
+        /// The maximum amount of time to wait for Overwatch to start. Default is 10000.
         /// </summary>
-        public int MaxOverwatchStartTime = 10000;
+        public int MaxOverwatchStartTime = 60000;
         /// <summary>
-        /// The maximum amount of time to wait for Battle.net to start.
+        /// The maximum amount of time to wait for Battle.net to start. Default is 10000.
         /// </summary>
-        public int MaxBattlenetStartTime = 10000;
+        public int MaxBattlenetStartTime = 60000;
     }
 }
