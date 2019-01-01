@@ -490,14 +490,14 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// The maximum amount of time to wait for the menu to load. Default is 20000.
         /// </summary>
-        public int MaxWaitForMenuTime = 20000;
+        public int MaxWaitForMenuTime = 60000;
         /// <summary>
         /// The maximum amount of time to wait for Overwatch to start. Default is 10000.
         /// </summary>
-        public int MaxOverwatchStartTime = 10000;
+        public int MaxOverwatchStartTime = 60000;
         /// <summary>
         /// The maximum amount of time to wait for Battle.net to start. Default is 10000.
         /// </summary>
-        public int MaxBattlenetStartTime = 10000;
+        public int MaxBattlenetStartTime = 60000;
     }
 }

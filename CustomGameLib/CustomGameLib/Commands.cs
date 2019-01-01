@@ -56,6 +56,10 @@ namespace Deltin.CustomGameAutomation
             ScanCommands() scans for letters at the y0 coordinate. 
             When it gets a color of the chat it will check for each letter in the "letters" array below. 
             The most likely letter is chosen.
+
+            To generate a Letter value, build the library in the Debug configuration. Create a CustomGame object with the debugMode in the builder set to true.
+            CustomGame cg = new CustomGame(new CustomGameBuilder() { debugMode = true });
+            When the object is created a menu will open up. Type the letter you want to generate into Overwatch's chat then select it with the GUI. The Letter value will be generated.
         */
         static internal readonly Letter[] letters = new Letter[]
         {
@@ -104,7 +108,7 @@ namespace Deltin.CustomGameAutomation
             new Letter(new int[,] {{0,0},{1,0},{2,0},{3,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{1,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '8', 3), // Number 8
             new Letter(new int[,] {{0,-3},{0,-1},{0,0},{1,-4},{1,-3},{1,-2},{1,0},{2,-4},{2,-2},{2,0},{3,-3},{3,-1},{3,0}}, '8', 3, 0),
             new Letter(new int[,] {{0,-3},{0,-1},{0,0},{1,-4},{1,-3},{1,-2},{1,0},{2,-4},{2,-2},{2,0},{3,-3},{3,-2},{3,-1},{3,0}}, '8', 3, 0),
-            new Letter(new int[,] {{0,0},{1,0},{2,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '9', 3), // Number 9
+            new Letter(new int[,] {{0,0},{1,0},{2,0},{0,-1},{3,-1},{0,-2},{1,-2},{2,-2},{3,-2},{0,-3},{3,-3},{0,-4},{1,-4},{2,-4},{3,-4}}, '9', 4), // Number 9
             new Letter(new int[,] {{-1,-4},{-1,-3},{-1,-1},{0,-4},{0,-2},{0,0},{1,-4},{1,-2},{1,0},{2,-3},{2,-2},{2,-1}}, '9', 3, -1),
 
             // Other
@@ -114,7 +118,7 @@ namespace Deltin.CustomGameAutomation
         };
         #endregion
 
-        private static readonly char[] TouchingCharacters = new char[] { 'M', 'N', 'X', 'L', 'U' };
+        private static readonly char[] TouchingCharacters = new char[] { 'M', 'N', 'X', 'L', 'U' }; // Prevents touching characters from being seen as one different character.
 
         private const int MarkerX = 50; // The X location of the chat marker.
         private const int TextStart = 54; // The X location that the chat text starts.

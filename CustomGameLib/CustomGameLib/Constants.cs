@@ -204,12 +204,12 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point[] MODERATOR_ICON_LOCATIONS = new Point[]
         {
             // blue
-            new Point(65, 257),
-            new Point(65, 286),
-            new Point(65, 315),
-            new Point(65, 343),
-            new Point(65, 372),
-            new Point(65, 400),
+            new Point(60, 257),
+            new Point(60, 286),
+            new Point(60, 315),
+            new Point(60, 343),
+            new Point(60, 372),
+            new Point(60, 400),
             // red
             new Point(607, 257),
             new Point(607, 286),
