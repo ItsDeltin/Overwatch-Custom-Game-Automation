@@ -100,7 +100,6 @@ namespace Deltin.CustomGameAutomation
                 if (AllSlots.Contains(slot))
                     return false;
 
-                Console.WriteLine(Interact.FindSlotLocation(slot));
                 LeftClick(Interact.FindSlotLocation(slot));
 
                 LeftClick(Points.INVITE_VIA_BATTLETAG, 100); // click via battletag
@@ -170,15 +169,7 @@ namespace Deltin.CustomGameAutomation
                         {
                             // If there is, compare it to the previous one.
 
-                            /*
-                            bool NotMatching = false;
-                            for (int x = 0; x < markup.Width && !NotMatching; x++)
-                                for (int y = 0; y < markup.Height && !NotMatching; y++)
-                                    if (!previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
-                                        NotMatching = true;
-                            */
-
-                            bool matching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, 98, DBCompareFlags.Multithread);
+                            bool matching = previousSlotData.Markup.CompareTo(markup, InviteScanData.MarkupFade, InviteScanData.MarkupDifference, DBCompareFlags.Multithread);
 
                             previousSlotData.Markup.Dispose();
                             previousSlotData.Markup = markup;
@@ -191,7 +182,7 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     iterations++;
-                    Thread.Sleep(10);
+                    Thread.Sleep(20);
                 }
 
                 for (int i = 0; i < slotData.Count; i++)
@@ -243,6 +234,17 @@ namespace Deltin.CustomGameAutomation
 
         internal class InviteScanData
         {
+            public static readonly Point Origin = new Point(176, 252);
+            public const int PlayerRange = 10;
+            public static readonly Point SpectatorOrigin = new Point(779, 251);
+            public const int SpectatorRange = 6;
+
+            public const double MarkupDifference = 99;
+            public const int MarkupFade = 3;
+            public const int MSToScan = 250;
+            public const int Player_MarkInvitedWithPercentageChanged = 30; // 50%
+            public const int Spectator_MarkInvitedWithPercentageChanged = 15; // 25%
+            
             public InviteScanData(int slot, DirectBitmap markup)
             {
                 Slot = slot;
@@ -252,110 +254,6 @@ namespace Deltin.CustomGameAutomation
             public int Slot;
             public DirectBitmap Markup;
             public double Changes = 0;
-
-            public static readonly Point Origin = new Point(176, 252);
-            public const int PlayerRange = 10;
-            public static readonly Point SpectatorOrigin = new Point(779, 251);
-            public const int SpectatorRange = 6;
-            public const int MarkupFade = 5;
-            public const int MSToScan = 250;
-            public const int Player_MarkInvitedWithPercentageChanged = 50; // 50%
-            public const int Spectator_MarkInvitedWithPercentageChanged = 20; // 25%
-
-            /*
-            public DateTime TimeSinceLastChange;
-            public DateTime TimeSinceLastNoChange;
-            public int PredictedState = InviteScan.Unsure;
-
-            public const int SpectatorRange = 5;
-            public const int ChangeWaitTime = 1;
-
-            public const int Unsure = 0;
-            public const int Ingame = 1;
-            public const int Invited = 2;
-            */
         }
-
-        // Multithreaded invite scan check WIP
-        /*
-        private void ScanInvitedPlayers(List<InviteScanData> data)
-        {
-            // Get all non-AI players
-            List<int> players = GetSlots(SlotFlags.BlueTeam | SlotFlags.RedTeam | SlotFlags.Spectators | SlotFlags.Queue | SlotFlags.NoAI);
-
-            foreach (int slot in PlayerRange)
-            {
-                // Get the data relating to the slot.
-                InviteScanData previousSlotData = data.FirstOrDefault(v => v.Slot == slot);
-
-                // If the slot is empty, dispose of the data associated with it then continue to the next slot.
-                if (!players.Contains(slot))
-                {
-                    if (previousSlotData != null)
-                    {
-                        previousSlotData.Markup.Dispose();
-                        data.Remove(previousSlotData);
-                    }
-                    continue;
-                }
-
-                // Copy a 20*20 pixel square of the invite icon animation.
-                Point scanAt = AddToSlotOrigin(InviteScanData.Origin, slot);
-                Bitmap markup = BmpClone(scanAt.X - InviteScanData.PlayerRange, scanAt.Y - InviteScanData.PlayerRange, InviteScanData.PlayerRange * 2, InviteScanData.PlayerRange * 2);
-
-                // If there is no previous record of the animation for the slot, create it.
-                if (previousSlotData == null)
-                {
-                    data.Add(new InviteScanData(slot, markup));
-                }
-                else
-                {
-                    // If there is, compare it to the previous one.
-                    double total = 0;
-                    double success = 0;
-
-                    for (int x = 0; x < markup.Width; x++)
-                        for (int y = 0; y < markup.Height; y++)
-                        {
-                            total++;
-
-                            if (previousSlotData.Markup.CompareColor(markup, x, y, InviteScanData.MarkupFade))
-                                success++;
-                        }
-
-                    double percentage = (success / total) * 100;
-
-                    previousSlotData.Markup.Dispose();
-                    previousSlotData.Markup = markup;
-
-                    // If the markups are 90% similar, there is no animation so the player is in game and not invited.
-
-                    if (percentage > 90)
-                    {
-                        previousSlotData.TimeSinceLastNoChange = DateTime.UtcNow;
-
-                        if ((DateTime.UtcNow - previousSlotData.TimeSinceLastChange).Seconds >= InviteScanData.ChangeWaitTime)
-                            previousSlotData.PredictedState = InviteScanData.Ingame;
-
-                        Console.WriteLine("Slot " + slot + " is ingame.");
-                    }
-                    else
-                    {
-                        previousSlotData.TimeSinceLastChange = DateTime.UtcNow;
-
-                        if ((DateTime.UtcNow - previousSlotData.TimeSinceLastNoChange).Seconds >= InviteScanData.ChangeWaitTime)
-                            previousSlotData.PredictedState = InviteScanData.Invited;
-                    }
-                }
-            }
-        }
-
-        public List<int> GetInvitedSlots(bool includeUnsure)
-        {
-            return InviteData.SlotData.Where(slotdata => slotdata.PredictedState == InviteScan.Invited || (includeUnsure && slotdata.PredictedState == InviteScan.Unsure))
-                .Select(slotdata => slotdata.Slot)
-                .ToList();
-        }
-        */
     }
 }

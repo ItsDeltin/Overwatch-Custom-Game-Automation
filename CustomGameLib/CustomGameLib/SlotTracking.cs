@@ -96,8 +96,8 @@ namespace Deltin.CustomGameAutomation
 
                 var slots = GetSlots(slotFlags);
 
-                //for (int slot = 0; slot < SlotCount; slot++)
-                Parallel.For(0, SlotCount, (slot) =>
+                for (int slot = 0; slot < SlotCount; slot++)
+                //Parallel.For(0, SlotCount, (slot) =>
                 {
                     SlotIdentity slotIdentity = slots.Contains(slot) ? GetSlotIdentity(slot) : null;
 
@@ -130,7 +130,7 @@ namespace Deltin.CustomGameAutomation
                     if (changed)
                         lock (listLock)
                             changedSlots.Add(slot);
-                });
+                }
 
                 return changedSlots;
             }
@@ -295,15 +295,26 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
+    /// <summary>
+    /// Contains data about a player being tracked in the game.
+    /// </summary>
+    /// <seealso cref="PlayerTracker"/>
+    /// <seealso cref="CustomGame.TrackPlayers(PlayerTracker, SlotFlags)"/>
     public class PlayerTrackerSlot
     {
-        public PlayerTrackerSlot(PlayerIdentity identity, int slot)
+        internal PlayerTrackerSlot(PlayerIdentity identity, int slot)
         {
             PlayerIdentity = identity;
             Slot = slot;
         }
 
+        /// <summary>
+        /// The identity of the player.
+        /// </summary>
         public PlayerIdentity PlayerIdentity { get; private set; }
+        /// <summary>
+        /// The slot of the player.
+        /// </summary>
         public int Slot { get; internal set; }
     }
 }

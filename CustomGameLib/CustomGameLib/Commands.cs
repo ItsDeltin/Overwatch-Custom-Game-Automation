@@ -408,7 +408,7 @@ namespace Deltin.CustomGameAutomation
 
 #if DEBUG
             letterInfos.RemoveRange(0, nameSeperator);
-            cg.DebugMenu.ShowScan(letterInfos);
+            cg.DebugMenu?.ShowScan(letterInfos);
 #endif
 
             lock (ListenToAccessLock)

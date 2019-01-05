@@ -345,7 +345,7 @@ namespace Deltin.CustomGameAutomation
                 if (slot == 5 && cg.OpenChatIsDefault)
                     cg.Chat.CloseChat();
 
-                if (!noUpdate || slot == 5)
+                if (!noUpdate || (slot == 5 && cg.OpenChatIsDefault))
                     cg.UpdateScreen();
 
                 int checkY = 0; // The potential Y locations of the commendation icon

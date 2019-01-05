@@ -49,9 +49,14 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        /// <include file='docs.xml' path='doc/lockHandler/summary'/>
+        /// <include file='docs.xml' path='doc/lockHandler/remarks'/>
         public LockHandler LockHandler { get; private set; }
     }
 
+    /// <include file='docs.xml' path='doc/lockHandler/summary'/>
+    /// <include file='docs.xml' path='doc/lockHandler/remarks'/>
+    /// <seealso cref="CustomGame.LockHandler"/>
     public class LockHandler
     {
         private const int PassiveNum = 0;
@@ -65,8 +70,17 @@ namespace Deltin.CustomGameAutomation
 
         private CustomGame cg;
 
+        /// <summary>
+        /// Lock for functions that only scan the Overwatch window.
+        /// </summary>
         public Locker Passive         { get { return new Locker(PassiveNum,         this); } }
+        /// <summary>
+        /// Lock for functions that interact with the Overwatch window that go into different menus.
+        /// </summary>
         public Locker Interactive     { get { return new Locker(InteractiveNum,     this); } }
+        /// <summary>
+        /// Lock for functions that interact with the Overwatch window that do not go into different menus.
+        /// </summary>
         public Locker SemiInteractive { get { return new Locker(SemiInteractiveNum, this); } }
 
         private List<PassiveData> PassiveList = new List<PassiveData>(); // List of passive methods running.
@@ -156,6 +170,9 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
+        /// <summary>
+        /// Lock for a <see cref="LockHandler"/>.
+        /// </summary>
         public class Locker : IDisposable
         {
             internal Locker(int lockType, LockHandler lockHandler)
@@ -168,6 +185,9 @@ namespace Deltin.CustomGameAutomation
             internal int LockType { get; private set; }
             private LockHandler LockHandler;
 
+            /// <summary>
+            /// Releases the lock.
+            /// </summary>
             public void Dispose()
             {
                 LockHandler.Unlock(this);

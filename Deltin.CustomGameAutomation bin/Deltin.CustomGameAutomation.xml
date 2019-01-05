@@ -94,6 +94,47 @@
             <returns>Returns true if player exists, else returns false.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.CustomGame.LockHandler">
+            <summary>
+      Locks functions in the CustomGame class.
+    </summary>
+            <remarks>
+      <para>
+        Passive locks is for functions that scan the Overwatch window but do not interact with it.
+        Any amount of passive locks will run side by side.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.Passive" />)</code>
+      </para>
+      <para>
+        Semi-Interactive locks is for functions that interact with the Overwatch window but do not go into any other menues allowing scanning to continue as normal.
+        Only 1 semi-interactive lock will run at a time.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.SemiInteractive" />)</code>
+      </para>
+      <para>
+        Interactive locks is for functions that interact with the Overwatch window and go into new menus. This will block passive locks from running during the interactive lock.
+        Only 1 interactive lock will run at a time.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.Interactive" />)</code>
+      </para>
+      <para>
+        A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiInteractive are accessed outside of a using() statement.
+
+        The following will also cause a deadlock:
+        <code>using (CustomGame.LockHandler.Interactive)
+{
+  Parallel.For(0, 10, (i) =&gt;
+  {
+    using (CustomGame.LockHandler...)
+    {
+      // ...
+    }
+  });
+}</code>
+        Because the first using statement is waiting for Parallel.For to complete, and the second using statement is waiting for the first using statement to release the lock.
+      </para>
+    </remarks>
+        </member>
         <member name="E:Deltin.CustomGameAutomation.CustomGame.OnGameOver">
             <summary>
             Events that are executed when the game is over.
@@ -472,7 +513,7 @@
             </summary>
             <param name="path">Path to save screenshot to.</param>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupOverwatchWindow">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.SetupWindow">
             <summary>
             Positions the Overwatch window to be usable by the CustomGame class.
             </summary>
@@ -2005,6 +2046,73 @@
             </summary>
             <param name="message">Message to display.</param>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.LockHandler">
+            <summary>
+      Locks functions in the CustomGame class.
+    </summary>
+            <remarks>
+      <para>
+        Passive locks is for functions that scan the Overwatch window but do not interact with it.
+        Any amount of passive locks will run side by side.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.Passive" />)</code>
+      </para>
+      <para>
+        Semi-Interactive locks is for functions that interact with the Overwatch window but do not go into any other menues allowing scanning to continue as normal.
+        Only 1 semi-interactive lock will run at a time.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.SemiInteractive" />)</code>
+      </para>
+      <para>
+        Interactive locks is for functions that interact with the Overwatch window and go into new menus. This will block passive locks from running during the interactive lock.
+        Only 1 interactive lock will run at a time.
+        Usage:
+        <code>using (CustomGame.<see cref="P:Deltin.CustomGameAutomation.LockHandler.Interactive" />)</code>
+      </para>
+      <para>
+        A deadlock will occur if LockHandler.Passive, LockHandler.Interactive, or LockHandler.SemiInteractive are accessed outside of a using() statement.
+
+        The following will also cause a deadlock:
+        <code>using (CustomGame.LockHandler.Interactive)
+{
+  Parallel.For(0, 10, (i) =&gt;
+  {
+    using (CustomGame.LockHandler...)
+    {
+      // ...
+    }
+  });
+}</code>
+        Because the first using statement is waiting for Parallel.For to complete, and the second using statement is waiting for the first using statement to release the lock.
+      </para>
+    </remarks>
+            <seealso cref="P:Deltin.CustomGameAutomation.CustomGame.LockHandler" />
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.LockHandler.Passive">
+            <summary>
+            Lock for functions that only scan the Overwatch window.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.LockHandler.Interactive">
+            <summary>
+            Lock for functions that interact with the Overwatch window that go into different menus.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.LockHandler.SemiInteractive">
+            <summary>
+            Lock for functions that interact with the Overwatch window that do not go into different menus.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.LockHandler.Locker">
+            <summary>
+            Lock for a <see cref="F:Deltin.CustomGameAutomation.LockHandler.Locker.LockHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.LockHandler.Locker.Dispose">
+            <summary>
+            Releases the lock.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.GameOverArgs">
             <summary>
             Arguments for the OnGameOver event that is executed when the game ends in Overwatch.
@@ -2921,6 +3029,23 @@
         <member name="M:Deltin.CustomGameAutomation.PlayerTracker.Dispose">
             <summary>
             Disposes data used by the object.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerTrackerSlot">
+            <summary>
+            Contains data about a player being tracked in the game.
+            </summary>
+            <seealso cref="T:Deltin.CustomGameAutomation.PlayerTracker"/>
+            <seealso cref="M:Deltin.CustomGameAutomation.CustomGame.TrackPlayers(Deltin.CustomGameAutomation.PlayerTracker,Deltin.CustomGameAutomation.SlotFlags)"/>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.PlayerTrackerSlot.PlayerIdentity">
+            <summary>
+            The identity of the player.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.PlayerTrackerSlot.Slot">
+            <summary>
+            The slot of the player.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">

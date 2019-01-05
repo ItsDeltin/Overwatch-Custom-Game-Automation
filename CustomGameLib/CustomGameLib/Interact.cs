@@ -37,12 +37,14 @@ namespace Deltin.CustomGameAutomation
     {
         internal Interact(CustomGame cg) : base(cg) { }
 
-        internal Point FindSlotLocation(int slot)
+        internal Point FindSlotLocation(int slot, bool noUpdate = false)
         {
             if (!CustomGame.IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
 
-            cg.UpdateScreen();
+            if (!noUpdate)
+                cg.UpdateScreen();
+
             int yoffset = 0;
             int xoffset = 0;
             if (cg.IsDeathmatch(true))
@@ -58,7 +60,8 @@ namespace Deltin.CustomGameAutomation
                     yoffset += Distances.LOBBY_SLOT_DM_Y_OFFSET;
                 }
             }
-            if (CustomGame.IsSlotInQueue(slot) && !cg.QueueSlots.Contains(slot)) return Point.Empty; // If a queue slot is selected and there is no one in that queue slot, return empty.
+
+            if (CustomGame.IsSlotInQueue(slot) && !cg.CheckRange(CustomGame.QueueMin, CustomGame.QueueMax, 0, true).Contains(slot)) return Point.Empty; // If a queue slot is selected and there is no one in that queue slot, return empty.
             if (CustomGame.IsSlotSpectator(slot)) yoffset = cg.FindSpectatorOffset(true); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.
             if (CustomGame.IsSlotSpectatorOrQueue(slot)) xoffset = -150; // Prevents the player context menu from orientating left for slots in the spectator and queue.
             if (CustomGame.IsSlotInQueue(slot)) slot = slot - 6; // selecting a person in the queue where spectator slots are normally at.

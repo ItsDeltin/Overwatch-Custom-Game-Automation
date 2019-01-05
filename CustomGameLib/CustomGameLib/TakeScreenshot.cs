@@ -63,8 +63,6 @@ namespace Deltin.CustomGameAutomation
         private static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
         {
             Validate(hWnd);
-            // Show the window behind all other opened windows. Screenshot does not work if Overwatch is minimized.
-            SetupWindow(hWnd, method);
 
             if (method == ScreenshotMethod.BitBlt)
                 ScreenshotBitBlt(hWnd, ref capture);
@@ -146,7 +144,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Positions the Overwatch window to be usable by the CustomGame class.
         /// </summary>
-        public void SetupOverwatchWindow()
+        public void SetupWindow()
         {
             SetupWindow(OverwatchHandle, ScreenshotMethod);
         }
@@ -306,12 +304,12 @@ namespace Deltin.CustomGameAutomation
             return CompareColor(point.X, point.Y, min, max);
         }
 
-        internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, int min, DBCompareFlags flags)
+        internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, double min, DBCompareFlags flags)
         {
             if (rectangle.Width != other.Width || rectangle.Height != other.Height)
                 return false;
 
-            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((double)(100 - min) / 100));
+            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((100 - min) / 100));
             int pixelsFailed = 0;
             bool failed = false;
 
@@ -341,17 +339,17 @@ namespace Deltin.CustomGameAutomation
 
             return !failed;
         }
-        internal bool CompareTo(DirectBitmap other, int fade, int min, DBCompareFlags flags)
+        internal bool CompareTo(DirectBitmap other, int fade, double min, DBCompareFlags flags)
         {
             return CompareTo(new Rectangle(0, 0, Width, Height), other, fade, min, flags);
         }
 
-        internal bool CompareTo(Rectangle rectangle, DirectBitmap markup, int[] blackColor, int fade, int min)
+        internal bool CompareTo(Rectangle rectangle, DirectBitmap markup, int[] blackColor, int fade, double min)
         {
             if (rectangle.Width != markup.Width || rectangle.Height != markup.Height)
                 return false;
 
-            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((double)(100 - min) / 100));
+            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((100 - min) / 100));
             int pixelsFailed = 0;
             bool failed = false;
 

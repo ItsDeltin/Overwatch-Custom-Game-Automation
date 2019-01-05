@@ -393,7 +393,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The running Overwatch process. Returns null if there are none.</returns>
         public static Process GetOverwatchProcess()
         {
-            return Process.GetProcessesByName("Overwatch").FirstOrDefault();
+            return Process.GetProcessesByName("Overwatch").OrderBy(v => v.StartTime).FirstOrDefault();
         }
     }
 

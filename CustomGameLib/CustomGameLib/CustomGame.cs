@@ -44,7 +44,7 @@ namespace Deltin.CustomGameAutomation
             if (customGameBuilder.OverwatchProcess != null)
                 OverwatchProcess = customGameBuilder.OverwatchProcess;
             else
-                OverwatchProcess = Process.GetProcessesByName("Overwatch").FirstOrDefault();
+                OverwatchProcess = GetOverwatchProcess();
 
             if (OverwatchProcess == null)
                 throw new MissingOverwatchProcessException("Could not find any Overwatch processes running.");
@@ -83,6 +83,8 @@ namespace Deltin.CustomGameAutomation
 
             if (OpenChatIsDefault)
                 Chat.OpenChat();
+            else
+                Chat.CloseChat();
 
             StartPersistentScanning();
         }

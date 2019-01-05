@@ -11,12 +11,23 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
-        static readonly int[] TotalRange     = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
-        static readonly int[] PlayerRange    = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11                                                 };
-        static readonly int[] BlueRange      = new int[] { 0, 1, 2, 3, 4, 5                                                                     };
-        static readonly int[] RedRange       = new int[] {                   6, 7, 8, 9, 10, 11                                                 };
-        static readonly int[] SpectatorRange = new int[] {                                       12, 13, 14, 15, 16, 17                         };
-        static readonly int[] QueueRange     = new int[] {                                                               18, 19, 20, 21, 22, 23 };
+        internal const int BlueMin = 0;
+        internal const int BlueMax = 5;
+
+        internal const int RedMin = 6;
+        internal const int RedMax = 11;
+
+        internal const int PlayerMin = 0;
+        internal const int PlayerMax = 11;
+
+        internal const int SpectatorMin = 12;
+        internal const int SpectatorMax = 17;
+
+        internal const int QueueMin = 18;
+        internal const int QueueMax = 23;
+
+        internal const int AllMin = 0;
+        internal const int AllMax = 23;
 
         #region Players in red and blue
         /// <summary>
@@ -26,7 +37,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(PlayerRange, 0, false);
+                return CheckRange(PlayerMin, PlayerMax, 0, false);
             }
         }
         /// <summary>
@@ -49,7 +60,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(BlueRange, 0, false);
+                return CheckRange(BlueMin, BlueMax, 0, false);
             }
         }
         /// <summary>
@@ -72,7 +83,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(RedRange, 0, false);
+                return CheckRange(RedMin, RedMax, 0, false);
             }
         }
         /// <summary>
@@ -95,7 +106,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(SpectatorRange, FindSpectatorOffset(), false);
+                return CheckRange(SpectatorMin, SpectatorMax, FindSpectatorOffset(), true);
             }
         }
         /// <summary>
@@ -118,7 +129,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(QueueRange, 0, false);
+                return CheckRange(QueueMin, QueueMax, 0, false);
             }
         }
         /// <summary>
@@ -141,7 +152,7 @@ namespace Deltin.CustomGameAutomation
         {
             get
             {
-                return CheckRange(TotalRange, FindSpectatorOffset(), false);
+                return CheckRange(AllMin, AllMax, FindSpectatorOffset(), false);
             }
         }
         /// <summary>
@@ -208,12 +219,12 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private List<int> CheckRange(int[] slotsToCheck, int yoffset, bool noUpdate)
+        internal List<int> CheckRange(int min, int max, int yoffset, bool noUpdate)
         {
             if (!noUpdate)
                 UpdateScreen();
             List<int> slots = new List<int>();
-            foreach (int slot in slotsToCheck)
+            for (int slot = min; slot <= max; slot++)
                 if (IsSlotFilled(slot, yoffset, true))
                     slots.Add(slot);
             return slots;
@@ -259,7 +270,7 @@ namespace Deltin.CustomGameAutomation
             if (!noUpdate)
                 UpdateScreen();
 
-            int inq = GetQueueCount(false, false);
+            int inq = GetQueueCount(false, true);
 
             // The spectator slots moves down 13 pixels for each player in the queue plus 23.
             int offset = inq * 13;
@@ -372,20 +383,20 @@ namespace Deltin.CustomGameAutomation
 
                 // Add the blue slots
                 if (flags.HasFlag(SlotFlags.Blue))
-                    slots.AddRange(CheckRange(BlueRange, 0, true));
+                    slots.AddRange(CheckRange(BlueMin, BlueMax, 0, true));
 
                 // Add the red slots
                 if (flags.HasFlag(SlotFlags.Red))
-                    slots.AddRange(CheckRange(RedRange, 0, true));
+                    slots.AddRange(CheckRange(RedMin, RedMax, 0, true));
 
                 // Add the spectator slots
                 if (flags.HasFlag(SlotFlags.Spectators))
-                    slots.AddRange(CheckRange(SpectatorRange, FindSpectatorOffset(true), true));
+                    slots.AddRange(CheckRange(SpectatorMin, SpectatorMax, FindSpectatorOffset(true), true));
 
                 // Add the queue slots
                 if (flags.HasFlag(SlotFlags.NeutralQueue) || flags.HasFlag(SlotFlags.RedQueue) || flags.HasFlag(SlotFlags.BlueQueue))
                 {
-                    slots.AddRange(CheckRange(QueueRange, 0, true).Where((slot) =>
+                    slots.AddRange(CheckRange(QueueMin, QueueMax, 0, true).Where((slot) =>
                     {
                         QueueTeam team = PlayerInfo.GetQueueTeam(slot, true);
 
@@ -640,7 +651,7 @@ namespace Deltin.CustomGameAutomation
             {
                 if (!CustomGame.IsSlotInQueue(slot))
                     throw new InvalidSlotException(slot);
-                Point check = cg.Interact.FindSlotLocation(slot);
+                Point check = cg.Interact.FindSlotLocation(slot, true);
                 if (!noUpdate)
                     cg.UpdateScreen();
                 Color color = Capture.GetPixel(check.X, check.Y);
