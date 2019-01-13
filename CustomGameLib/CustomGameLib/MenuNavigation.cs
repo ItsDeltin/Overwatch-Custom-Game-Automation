@@ -179,5 +179,10 @@ namespace Deltin.CustomGameAutomation
             for (int columnindex = 0; columnindex < column; columnindex++)
                 KeyPress(keyPressWait, Keys.Right);
         }
+
+        internal void GoToCustomGameInfo()
+        {
+            RightClick(Points.LOBBY_CUSTOM_GAME_INFO);
+        }
     }
 }

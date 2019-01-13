@@ -3250,9 +3250,15 @@
             The Settings class is accessed in a CustomGame object on the <see cref="P:Deltin.CustomGameAutomation.CustomGame.Settings"/> field.
             </remarks>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SavePreset(System.String)">
+            <summary>
+            Saves the current settings into a preset.
+            </summary>
+            <param name="name">Name of the preset that will be saved.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32)">
             <summary>
-            Loads a preset saved in Overwatch.
+            Loads a preset saved in Overwatch using its index.
             </summary>
             <param name="preset">Preset to load. 0 is the first preset</param>
             <returns>Returns true if loading the preset was successful.</returns>
@@ -3267,13 +3273,21 @@
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Drawing.Bitmap)">
             <summary>
-            Loads a preset saved in Overwatch.
+            Loads a preset saved in Overwatch using the markup.
             </summary>
             <param name="preset">Markup of the preset to load. Generated from <see cref="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)"/></param>
             <returns>Returns true if loading the preset was successful.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="preset"/> is null.</exception>
             <exception cref="T:System.ArgumentException">Thrown if <paramref name="preset"/> is an invalid markup.</exception>
             <seealso cref="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)"/>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.String,System.Boolean)">
+            <summary>
+            Loads a preset saved in Overwatch using the name.
+            </summary>
+            <param name="name">Name of the preset</param>
+            <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+            <returns>Returns true if loading the preset was successful.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)">
             <summary>

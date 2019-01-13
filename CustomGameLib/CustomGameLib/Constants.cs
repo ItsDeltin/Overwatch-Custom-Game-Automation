@@ -110,6 +110,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_PAUSED = new Point(441, 268);
         public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP = new Point(703, 51);
         public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = new Point(703, 40);
+        public static readonly Point LOBBY_CUSTOM_GAME_INFO = new Point(119, 180);
 
         public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
 
@@ -153,6 +154,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_HEROES_ROSTER_TEAM_RED = new Point(484, 193);
         public static readonly Point SETTINGS_HEROES_ROSTER_DISABLE_ALL = new Point(635, 130);
         public static readonly Point SETTINGS_HEROES_ROSTER_ENABLE_ALL = new Point(597, 130);
+
+        public static readonly Point INFO_SAVE = new Point(720, 390);
 
         public static readonly Point ENDING_COMMEND_DEFEAT = new Point(53, 62);
 

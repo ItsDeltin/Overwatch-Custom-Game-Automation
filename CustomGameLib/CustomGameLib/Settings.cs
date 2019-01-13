@@ -70,7 +70,43 @@ namespace Deltin.CustomGameAutomation
         internal Settings(CustomGame cg) : base(cg) { }
 
         /// <summary>
-        /// Loads a preset saved in Overwatch.
+        /// Saves the current settings into a preset.
+        /// </summary>
+        /// <param name="name">Name of the preset that will be saved.</param>
+        public void SavePreset(string name)
+        {
+            if (name.Length > 32)
+                throw new ArgumentOutOfRangeException(nameof(name), name, "Name must be less than 32 characters.");
+
+            using (cg.LockHandler.Interactive)
+            {
+                cg.GoToCustomGameInfo();
+
+                cg.LeftClick(Points.INFO_SAVE, 250);
+
+                // Set the name if it is not null.
+                if (name != null)
+                {
+                    // Press CTRL+A to select the entire name box.
+                    cg.KeyDown(Keys.LControlKey);
+                    cg.KeyPress(Keys.A);
+                    cg.KeyUp(Keys.LControlKey);
+                    // Delete the text.
+                    Thread.Sleep(100);
+                    cg.KeyPress(Keys.Back, Keys.Back);
+                    // Input the name. It will replace the text in the text box because it is selected.
+                    cg.TextInput(name);
+                }
+
+                // Save the preset
+                cg.KeyPress(100, Keys.Return);
+
+                cg.GoBack(1);
+            }
+        }
+
+        /// <summary>
+        /// Loads a preset saved in Overwatch using its index.
         /// </summary>
         /// <param name="preset">Preset to load. 0 is the first preset</param>
         /// <returns>Returns true if loading the preset was successful.</returns>
@@ -123,7 +159,7 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Loads a preset saved in Overwatch.
+        /// Loads a preset saved in Overwatch using the markup.
         /// </summary>
         /// <param name="preset">Markup of the preset to load. Generated from <see cref="Settings.GeneratePresetMarkup(int)"/></param>
         /// <returns>Returns true if loading the preset was successful.</returns>
@@ -174,6 +210,72 @@ namespace Deltin.CustomGameAutomation
 
                 cg.GoBack(2);
                 //cg.//ResetMouse();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Loads a preset saved in Overwatch using the name.
+        /// </summary>
+        /// <param name="name">Name of the preset</param>
+        /// <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+        /// <returns>Returns true if loading the preset was successful.</returns>
+        public bool LoadPreset(string name, bool caseSensitive = false)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                for (int i = 0; i < numPresets; i++)
+                {
+                    const int waitTime = 100;
+
+                    // Open the rename menu for the preset.
+                    Point presetLocation = GetPresetLocation(i); // Get the preset location.
+                    cg.RightClick(presetLocation); // Right click the preset to open the option menu.
+                    cg.KeyPress(Keys.Down, Keys.Enter); // Select the rename preset option.
+
+                    // Select all the text using CTRL+A.
+                    Thread.Sleep(waitTime);
+                    cg.KeyDown(Keys.LControlKey);
+                    cg.KeyDown(Keys.A);
+                    cg.KeyUp(Keys.LControlKey);
+                    Thread.Sleep(waitTime);
+
+                    // Save the clipboard.
+                    string clipboardText = CustomGame.GetClipboard();
+                    
+                    // Copy the selected text into the clipboard.
+                    cg.KeyDown(Keys.LControlKey);
+                    cg.KeyDown(Keys.C);
+                    cg.KeyUp(Keys.LControlKey);
+                    Thread.Sleep(waitTime);
+
+                    // The clipboard now has the preset name. Save the clipboard.
+                    string presetName = CustomGame.GetClipboard();
+
+                    // Reset the clipboard.
+                    CustomGame.SetClipboard(clipboardText);
+
+                    // Close the renaming menu.
+                    cg.LeftClick(508, 324, 100);
+
+                    // Select the preset if it matches.
+                    if ((caseSensitive && presetName == name) || (!caseSensitive && presetName.ToLower() == name.ToLower()))
+                    {
+                        cg.LeftClick(presetLocation);
+                        cg.LeftClick(Points.PRESETS_CONFIRM);
+
+                        cg.GoBack(2);
+                        return true;
+                    }
+                }
+
+                cg.GoBack(2);
                 return false;
             }
         }

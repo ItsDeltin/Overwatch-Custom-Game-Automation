@@ -177,5 +177,23 @@ namespace Deltin.CustomGameAutomation
             }
         }
         internal void TextInput(string text) => TextInput(OverwatchHandle, text);
+
+        // Clipboard
+        internal static string GetClipboard()
+        {
+            string clipboardText = null;
+            Thread getClipboardThread = new Thread(() => clipboardText = Clipboard.GetText());
+            getClipboardThread.SetApartmentState(ApartmentState.STA);
+            getClipboardThread.Start();
+            getClipboardThread.Join();
+            return clipboardText;
+        }
+        internal static void SetClipboard(string text)
+        {
+            Thread resetClipboardThread = new Thread(() => Clipboard.SetText(text));
+            resetClipboardThread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            resetClipboardThread.Start();
+            resetClipboardThread.Join();
+        }
     }
 }

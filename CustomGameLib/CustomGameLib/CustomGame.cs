@@ -25,7 +25,7 @@ namespace Deltin.CustomGameAutomation
         /// The Overwatch Process being used in the CustomGame class.
         /// </summary>
         public Process OverwatchProcess { get; private set; }
-        private IntPtr OverwatchHandle { get { return OverwatchProcess.MainWindowHandle; } }
+        internal IntPtr OverwatchHandle { get { return OverwatchProcess.MainWindowHandle; } }
 
         /// <summary>
         /// Determines if the Custom Game object was disposed.
