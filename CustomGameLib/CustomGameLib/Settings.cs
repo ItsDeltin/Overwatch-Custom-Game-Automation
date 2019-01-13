@@ -204,7 +204,8 @@ namespace Deltin.CustomGameAutomation
                     string presetName = CustomGame.GetClipboard();
 
                     // Reset the clipboard.
-                    CustomGame.SetClipboard(clipboardText);
+                    if (!string.IsNullOrEmpty(clipboardText))
+                        CustomGame.SetClipboard(clipboardText);
 
                     // Close the renaming menu.
                     cg.LeftClick(508, 324, 100);

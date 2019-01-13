@@ -460,8 +460,6 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(targetSlotLoc, 250);
                 cg.LeftClick(destinationSlotLoc, 250);
 
-                Thread.Sleep(200);
-
                 ExitMoveMenu();
             }
         }
@@ -504,6 +502,8 @@ namespace Deltin.CustomGameAutomation
                 cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT);
 
             cg.ResetMouse();
+
+            Thread.Sleep(200);
         }
     }
 

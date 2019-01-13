@@ -190,10 +190,10 @@ namespace Deltin.CustomGameAutomation
         }
         internal static void SetClipboard(string text)
         {
-            Thread resetClipboardThread = new Thread(() => Clipboard.SetText(text));
-            resetClipboardThread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
-            resetClipboardThread.Start();
-            resetClipboardThread.Join();
+            Thread setClipboardThread = new Thread(() => Clipboard.SetText(text));
+            setClipboardThread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            setClipboardThread.Start();
+            setClipboardThread.Join();
         }
     }
 }
