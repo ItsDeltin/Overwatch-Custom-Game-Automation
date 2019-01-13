@@ -761,9 +761,11 @@
         <member name="M:Deltin.CustomGameAutomation.AI.GetAIDifficulty(System.Int32,System.Boolean)">
             <summary>
             Gets the difficulty of the AI in the input slot.
-            <para>If the input slot is not an AI, returns null.
-            If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.</para>
             </summary>
+            <remarks>
+            If the input slot is not an AI, returns null.
+            If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.
+            </remarks>
             <param name="slot">Slot to check</param>
             <param name="noUpdate" />
             <returns>Returns the if the difficulty is found. Returns null if the input slot is not an AI.</returns>
@@ -3271,16 +3273,6 @@
             <param name="preset">Preset to load.</param>
             <returns>Returns true if loading the preset was successful.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Drawing.Bitmap)">
-            <summary>
-            Loads a preset saved in Overwatch using the markup.
-            </summary>
-            <param name="preset">Markup of the preset to load. Generated from <see cref="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)"/></param>
-            <returns>Returns true if loading the preset was successful.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="preset"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">Thrown if <paramref name="preset"/> is an invalid markup.</exception>
-            <seealso cref="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)"/>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.String,System.Boolean)">
             <summary>
             Loads a preset saved in Overwatch using the name.
@@ -3288,15 +3280,7 @@
             <param name="name">Name of the preset</param>
             <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
             <returns>Returns true if loading the preset was successful.</returns>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.GeneratePresetMarkup(System.Int32)">
-            <summary>
-            Generates a markup for use with <see cref="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Drawing.Bitmap)"/>
-            </summary>
-            <param name="preset">The index of the preset to create a markup from.</param>
-            <returns>A <see cref="T:System.Drawing.Bitmap"/> containing the markup.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
-            <seealso cref="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Drawing.Bitmap)"/>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Settings.JoinSetting">
             <summary>

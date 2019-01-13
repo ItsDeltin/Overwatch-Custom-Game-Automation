@@ -159,67 +159,12 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Loads a preset saved in Overwatch using the markup.
-        /// </summary>
-        /// <param name="preset">Markup of the preset to load. Generated from <see cref="Settings.GeneratePresetMarkup(int)"/></param>
-        /// <returns>Returns true if loading the preset was successful.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="preset"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="preset"/> is an invalid markup.</exception>
-        /// <seealso cref="GeneratePresetMarkup(int)"/>
-        public bool LoadPreset(Bitmap preset)
-        {
-            if (preset == null)
-                throw new ArgumentNullException(nameof(preset));
-
-            if (preset.Width != Rectangles.SETTINGS_PRESET_OPTION.Width || preset.Height != Rectangles.SETTINGS_PRESET_OPTION.Height)
-                throw new ArgumentException("Preset markup is not a valid markup.", nameof(preset));
-
-            using (cg.LockHandler.Interactive)
-            {
-                int numPresets = NavigateToPresets();
-                if (numPresets == -1) return false;
-
-                int minimum = (int)(Rectangles.SETTINGS_PRESET_OPTION.Width * Rectangles.SETTINGS_PRESET_OPTION.Height * 0.05);
-
-                for (int i = 0; i < numPresets; i++)
-                {
-                    Point presetLocation = GetPresetLocation(i);
-
-                    int failCount = 0;
-                    bool failed = false;
-                    for (int x = 0; x < preset.Width && !failed; x++)
-                        for (int y = 0; y < preset.Height && !failed; y++)
-                        {
-                            // If the pixel in the preset does not equal the pixel in the capture.
-                            if (preset.GetPixel(x, y) == Color.FromArgb(255, 255, 255) == Capture.CompareColor(x + presetLocation.X, y + presetLocation.Y, Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET) == false)
-                                failCount++;
-
-                            failed = failCount > minimum;
-                        }
-
-                    if (!failed)
-                    {
-                        cg.LeftClick(presetLocation);
-                        cg.LeftClick(Points.PRESETS_CONFIRM);
-
-                        cg.GoBack(2);
-                        //cg.//ResetMouse();
-                        return true;
-                    }
-                }
-
-                cg.GoBack(2);
-                //cg.//ResetMouse();
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Loads a preset saved in Overwatch using the name.
         /// </summary>
         /// <param name="name">Name of the preset</param>
         /// <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
         /// <returns>Returns true if loading the preset was successful.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
         public bool LoadPreset(string name, bool caseSensitive = false)
         {
             if (name == null)
@@ -277,46 +222,6 @@ namespace Deltin.CustomGameAutomation
 
                 cg.GoBack(2);
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Generates a markup for use with <see cref="LoadPreset(Bitmap)"/>
-        /// </summary>
-        /// <param name="preset">The index of the preset to create a markup from.</param>
-        /// <returns>A <see cref="Bitmap"/> containing the markup.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
-        /// <seealso cref="LoadPreset(Bitmap)"/>
-        public Bitmap GeneratePresetMarkup(int preset)
-        {
-            if (preset < 0)
-                throw new ArgumentOutOfRangeException("preset", preset, "Preset cannot be less than 0.");
-
-            using (cg.LockHandler.Interactive)
-            {
-                int numPresets = NavigateToPresets();
-                if (numPresets == -1) return null;
-                if (numPresets < preset)
-                {
-                    cg.GoBack(2);
-                    return null;
-                }
-
-                Point presetLocation = GetPresetLocation(preset);
-                using (DirectBitmap presetMarkup = cg.Capture.Clone(presetLocation.X, presetLocation.Y, Rectangles.SETTINGS_PRESET_OPTION.Width, Rectangles.SETTINGS_PRESET_OPTION.Height))
-                {
-
-                    for (int x = 0; x < presetMarkup.Width; x++)
-                        for (int y = 0; y < presetMarkup.Height; y++)
-                            if (!presetMarkup.GetPixel(x, y).CompareColor(Colors.SETTINGS_PRESETS_LOADABLE_PRESET, Fades.SETTINGS_PRESETS_LOADABLE_PRESET))
-                                presetMarkup.SetPixel(x, y, Color.Black);
-                            else
-                                presetMarkup.SetPixel(x, y, Color.White);
-
-                    cg.GoBack(2);
-
-                    return presetMarkup.ToBitmap();
-                }
             }
         }
 

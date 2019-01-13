@@ -154,9 +154,11 @@ namespace Deltin.CustomGameAutomation
 
         /// <summary>
         /// Gets the difficulty of the AI in the input slot.
-        /// <para>If the input slot is not an AI, returns null.
-        /// If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.</para>
         /// </summary>
+        /// <remarks>
+        /// If the input slot is not an AI, returns null.
+        /// If checking an AI's difficulty in the queue, it will always return easy, or null if it is a player.
+        /// </remarks>
         /// <param name="slot">Slot to check</param>
         /// <param name="noUpdate"></param>
         /// <returns>Returns the if the difficulty is found. Returns null if the input slot is not an AI.</returns>

@@ -499,9 +499,9 @@ namespace Deltin.CustomGameAutomation
 
             Color color = Capture.GetPixel(661, 175);
             if (color.R - color.B > 40)
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT, 250);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_PRESENT);
             else
-                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT, 250);
+                cg.LeftClick(Points.LOBBY_MOVE_IF_ADD_BUTTON_NOT_PRESENT);
 
             cg.ResetMouse();
         }
