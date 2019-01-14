@@ -527,25 +527,12 @@ namespace Deltin.CustomGameAutomation
     public enum DefaultPreset
     {
 #pragma warning disable CS1591
-        Standard_1v1LimitedDuel,
-        Standard_1v1MysteryDuel,
-        Standard_3v3Elimination,
-        Standard_LockoutElimination,
-        Standard_4v4TeamDeatchmatch,
-        Standard_6v6LockoutElimination,
-        Standard_8PlayerFFADeathmatch,
-        Standard_Assault,
-        Standard_AssaultEscort,
-        Standard_CaptureTheFlag,
-        Standard_CaptureTheFlag2017,
-        Standard_Competitive,
-        Standard_Control,
-        Standard_Escort,
-        Standard_QuickPlay,
+        Standard_1v1LimitedDuel     = 0,  Standard_1v1MysteryDuel        = 1,  Standard_3v3Elimination       = 2,  Standard_3v3LockoutElimination = 3,
+        Standard_4v4TeamDeatchmatch = 4,  Standard_6v6LockoutElimination = 5,  Standard_8PlayerFFADeathmatch = 6,  Standard_Assault               = 7,
+        Standard_AssaultEscort      = 8,  Standard_CaptureTheFlag        = 9,  Standard_CaptureTheFlag2017   = 10, Standard_Competitive           = 11,
+        Standard_Control            = 12, Standard_Escort                = 13, Standard_QuickPlay            = 14, /* 15 is empty */
 
-        Brawl_MysteryHeroes,
-        Brawl_NoLimits,
-        Brawl_TotalMayhem
+        Brawl_MysteryHeroes = 16, Brawl_NoLimits = 17, Brawl_TotalMayhem = 18
 #pragma warning restore CS1591
     }
     #endregion

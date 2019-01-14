@@ -88,9 +88,7 @@ namespace Deltin.CustomGameAutomation
                 if (name != null)
                 {
                     // Press CTRL+A to select the entire name box.
-                    cg.KeyDown(Keys.LControlKey);
-                    cg.KeyPress(Keys.A);
-                    cg.KeyUp(Keys.LControlKey);
+                    cg.SelectAll();
                     // Delete the text.
                     Thread.Sleep(100);
                     cg.KeyPress(Keys.Back, Keys.Back);
@@ -106,11 +104,38 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
+        /// Loads a default preset in Overwatch.
+        /// </summary>
+        /// <param name="preset">Preset to load.</param>
+        /// <returns>Returns true if loading the preset was successful.</returns>
+        public bool LoadPreset(DefaultPreset preset)
+        {
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                cg.KeyPress(Keys.Tab, Keys.Tab);
+                for (int i = 0; i < numPresets / 4; i++)
+                    cg.KeyPress(Keys.Down, Keys.Down);
+
+                cg.GridNavigator((int)preset);
+                cg.KeyPress(Keys.Space);
+                cg.LeftClick(Points.PRESETS_CONFIRM);
+
+                // Go back to lobby
+                cg.GoBack(2);
+                //cg.//ResetMouse();
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Loads a preset saved in Overwatch using its index.
         /// </summary>
-        /// <param name="preset">Preset to load. 0 is the first preset</param>
+        /// <param name="preset">Preset to load. 0 is the first preset.</param>
         /// <returns>Returns true if loading the preset was successful.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
         public bool LoadPreset(int preset)
         {
             if (preset < 0)
@@ -135,33 +160,9 @@ namespace Deltin.CustomGameAutomation
         }
 
         /// <summary>
-        /// Loads a default preset in Overwatch.
-        /// </summary>
-        /// <param name="preset">Preset to load.</param>
-        /// <returns>Returns true if loading the preset was successful.</returns>
-        public bool LoadPreset(DefaultPreset preset)
-        {
-            using (cg.LockHandler.Interactive)
-            {
-                int numPresets = NavigateToPresets();
-                if (numPresets == -1) return false;
-
-                cg.KeyPress(Keys.Tab, Keys.Tab);
-                cg.GridNavigator(numPresets + (int)preset);
-                cg.KeyPress(Keys.Space);
-                cg.LeftClick(Points.PRESETS_CONFIRM);
-
-                // Go back to lobby
-                cg.GoBack(2);
-                //cg.//ResetMouse();
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Loads a preset saved in Overwatch using the name.
         /// </summary>
-        /// <param name="name">Name of the preset</param>
+        /// <param name="name">Name of the preset.</param>
         /// <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
         /// <returns>Returns true if loading the preset was successful.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
@@ -176,50 +177,179 @@ namespace Deltin.CustomGameAutomation
                 if (numPresets == -1) return false;
 
                 for (int i = 0; i < numPresets; i++)
-                {
-                    const int waitTime = 100;
-
-                    // Open the rename menu for the preset.
-                    Point presetLocation = GetPresetLocation(i); // Get the preset location.
-                    cg.RightClick(presetLocation); // Right click the preset to open the option menu.
-                    cg.KeyPress(Keys.Down, Keys.Enter); // Select the rename preset option.
-
-                    // Select all the text using CTRL+A.
-                    Thread.Sleep(waitTime);
-                    cg.KeyDown(Keys.LControlKey);
-                    cg.KeyDown(Keys.A);
-                    cg.KeyUp(Keys.LControlKey);
-                    Thread.Sleep(waitTime);
-
-                    // Save the clipboard.
-                    string clipboardText = CustomGame.GetClipboard();
-                    
-                    // Copy the selected text into the clipboard.
-                    cg.KeyDown(Keys.LControlKey);
-                    cg.KeyDown(Keys.C);
-                    cg.KeyUp(Keys.LControlKey);
-                    Thread.Sleep(waitTime);
-
-                    // The clipboard now has the preset name. Save the clipboard.
-                    string presetName = CustomGame.GetClipboard();
-
-                    // Reset the clipboard.
-                    if (!string.IsNullOrEmpty(clipboardText))
-                        CustomGame.SetClipboard(clipboardText);
-
-                    // Close the renaming menu.
-                    cg.LeftClick(508, 324, 100);
-
                     // Select the preset if it matches.
-                    if ((caseSensitive && presetName == name) || (!caseSensitive && presetName.ToLower() == name.ToLower()))
+                    if (PresetNameEquals(i, name, caseSensitive))
                     {
-                        cg.LeftClick(presetLocation);
+                        cg.LeftClick(GetPresetLocation(i));
                         cg.LeftClick(Points.PRESETS_CONFIRM);
 
                         cg.GoBack(2);
                         return true;
                     }
-                }
+
+                cg.GoBack(2);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Deletes a preset in Overwatch using its index.
+        /// </summary>
+        /// <param name="preset">Preset to delete. 0 is the first preset.</param>
+        /// <returns>Returns true if deleting the preset was successful.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
+        public bool DeletePreset(int preset)
+        {
+            if (preset < 0)
+                throw new ArgumentOutOfRangeException(nameof(preset), preset, "Preset cannot be less than 0.");
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                Point presetLocation = GetPresetLocation(preset);
+                cg.RightClick(presetLocation, Timing.OPTION_MENU);
+
+                cg.KeyPress(100, Keys.Enter);
+
+                cg.GoBack(2);
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Deletes a preset saved in Overwatch using the name.
+        /// </summary>
+        /// <param name="name">Name of the preset.</param>
+        /// <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+        /// <returns>Returns true if deleting the preset was successful.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
+        public bool DeletePreset(string name, bool caseSensitive = false)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                for (int i = 0; i < numPresets; i++)
+                    // Select the preset if it matches.
+                    if (PresetNameEquals(i, name, caseSensitive))
+                    {
+                        cg.RightClick(GetPresetLocation(i), Timing.OPTION_MENU); // Right click the preset to open the option menu.
+                        cg.KeyPress(Keys.Enter); // Select the delete preset option.
+
+                        cg.GoBack(2);
+                        return true;
+                    }
+
+                cg.GoBack(2);
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Renames a preset saved in Overwatch using its index.
+        /// </summary>
+        /// <param name="preset">Preset to rename. 0 is the first preset.</param>
+        /// <param name="newName">The new name of the preset.</param>
+        /// <returns>Returns true if renaming the preset was successful.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0 or the length of <paramref name="newName"/> is greater than 32 characters.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="newName"/> is null.</exception>
+        public bool RenamePreset(int preset, string newName)
+        {
+            if (preset < 0)
+                throw new ArgumentOutOfRangeException(nameof(preset), preset, "Preset cannot be less than 0.");
+
+            if (newName == null)
+                throw new ArgumentNullException(nameof(newName));
+
+            if (newName.Length > 32)
+                throw new ArgumentOutOfRangeException(nameof(newName), newName, "The new name must be less than 32 characters.");
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                Point presetLocation = GetPresetLocation(preset);
+                cg.RightClick(presetLocation, Timing.OPTION_MENU);
+
+                cg.KeyPress(Keys.Down, Keys.Enter);
+                Thread.Sleep(100);
+
+                cg.SelectAll();
+                Thread.Sleep(100);
+
+                cg.KeyPress(Keys.Back);
+                Thread.Sleep(100);
+
+                cg.TextInput(newName);
+                Thread.Sleep(100);
+
+                cg.KeyPress(Keys.Enter);
+                Thread.Sleep(100);
+
+                cg.GoBack(2);
+
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Renames a preset saved in Overwatch using its name.
+        /// </summary>
+        /// <param name="name">Name of the preset.</param>
+        /// <param name="newName">The new name of the preset.</param>
+        /// <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+        /// <returns>Returns true if renaming the preset was successful.</returns>
+        /// /// <exception cref="ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="newName"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the length of <paramref name="newName"/> is greater than 32 characters.</exception>
+        public bool RenamePreset(string name, string newName, bool caseSensitive = false)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (newName == null)
+                throw new ArgumentNullException(nameof(newName));
+
+            if (newName.Length > 32)
+                throw new ArgumentOutOfRangeException(nameof(newName), newName, "The new name must be less than 32 characters.");
+
+            using (cg.LockHandler.Interactive)
+            {
+                int numPresets = NavigateToPresets();
+                if (numPresets == -1) return false;
+
+                for (int i = 0; i < numPresets; i++)
+                    if (PresetNameEquals(i, name, caseSensitive))
+                    {
+                        Point presetLocation = GetPresetLocation(i);
+                        cg.RightClick(presetLocation, Timing.OPTION_MENU);
+
+                        cg.KeyPress(Keys.Down, Keys.Enter);
+                        Thread.Sleep(100);
+
+                        cg.SelectAll();
+                        Thread.Sleep(100);
+
+                        cg.KeyPress(Keys.Back);
+                        Thread.Sleep(100);
+
+                        cg.TextInput(newName);
+                        Thread.Sleep(100);
+
+                        cg.KeyPress(Keys.Enter);
+                        Thread.Sleep(100);
+
+                        cg.GoBack(2);
+                        return true;
+                    }
 
                 cg.GoBack(2);
                 return false;
@@ -264,6 +394,41 @@ namespace Deltin.CustomGameAutomation
                     Thread.Sleep(100);
                 }
             }
+        }
+
+        private bool PresetNameEquals(int presetIndex, string name, bool caseSensitive)
+        {
+            const int waitTime = 100;
+
+            // Open the rename menu for the preset.
+            Point presetLocation = GetPresetLocation(presetIndex); // Get the preset location.
+            cg.RightClick(presetLocation, Timing.OPTION_MENU); // Right click the preset to open the option menu.
+            cg.KeyPress(Keys.Down, Keys.Enter); // Select the rename preset option.
+
+            // Select all the text using CTRL+A.
+            Thread.Sleep(waitTime);
+            cg.SelectAll();
+            Thread.Sleep(waitTime);
+
+            // Save the clipboard.
+            string clipboardText = CustomGame.GetClipboard();
+
+            // Copy the selected text into the clipboard.
+            cg.Copy();
+            Thread.Sleep(waitTime);
+
+            // The clipboard now has the preset name. Save the clipboard.
+            string presetName = CustomGame.GetClipboard();
+
+            // Reset the clipboard.
+            if (!string.IsNullOrEmpty(clipboardText))
+                CustomGame.SetClipboard(clipboardText);
+
+            // Close the renaming menu.
+            cg.LeftClick(508, 324, 100);
+
+            // Check if they match.
+            return (caseSensitive && presetName == name) || (!caseSensitive && presetName.ToLower() == name.ToLower());
         }
 
         /// <summary>

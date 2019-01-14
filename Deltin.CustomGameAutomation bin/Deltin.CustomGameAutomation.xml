@@ -3258,14 +3258,6 @@
             </summary>
             <param name="name">Name of the preset that will be saved.</param>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32)">
-            <summary>
-            Loads a preset saved in Overwatch using its index.
-            </summary>
-            <param name="preset">Preset to load. 0 is the first preset</param>
-            <returns>Returns true if loading the preset was successful.</returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">Throw if <paramref name="preset"/> is less than 0.</exception>
-        </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(Deltin.CustomGameAutomation.DefaultPreset)">
             <summary>
             Loads a default preset in Overwatch.
@@ -3273,14 +3265,60 @@
             <param name="preset">Preset to load.</param>
             <returns>Returns true if loading the preset was successful.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.Int32)">
+            <summary>
+            Loads a preset saved in Overwatch using its index.
+            </summary>
+            <param name="preset">Preset to load. 0 is the first preset.</param>
+            <returns>Returns true if loading the preset was successful.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.Settings.LoadPreset(System.String,System.Boolean)">
             <summary>
             Loads a preset saved in Overwatch using the name.
             </summary>
-            <param name="name">Name of the preset</param>
+            <param name="name">Name of the preset.</param>
             <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
             <returns>Returns true if loading the preset was successful.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.DeletePreset(System.Int32)">
+            <summary>
+            Deletes a preset in Overwatch using its index.
+            </summary>
+            <param name="preset">Preset to delete. 0 is the first preset.</param>
+            <returns>Returns true if deleting the preset was successful.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.DeletePreset(System.String,System.Boolean)">
+            <summary>
+            Deletes a preset saved in Overwatch using the name.
+            </summary>
+            <param name="name">Name of the preset.</param>
+            <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+            <returns>Returns true if deleting the preset was successful.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/> is null.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.RenamePreset(System.Int32,System.String)">
+            <summary>
+            Renames a preset saved in Overwatch using its index.
+            </summary>
+            <param name="preset">Preset to rename. 0 is the first preset.</param>
+            <param name="newName">The new name of the preset.</param>
+            <returns>Returns true if renaming the preset was successful.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if <paramref name="preset"/> is less than 0 or the length of <paramref name="newName"/> is greater than 32 characters.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="newName"/> is null.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.RenamePreset(System.String,System.String,System.Boolean)">
+            <summary>
+            Renames a preset saved in Overwatch using its name.
+            </summary>
+            <param name="name">Name of the preset.</param>
+            <param name="newName">The new name of the preset.</param>
+            <param name="caseSensitive">Determines if comparing should be case sensitive.</param>
+            <returns>Returns true if renaming the preset was successful.</returns>
+            /// <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="name"/> or <paramref name="newName"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the length of <paramref name="newName"/> is greater than 32 characters.</exception>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Settings.JoinSetting">
             <summary>

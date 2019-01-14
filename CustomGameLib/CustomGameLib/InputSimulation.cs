@@ -195,5 +195,19 @@ namespace Deltin.CustomGameAutomation
             setClipboardThread.Start();
             setClipboardThread.Join();
         }
+
+        internal void SelectAll()
+        {
+            KeyDown(Keys.LControlKey);
+            KeyDown(Keys.A);
+            KeyUp(Keys.LControlKey);
+        }
+
+        internal void Copy()
+        {
+            KeyDown(Keys.LControlKey);
+            KeyDown(Keys.C);
+            KeyUp(Keys.LControlKey);
+        }
     }
 }
