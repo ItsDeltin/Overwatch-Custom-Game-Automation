@@ -107,10 +107,12 @@ namespace Deltin.CustomGameAutomation
             else
                 return GetWindowLongPtr32(hWnd, nIndex);
         }
+
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         static extern int GetWindowLongPtr32(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         static extern int GetWindowLongPtr64(IntPtr hWnd, int nIndex);
+
         internal static int SetWindowLongPtr(IntPtr hWnd, int nIndex, int dwNewLong)
         {
             if (IntPtr.Size == 8)
@@ -118,6 +120,7 @@ namespace Deltin.CustomGameAutomation
             else
                 return SetWindowLong(hWnd, nIndex, dwNewLong);
         }
+
         [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]

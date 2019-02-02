@@ -198,14 +198,12 @@ namespace Deltin.CustomGameAutomation
 
                     int compareToX = Points.SLOT_LOCATIONS[slot].X;
 
-                    if (slot == 0)
+                    if (IsSlotBlue(slot))
                         compareToX -= 8;
-                    else if (IsSlotInQueue(slot) || IsSlotSpectator(slot))
-                        compareToX -= 3;
-                    else if (IsSlotBlue(slot))
-                        compareToX -= 4;
                     else if (IsSlotRed(slot))
                         compareToX += 3;
+                    else if (IsSlotSpectatorOrQueue(slot))
+                        compareToX -= 3;
 
                     if (IsSlotSpectator(slot))
                         y += yoffset;

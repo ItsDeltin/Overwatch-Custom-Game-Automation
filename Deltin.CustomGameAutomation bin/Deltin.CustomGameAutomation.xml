@@ -1407,14 +1407,9 @@
             The default keys set in Overwatch's settings.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DisableInputForInteractive">
+        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DisableInput">
             <summary>
-            Prevents the Overwatch window from recieving input during interactive statements.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.CustomGameBuilder.DisableInputForSemiInteractive">
-            <summary>
-            Prevents the Overwatch window from recieving input during semi-interactive statements.
+            Prevents the Overwatch window from recieving input when <see cref="T:Deltin.CustomGameAutomation.CustomGame"/> methods are running.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.DefaultKeys">

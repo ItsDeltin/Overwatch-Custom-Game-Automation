@@ -332,6 +332,8 @@ namespace Deltin.CustomGameAutomation
 
         // Capture The Flag
         public static readonly Map CTF_Ayutthaya                    = new Map(Gamemode.CaptureTheFlag,        "CTF_Ayutthaya",                    OWEvent.None);
+        public static readonly Map CTF_Busan_Downtown               = new Map(Gamemode.CaptureTheFlag,        "CTF_Busan_Downtown",               OWEvent.None);
+        public static readonly Map CTF_Busan_Sanctuary               = new Map(Gamemode.CaptureTheFlag,       "CTF_Busan_Sanctuary",              OWEvent.None);
         public static readonly Map CTF_Ilios_Lighthouse             = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Lighthouse",             OWEvent.None);
         public static readonly Map CTF_Ilios_Ruins                  = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Ruins",                  OWEvent.None);
         public static readonly Map CTF_Ilios_Well                   = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Well",                   OWEvent.None);

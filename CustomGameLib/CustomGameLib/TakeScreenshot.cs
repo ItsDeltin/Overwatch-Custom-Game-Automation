@@ -304,24 +304,22 @@ namespace Deltin.CustomGameAutomation
             return CompareColor(point.X, point.Y, min, max);
         }
 
-        internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, double min, DBCompareFlags flags)
+        //internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, double min, DBCompareFlags flags)
+        internal bool CompareTo(Point scanAt, DirectBitmap other, int fade, double min, DBCompareFlags flags)
         {
-            if (rectangle.Width != other.Width || rectangle.Height != other.Height)
-                return false;
-
-            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((100 - min) / 100));
+            int maxFail = (int)((double)other.Width * other.Height * ((100 - min) / 100));
             int pixelsFailed = 0;
             bool failed = false;
 
             Action<int, ParallelLoopState> check = new Action<int, ParallelLoopState>((x, loopState) =>
             {
-                for (int y = 0; y < rectangle.Height && !failed; y++)
+                for (int y = 0; y < other.Height && !failed; y++)
                 {
                     Color pixelColor = other.GetPixel(x, y);
                     if ((flags.HasFlag(DBCompareFlags.IgnoreBlack) && pixelColor == Color.Black)
                     || (flags.HasFlag(DBCompareFlags.IgnoreWhite) && pixelColor == Color.White))
                         continue;
-                    else if (!CompareColor(x + rectangle.X, y + rectangle.Y, pixelColor.ToInt(), fade))
+                    else if (!CompareColor(x + scanAt.X, y + scanAt.Y, pixelColor.ToInt(), fade))
                         pixelsFailed++;
 
                     failed = pixelsFailed >= maxFail;
@@ -332,16 +330,16 @@ namespace Deltin.CustomGameAutomation
             });
 
             if (!flags.HasFlag(DBCompareFlags.Multithread))
-                for (int x = 0; x < rectangle.Width && !failed; x++)
+                for (int x = 0; x < other.Width && !failed; x++)
                     check.Invoke(x, null);
             else
-                Parallel.For(0, rectangle.Width, check);
+                Parallel.For(0, other.Width, check);
 
             return !failed;
         }
         internal bool CompareTo(DirectBitmap other, int fade, double min, DBCompareFlags flags)
         {
-            return CompareTo(new Rectangle(0, 0, Width, Height), other, fade, min, flags);
+            return CompareTo(new Point(0, 0), other, fade, min, flags);
         }
 
         internal bool CompareTo(Rectangle rectangle, DirectBitmap markup, int[] blackColor, int fade, double min)

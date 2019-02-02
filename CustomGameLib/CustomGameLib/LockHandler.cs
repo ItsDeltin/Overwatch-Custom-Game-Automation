@@ -88,6 +88,7 @@ namespace Deltin.CustomGameAutomation
 
         private readonly object InteractiveLock = new object(); // Lock for semi-interactive and interactive methods.
         private int InteractiveThreadID = -1; // The ID of the interactive thread. -1 for no interactive threads.
+        private int StackLength = 0;
 
         private void SetLock(Locker locker)
         {
@@ -116,23 +117,31 @@ namespace Deltin.CustomGameAutomation
                     SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != locker.ThreadID && !p.Waiting); });
                     InteractiveThreadID = locker.ThreadID;
 
-                    if (cg.DisableInputForInteractive)
-                        cg.EnableExternalInput(false);
-
                     break;
 
                 // Semi-Interactive:
                 case SemiInteractiveNum:
                     Monitor.Enter(InteractiveLock);
 
-                    if (cg.DisableInputForSemiInteractive)
-                        cg.EnableExternalInput(false);
-
                     break;
+            }
+            
+            if (locker.LockType != PassiveNum)
+            {
+                StackLength++;
+                if (cg.DisableInput && StackLength == 1)
+                    cg.EnableExternalInput(false);
             }
         }
         private void Unlock(Locker locker)
         {
+            if (locker.LockType != PassiveNum)
+            {
+                if (cg.DisableInput && StackLength == 1)
+                    cg.EnableExternalInput(true);
+                StackLength--;
+            }
+
             switch (locker.LockType)
             {
                 // Passive:
@@ -153,18 +162,11 @@ namespace Deltin.CustomGameAutomation
                                 break;
                             }
                     InteractiveThreadID = -1;
-
-                    if (cg.DisableInputForInteractive)
-                        cg.EnableExternalInput(true);
-
                     Monitor.Exit(InteractiveLock);
                     break;
 
                 // Semi-Interactive:
                 case SemiInteractiveNum:
-                    if (cg.DisableInputForSemiInteractive)
-                        cg.EnableExternalInput(true);
-
                     Monitor.Exit(InteractiveLock);
                     break;
             }

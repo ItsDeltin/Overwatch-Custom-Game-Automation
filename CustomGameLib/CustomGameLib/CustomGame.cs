@@ -16,8 +16,7 @@ namespace Deltin.CustomGameAutomation
     public partial class CustomGame : IDisposable
     {
         internal readonly DefaultKeys DefaultKeys;
-        internal readonly bool DisableInputForInteractive = false;
-        internal readonly bool DisableInputForSemiInteractive = false;
+        internal readonly bool DisableInput = false;
 
         internal DirectBitmap Capture = null;
 
@@ -56,8 +55,7 @@ namespace Deltin.CustomGameAutomation
             ScreenshotMethod = customGameBuilder.ScreenshotMethod;
             OpenChatIsDefault = customGameBuilder.OpenChatIsDefault;
             DefaultKeys = customGameBuilder.DefaultKeys;
-            DisableInputForInteractive = customGameBuilder.DisableInputForInteractive;
-            DisableInputForSemiInteractive = customGameBuilder.DisableInputForSemiInteractive;
+            DisableInput = customGameBuilder.DisableInput;
 
             // Create a link between OnExit and OverwatchProcess.Exited.
             OverwatchProcess.EnableRaisingEvents = true;
@@ -236,13 +234,9 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public DefaultKeys DefaultKeys = new DefaultKeys();
         /// <summary>
-        /// Prevents the Overwatch window from recieving input during interactive statements.
+        /// Prevents the Overwatch window from recieving input when <see cref="CustomGame"/> methods are running.
         /// </summary>
-        public bool DisableInputForInteractive = false;
-        /// <summary>
-        /// Prevents the Overwatch window from recieving input during semi-interactive statements.
-        /// </summary>
-        public bool DisableInputForSemiInteractive = false;
+        public bool DisableInput = false;
 
 #if DEBUG
 #pragma warning disable CS1591
