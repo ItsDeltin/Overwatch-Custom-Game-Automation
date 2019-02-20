@@ -18,6 +18,7 @@ namespace Deltin.CustomGameAutomation
         /// The current event occuring in Overwatch.
         /// </summary>
         public OWEvent CurrentEvent = OWEvent.None;
+
         /// <summary>
         /// Gets the current Overwatch event.
         /// </summary>
@@ -316,6 +317,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map A_Hanamura                       = new Map(Gamemode.Assault,               "A_Hanamura",                       OWEvent.None);
         public static readonly Map A_Hanamura_Winter                = new Map(Gamemode.Assault,               "A_Hanamura_Winter",                OWEvent.WinterWonderland);
         public static readonly Map A_HorizonLunarColony             = new Map(Gamemode.Assault,               "A_HorizonLunarColony",             OWEvent.None);
+        public static readonly Map A_Paris                          = new Map(Gamemode.Assault,               "A_Paris",                          OWEvent.None);
         public static readonly Map A_TempleOfAnubis                 = new Map(Gamemode.Assault,               "A_TempleOfAnubis",                 OWEvent.None);
         public static readonly Map A_VolskayaIndustries             = new Map(Gamemode.Assault,               "A_VolskayaIndustries",             OWEvent.None);
 
@@ -333,7 +335,7 @@ namespace Deltin.CustomGameAutomation
         // Capture The Flag
         public static readonly Map CTF_Ayutthaya                    = new Map(Gamemode.CaptureTheFlag,        "CTF_Ayutthaya",                    OWEvent.None);
         public static readonly Map CTF_Busan_Downtown               = new Map(Gamemode.CaptureTheFlag,        "CTF_Busan_Downtown",               OWEvent.None);
-        public static readonly Map CTF_Busan_Sanctuary               = new Map(Gamemode.CaptureTheFlag,       "CTF_Busan_Sanctuary",              OWEvent.None);
+        public static readonly Map CTF_Busan_Sanctuary              = new Map(Gamemode.CaptureTheFlag,       "CTF_Busan_Sanctuary",              OWEvent.None);
         public static readonly Map CTF_Ilios_Lighthouse             = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Lighthouse",             OWEvent.None);
         public static readonly Map CTF_Ilios_Ruins                  = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Ruins",                  OWEvent.None);
         public static readonly Map CTF_Ilios_Well                   = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Well",                   OWEvent.None);
@@ -461,6 +463,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Map SKIRM_Nepal                      = new Map(Gamemode.Skirmish,              "SKIRM_Nepal",                      OWEvent.None);
         public static readonly Map SKIRM_Numbani                    = new Map(Gamemode.Skirmish,              "SKIRM_Numbani",                    OWEvent.None);
         public static readonly Map SKIRM_Oasis                      = new Map(Gamemode.Skirmish,              "SKIRM_Oasis",                      OWEvent.None);
+        public static readonly Map SKIRM_Paris                      = new Map(Gamemode.Skirmish,              "SKIRM_Paris",                      OWEvent.None);
         public static readonly Map SKIRM_Rialto                     = new Map(Gamemode.Skirmish,              "SKIRM_Rialto",                     OWEvent.None);
         public static readonly Map SKIRM_Route66                    = new Map(Gamemode.Skirmish,              "SKIRM_Route66",                    OWEvent.None);
         public static readonly Map SKIRM_TempleOfAnubis             = new Map(Gamemode.Skirmish,              "SKIRM_TempleOfAnubis",             OWEvent.None);
