@@ -552,5 +552,12 @@ namespace Deltin.CustomGameAutomation
         toggle,
         dropdown
     }
+    internal enum PixelType
+    {
+        Any, // Filled or empty
+        Filled, // Black pixel
+        Empty, // Dark red pixel
+        Required // Blue pixel
+    }
     #endregion
 }

@@ -81,6 +81,11 @@
             </summary>
             <returns>Returns the state of the game.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetCapture">
+            <summary>
+            Gets the current captured screenshot of the Overwatch window.
+            </summary>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.Dispose">
             <summary>
             Disposes of all resources being used by the CustomGame instance.
@@ -93,6 +98,21 @@
             <param name="battletag">Battletag of player to check. Is case sensitive.</param>
             <returns>Returns true if player exists, else returns false.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="battletag"/> is null.</exception>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GenerateAlphabet(System.String)">
+            <summary>
+            Generates the alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/>
+            </summary>
+            <param name="letters">Characters to generate.</param>
+            <returns>An alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32,Deltin.CustomGameAutomation.PlayerNameAlphabet,System.String)">
+            <summary>
+            Gets the name of a player.
+            </summary>
+            <param name="slot">The slot of the player.</param>
+            <param name="alphabet">The alphabet to use.</param>
+            <returns>The name of the player.</returns>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.LockHandler">
             <summary>
@@ -1422,6 +1442,28 @@
             The key used to open the Custom Game lobby. Is <see cref="F:System.Windows.Forms.Keys.L"/> by default.
             </summary>
         </member>
+        <member name="F:Deltin.CustomGameAutomation.DebugMenu.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PictureBoxExtended">
+            <summary>
+            Inherits from PictureBox; adds Interpolation Mode Setting
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">
             <summary>
             AI heroes.
@@ -2043,6 +2085,16 @@
             </summary>
             <param name="message">Message to display.</param>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerNameAlphabet">
+            <summary>
+            Data for letter scanning that <see cref="!:CustomGame.GetPlayerName(int, PlayerNameAlphabet)" /> uses. Generated from <see cref="M:Deltin.CustomGameAutomation.CustomGame.GenerateAlphabet(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.PlayerNameAlphabet.Dispose">
+            <summary>
+            Disposes data used by the alphabet.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.LockHandler">
             <summary>
       Locks functions in the CustomGame class.
@@ -2301,7 +2353,7 @@
             </summary>
             <param name="scanLocation">The location to scan at.</param>
             <param name="flags">The flags for scanning.</param>
-            <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+            <param name="saveMarkupsToFolder">The location to save the markup of the scanned options. Set to null to ignore.</param>
             <param name="markup">The markup to scan for. Set to null to ignore.</param>
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>
@@ -2312,7 +2364,7 @@
             </summary>
             <param name="slot">The slot to scan at.</param>
             <param name="flags">The flags for scanning.</param>
-            <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+            <param name="saveMarkupsToFolder">The location to save the markup of the scanned options. Set to null to ignore.</param>
             <param name="markup">The markup to scan for. Set to null to ignore.</param>
             <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnFound"/> flag.</para>
             <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="F:Deltin.CustomGameAutomation.OptionScanFlags.ReturnLocation"/> flag.</para></returns>

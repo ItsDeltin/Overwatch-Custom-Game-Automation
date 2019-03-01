@@ -127,12 +127,15 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="scanLocation">The location to scan at.</param>
         /// <param name="flags">The flags for scanning.</param>
-        /// <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+        /// <param name="saveMarkupsToFolder">The location to save the markup of the scanned options. Set to null to ignore.</param>
         /// <param name="markup">The markup to scan for. Set to null to ignore.</param>
         /// <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnFound"/> flag.</para>
         /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
-        public object MenuOptionScan(Point scanLocation, OptionScanFlags flags, string savelocation, DirectBitmap markup)
+        public object MenuOptionScan(Point scanLocation, OptionScanFlags flags, string saveMarkupsToFolder, DirectBitmap markup)
         {
+            if (saveMarkupsToFolder != null)
+                saveMarkupsToFolder = System.IO.Path.GetDirectoryName(saveMarkupsToFolder) + System.IO.Path.DirectorySeparatorChar;
+
             using (cg.LockHandler.SemiInteractive)
             {
                 if (scanLocation == Point.Empty)
@@ -148,109 +151,107 @@ namespace Deltin.CustomGameAutomation
                 if (flags.HasFlag(OptionScanFlags.OpenMenu))
                     cg.RightClick(scanLocation);
 
-                double yincrement = 11.65; // Pixel distance between options.
-                int xstart = scanLocation.X + 14,  // X position to start scanning
-                    xmax = 79, // How far on the X axis to scan
-                    ystart = 0, // Y position to start scanning
-                    ymax = 6; // How far on the Y axis to scan.
+                double yIncrement = 11.65, // Pixel distance between options.
+                    yIncrementAbsolute = Math.Abs(yIncrement); // yIncrement might be changed into -yIncrement later.
+                int xStart = scanLocation.X + 14,  // X position to start scanning.
+                    yStart = 0, // Y position to start scanning.
+                    optionWidth = 79, // The width of the option.
+                    optionHeight = 6, // The height of the option.
+                    startScanningAtIndex = 0; // The option to start scanning.
 
-                bool mpd = MenuPointsDown(scanLocation);
+                bool menuPointsDown = MenuPointsDown(scanLocation);
 
-                if (mpd)
+                if (menuPointsDown) // The menu points down.
                 {
-                    ystart = scanLocation.Y + 12;
+                    yStart = scanLocation.Y + 12;
                 }
-                else
+                else // The menu points up.
                 {
-                    ystart = scanLocation.Y - 18;
-                    yincrement = -yincrement;
+                    yStart = scanLocation.Y - 18;
+                    yIncrement = -yIncrement;
+                    startScanningAtIndex = 3;
                 }
 
                 cg.UpdateScreen();
                 List<int> percentResults = new List<int>();
-
                 List<Point> optionLocations = new List<Point>();
 
                 int optionIndex = 0;
-                int yoffset = 0;
+                int yOffset = 0;
                 while (true)
                 {
-                    int yii = ystart + yoffset + (int)(yincrement * optionIndex);
+                    int y = yStart + yOffset + (int)(yIncrement * optionIndex);
 
-                    if (10 > yii || yii > cg.Capture.Height - 10)
-                        break;
+                    // If the y is out of range of the bitmap, ...
+                    if (yIncrementAbsolute > y || y > cg.Capture.Height - yIncrementAbsolute
+                        // ...or the end of the option menu has been detected, ...
+                        || (menuPointsDown && Capture.CompareColor(scanLocation.X + 4, y + 1, new int[] { 171, 171, 172 }, 5))
+                        || (!menuPointsDown && Capture.CompareColor(scanLocation.X + 4, y - 1, new int[] { 171, 171, 172 }, 5)))
+                        break; // ...stop scanning the options.
 
                     // Test for menu split
                     if (optionIndex > 0)
                     {
-                        if (mpd)
-                        {
-                            if (Capture.CompareColor(xstart - 1, yii - 1, new int[] { 102, 102, 103 }, 25))
+#warning Fix bug with menu split detector
+                        int[] checkForSplit = new int[] { -1, -2, 7, 8 };
+                        foreach(int checkAt in checkForSplit)
+                            if (Capture.CompareColor(xStart - 1, y + checkAt, new int[] { 102, 102, 103 }, 25))
                             {
-                                yoffset += 3;
-                                yii += 3;
+                                yOffset -= checkAt;
+                                y -= checkAt;
+                                break;
                             }
-                            else if (Capture.CompareColor(xstart - 1, yii - 2, new int[] { 102, 102, 103 }, 25))
-                            {
-                                yoffset += 2;
-                                yii += 2;
-                            }
-                        }
-                        else
-                        {
-                            if (Capture.CompareColor(xstart - 1, yii + 8, new int[] { 102, 102, 103 }, 25))
-                            {
-                                yoffset -= 2;
-                                yii -= 2;
-                            }
-                            else if (Capture.CompareColor(xstart - 1, yii + 7, new int[] { 102, 102, 103 }, 25))
-                            {
-                                yoffset -= 3;
-                                yii -= 3;
-                            }
-                        }
                     }
 
-                    // Get bitmap of option
-                    if (savelocation != null)
+                    if (optionIndex >= startScanningAtIndex)
                     {
-                        DirectBitmap work = Capture.Clone(xstart, yii, xmax, ymax);
+                        // Get bitmap of option
+                        if (saveMarkupsToFolder != null)
+                        {
+                            DirectBitmap work = Capture.Clone(xStart, y, optionWidth, optionHeight);
 
-                        for (int xi = 0; xi < work.Width; xi++)
-                            for (int yi = 0; yi < work.Height; yi++)
-                            {
-                                int fade = 80;
-                                int[] textcolor = new int[] { 169, 169, 169 };
-                                if (work.CompareColor(xi, yi, textcolor, fade))
-                                    work.SetPixel(xi, yi, Color.Black);
-                                else
-                                    work.SetPixel(xi, yi, Color.White);
-                            }
-                        work.Save(savelocation + "markup-" + optionIndex.ToString() + ".png");
-                        work.Dispose();
+                            for (int xi = 0; xi < work.Width; xi++)
+                                for (int yi = 0; yi < work.Height; yi++)
+                                {
+                                    int fade = 80;
+                                    int[] textcolor = new int[] { 169, 169, 169 };
+                                    if (work.CompareColor(xi, yi, textcolor, fade))
+                                        work.SetPixel(xi, yi, Color.Black);
+                                    else
+                                        work.SetPixel(xi, yi, Color.White);
+                                }
+
+                            string saveMarkupTo = "";
+                            for (int index = 0; System.IO.File.Exists(saveMarkupTo = $@"{saveMarkupsToFolder}Option Markup-{index}.png"); index++);
+
+                            work.Save(saveMarkupTo);
+                            work.Dispose();
+                        }
+
+                        if (markup != null)
+                        {
+                            int success = 0;
+                            int total = 0;
+
+                            for (int xi = 0; xi < markup.Width; xi++)
+                                for (int yi = 0; yi < markup.Height; yi++)
+                                {
+                                    total++;
+
+                                    bool bmpPixelIsBlack = Capture.CompareColor(xStart + xi, y + yi, new int[] { 170, 170, 170 }, 80);
+                                    bool markupPixelIsBlack = markup.GetPixel(xi, yi) == Color.FromArgb(0, 0, 0);
+
+                                    if (bmpPixelIsBlack == markupPixelIsBlack)
+                                        success++;
+                                }
+                            int percent = (int)(Convert.ToDouble(success) / Convert.ToDouble(total) * 100);
+                            percentResults.Add(percent);
+                        }
                     }
+                    else if (markup != null)
+                        percentResults.Add(0);
 
-                    if (markup != null)
-                    {
-                        int success = 0;
-                        int total = 0;
-
-                        for (int xi = 0; xi < markup.Width; xi++)
-                            for (int yi = 0; yi < markup.Height; yi++)
-                            {
-                                total++;
-
-                                bool bmpPixelIsBlack = Capture.CompareColor(xstart + xi, yii + yi, new int[] { 170, 170, 170 }, 80);
-                                bool markupPixelIsBlack = markup.GetPixel(xi, yi) == Color.FromArgb(0, 0, 0);
-
-                                if (bmpPixelIsBlack == markupPixelIsBlack)
-                                    success++;
-                            }
-                        int percent = (int)(Convert.ToDouble(success) / Convert.ToDouble(total) * 100);
-                        percentResults.Add(percent);
-                    }
-
-                    optionLocations.Add(new Point(xstart + 12, yii));
+                    optionLocations.Add(new Point(xStart + 12, y));
 
                     optionIndex++;
                 }
@@ -285,13 +286,13 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="slot">The slot to scan at.</param>
         /// <param name="flags">The flags for scanning.</param>
-        /// <param name="savelocation">The location to save the markup of the scanned options. Set to null to ignore.</param>
+        /// <param name="saveMarkupsToFolder">The location to save the markup of the scanned options. Set to null to ignore.</param>
         /// <param name="markup">The markup to scan for. Set to null to ignore.</param>
         /// <returns><para>Returns a bool determining if the option is found if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnFound"/> flag.</para>
         /// <para>Returns the location of the option if <paramref name="markup"/> is not null and <paramref name="flags"/> has the <see cref="OptionScanFlags.ReturnLocation"/> flag.</para></returns>
-        public object MenuOptionScan(int slot, OptionScanFlags flags, string savelocation, DirectBitmap markup)
+        public object MenuOptionScan(int slot, OptionScanFlags flags, string saveMarkupsToFolder, DirectBitmap markup)
         {
-            return MenuOptionScan(FindSlotLocation(slot), flags, savelocation, markup);
+            return MenuOptionScan(FindSlotLocation(slot), flags, saveMarkupsToFolder, markup);
         }
 
         /// <summary>

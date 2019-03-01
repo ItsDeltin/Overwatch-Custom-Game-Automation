@@ -138,11 +138,11 @@ namespace Deltin.CustomGameAutomation
             {
                 cg.UpdateScreen();
                 int[] scales = new int[] { 33, 49, 34 };
-                DirectBitmap tmp = Capture.Clone(402, 244, scales[scalar], 16);
+                DirectBitmap tmp = Capture.Clone(401, 244, scales[scalar], 17);
                 for (int x = 0; x < tmp.Width; x++)
                     for (int y = 0; y < tmp.Height; y++)
                     {
-                        if (tmp.CompareColor(x, y, Colors.WHITE, 25))
+                        if (tmp.CompareColor(x, y, Colors.WHITE, 30))
                             tmp.SetPixel(x, y, Color.Black);
                         else
                             tmp.SetPixel(x, y, Color.White);

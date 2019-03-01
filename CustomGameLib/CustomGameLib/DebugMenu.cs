@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
-    partial class DebugMenu : Form
+    public partial class DebugMenu : Form
     {
         #region Fields
         private readonly CustomGame cg;
@@ -35,6 +35,7 @@ namespace Deltin.CustomGameAutomation
         {
             this.cg = cg;
             InitializeComponent();
+            ResetDebugImage();
         }
         #endregion
 
@@ -339,7 +340,7 @@ namespace Deltin.CustomGameAutomation
 
         int previousIndex = -1;
 
-        public void ShowScan(List<Commands.LetterResult> letterInfos)
+        internal void ShowScan(List<Commands.LetterResult> letterInfos)
         {
             string command = new string(letterInfos.Select(info => info?.Letter.Char ?? ' ').ToArray());
 
@@ -366,6 +367,64 @@ namespace Deltin.CustomGameAutomation
         {
             ((RichTextBox)sender).Height = e.NewRectangle.Height + 5;
         }
+
+        #region
+#pragma warning disable 1591
+        public void SetDebugImage(int x, int y, Color color)
+        {
+            if (imageDebugger.InvokeRequired)
+            {
+                imageDebugger.Invoke(new MethodInvoker(delegate ()
+                {
+                    editedDebugImage.SetPixel(x, y, color);
+                }));
+            }
+            else
+            {
+                editedDebugImage.SetPixel(x, y, color);
+            }
+        }
+        public void ResetDebugImage()
+        {
+            if (imageDebugger.InvokeRequired)
+            {
+                imageDebugger.Invoke(new MethodInvoker(delegate ()
+                {
+                    _resetDebugImage();
+                }));
+            }
+            else
+            {
+                _resetDebugImage();
+            }
+        }
+        private void _resetDebugImage()
+        {
+            if (editedDebugImage != null)
+                editedDebugImage.Dispose();
+            editedDebugImage = cg.Capture.CloneAsBitmap();
+            imageDebugger.Image = editedDebugImage;
+            imageDebugger.Width = Rectangles.ENTIRE_SCREEN.Width * 5;
+            imageDebugger.Height = Rectangles.ENTIRE_SCREEN.Height * 5;
+        }
+        public void InvalidateDebugImage()
+        {
+            if (imageDebugger.InvokeRequired)
+            {
+                imageDebugger.Invoke(new MethodInvoker(delegate ()
+                {
+                    imageDebugger.Invalidate();
+                }));
+            }
+            else
+            {
+                imageDebugger.Invalidate();
+            }
+        }
+        private Bitmap editedDebugImage;
+#pragma warning restore 1591
+        #endregion
+
     }
 
     /// <summary>
@@ -386,7 +445,7 @@ namespace Deltin.CustomGameAutomation
 
     internal class CustomGameDebug
     {
-        internal const string DebugHeader = "[CGA]";
+        private const string DebugHeader = "[CGA]";
 
         public static void WriteLine(string text)
         {
@@ -401,7 +460,7 @@ namespace Deltin.CustomGameAutomation
 
     partial class CustomGame
     {
-        internal DebugMenu DebugMenu = null;
+        public DebugMenu DebugMenu = null;
         private bool DebugStarted = false;
 
         private void SetupDebugWindow()

@@ -211,7 +211,7 @@ namespace Deltin.CustomGameAutomation
             Inverted = true;
         }
         // From another db
-        internal DirectBitmap(DirectBitmap other)
+        public DirectBitmap(DirectBitmap other)
         {
             //Msvcrt.memcpy(Bytes, other.Bytes, other.Bytes.Length);
             Bytes = other.Bytes;
@@ -220,7 +220,7 @@ namespace Deltin.CustomGameAutomation
             BytesPerLine = Width * 4;
         }
         // From a bitmap
-        internal DirectBitmap(Bitmap bitmap, bool disposeBitmap = false)
+        public DirectBitmap(Bitmap bitmap, bool disposeBitmap = false)
         {
             var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
 
@@ -237,13 +237,13 @@ namespace Deltin.CustomGameAutomation
                 bitmap.Dispose();
         }
         // From a file
-        internal DirectBitmap(string file) : this(new Bitmap(file), true)
+        public DirectBitmap(string file) : this(new Bitmap(file), true)
         {
         }
 #endregion
 
 #region Public Methods
-        internal Color GetPixel(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             GetInternalLocation(x, y, out x, out y);
             var offset = GetByteIndexLocation(x, y);
@@ -256,7 +256,7 @@ namespace Deltin.CustomGameAutomation
             return Color.FromArgb(a, r, g, b);
         }
 
-        internal void SetPixel(int x, int y, Color color)
+        public void SetPixel(int x, int y, Color color)
         {
             GetInternalLocation(x, y, out x, out y);
             var offset = GetByteIndexLocation(x, y);
@@ -267,19 +267,19 @@ namespace Deltin.CustomGameAutomation
             Bytes[offset + 0] = color.B;
         }
 
-        internal bool CompareColor(int x, int y, int[] color, int fade)
+        public bool CompareColor(int x, int y, int[] color, int fade)
         {
             Color pixelColor = GetPixel(x, y);
             return Math.Abs(pixelColor.R - color[0]) < fade
                 && Math.Abs(pixelColor.G - color[1]) < fade
                 && Math.Abs(pixelColor.B - color[2]) < fade;
         }
-        internal bool CompareColor(Point point, int[] color, int fade)
+        public bool CompareColor(Point point, int[] color, int fade)
         {
             return CompareColor(point.X, point.Y, color, fade);
         }
 
-        internal bool CompareColor(int x1, int y1, int x2, int y2, int fade)
+        public bool CompareColor(int x1, int y1, int x2, int y2, int fade)
         {
             Color pixelColor1 = GetPixel(x1, y1);
             Color pixelColor2 = GetPixel(x2, y2);
@@ -287,19 +287,19 @@ namespace Deltin.CustomGameAutomation
                 && Math.Abs(pixelColor1.G - pixelColor2.G) < fade
                 && Math.Abs(pixelColor1.B - pixelColor2.B) < fade;
         }
-        internal bool CompareColor(Point point1, Point point2, int fade)
+        public bool CompareColor(Point point1, Point point2, int fade)
         {
             return CompareColor(point1.X, point1.Y, point2.X, point2.Y, fade);
         }
 
-        internal bool CompareColor(int x, int y, int[] min, int[] max)
+        public bool CompareColor(int x, int y, int[] min, int[] max)
         {
             Color pixelColor = GetPixel(x, y);
             return min[0] < pixelColor.R && pixelColor.R < max[0]
                 && min[1] < pixelColor.G && pixelColor.G < max[1]
                 && min[2] < pixelColor.B && pixelColor.B < max[2];
         }
-        internal bool CompareColor(Point point, int[] min, int[] max)
+        public bool CompareColor(Point point, int[] min, int[] max)
         {
             return CompareColor(point.X, point.Y, min, max);
         }
@@ -363,11 +363,11 @@ namespace Deltin.CustomGameAutomation
             return !failed;
         }
 
-        internal DirectBitmap Clone()
+        public DirectBitmap Clone()
         {
             return new DirectBitmap(this);
         }
-        internal DirectBitmap Clone(int x, int y, int width, int height)
+        public DirectBitmap Clone(int x, int y, int width, int height)
         {
             if (Inverted)
             {
@@ -393,23 +393,23 @@ namespace Deltin.CustomGameAutomation
 
             return new DirectBitmap(newBytes, width, height, Inverted);
         }
-        internal DirectBitmap Clone(Rectangle rectangle)
+        public DirectBitmap Clone(Rectangle rectangle)
         {
             return Clone(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
-        internal Bitmap CloneAsBitmap()
+        public Bitmap CloneAsBitmap()
         {
             return ToBitmap();
         }
-        internal Bitmap CloneAsBitmap(int x, int y, int width, int height)
+        public Bitmap CloneAsBitmap(int x, int y, int width, int height)
         {
             DirectBitmap dbClone = Clone(x, y, width, height);
             Bitmap bmp = dbClone.ToBitmap();
             dbClone.Dispose();
             return bmp;
         }
-        internal Bitmap CloneAsBitmap(Rectangle rectangle)
+        public Bitmap CloneAsBitmap(Rectangle rectangle)
         {
             return CloneAsBitmap(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }

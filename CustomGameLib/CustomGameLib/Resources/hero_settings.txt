@@ -122,7 +122,7 @@ primary_fire toggle
 ammunition_clip_size_scalar value
 no_ammunition_requirement toggle
 
-- Brigitte
+-Brigitte
 
 barrier_shield toggle
 barrier_shield_cooldown_time value
@@ -839,6 +839,7 @@ ammunition_clip_size_scalar value
 no_ammunition_requirement toggle
 
 -WreckingBall
+
 adaptive_shield toggle
 adaptive_shield_cooldown_time value
 grappling_claw toggle

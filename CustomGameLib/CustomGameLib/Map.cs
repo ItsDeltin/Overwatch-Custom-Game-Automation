@@ -25,45 +25,38 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The current Overwatch event as the Event enum.</returns>
         public static OWEvent GetCurrentEvent()
         {
-            DateTime cdt = DateTime.UtcNow;
-            DateTime currentdate = new DateTime(1, cdt.Month, cdt.Day);
+            // Search for the "Event Has Ended" box.
+            const string searchFor = "<span class=\"btn m-lg u-center-block margin-18 is-disabled\">EVENT HAS ENDED</span>";
 
-            // Summer Games
-            DateTime sgStart = new DateTime(1, 8, 8);
-            DateTime sgEnd = new DateTime(1, 8, 28);
-            // Halloween Terror
-            DateTime htStart = new DateTime(1, 10, 10);
-            DateTime htEnd = new DateTime(1, 11, 1);
-            // Winter Wonderland
-            DateTime wwStart = new DateTime(1, 12, 12);
-            DateTime wwEnd = new DateTime(2, 1, 1); // 2 because next year
-            // Lunar New Year
-            DateTime lnyStart = new DateTime(1, 2, 8);
-            DateTime lnyEnd = new DateTime(1, 3, 5);
-            // Archives
-            DateTime uStart = new DateTime(1, 4, 11);
-            DateTime uEnd = new DateTime(1, 5, 1);
-            // Aniversary
-            DateTime aStart = new DateTime(1, 5, 22);
-            DateTime aEnd = new DateTime(1, 6, 11);
+            var eventPages = new Tuple<OWEvent, string>[]
+            {
+                new Tuple<OWEvent, string>(OWEvent.SummerGames,      "https://playoverwatch.com/en-us/events/summer-games/"),
+                new Tuple<OWEvent, string>(OWEvent.HalloweenTerror,  "https://playoverwatch.com/en-us/events/halloween-terror/"),
+                new Tuple<OWEvent, string>(OWEvent.WinterWonderland, "https://playoverwatch.com/en-us/events/winter-wonderland/"),
+                new Tuple<OWEvent, string>(OWEvent.LunarNewYear,     "https://playoverwatch.com/en-us/events/lunar-new-year/"),
+                new Tuple<OWEvent, string>(OWEvent.Archives,         "https://playoverwatch.com/en-us/events/archives/"),
+                new Tuple<OWEvent, string>(OWEvent.Aniversary,       "https://playoverwatch.com/en-us/events/anniversary/"),
+            };
 
-            if (currentdate >= sgStart && currentdate <= sgEnd)
-                return OWEvent.SummerGames;
-
-            if (currentdate >= htStart && currentdate <= htEnd)
-                return OWEvent.HalloweenTerror;
-
-            if (currentdate >= wwStart && currentdate <= wwEnd)
-                return OWEvent.WinterWonderland;
-
-            if (currentdate >= lnyStart && currentdate <= lnyEnd)
-                return OWEvent.LunarNewYear;
-
-            if (currentdate >= uStart && currentdate <= uEnd)
-                return OWEvent.Archives;
-
-            if (currentdate >= aStart && currentdate <= aEnd)
-                return OWEvent.Aniversary;
+            using (var client = new System.Net.WebClient())
+            {
+                try
+                {
+                    for (int i = 0; i < eventPages.Length; i++)
+                    {
+#if DEBUG
+                        CustomGameDebug.WriteLine($"Downloading data for {eventPages[i].Item1}");
+#endif
+                        // If the page does not contain the box, then the event is active.
+                        if (!client.DownloadString(eventPages[i].Item2).Contains(searchFor))
+                            return eventPages[i].Item1;
+                    }
+                }
+                catch (System.Net.WebException)
+                {
+                    throw new System.Net.WebException("Could not download event info from playoverwatch.com.");
+                }
+            }
 
             return OWEvent.None;
         }
@@ -335,7 +328,7 @@ namespace Deltin.CustomGameAutomation
         // Capture The Flag
         public static readonly Map CTF_Ayutthaya                    = new Map(Gamemode.CaptureTheFlag,        "CTF_Ayutthaya",                    OWEvent.None);
         public static readonly Map CTF_Busan_Downtown               = new Map(Gamemode.CaptureTheFlag,        "CTF_Busan_Downtown",               OWEvent.None);
-        public static readonly Map CTF_Busan_Sanctuary              = new Map(Gamemode.CaptureTheFlag,       "CTF_Busan_Sanctuary",              OWEvent.None);
+        public static readonly Map CTF_Busan_Sanctuary              = new Map(Gamemode.CaptureTheFlag,        "CTF_Busan_Sanctuary",              OWEvent.None);
         public static readonly Map CTF_Ilios_Lighthouse             = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Lighthouse",             OWEvent.None);
         public static readonly Map CTF_Ilios_Ruins                  = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Ruins",                  OWEvent.None);
         public static readonly Map CTF_Ilios_Well                   = new Map(Gamemode.CaptureTheFlag,        "CTF_Ilios_Well",                   OWEvent.None);

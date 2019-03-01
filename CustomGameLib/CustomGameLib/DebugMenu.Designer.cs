@@ -32,6 +32,7 @@ namespace Deltin.CustomGameAutomation
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.cursorLocation = new System.Windows.Forms.Label();
             this.Chat = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.CharacterText = new System.Windows.Forms.Label();
@@ -45,13 +46,24 @@ namespace Deltin.CustomGameAutomation
             this.panel3 = new System.Windows.Forms.Panel();
             this.copyButton = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.commandsTab = new System.Windows.Forms.TabPage();
+            this.imageDebugTab = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.imageDebuggerContainer = new System.Windows.Forms.Panel();
+            this.imageDebugger = new Deltin.CustomGameAutomation.PictureBoxExtended();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Chat)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.letterOutput)).BeginInit();
             this.panel3.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.commandsTab.SuspendLayout();
+            this.imageDebugTab.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.imageDebuggerContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imageDebugger)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -68,7 +80,7 @@ namespace Deltin.CustomGameAutomation
             this.tableLayoutPanel1.Controls.Add(this.letterOutput, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 7);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 8;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -79,7 +91,7 @@ namespace Deltin.CustomGameAutomation
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(616, 482);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(524, 458);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // cursorLocation
@@ -104,6 +116,14 @@ namespace Deltin.CustomGameAutomation
             this.Chat.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             this.Chat.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.Chat.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(3, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(78, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Scanned Text:";
             // 
             // richTextBox1
             // 
@@ -243,21 +263,84 @@ namespace Deltin.CustomGameAutomation
             this.output.TabIndex = 5;
             this.output.Visible = false;
             // 
-            // label1
+            // tabControl1
             // 
-            this.label1.Location = new System.Drawing.Point(3, 29);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Scanned Text:";
+            this.tabControl1.Controls.Add(this.commandsTab);
+            this.tabControl1.Controls.Add(this.imageDebugTab);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(538, 490);
+            this.tabControl1.TabIndex = 2;
+            // 
+            // commandsTab
+            // 
+            this.commandsTab.Controls.Add(this.tableLayoutPanel1);
+            this.commandsTab.Location = new System.Drawing.Point(4, 22);
+            this.commandsTab.Name = "commandsTab";
+            this.commandsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.commandsTab.Size = new System.Drawing.Size(530, 464);
+            this.commandsTab.TabIndex = 0;
+            this.commandsTab.Text = "Commands";
+            this.commandsTab.UseVisualStyleBackColor = true;
+            // 
+            // imageDebugTab
+            // 
+            this.imageDebugTab.Controls.Add(this.tableLayoutPanel2);
+            this.imageDebugTab.Location = new System.Drawing.Point(4, 22);
+            this.imageDebugTab.Name = "imageDebugTab";
+            this.imageDebugTab.Padding = new System.Windows.Forms.Padding(3);
+            this.imageDebugTab.Size = new System.Drawing.Size(530, 464);
+            this.imageDebugTab.TabIndex = 1;
+            this.imageDebugTab.Text = "Debugger";
+            this.imageDebugTab.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.imageDebuggerContainer, 0, 2);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(524, 458);
+            this.tableLayoutPanel2.TabIndex = 3;
+            // 
+            // imageDebuggerContainer
+            // 
+            this.imageDebuggerContainer.AutoScroll = true;
+            this.imageDebuggerContainer.Controls.Add(this.imageDebugger);
+            this.imageDebuggerContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageDebuggerContainer.Location = new System.Drawing.Point(0, 0);
+            this.imageDebuggerContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.imageDebuggerContainer.Name = "imageDebuggerContainer";
+            this.imageDebuggerContainer.Size = new System.Drawing.Size(534, 458);
+            this.imageDebuggerContainer.TabIndex = 1;
+            // 
+            // imageDebugger
+            // 
+            this.imageDebugger.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.imageDebugger.Location = new System.Drawing.Point(0, -16);
+            this.imageDebugger.Margin = new System.Windows.Forms.Padding(0);
+            this.imageDebugger.Name = "imageDebugger";
+            this.imageDebugger.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
+            this.imageDebugger.Size = new System.Drawing.Size(100, 100);
+            this.imageDebugger.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.imageDebugger.TabIndex = 0;
+            this.imageDebugger.TabStop = false;
             // 
             // DebugMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(616, 482);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.ClientSize = new System.Drawing.Size(538, 490);
+            this.Controls.Add(this.tabControl1);
             this.Name = "DebugMenu";
             this.Text = "DebugMenu";
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -270,6 +353,12 @@ namespace Deltin.CustomGameAutomation
             ((System.ComponentModel.ISupportInitialize)(this.letterOutput)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.commandsTab.ResumeLayout(false);
+            this.imageDebugTab.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.imageDebuggerContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.imageDebugger)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -292,6 +381,12 @@ namespace Deltin.CustomGameAutomation
         private System.Windows.Forms.TextBox output;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage commandsTab;
+        private System.Windows.Forms.TabPage imageDebugTab;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private PictureBoxExtended imageDebugger;
+        private System.Windows.Forms.Panel imageDebuggerContainer;
     }
 }
 #endif

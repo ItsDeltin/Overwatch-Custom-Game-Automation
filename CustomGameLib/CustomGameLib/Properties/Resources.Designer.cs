@@ -22,7 +22,7 @@ namespace Deltin.CustomGameAutomation.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Deltin.CustomGameAutomation.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ana_markup {
+        public static System.Drawing.Bitmap ana_markup {
             get {
                 object obj = ResourceManager.GetObject("ana_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Antarctica {
+        public static System.Drawing.Bitmap Antarctica {
             get {
                 object obj = ResourceManager.GetObject("Antarctica", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -83,7 +83,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap AntarcticaWinter {
+        public static System.Drawing.Bitmap AntarcticaWinter {
             get {
                 object obj = ResourceManager.GetObject("AntarcticaWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +93,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ashe_markup {
+        public static System.Drawing.Bitmap ashe_markup {
             get {
                 object obj = ResourceManager.GetObject("ashe_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +103,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Ayutthaya {
+        public static System.Drawing.Bitmap Ayutthaya {
             get {
                 object obj = ResourceManager.GetObject("Ayutthaya", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +113,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bastion_markup {
+        public static System.Drawing.Bitmap bastion_markup {
             get {
                 object obj = ResourceManager.GetObject("bastion_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +123,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BlackForest {
+        public static System.Drawing.Bitmap BlackForest {
             get {
                 object obj = ResourceManager.GetObject("BlackForest", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +133,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BlackForestWinter {
+        public static System.Drawing.Bitmap BlackForestWinter {
             get {
                 object obj = ResourceManager.GetObject("BlackForestWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +143,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BlizzardWorld {
+        public static System.Drawing.Bitmap BlizzardWorld {
             get {
                 object obj = ResourceManager.GetObject("BlizzardWorld", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +153,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BlizzardWorldWinter {
+        public static System.Drawing.Bitmap BlizzardWorldWinter {
             get {
                 object obj = ResourceManager.GetObject("BlizzardWorldWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +163,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap brigitte_markup {
+        public static System.Drawing.Bitmap brigitte_markup {
             get {
                 object obj = ResourceManager.GetObject("brigitte_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +173,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Busan {
+        public static System.Drawing.Bitmap Busan {
             get {
                 object obj = ResourceManager.GetObject("Busan", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -183,7 +183,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Castillo {
+        public static System.Drawing.Bitmap Castillo {
             get {
                 object obj = ResourceManager.GetObject("Castillo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -193,7 +193,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ChateauGuillard {
+        public static System.Drawing.Bitmap ChateauGuillard {
             get {
                 object obj = ResourceManager.GetObject("ChateauGuillard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -203,7 +203,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ChateauGuillard_Halloween {
+        public static System.Drawing.Bitmap ChateauGuillard_Halloween {
             get {
                 object obj = ResourceManager.GetObject("ChateauGuillard_Halloween", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -213,7 +213,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap doomfist_markup {
+        public static System.Drawing.Bitmap doomfist_markup {
             get {
                 object obj = ResourceManager.GetObject("doomfist_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -223,7 +223,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Dorado {
+        public static System.Drawing.Bitmap Dorado {
             get {
                 object obj = ResourceManager.GetObject("Dorado", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -233,7 +233,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dva_markup {
+        public static System.Drawing.Bitmap dva_markup {
             get {
                 object obj = ResourceManager.GetObject("dva_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -243,7 +243,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap easy_difficulty {
+        public static System.Drawing.Bitmap easy_difficulty {
             get {
                 object obj = ResourceManager.GetObject("easy_difficulty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -253,7 +253,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Eichenwalde {
+        public static System.Drawing.Bitmap Eichenwalde {
             get {
                 object obj = ResourceManager.GetObject("Eichenwalde", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -263,7 +263,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Eichenwalde_Halloween {
+        public static System.Drawing.Bitmap Eichenwalde_Halloween {
             get {
                 object obj = ResourceManager.GetObject("Eichenwalde_Halloween", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -273,7 +273,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap gengi_markup {
+        public static System.Drawing.Bitmap gengi_markup {
             get {
                 object obj = ResourceManager.GetObject("gengi_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -283,7 +283,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Gibraltar {
+        public static System.Drawing.Bitmap Gibraltar {
             get {
                 object obj = ResourceManager.GetObject("Gibraltar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -293,7 +293,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Hanamura {
+        public static System.Drawing.Bitmap Hanamura {
             get {
                 object obj = ResourceManager.GetObject("Hanamura", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -303,7 +303,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap HanamuraWinter {
+        public static System.Drawing.Bitmap HanamuraWinter {
             get {
                 object obj = ResourceManager.GetObject("HanamuraWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -313,7 +313,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hanzo_markup {
+        public static System.Drawing.Bitmap hanzo_markup {
             get {
                 object obj = ResourceManager.GetObject("hanzo_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -323,7 +323,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hard_difficulty {
+        public static System.Drawing.Bitmap hard_difficulty {
             get {
                 object obj = ResourceManager.GetObject("hard_difficulty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -355,7 +355,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         ///projectile_speed value
         ///recieve_h [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string hero_settings {
+        public static string hero_settings {
             get {
                 return ResourceManager.GetString("hero_settings", resourceCulture);
             }
@@ -364,7 +364,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Hollywood {
+        public static System.Drawing.Bitmap Hollywood {
             get {
                 object obj = ResourceManager.GetObject("Hollywood", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -374,7 +374,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Hollywood_Halloween {
+        public static System.Drawing.Bitmap Hollywood_Halloween {
             get {
                 object obj = ResourceManager.GetObject("Hollywood_Halloween", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -384,7 +384,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap HorizonLunarColony {
+        public static System.Drawing.Bitmap HorizonLunarColony {
             get {
                 object obj = ResourceManager.GetObject("HorizonLunarColony", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -394,7 +394,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Ilios {
+        public static System.Drawing.Bitmap Ilios {
             get {
                 object obj = ResourceManager.GetObject("Ilios", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -404,7 +404,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Ilios_Lighthouse {
+        public static System.Drawing.Bitmap Ilios_Lighthouse {
             get {
                 object obj = ResourceManager.GetObject("Ilios_Lighthouse", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -414,7 +414,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Ilios_Ruins {
+        public static System.Drawing.Bitmap Ilios_Ruins {
             get {
                 object obj = ResourceManager.GetObject("Ilios_Ruins", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -424,7 +424,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Ilios_Well {
+        public static System.Drawing.Bitmap Ilios_Well {
             get {
                 object obj = ResourceManager.GetObject("Ilios_Well", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -434,7 +434,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Junkertown {
+        public static System.Drawing.Bitmap Junkertown {
             get {
                 object obj = ResourceManager.GetObject("Junkertown", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -444,7 +444,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap junkrat_markup {
+        public static System.Drawing.Bitmap junkrat_markup {
             get {
                 object obj = ResourceManager.GetObject("junkrat_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -454,7 +454,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap KingsRow {
+        public static System.Drawing.Bitmap KingsRow {
             get {
                 object obj = ResourceManager.GetObject("KingsRow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -464,7 +464,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap KingsRowWinter {
+        public static System.Drawing.Bitmap KingsRowWinter {
             get {
                 object obj = ResourceManager.GetObject("KingsRowWinter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -474,7 +474,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lijiang {
+        public static System.Drawing.Bitmap Lijiang {
             get {
                 object obj = ResourceManager.GetObject("Lijiang", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -484,7 +484,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lijiang_ControlCenter {
+        public static System.Drawing.Bitmap Lijiang_ControlCenter {
             get {
                 object obj = ResourceManager.GetObject("Lijiang_ControlCenter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -494,7 +494,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lijiang_Garden {
+        public static System.Drawing.Bitmap Lijiang_Garden {
             get {
                 object obj = ResourceManager.GetObject("Lijiang_Garden", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -504,7 +504,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lijiang_NightMarket {
+        public static System.Drawing.Bitmap Lijiang_NightMarket {
             get {
                 object obj = ResourceManager.GetObject("Lijiang_NightMarket", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -514,7 +514,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap lucio_markup {
+        public static System.Drawing.Bitmap lucio_markup {
             get {
                 object obj = ResourceManager.GetObject("lucio_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -524,7 +524,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mccree_markup {
+        public static System.Drawing.Bitmap mccree_markup {
             get {
                 object obj = ResourceManager.GetObject("mccree_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -534,7 +534,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap medium_difficulty {
+        public static System.Drawing.Bitmap medium_difficulty {
             get {
                 object obj = ResourceManager.GetObject("medium_difficulty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -544,7 +544,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mei_markup {
+        public static System.Drawing.Bitmap mei_markup {
             get {
                 object obj = ResourceManager.GetObject("mei_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -554,7 +554,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap mercy_markup {
+        public static System.Drawing.Bitmap mercy_markup {
             get {
                 object obj = ResourceManager.GetObject("mercy_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -564,7 +564,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap moira_markup {
+        public static System.Drawing.Bitmap moira_markup {
             get {
                 object obj = ResourceManager.GetObject("moira_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -574,7 +574,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Necropolis {
+        public static System.Drawing.Bitmap Necropolis {
             get {
                 object obj = ResourceManager.GetObject("Necropolis", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -584,7 +584,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Nepal {
+        public static System.Drawing.Bitmap Nepal {
             get {
                 object obj = ResourceManager.GetObject("Nepal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -594,7 +594,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Nepal_Sanctum {
+        public static System.Drawing.Bitmap Nepal_Sanctum {
             get {
                 object obj = ResourceManager.GetObject("Nepal_Sanctum", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -604,7 +604,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Nepal_Shrine {
+        public static System.Drawing.Bitmap Nepal_Shrine {
             get {
                 object obj = ResourceManager.GetObject("Nepal_Shrine", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -614,7 +614,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Nepal_Village {
+        public static System.Drawing.Bitmap Nepal_Village {
             get {
                 object obj = ResourceManager.GetObject("Nepal_Village", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -624,7 +624,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Numbani {
+        public static System.Drawing.Bitmap Numbani {
             get {
                 object obj = ResourceManager.GetObject("Numbani", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -634,7 +634,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Oasis {
+        public static System.Drawing.Bitmap Oasis {
             get {
                 object obj = ResourceManager.GetObject("Oasis", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -644,7 +644,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Oasis_CityCenter {
+        public static System.Drawing.Bitmap Oasis_CityCenter {
             get {
                 object obj = ResourceManager.GetObject("Oasis_CityCenter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -654,7 +654,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Oasis_Gardens {
+        public static System.Drawing.Bitmap Oasis_Gardens {
             get {
                 object obj = ResourceManager.GetObject("Oasis_Gardens", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -664,7 +664,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Oasis_University {
+        public static System.Drawing.Bitmap Oasis_University {
             get {
                 object obj = ResourceManager.GetObject("Oasis_University", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -674,7 +674,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap orisa_markup {
+        public static System.Drawing.Bitmap orisa_markup {
             get {
                 object obj = ResourceManager.GetObject("orisa_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -684,7 +684,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Petra {
+        public static System.Drawing.Bitmap Petra {
             get {
                 object obj = ResourceManager.GetObject("Petra", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -694,7 +694,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap pharah_markup {
+        public static System.Drawing.Bitmap pharah_markup {
             get {
                 object obj = ResourceManager.GetObject("pharah_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -704,7 +704,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap put_in_queue {
+        public static System.Drawing.Bitmap put_in_queue {
             get {
                 object obj = ResourceManager.GetObject("put_in_queue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -714,7 +714,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap reaper_markup {
+        public static System.Drawing.Bitmap reaper_markup {
             get {
                 object obj = ResourceManager.GetObject("reaper_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -724,7 +724,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap reinhardt_markup {
+        public static System.Drawing.Bitmap reinhardt_markup {
             get {
                 object obj = ResourceManager.GetObject("reinhardt_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -734,7 +734,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap remove_all_bots {
+        public static System.Drawing.Bitmap remove_all_bots {
             get {
                 object obj = ResourceManager.GetObject("remove_all_bots", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -744,7 +744,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap remove_friend {
+        public static System.Drawing.Bitmap remove_friend {
             get {
                 object obj = ResourceManager.GetObject("remove_friend", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -754,7 +754,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap remove_from_game {
+        public static System.Drawing.Bitmap remove_from_game {
             get {
                 object obj = ResourceManager.GetObject("remove_from_game", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -764,7 +764,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Rialto {
+        public static System.Drawing.Bitmap Rialto {
             get {
                 object obj = ResourceManager.GetObject("Rialto", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -774,7 +774,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap roadhog_markup {
+        public static System.Drawing.Bitmap roadhog_markup {
             get {
                 object obj = ResourceManager.GetObject("roadhog_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -784,7 +784,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap round_over_markup {
+        public static System.Drawing.Bitmap round_over_markup {
             get {
                 object obj = ResourceManager.GetObject("round_over_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -794,7 +794,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Route66 {
+        public static System.Drawing.Bitmap Route66 {
             get {
                 object obj = ResourceManager.GetObject("Route66", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -804,7 +804,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap send_friend_request {
+        public static System.Drawing.Bitmap send_friend_request {
             get {
                 object obj = ResourceManager.GetObject("send_friend_request", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -814,7 +814,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap soldier_markup {
+        public static System.Drawing.Bitmap soldier_markup {
             get {
                 object obj = ResourceManager.GetObject("soldier_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -824,7 +824,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sombra_markup {
+        public static System.Drawing.Bitmap sombra_markup {
             get {
                 object obj = ResourceManager.GetObject("sombra_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -834,7 +834,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap spectate_all {
+        public static System.Drawing.Bitmap spectate_all {
             get {
                 object obj = ResourceManager.GetObject("spectate_all", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -844,7 +844,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap spectate_blue_only {
+        public static System.Drawing.Bitmap spectate_blue_only {
             get {
                 object obj = ResourceManager.GetObject("spectate_blue_only", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -854,7 +854,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap spectate_red_only {
+        public static System.Drawing.Bitmap spectate_red_only {
             get {
                 object obj = ResourceManager.GetObject("spectate_red_only", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -864,7 +864,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap swap_to_blue {
+        public static System.Drawing.Bitmap swap_to_blue {
             get {
                 object obj = ResourceManager.GetObject("swap_to_blue", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -874,7 +874,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap swap_to_neutral {
+        public static System.Drawing.Bitmap swap_to_neutral {
             get {
                 object obj = ResourceManager.GetObject("swap_to_neutral", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -884,7 +884,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap swap_to_red {
+        public static System.Drawing.Bitmap swap_to_red {
             get {
                 object obj = ResourceManager.GetObject("swap_to_red", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -894,7 +894,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap swap_to_spectators {
+        public static System.Drawing.Bitmap swap_to_spectators {
             get {
                 object obj = ResourceManager.GetObject("swap_to_spectators", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -904,7 +904,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap symmetra_markup {
+        public static System.Drawing.Bitmap symmetra_markup {
             get {
                 object obj = ResourceManager.GetObject("symmetra_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -914,7 +914,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap TempleOfAnubis {
+        public static System.Drawing.Bitmap TempleOfAnubis {
             get {
                 object obj = ResourceManager.GetObject("TempleOfAnubis", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -924,7 +924,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap torbjorn_markup {
+        public static System.Drawing.Bitmap torbjorn_markup {
             get {
                 object obj = ResourceManager.GetObject("torbjorn_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -934,7 +934,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tracer_markup {
+        public static System.Drawing.Bitmap tracer_markup {
             get {
                 object obj = ResourceManager.GetObject("tracer_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -944,7 +944,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap view_career_profile {
+        public static System.Drawing.Bitmap view_career_profile {
             get {
                 object obj = ResourceManager.GetObject("view_career_profile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -954,7 +954,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap VolskayaIndustries {
+        public static System.Drawing.Bitmap VolskayaIndustries {
             get {
                 object obj = ResourceManager.GetObject("VolskayaIndustries", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -964,7 +964,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap widowmaker_markup {
+        public static System.Drawing.Bitmap widowmaker_markup {
             get {
                 object obj = ResourceManager.GetObject("widowmaker_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -974,7 +974,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap winston_markup {
+        public static System.Drawing.Bitmap winston_markup {
             get {
                 object obj = ResourceManager.GetObject("winston_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -984,7 +984,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wreckingball_markup {
+        public static System.Drawing.Bitmap wreckingball_markup {
             get {
                 object obj = ResourceManager.GetObject("wreckingball_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -994,7 +994,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap YH_Nepal_Village {
+        public static System.Drawing.Bitmap YH_Nepal_Village {
             get {
                 object obj = ResourceManager.GetObject("YH_Nepal_Village", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1004,7 +1004,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap zarya_markup {
+        public static System.Drawing.Bitmap zarya_markup {
             get {
                 object obj = ResourceManager.GetObject("zarya_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1014,7 +1014,7 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap zenyatta_markup {
+        public static System.Drawing.Bitmap zenyatta_markup {
             get {
                 object obj = ResourceManager.GetObject("zenyatta_markup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

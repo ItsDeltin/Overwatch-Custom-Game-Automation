@@ -65,11 +65,6 @@ namespace Deltin.CustomGameAutomation
             SetupWindow(OverwatchHandle, ScreenshotMethod);
             Thread.Sleep(250);
 
-#if DEBUG
-            if (customGameBuilder.DebugMode)
-                SetupDebugWindow();
-#endif
-
             // Create subclass instances.
             Commands = new Commands(this);
             AI = new AI(this);
@@ -78,6 +73,13 @@ namespace Deltin.CustomGameAutomation
             PlayerInfo = new PlayerInfo(this);
             Interact = new Interact(this);
             Settings = new Settings(this);
+
+            UpdateScreen();
+
+#if DEBUG
+            if (customGameBuilder.DebugMode)
+                SetupDebugWindow();
+#endif
 
             if (OpenChatIsDefault)
                 Chat.OpenChat();
@@ -139,6 +141,14 @@ namespace Deltin.CustomGameAutomation
 
                 return GameState.Unknown;
             }
+        }
+
+        /// <summary>
+        /// Gets the current captured screenshot of the Overwatch window.
+        /// </summary>
+        public DirectBitmap GetCapture()
+        {
+            return Capture;
         }
 
         /// <summary>
