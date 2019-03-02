@@ -106,13 +106,18 @@
             <param name="letters">Characters to generate.</param>
             <returns>An alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32,Deltin.CustomGameAutomation.PlayerNameAlphabet,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32)">
             <summary>
             Gets the name of a player.
             </summary>
             <param name="slot">The slot of the player.</param>
-            <param name="alphabet">The alphabet to use.</param>
             <returns>The name of the player.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName">
+            <summary>
+            Gets the name of the player when already in the career profile.
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:Deltin.CustomGameAutomation.CustomGame.LockHandler">
             <summary>
@@ -301,6 +306,14 @@
             Returns true if the slot is in spectator or queue.
             </summary>
             <param name="slot">Slot to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.IsSlot(System.Int32,Deltin.CustomGameAutomation.Team)">
+            <summary>
+            Returns true if the slot is in one of the teams in the teams flag.
+            </summary>
+            <param name="slot">Slot to check</param>
+            <param name="teams">Team the slot must be in.</param>
             <returns></returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.GetSlots(Deltin.CustomGameAutomation.SlotFlags,System.Boolean)">
@@ -1174,7 +1187,7 @@
             </summary>
             <param name="command">Command to listen to.</param>
             <param name="listen">Should this command be listened to?</param>
-            <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
+            <param name="getNameAndProfile">Should the player who executes this command have their player profile registered?</param>
             <param name="checkIfFriend">Should the player who executes this command be checked to see if they are a friend?</param>
             <param name="callback">Method to be executed when the command is executed.</param>
         </member>
@@ -1195,7 +1208,7 @@
             Should this command be listened to?
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.ListenTo.RegisterProfile">
+        <member name="F:Deltin.CustomGameAutomation.ListenTo.GetNameAndProfile">
             <summary>
             Should the player who executes this command have their profile registered?
             </summary>
@@ -1256,11 +1269,6 @@
             Channel the command was executed on.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
-            <summary>
-            The identity of the player that executed the command.
-            </summary>
-        </member>
         <member name="P:Deltin.CustomGameAutomation.CommandData.ChatIdentity">
             <summary>
             The chat identity of the player that executed the command.
@@ -1269,6 +1277,16 @@
         <member name="P:Deltin.CustomGameAutomation.CommandData.IsFriend">
             <summary>
             Is the player that executed the command a friend?
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CommandData.PlayerName">
+            <summary>
+            The name of the player that executed the command.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.CommandData.PlayerIdentity">
+            <summary>
+            The identity of the player that executed the command.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.CommandExecuted">
@@ -1440,28 +1458,6 @@
         <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenCustomGameLobbyKey">
             <summary>
             The key used to open the Custom Game lobby. Is <see cref="F:System.Windows.Forms.Keys.L"/> by default.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.DebugMenu.components">
-            <summary>
-            Required designer variable.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.DebugMenu.Dispose(System.Boolean)">
-            <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.DebugMenu.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.PictureBoxExtended">
-            <summary>
-            Inherits from PictureBox; adds Interpolation Mode Setting
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">

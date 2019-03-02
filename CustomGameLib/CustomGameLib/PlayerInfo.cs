@@ -342,6 +342,19 @@ namespace Deltin.CustomGameAutomation
         {
             return IsSlotSpectator(slot) || IsSlotInQueue(slot);
         }
+        /// <summary>
+        /// Returns true if the slot is in one of the teams in the teams flag.
+        /// </summary>
+        /// <param name="slot">Slot to check</param>
+        /// <param name="teams">Team the slot must be in.</param>
+        /// <returns></returns>
+        public static bool IsSlot(int slot, Team teams)
+        {
+            return (teams.HasFlag(Team.Blue) && IsSlotBlue(slot))
+                || (teams.HasFlag(Team.Red) && IsSlotRed(slot))
+                || (teams.HasFlag(Team.Spectator) && IsSlotSpectator(slot))
+                || (teams.HasFlag(Team.Queue) && IsSlotInQueue(slot));
+        }
         #endregion
 
         /// <summary>

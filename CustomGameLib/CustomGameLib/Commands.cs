@@ -441,11 +441,12 @@ namespace Deltin.CustomGameAutomation
             #endregion
 
             #region Profile and Friend Check
-            PlayerIdentity pi = null;
             bool isFriend = false;
+            string name = null;
+            PlayerIdentity pi = null;
 
             // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
-            if (ltd.RegisterProfile || ltd.CheckIfFriend)
+            if (ltd.GetNameAndProfile || ltd.CheckIfFriend)
             {
                 Point openMenuAt = new Point(56, y);
 
@@ -458,7 +459,7 @@ namespace Deltin.CustomGameAutomation
                 // If the Send Friend Request option exists, they are not a friend.
                 isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
 
-                if (ltd.RegisterProfile)
+                if (ltd.GetNameAndProfile)
                 {
                     using (cg.LockHandler.Interactive)
                     {
@@ -468,8 +469,10 @@ namespace Deltin.CustomGameAutomation
                         // Wait for the career profile to load.
                         WaitForCareerProfileToLoad();
 
+                        // Get the player name
+                        name = cg.GetPlayerName();
+
                         // Take a screenshot of the career profile.
-                        cg.UpdateScreen();
                         DirectBitmap careerProfileSnapshot = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
 
                         // Register the player identity.
@@ -492,7 +495,7 @@ namespace Deltin.CustomGameAutomation
             }
             #endregion
 
-            CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), pi, ci, isFriend);
+            CommandData commandData = new CommandData(command, GetChannelFromSeed(seed), ci, isFriend, name, pi);
             if (ltd.Callback != null)
                 ltd.Callback.Invoke(commandData);
             else
@@ -623,10 +626,10 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         /// <param name="command">Command to listen to.</param>
         /// <param name="listen">Should this command be listened to?</param>
-        /// <param name="registerProfile">Should the player who executes this command have their player profile registered?</param>
+        /// <param name="getNameAndProfile">Should the player who executes this command have their player profile registered?</param>
         /// <param name="checkIfFriend">Should the player who executes this command be checked to see if they are a friend?</param>
         /// <param name="callback">Method to be executed when the command is executed.</param>
-        public ListenTo(string command, bool listen, bool registerProfile, bool checkIfFriend, CommandExecuted callback)
+        public ListenTo(string command, bool listen, bool getNameAndProfile, bool checkIfFriend, CommandExecuted callback)
         {
             for (int c = 0; c < command.Length; c++)
             {
@@ -643,7 +646,7 @@ namespace Deltin.CustomGameAutomation
 
             Command = command;
             Listen = listen;
-            RegisterProfile = registerProfile;
+            GetNameAndProfile = getNameAndProfile;
             CheckIfFriend = checkIfFriend;
             Callback = callback;
         }
@@ -666,7 +669,7 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Should the player who executes this command have their profile registered?
         /// </summary>
-        public bool RegisterProfile;
+        public bool GetNameAndProfile;
         /// <summary>
         /// Should the player who executes this command be checked to see if they are a friend?
         /// </summary>
@@ -752,13 +755,14 @@ namespace Deltin.CustomGameAutomation
     /// /// <seealso cref="Commands"/>
     public class CommandData
     {
-        internal CommandData(string command, Channel channel, PlayerIdentity playerIdentity, ChatIdentity chatIdentity, bool isFriend)
+        internal CommandData(string command, Channel channel, ChatIdentity chatIdentity, bool isFriend, string playerName, PlayerIdentity playerIdentity)
         {
             Command = command;
             Channel = channel;
-            PlayerIdentity = playerIdentity;
             ChatIdentity = chatIdentity;
             IsFriend = isFriend;
+            PlayerName = playerName;
+            PlayerIdentity = playerIdentity;
         }
 
         /// <summary>
@@ -772,11 +776,6 @@ namespace Deltin.CustomGameAutomation
         public Channel Channel { get; private set; }
 
         /// <summary>
-        /// The identity of the player that executed the command.
-        /// </summary>
-        public PlayerIdentity PlayerIdentity { get; private set; }
-
-        /// <summary>
         /// The chat identity of the player that executed the command.
         /// </summary>
         public ChatIdentity ChatIdentity { get; private set; }
@@ -785,6 +784,16 @@ namespace Deltin.CustomGameAutomation
         /// Is the player that executed the command a friend?
         /// </summary>
         public bool IsFriend { get; private set; }
+
+        /// <summary>
+        /// The name of the player that executed the command.
+        /// </summary>
+        public string PlayerName { get; private set; }
+
+        /// <summary>
+        /// The identity of the player that executed the command.
+        /// </summary>
+        public PlayerIdentity PlayerIdentity { get; private set; }
     }
 
     /// <summary>

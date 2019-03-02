@@ -14,6 +14,8 @@ namespace Deltin.CustomGameAutomation
 {
     partial class CustomGame
     {
+        private static readonly PlayerNameAlphabet EnglishAlphabet = GenerateAlphabet();
+
         #region Generate Letters
 #pragma warning disable
         /// <summary>
@@ -22,7 +24,7 @@ namespace Deltin.CustomGameAutomation
         /// <param name="letters">Characters to generate.</param>
         /// <returns>An alphabet to be used with <see cref="GetPlayerName(int, PlayerNameAlphabet)"/></returns>
 #pragma warning restore
-        public static PlayerNameAlphabet GenerateAlphabet(string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+        internal static PlayerNameAlphabet GenerateAlphabet(string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
         {
             FontFamily fontFamily = new FontFamily("BigNoodleTooOblique");
             Font font = new Font(fontFamily, 25);
@@ -54,7 +56,7 @@ namespace Deltin.CustomGameAutomation
                         else
                             bmp.SetPixel(x, y, Color.White);
 
-                Bitmap final = cropImage(bmp, GetBounds(bmp));
+                Bitmap final = CropImage(bmp, GetBounds(bmp));
                 bmp.Dispose();
 
                 List<Point> outside = GetOutside(final);
@@ -92,15 +94,10 @@ namespace Deltin.CustomGameAutomation
                     }
 
                 // Get the vital pixels
-                for (int x = 0; x < final.Width; x++)
+                for (int x = 1; x < final.Width - 1; x++)
                     for (int y = 0; y < final.Height; y++)
-                        if (ContainsPixel(final, x, y)
-                            && ((x > 0 && x < final.Width - 1 && ContainsPixel(final, x + 1, y) && ContainsPixel(final, x - 1, y)) 
-                            || (y > 0 && y < final.Height - 1 && ContainsPixel(final, x, y + 1) && ContainsPixel(final, x, y - 1))))
+                        if (ContainsPixel(final, x, y) && ContainsPixel(final, x + 1, y) && ContainsPixel(final, x - 1, y))
                             final.SetPixel(x, y, Color.Blue);
-
-                //if (letter == "D")
-                  //  final.SetPixel(0, final.Height - 1, Color.Blue);
 
                 // Get the length of the letter
                 bool lastPixelState = false;
@@ -116,7 +113,6 @@ namespace Deltin.CustomGameAutomation
                     letterLength = final.Width - 1;
                 letterLengths[l] = letterLength;
 
-                // Do stuff with final
                 generated[l] = final;
             }
 
@@ -157,7 +153,7 @@ namespace Deltin.CustomGameAutomation
             return new Rectangle(xs - 1, ys - 1, width + 3 - xs, height + 3 - ys);
         }
 
-        private static Bitmap cropImage(Image img, Rectangle cropArea)
+        private static Bitmap CropImage(Image img, Rectangle cropArea)
         {
             Bitmap bmpImage = new Bitmap(img);
             return bmpImage.Clone(cropArea, bmpImage.PixelFormat);
@@ -210,33 +206,17 @@ namespace Deltin.CustomGameAutomation
         /// Gets the name of a player.
         /// </summary>
         /// <param name="slot">The slot of the player.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The name of the player.</returns>
-        public string GetPlayerName(int slot, PlayerNameAlphabet alphabet
+        public string GetPlayerName(int slot
 #if DEBUG
-#pragma warning disable
+#pragma warning disable 1573
             , string debugLetters = ""
-#pragma warning restore
+#pragma warning restore 1573
 #endif
             )
         {
             if (!IsSlotValid(slot))
                 throw new InvalidSlotException(slot);
-
-            if (alphabet == null)
-                throw new ArgumentNullException(nameof(alphabet));
-
-            int lineScanFade = 80;
-            int letterCheckFade = 80;
-            float cutoff = .92f;
-            LetterPrioritize[] prioritize = new LetterPrioritize[]
-            {
-                new LetterPrioritize('D', 'O'),
-            };
-            int cy = 131;
-            int xStart = 131;
-            int xEnd = 270;
-            int maxSinceLastLetter = 10;
 
             using (LockHandler.Interactive)
             {
@@ -246,6 +226,51 @@ namespace Deltin.CustomGameAutomation
                     return null;
                 Commands.WaitForCareerProfileToLoad();
 
+                string name = GetPlayerName(
+#if DEBUG
+                    debugLetters
+#endif
+                    );
+
+                GoBack(1);
+
+                return name;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the player when already in the career profile.
+        /// </summary>
+        /// <returns></returns>
+        internal string GetPlayerName(
+#if DEBUG
+#pragma warning disable 1573
+            string debugLetters = ""
+#pragma warning restore 1573
+#endif
+            )
+        {
+#if DEBUG
+            if (debugLetters == null)
+                debugLetters = "";
+#endif
+            int lineScanFade = 80;
+            int letterCheckFade = 80;
+            float cutoff = .92f;
+            int cy = 131;
+            int xStart = 131;
+            int xEnd = 270;
+            int maxSinceLastLetter = 10;
+            Tuple<char, char>[] prioritizeLetter = new Tuple<char, char>[]
+            {
+                new Tuple<char, char>('O', 'D'),
+                new Tuple<char, char>('R', 'A'),
+            };
+
+            using (LockHandler.Interactive)
+            {
+                UpdateScreen();
+
                 string word = string.Empty;
 
                 // Scan a line under the name in the career profile for text.
@@ -254,117 +279,115 @@ namespace Deltin.CustomGameAutomation
                     if (Capture.CompareColor(cx, cy, Colors.WHITE, lineScanFade))
                     {
                         sinceLastLetter = 0;
-                        PlayerNameLetterResult[] results = new PlayerNameLetterResult[alphabet.Length];
-                        for (int i = 0; i < alphabet.Length; i++)
-                        {
-                            List<Point> filledPixels = new List<Point>();
-                            float total = 0;
-                            float match = 0;
-                            bool failed = false;
-                            for (int lx = 0; lx < alphabet.Markups[i].Width && !failed; lx++)
-                                for (int ly = 0; ly < alphabet.Markups[i].Height && !failed; ly++)
-                                {
-                                    PixelType pixelType = GetPixelType(alphabet.Markups[i], lx, ly);
-
-                                    if (pixelType != PixelType.Any)
+                        List<PlayerNameLetterResult> results = new List<PlayerNameLetterResult>();
+                        for (int ax = cx; ax <= cx + 1; ax++)
+                            for (int i = 0; i < EnglishAlphabet.Length; i++)
+                            {
+                                List<Point> filledPixels = new List<Point>();
+                                float total = 0;
+                                float match = 0;
+                                bool failed = false;
+                                for (int lx = 0; lx < EnglishAlphabet.Markups[i].Width && !failed; lx++)
+                                    for (int ly = 0; ly < EnglishAlphabet.Markups[i].Height && !failed; ly++)
                                     {
-                                        int px = cx + lx;
-                                        int py = cy + ly + 2 - alphabet.Markups[i].Height;
-                                        bool pixelFilled = Capture.CompareColor(px, py, Colors.WHITE, letterCheckFade);
+                                        PixelType pixelType = GetPixelType(EnglishAlphabet.Markups[i], lx, ly);
 
-                                        failed = pixelType == PixelType.Required && !pixelFilled;
-                                        if (failed)
-                                            break;
-
-                                        total++;
-                                        if ((pixelFilled && (pixelType == PixelType.Filled || pixelType == PixelType.Required)) || (!pixelFilled && pixelType == PixelType.Empty))
+                                        if (pixelType != PixelType.Any)
                                         {
-                                            match++;
-                                            if (pixelType == PixelType.Filled || pixelType == PixelType.Required)
+                                            int px = ax + lx;
+                                            int py = cy + ly + 2 - EnglishAlphabet.Markups[i].Height;
+                                            bool pixelFilled = Capture.CompareColor(px, py, Colors.WHITE, letterCheckFade);
+
+                                            failed = pixelType == PixelType.Required && !pixelFilled;
+                                            if (failed)
+                                                break;
+
+                                            total++;
+                                            if ((pixelFilled && (pixelType == PixelType.Filled || pixelType == PixelType.Required)) || (!pixelFilled && pixelType == PixelType.Empty))
                                             {
-                                                filledPixels.Add(new Point(lx, ly));
+                                                match++;
+                                                if (pixelType == PixelType.Filled || pixelType == PixelType.Required)
+                                                {
+                                                    filledPixels.Add(new Point(lx, ly));
+                                                    #region DEBUG
+#if DEBUG
+                                                    if (DebugMenu != null)
+                                                        DebugMenu.SetDebugImage(px, py, Color.Green);
+#endif
+                                                    #endregion
+                                                }
                                                 #region DEBUG
 #if DEBUG
-                                                if (DebugMenu != null)
-                                                    DebugMenu.SetDebugImage(px, py, Color.Green);
+                                                else if (DebugMenu != null)
+                                                    DebugMenu.SetDebugImage(px, py, Color.DarkBlue);
 #endif
                                                 #endregion
                                             }
                                             #region DEBUG
 #if DEBUG
                                             else if (DebugMenu != null)
-                                                DebugMenu.SetDebugImage(px, py, Color.DarkBlue);
+                                            {
+                                                if (pixelType == PixelType.Filled)
+                                                    DebugMenu.SetDebugImage(px, py, Color.DarkRed);
+                                                else
+                                                    DebugMenu.SetDebugImage(px, py, Color.Yellow);
+                                            }
 #endif
                                             #endregion
                                         }
-                                        #region DEBUG
-#if DEBUG
-                                        else if (DebugMenu != null)
-                                        {
-                                            if (pixelType == PixelType.Filled)
-                                                DebugMenu.SetDebugImage(px, py, Color.DarkRed);
-                                            else
-                                                DebugMenu.SetDebugImage(px, py, Color.Yellow);
-                                        }
-#endif
-                                        #endregion
                                     }
+
+                                if (!failed)
+                                {
+                                    bool isConnected = PointsAreConnected(filledPixels);
+                                    float result = !isConnected ? 0 : match / total;
+
+                                    results.Add(new PlayerNameLetterResult(EnglishAlphabet.Letters[i], result, (int)total, (int)match, EnglishAlphabet.Markups[i], EnglishAlphabet.LetterLengths[i]));
+                                    #region DEBUG
+#if DEBUG
+                                    Console.Write($"{EnglishAlphabet.Letters[i]} - R: ");
+                                    if (result >= cutoff)
+                                    {
+                                        Console.BackgroundColor = ConsoleColor.DarkGreen;
+                                        Console.Write($"{result}");
+                                        Console.BackgroundColor = ConsoleColor.Black;
+                                    }
+                                    else
+                                        Console.Write($"{result}");
+                                    Console.WriteLine($" T: {total} - M: {match} - C: {isConnected}");
+#endif
+                                    #endregion
                                 }
-
-                            if (!failed)
-                            {
-                                bool isConnected = PointsAreConnected(filledPixels);
-                                float result = !isConnected ? 0 : match / total;
-
-                                results[i] = new PlayerNameLetterResult(alphabet.Letters[i], result, (int)total, (int)match, alphabet.Markups[i], alphabet.LetterLengths[i]);
                                 #region DEBUG
 #if DEBUG
-                                Console.Write($"{alphabet.Letters[i]} - R: ");
-                                if (result >= cutoff)
-                                {
-                                    Console.BackgroundColor = ConsoleColor.DarkGreen;
-                                    Console.Write($"{result}");
-                                    Console.BackgroundColor = ConsoleColor.Black;
-                                }
                                 else
-                                    Console.Write($"{result}");
-                                Console.WriteLine($" T: {total} - M: {match} - C: {isConnected}");
+                                    Console.WriteLine($"{EnglishAlphabet.Letters[i]} vital pixel missing.");
+
+                                if (DebugMenu != null)
+                                    DebugMenu.InvalidateDebugImage();
+
+                                if (debugLetters.Contains(EnglishAlphabet.Letters[i]))
+                                    Console.ReadLine();
+
+                                if (DebugMenu != null)
+                                    DebugMenu.ResetDebugImage();
 #endif
                                 #endregion
                             }
-                            #region DEBUG
-#if DEBUG
-                            else
-                                Console.WriteLine($"{alphabet.Letters[i]} vital pixel missing.");
 
-                            if (DebugMenu != null)
-                                DebugMenu.InvalidateDebugImage();
-
-                            if (debugLetters.Contains(alphabet.Letters[i]))
-                                Console.ReadLine();
-
-                            if (DebugMenu != null)
-                                DebugMenu.ResetDebugImage();
-#endif
-                            #endregion
-                        }
-
-                        PlayerNameLetterResult mostLikely = results.Where(result => result != null && result.Result >= cutoff).OrderByDescending(result => result.Match).ThenByDescending(result => result.Result).FirstOrDefault();
+                        results = results.Where(result => result != null && result.Result >= cutoff).ToList();
+                        PlayerNameLetterResult mostLikely = results.OrderByDescending(result => result.Match).ThenByDescending(result => result.Result).FirstOrDefault();
 
                         if (mostLikely != null)
                         {
-                            for (int p = 0; p < prioritize.Length; p++)
-                                if (mostLikely.Letter == prioritize[p].Letter)
-                                    for (int t = 0; t < prioritize[p].To.Length; t++)
-                                    {
-                                        var to = results.FirstOrDefault(result => result != null && result.Result >= cutoff && result.Letter == prioritize[p].To[t]);
-                                        if (to != null)
-                                        {
-                                            mostLikely = to;
-                                            p = prioritize.Length;
-                                            break;
-                                        }
-                                    }
+                            foreach (var prioritize in prioritizeLetter)
+                                if (mostLikely.Letter == prioritize.Item1)
+                                {
+                                    int toCount = results.Count(r => r.Letter == prioritize.Item2);
+                                    var bestTo = results.OrderByDescending(result => result.Match).FirstOrDefault(result => result.Letter == prioritize.Item2);
+                                    if (toCount == 2 || (bestTo != null && bestTo.Result > mostLikely.Result))
+                                        mostLikely = bestTo;
+                                }
                             #region DEBUG
 #if DEBUG
                             Console.BackgroundColor = ConsoleColor.DarkBlue;
@@ -379,8 +402,6 @@ namespace Deltin.CustomGameAutomation
                     else
                         sinceLastLetter++;
                 } // Line scan
-
-                GoBack(1);
 
                 return word;
             }
@@ -456,7 +477,7 @@ namespace Deltin.CustomGameAutomation
     /// Data for letter scanning that <see cref="CustomGame.GetPlayerName(int, PlayerNameAlphabet)" /> uses. Generated from <see cref="CustomGame.GenerateAlphabet(string)"/>.
     /// </summary>
 #pragma warning restore
-    public class PlayerNameAlphabet : IDisposable
+    internal class PlayerNameAlphabet : IDisposable
     {
         internal Bitmap[] Markups { get; private set; }
         internal string Letters { get; private set; }
@@ -491,17 +512,6 @@ namespace Deltin.CustomGameAutomation
         }
 #pragma warning restore CS1591
 #endif
-    }
-
-    internal class LetterPrioritize
-    {
-        public LetterPrioritize(char letter, params char[] to)
-        {
-            Letter = letter;
-            To = to;
-        }
-        public char Letter { get; private set; }
-        public char[] To { get; private set; }
     }
 
     internal class PlayerNameLetterResult
