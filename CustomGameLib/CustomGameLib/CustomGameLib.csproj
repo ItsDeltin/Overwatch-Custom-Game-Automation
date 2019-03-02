@@ -60,7 +60,9 @@
     <Compile Include="Commands.cs" />
     <Compile Include="CreateOverwatchProcess.cs" />
     <Compile Include="CustomGame.cs" />
-    <Compile Include="DebugMenu.cs" />
+    <Compile Include="DebugMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DebugMenu.Designer.cs">
       <DependentUpon>DebugMenu.cs</DependentUpon>
     </Compile>
@@ -85,6 +87,7 @@
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <EmbeddedResource Include="Resources\BigNoodleTooOblique.ttf" />
     <None Include="Resources\E_ELIMRoundOver.png" />
     <None Include="Resources\MainMenu.png" />
     <None Include="Resources\EscapeMenu.png" />

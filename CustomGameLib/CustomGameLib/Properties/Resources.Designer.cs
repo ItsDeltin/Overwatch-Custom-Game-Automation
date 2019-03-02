@@ -61,6 +61,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] BigNoodleTooOblique {
+            get {
+                object obj = ResourceManager.GetObject("BigNoodleTooOblique", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap D_Easy {

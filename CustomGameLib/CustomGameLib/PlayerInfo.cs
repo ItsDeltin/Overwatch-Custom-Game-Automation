@@ -822,7 +822,7 @@ namespace Deltin.CustomGameAutomation
         /// <returns></returns>
         public bool IsFriend(int slot)
         {
-            return cg.Interact.PeakOption(slot, Markups.REMOVE_FRIEND);
+            return !cg.Interact.PeakOption(slot, Markups.SEND_FRIEND_REQUEST);
         }
     }
 }

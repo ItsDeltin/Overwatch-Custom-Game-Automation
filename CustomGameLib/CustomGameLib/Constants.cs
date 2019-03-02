@@ -337,7 +337,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly DirectBitmap REMOVE_ALL_BOTS     = new DirectBitmap(Resources.O_RemoveAllBots, true);
         public static readonly DirectBitmap VIEW_CAREER_PROFILE = new DirectBitmap(Resources.O_ViewCareerProfile, true);
         public static readonly DirectBitmap SEND_FRIEND_REQUEST = new DirectBitmap(Resources.O_SendFriendRequest, true);
-        public static readonly DirectBitmap REMOVE_FRIEND       = new DirectBitmap(Resources.O_RemoveFriend, true);
+        //public static readonly DirectBitmap REMOVE_FRIEND       = new DirectBitmap(Resources.O_RemoveFriend, true);
 
         // Navigation
         public static readonly DirectBitmap NAV_LOBBY = new DirectBitmap(Resources.N_CreateGame, true);
