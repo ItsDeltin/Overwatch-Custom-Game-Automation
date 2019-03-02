@@ -400,4 +400,13 @@
   <data name="YH_Nepal_Village" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\YH_Nepal_Village.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="CreateGame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreateGame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EscapeMenu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\EscapeMenu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MainMenu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\MainMenu.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

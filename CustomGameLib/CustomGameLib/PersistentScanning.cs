@@ -122,7 +122,7 @@ namespace Deltin.CustomGameAutomation
 
                 Parallel.For(startX, startX + length, (x, loop) =>
                 {
-                    if (Capture.CompareTo(new Rectangle(x, y, Markups.ROUND_OVER.Width, Markups.ROUND_OVER.Height), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
+                    if (Capture.CompareTo(new Point(x, y), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
                     {
                         isOver = true;
                         loop.Break();

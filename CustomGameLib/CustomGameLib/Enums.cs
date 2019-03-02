@@ -535,6 +535,25 @@ namespace Deltin.CustomGameAutomation
         Brawl_MysteryHeroes = 16, Brawl_NoLimits = 17, Brawl_TotalMayhem = 18
 #pragma warning restore CS1591
     }
+
+    /// <summary>
+    /// The state of Overwatch.
+    /// </summary>
+    public enum OverwatchState
+    {
+        /// <summary>
+        /// Overwatch is ready to recieve commands from CustomGame functions.
+        /// </summary>
+        Ready,
+        /// <summary>
+        /// Overwatch disconnected.
+        /// </summary>
+        Disconnected,
+        /// <summary>
+        /// Overwatch is in the main menu.
+        /// </summary>
+        MainMenu
+    }
     #endregion
 
     #region Internal Enums

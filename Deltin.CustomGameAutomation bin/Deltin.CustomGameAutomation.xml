@@ -603,6 +603,12 @@
             Starts the game when waiting for players.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.Reset">
+            <summary>
+            Resets the executing position in Overwatch.
+            </summary>
+            <returns>The state of Overwatch.</returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.SetHeroRoster(Deltin.CustomGameAutomation.ToggleAction,Deltin.CustomGameAutomation.Team,Deltin.CustomGameAutomation.Hero[])">
             <summary>
             Toggles what heroes can be selected.
@@ -2020,6 +2026,26 @@
             </summary>
             <seealso cref="M:Deltin.CustomGameAutomation.Settings.LoadPreset(Deltin.CustomGameAutomation.DefaultPreset)"/>
         </member>
+        <member name="T:Deltin.CustomGameAutomation.OverwatchState">
+            <summary>
+            The state of Overwatch.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OverwatchState.Ready">
+            <summary>
+            Overwatch is ready to recieve commands from CustomGame functions.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OverwatchState.Disconnected">
+            <summary>
+            Overwatch disconnected.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.OverwatchState.MainMenu">
+            <summary>
+            Overwatch is in the main menu.
+            </summary>
+        </member>
         <member name="T:Deltin.CustomGameAutomation.InvalidSlotException">
             <summary>
             Thrown when slot is invalid or out of range.
@@ -2080,6 +2106,21 @@
             Throws Overwatch closed exception.
             </summary>
             <param name="message">Message to display.</param>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.UnknownOverwatchStateException">
+            <summary>
+            Thrown if Overwatch is in an unknown game state.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.UnknownOverwatchStateException.#ctor(System.String)">
+            <summary>
+            Throws unkown game state exception.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.UnknownOverwatchStateException.#ctor">
+            <summary>
+            Throws unkown game state exception.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.PlayerNameAlphabet">
             <summary>
@@ -2615,6 +2656,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.CreateGame">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.doomfist_markup">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
@@ -2641,6 +2687,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Eichenwalde_Halloween">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.EscapeMenu">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2778,6 +2829,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.lucio_markup">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.MainMenu">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>

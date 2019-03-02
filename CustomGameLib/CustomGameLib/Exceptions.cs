@@ -80,4 +80,20 @@ namespace Deltin.CustomGameAutomation
         /// <param name="message">Message to display.</param>
         public OverwatchClosedException(string message) : base(message) { }
     }
+
+    /// <summary>
+    /// Thrown if Overwatch is in an unknown game state.
+    /// </summary>
+    public class UnknownOverwatchStateException : Exception
+    {
+        /// <summary>
+        /// Throws unkown game state exception.
+        /// </summary>
+        public UnknownOverwatchStateException(string message) : base(message) { }
+
+        /// <summary>
+        /// Throws unkown game state exception.
+        /// </summary>
+        public UnknownOverwatchStateException() : base("Could not reset, unkown game state.") { }
+    }
 }

@@ -213,6 +213,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap CreateGame {
+            get {
+                object obj = ResourceManager.GetObject("CreateGame", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap doomfist_markup {
             get {
                 object obj = ResourceManager.GetObject("doomfist_markup", resourceCulture);
@@ -266,6 +276,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         public static System.Drawing.Bitmap Eichenwalde_Halloween {
             get {
                 object obj = ResourceManager.GetObject("Eichenwalde_Halloween", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap EscapeMenu {
+            get {
+                object obj = ResourceManager.GetObject("EscapeMenu", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -517,6 +537,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         public static System.Drawing.Bitmap lucio_markup {
             get {
                 object obj = ResourceManager.GetObject("lucio_markup", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap MainMenu {
+            get {
+                object obj = ResourceManager.GetObject("MainMenu", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

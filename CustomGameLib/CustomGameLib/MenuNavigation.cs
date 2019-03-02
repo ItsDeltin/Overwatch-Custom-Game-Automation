@@ -18,7 +18,7 @@ namespace Deltin.CustomGameAutomation
                 Activate();
                 Thread.Sleep(100);
                 KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
-                Thread.Sleep(1000);
+                Thread.Sleep(Timing.LOBBY_FADE);
             }
 
             //ResetMouse();
@@ -116,6 +116,59 @@ namespace Deltin.CustomGameAutomation
             using (LockHandler.Interactive)
             {
                 LeftClick(Points.LOBBY_START_FROM_WAITING_FOR_PLAYERS, 1000);
+            }
+        }
+
+        /// <summary>
+        /// Resets the executing position in Overwatch.
+        /// </summary>
+        /// <returns>The state of Overwatch.</returns>
+        public OverwatchState Reset()     
+        {
+            using (LockHandler.Interactive)
+            {
+                Chat.CloseChat();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    UpdateScreen();
+                    // Check if Ovewratch is disconnected.
+                    if (IsDisconnected())
+                    {
+                        return OverwatchState.Disconnected;
+                    }
+
+                    // Check if Overwatch is in the main menu
+                    if (Capture.CompareTo(Points.LOBBY_NAV_MAINMENU, Markups.NAV_MAINMENU, 50, 95, DBCompareFlags.IgnoreBlack))
+                    {
+                        // Overwatch is in the main menu.
+                        if (OpenChatIsDefault)
+                            Chat.OpenChat();
+                        return OverwatchState.MainMenu;
+                    }
+                    
+                    // Check if Overwatch is in the escape menu.
+                    if (Capture.CompareTo(Points.LOBBY_NAV_ESCAPEMENU, Markups.NAV_ESCAPEMENU, 50, 95, DBCompareFlags.IgnoreBlack))
+                    {
+                        // Overwatch is in the escape menu.
+                        LeftClick(468, 284, Timing.LOBBY_FADE);
+                        UpdateScreen();
+                    }
+
+                    // Check if Overwatch is in the custom game menu.
+                    if (Capture.CompareTo(Points.LOBBY_NAV_CREATEGAME, Markups.NAV_LOBBY, new int[] { 152, 149, 151 }, 40, 95))
+                    {
+                        // Overwatch is in the custom game menu.
+                        if (OpenChatIsDefault)
+                            Chat.OpenChat();
+                        return OverwatchState.Ready;
+                    }
+
+                    KeyPress(Keys.Escape);
+                    Thread.Sleep(500);
+                    Activate();
+                }
+                throw new UnknownOverwatchStateException();
             }
         }
 

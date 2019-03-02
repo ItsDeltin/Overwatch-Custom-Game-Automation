@@ -111,6 +111,9 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP = new Point(703, 51);
         public static readonly Point LOBBY_INVITE_PLAYERS_TO_GROUP_COMPARE = new Point(703, 40);
         public static readonly Point LOBBY_CUSTOM_GAME_INFO = new Point(119, 180);
+        public static readonly Point LOBBY_NAV_CREATEGAME = new Point(48, 107);
+        public static readonly Point LOBBY_NAV_ESCAPEMENU = new Point(310, 60);
+        public static readonly Point LOBBY_NAV_MAINMENU = new Point(48, 50);
 
         public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
 
@@ -335,6 +338,10 @@ namespace Deltin.CustomGameAutomation
         public static readonly DirectBitmap SEND_FRIEND_REQUEST = new DirectBitmap(Resources.send_friend_request, true);
         public static readonly DirectBitmap REMOVE_FRIEND       = new DirectBitmap(Resources.remove_friend, true);
 
+        public static readonly DirectBitmap NAV_LOBBY = new DirectBitmap(Resources.CreateGame, true);
+        public static readonly DirectBitmap NAV_ESCAPEMENU = new DirectBitmap(Resources.EscapeMenu, true);
+        public static readonly DirectBitmap NAV_MAINMENU = new DirectBitmap(Resources.MainMenu, true);
+
         public static readonly DirectBitmap ROUND_OVER = new DirectBitmap(Resources.round_over_markup, true);
 
         public static readonly DirectBitmap[] DIFFICULTY_MARKUPS = new DirectBitmap[]
@@ -431,6 +438,7 @@ namespace Deltin.CustomGameAutomation
     internal static class Timing
     {
         public static readonly int OPTION_MENU = 250;
+        public static readonly int LOBBY_FADE = 1000;
     }
 
     internal class MapMarkup

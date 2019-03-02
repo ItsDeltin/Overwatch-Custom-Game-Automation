@@ -316,8 +316,8 @@ namespace Deltin.CustomGameAutomation
                 for (int y = 0; y < other.Height && !failed; y++)
                 {
                     Color pixelColor = other.GetPixel(x, y);
-                    if ((flags.HasFlag(DBCompareFlags.IgnoreBlack) && pixelColor == Color.Black)
-                    || (flags.HasFlag(DBCompareFlags.IgnoreWhite) && pixelColor == Color.White))
+                    if ((flags.HasFlag(DBCompareFlags.IgnoreBlack) && pixelColor == Color.FromArgb(255, 0, 0, 0))
+                    || (flags.HasFlag(DBCompareFlags.IgnoreWhite) && pixelColor == Color.FromArgb(255, 255, 255, 255)))
                         continue;
                     else if (!CompareColor(x + scanAt.X, y + scanAt.Y, pixelColor.ToInt(), fade))
                         pixelsFailed++;
@@ -342,19 +342,17 @@ namespace Deltin.CustomGameAutomation
             return CompareTo(new Point(0, 0), other, fade, min, flags);
         }
 
-        internal bool CompareTo(Rectangle rectangle, DirectBitmap markup, int[] blackColor, int fade, double min)
+        internal bool CompareTo(Point scanAt, DirectBitmap markup, int[] blackColor, int fade, double min)
         {
-            if (rectangle.Width != markup.Width || rectangle.Height != markup.Height)
-                return false;
 
-            int maxFail = (int)((double)rectangle.Width * rectangle.Height * ((100 - min) / 100));
+            int maxFail = (int)((double)markup.Width * markup.Height * ((100 - min) / 100));
             int pixelsFailed = 0;
             bool failed = false;
 
-            for (int x = 0; x < rectangle.Width && !failed; x++)
-                for (int y = 0; y < rectangle.Height && !failed; y++)
+            for (int x = 0; x < markup.Width && !failed; x++)
+                for (int y = 0; y < markup.Height && !failed; y++)
                 {
-                    if (markup.GetPixel(x, y) == Color.FromArgb(0, 0, 0) == CompareColor(rectangle.X + x, rectangle.Y + y, blackColor, fade) == false)
+                    if (markup.GetPixel(x, y) == Color.FromArgb(0, 0, 0) == CompareColor(scanAt.X + x, scanAt.Y + y, blackColor, fade) == false)
                         pixelsFailed++;
 
                     failed = pixelsFailed >= maxFail;
