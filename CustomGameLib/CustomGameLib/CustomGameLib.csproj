@@ -85,6 +85,7 @@
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <None Include="Resources\E_ELIMRoundOver.png" />
     <None Include="Resources\MainMenu.png" />
     <None Include="Resources\EscapeMenu.png" />
     <None Include="Resources\CreateGame.png" />

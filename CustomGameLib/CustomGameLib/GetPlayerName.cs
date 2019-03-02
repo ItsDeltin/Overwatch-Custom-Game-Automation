@@ -99,6 +99,9 @@ namespace Deltin.CustomGameAutomation
                         if (ContainsPixel(final, x, y) && ContainsPixel(final, x + 1, y) && ContainsPixel(final, x - 1, y))
                             final.SetPixel(x, y, Color.Blue);
 
+                if (letters[l] == 'D')
+                    final.SetPixel(0, final.Height - 1, Color.Blue);
+
                 // Get the length of the letter
                 bool lastPixelState = false;
                 int letterLength = 0;

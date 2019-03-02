@@ -120,14 +120,19 @@ namespace Deltin.CustomGameAutomation
 
                 bool isOver = false;
 
+                // Check for the KOTH round over animation.
                 Parallel.For(startX, startX + length, (x, loop) =>
                 {
-                    if (Capture.CompareTo(new Point(x, y), Markups.ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
+                    if (Capture.CompareTo(new Point(x, y), Markups.KOTH_ROUND_OVER, new int[] { 190, 185, 188 }, 70, 90))
                     {
                         isOver = true;
                         loop.Break();
                     }
                 });
+
+                // Check for the elimination round over animation.
+                if (!isOver)
+                    isOver = Capture.CompareTo(Points.LOBBY_ELIMINATION_ROUND_OVER, Markups.ELIM_ROUND_OVER, 30, 95, DBCompareFlags.IgnoreBlack);
 
                 if (isOver && !roundOverScan.Executed)
                 {

@@ -2581,147 +2581,172 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ana_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.D_Easy">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Antarctica">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.D_Hard">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.AntarcticaWinter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.D_Medium">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ashe_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.E_ELIMRoundOver">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ayutthaya">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.E_KOTHRoundOver">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.bastion_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Ana">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlackForest">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Ashe">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlackForestWinter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Bastion">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlizzardWorld">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Brigitte">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BlizzardWorldWinter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Doomfist">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.brigitte_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Dva">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Busan">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Gengi">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Castillo">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Hanzo">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ChateauGuillard">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Junkrat">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.ChateauGuillard_Halloween">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Lucio">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.CreateGame">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_McCree">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.doomfist_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Mei">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Dorado">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Mercy">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.dva_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Moira">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.easy_difficulty">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Orisa">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Eichenwalde">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Pharah">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Eichenwalde_Halloween">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Reaper">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.EscapeMenu">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Reinhardt">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.gengi_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Roadhog">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Gibraltar">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Soldier76">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hanamura">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Sombra">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.HanamuraWinter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Symmetra">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.hanzo_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Torbjorn">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.hard_difficulty">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Tracer">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Widowmaker">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Winston">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Wreckingball">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Zarya">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Zenyatta">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2753,337 +2778,317 @@
             recieve_h [rest of string was truncated]&quot;;.
              </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hollywood">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Antarctica">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Hollywood_Halloween">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_AntarcticaWinter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.HorizonLunarColony">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Ayutthaya">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_BlackForest">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Lighthouse">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_BlackForestWinter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Ruins">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_BlizzardWorld">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Ilios_Well">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_BlizzardWorldWinter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Junkertown">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Busan">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.junkrat_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Castillo">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.KingsRow">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_ChateauGuillard">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.KingsRowWinter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_ChateauGuillard_Halloween">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Dorado">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_ControlCenter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Eichenwalde">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_Garden">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Eichenwalde_Halloween">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Lijiang_NightMarket">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Gibraltar">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.lucio_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Hanamura">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.MainMenu">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_HanamuraWinter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.mccree_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Hollywood">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.medium_difficulty">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Hollywood_Halloween">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.mei_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_HorizonLunarColony">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.mercy_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Ilios">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.moira_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Ilios_Lighthouse">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Necropolis">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Ilios_Ruins">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Ilios_Well">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Sanctum">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Junkertown">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Shrine">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_KingsRow">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Nepal_Village">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_KingsRowWinter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Numbani">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Lijiang">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Lijiang_ControlCenter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_CityCenter">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Lijiang_Garden">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_Gardens">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Lijiang_NightMarket">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Oasis_University">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Necropolis">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.orisa_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Nepal">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Petra">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Nepal_Sanctum">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.pharah_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Nepal_Shrine">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.put_in_queue">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Nepal_Village">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.reaper_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Numbani">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.reinhardt_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Oasis">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.remove_all_bots">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Oasis_CityCenter">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.remove_friend">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Oasis_Gardens">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.remove_from_game">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Oasis_University">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Rialto">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Petra">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.roadhog_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Rialto">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.round_over_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_Route66">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.Route66">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_TempleOfAnubis">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.send_friend_request">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_VolskayaIndustries">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.soldier_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.M_YH_Nepal_Village">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.sombra_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.N_CreateGame">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.spectate_all">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.N_EscapeMenu">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.spectate_blue_only">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.N_MainMenu">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.spectate_red_only">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_PutInQueue">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_blue">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_RemoveAllBots">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_neutral">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_RemoveFriend">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_red">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_RemoveFromGame">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.swap_to_spectators">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SendFriendRequest">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.symmetra_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SpectateAll">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.TempleOfAnubis">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SpectateBlueOnly">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.torbjorn_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SpectateRedOnly">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.tracer_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SwapToBlue">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.view_career_profile">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SwapToNeutral">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.VolskayaIndustries">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SwapToRed">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.widowmaker_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_SwapToSpectators">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.winston_markup">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.wreckingball_markup">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.YH_Nepal_Village">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.zarya_markup">
-            <summary>
-              Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.zenyatta_markup">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.O_ViewCareerProfile">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
