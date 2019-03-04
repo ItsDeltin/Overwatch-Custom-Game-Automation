@@ -226,7 +226,7 @@ namespace Deltin.CustomGameAutomation
                         int percent = (int)(Convert.ToDouble(success) / Convert.ToDouble(total) * 100);
                         percentResults.Add(percent);
                     }
-                    optionLocations.Add(new Point(xStart + 12, y));
+                    optionLocations.Add(new Point(xStart, y));
                 }
 
                 Point optionLocation = Point.Empty;
