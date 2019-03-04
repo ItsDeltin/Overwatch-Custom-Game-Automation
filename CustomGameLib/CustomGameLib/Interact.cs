@@ -173,13 +173,14 @@ namespace Deltin.CustomGameAutomation
                 List<int> percentResults = new List<int>();
                 List<Point> optionLocations = new List<Point>();
 
+                int optionIndex = 0;
                 for (int y = yStart; optionHeight < y && y < cg.Capture.Height - optionHeight; y+=yIncrement)
                 {
                     int[] textcolor = new int[] { 169, 169, 169 };
-                    int fade = 80;
+                    int fade = 90;
 
                     bool oob = false;
-                    while (!(oob = optionHeight > y || y > cg.Capture.Height - optionHeight) && !Capture.CompareColor(xStart, y + (menuPointsDown ? 1 : -optionHeight), textcolor, fade))
+                    while (!(oob = optionHeight > y || y > cg.Capture.Height - optionHeight) && !Capture.CompareColor(xStart, y + (menuPointsDown ? 1 : -optionHeight), textcolor, fade + 20))
                         y+=yIncrement;
 
                     // If the y is out of range of the bitmap, stop scanning the options.
@@ -199,11 +200,9 @@ namespace Deltin.CustomGameAutomation
                                 else
                                     work.SetPixel(xi, yi, Color.White);
                             }
+                        //for (int index = 0; System.IO.File.Exists(saveMarkupTo = $@"{saveMarkupsToFolder}Option Markup-{index}.png"); index++);
 
-                        string saveMarkupTo = "";
-                        for (int index = 0; System.IO.File.Exists(saveMarkupTo = $@"{saveMarkupsToFolder}Option Markup-{index}.png"); index++);
-
-                        work.Save(saveMarkupTo);
+                        work.Save($@"{saveMarkupsToFolder}Option Markup-{optionIndex}.png");
                         work.Dispose();
                     }
 
@@ -227,6 +226,7 @@ namespace Deltin.CustomGameAutomation
                         percentResults.Add(percent);
                     }
                     optionLocations.Add(new Point(xStart, y));
+                    optionIndex++;
                 }
 
                 Point optionLocation = Point.Empty;
@@ -234,7 +234,7 @@ namespace Deltin.CustomGameAutomation
                 if (markup != null && percentResults.Count > 0)
                 {
                     int maxpercent = percentResults.IndexOf(percentResults.Max());
-                    if (percentResults[maxpercent] > 70)
+                    if (percentResults[maxpercent] > 75)
                         optionLocation = optionLocations[maxpercent];
                 }
 
