@@ -111,7 +111,7 @@ namespace Deltin.CustomGameAutomation
             cg.UpdateScreen();
 
             // Tests for the blue outline for the first option selection.
-            if (Capture.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 5))
+            if (Capture.CompareColor(point.X + 12, point.Y + 9, new int[] { 75, 106, 120 }, 20))
                 return true;
 
             // Tests for the border of the option menu for right/left-up
