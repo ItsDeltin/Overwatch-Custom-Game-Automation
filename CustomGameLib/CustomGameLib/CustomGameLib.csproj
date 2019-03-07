@@ -85,82 +85,104 @@
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <None Include="Resources\N_MainMenu.png" />
+    <None Include="Resources\N_EscapeMenu.png" />
+    <None Include="Resources\N_CreateGame.png" />
+    <None Include="Resources\M_YH_Nepal_Village.png" />
+    <None Include="Resources\M_VolskayaIndustries.png" />
+    <None Include="Resources\M_TempleOfAnubis.png" />
+    <None Include="Resources\M_Route66.png" />
+    <None Include="Resources\M_Rialto.png" />
+    <None Include="Resources\M_Petra.png" />
+    <None Include="Resources\M_Oasis_University.png" />
+    <None Include="Resources\M_Oasis_Gardens.png" />
+    <None Include="Resources\M_Oasis_CityCenter.png" />
+    <None Include="Resources\M_Oasis.png" />
+    <None Include="Resources\M_Numbani.png" />
+    <None Include="Resources\M_Nepal_Village.png" />
+    <None Include="Resources\M_Nepal_Shrine.png" />
+    <None Include="Resources\M_Nepal_Sanctum.png" />
+    <None Include="Resources\M_Nepal.png" />
+    <None Include="Resources\M_Necropolis.png" />
+    <None Include="Resources\M_Lijiang_NightMarket.png" />
+    <None Include="Resources\M_Lijiang_Garden.png" />
+    <None Include="Resources\M_Lijiang_ControlCenter.png" />
+    <None Include="Resources\M_Lijiang.png" />
+    <None Include="Resources\M_KingsRowWinter.png" />
+    <None Include="Resources\M_KingsRow.png" />
+    <None Include="Resources\M_Junkertown.png" />
+    <None Include="Resources\M_Ilios_Well.png" />
+    <None Include="Resources\M_Ilios_Ruins.png" />
+    <None Include="Resources\M_Ilios_Lighthouse.png" />
+    <None Include="Resources\M_Ilios.png" />
+    <None Include="Resources\M_HorizonLunarColony.png" />
+    <None Include="Resources\M_Hollywood_Halloween.png" />
+    <None Include="Resources\M_Hollywood.png" />
+    <None Include="Resources\M_HanamuraWinter.png" />
+    <None Include="Resources\M_Hanamura.png" />
+    <None Include="Resources\M_Gibraltar.png" />
+    <None Include="Resources\M_Eichenwalde_Halloween.png" />
+    <None Include="Resources\M_Eichenwalde.png" />
+    <None Include="Resources\M_Dorado.png" />
+    <None Include="Resources\M_ChateauGuillard_Halloween.png" />
+    <None Include="Resources\M_ChateauGuillard.png" />
+    <None Include="Resources\M_Castillo.png" />
+    <None Include="Resources\M_Busan.png" />
+    <None Include="Resources\M_BlizzardWorldWinter.png" />
+    <None Include="Resources\M_BlizzardWorld.png" />
+    <None Include="Resources\M_BlackForestWinter.png" />
+    <None Include="Resources\M_BlackForest.png" />
+    <None Include="Resources\M_Ayutthaya.png" />
+    <None Include="Resources\M_AntarcticaWinter.png" />
+    <None Include="Resources\M_Antarctica.png" />
+    <None Include="Resources\H_Zenyatta.png" />
+    <None Include="Resources\H_Zarya.png" />
+    <None Include="Resources\H_WreckingBall.png" />
+    <None Include="Resources\H_Winston.png" />
+    <None Include="Resources\H_Widowmaker.png" />
+    <None Include="Resources\H_Tracer.png" />
+    <None Include="Resources\H_Torbjorn.png" />
+    <None Include="Resources\H_Symmetra.png" />
+    <None Include="Resources\H_Sombra.png" />
+    <None Include="Resources\H_Soldier76.png" />
+    <None Include="Resources\H_Roadhog.png" />
+    <None Include="Resources\H_Reinhardt.png" />
+    <None Include="Resources\H_Reaper.png" />
+    <None Include="Resources\H_Pharah.png" />
+    <None Include="Resources\H_Orisa.png" />
+    <None Include="Resources\H_Moira.png" />
+    <None Include="Resources\H_Mercy.png" />
+    <None Include="Resources\H_Mei.png" />
+    <None Include="Resources\H_McCree.png" />
+    <None Include="Resources\H_Lucio.png" />
+    <None Include="Resources\H_Junkrat.png" />
+    <None Include="Resources\H_Hanzo.png" />
+    <None Include="Resources\H_Gengi.png" />
+    <None Include="Resources\H_Dva.png" />
+    <None Include="Resources\H_Doomfist.png" />
+    <None Include="Resources\H_Brigitte.png" />
+    <None Include="Resources\H_Bastion.png" />
+    <None Include="Resources\H_Ashe.png" />
+    <None Include="Resources\H_Ana.png" />
+    <None Include="Resources\E_KOTHRoundOver.png" />
+    <None Include="Resources\D_Medium.png" />
+    <None Include="Resources\D_Hard.png" />
+    <None Include="Resources\D_Easy.png" />
+    <None Include="Resources\O_ViewCareerProfile.png" />
+    <None Include="Resources\O_SwapToSpectators.png" />
+    <None Include="Resources\O_SwapToNeutral.png" />
+    <None Include="Resources\O_SpectateRedOnly.png" />
+    <None Include="Resources\O_SpectateBlueOnly.png" />
+    <None Include="Resources\O_SpectateAll.png" />
+    <None Include="Resources\O_SendFriendRequest.png" />
+    <None Include="Resources\O_RemoveFromGame.png" />
+    <None Include="Resources\O_RemoveFriend.png" />
+    <None Include="Resources\O_RemoveAllBots.png" />
+    <None Include="Resources\O_PutInQueue.png" />
+    <None Include="Resources\O_SwapToRed.png" />
+    <None Include="Resources\O_SwapToBlue.png" />
     <EmbeddedResource Include="Resources\BigNoodleTooOblique.ttf" />
     <None Include="Resources\E_ELIMRoundOver.png" />
-    <None Include="Resources\MainMenu.png" />
-    <None Include="Resources\EscapeMenu.png" />
-    <None Include="Resources\CreateGame.png" />
-    <None Include="Resources\YH_Nepal_Village.png" />
-    <None Include="Resources\KingsRowWinter.png" />
-    <None Include="Resources\HanamuraWinter.png" />
-    <None Include="Resources\BlizzardWorldWinter.png" />
-    <None Include="Resources\AntarcticaWinter.png" />
-    <None Include="Resources\BlackForestWinter.png" />
-    <None Include="Resources\roundover.png" />
-    <None Include="Resources\ashe_markup.png" />
-    <None Include="Resources\Oasis_University.png" />
-    <None Include="Resources\Oasis_Gardens.png" />
-    <None Include="Resources\Oasis_CityCenter.png" />
-    <None Include="Resources\Oasis.png" />
-    <None Include="Resources\Numbani.png" />
-    <None Include="Resources\Nepal_Village.png" />
-    <None Include="Resources\Nepal_Shrine.png" />
-    <None Include="Resources\Nepal_Sanctum.png" />
-    <None Include="Resources\Nepal.png" />
-    <None Include="Resources\Necropolis.png" />
-    <None Include="Resources\Lijiang_NightMarket.png" />
-    <None Include="Resources\Lijiang_Garden.png" />
-    <None Include="Resources\Lijiang_ControlCenter.png" />
-    <None Include="Resources\Lijiang.png" />
-    <None Include="Resources\KingsRow.png" />
-    <None Include="Resources\Junkertown.png" />
-    <None Include="Resources\Ilios_Well.png" />
-    <None Include="Resources\Ilios_Ruins.png" />
-    <None Include="Resources\Ilios_Lighthouse.png" />
-    <None Include="Resources\Ilios.png" />
-    <None Include="Resources\HorizonLunarColony.png" />
-    <None Include="Resources\Hollywood_Halloween.png" />
-    <None Include="Resources\Hollywood.png" />
-    <None Include="Resources\Hanamura.png" />
-    <None Include="Resources\Gibraltar.png" />
-    <None Include="Resources\Eichenwalde_Halloween.png" />
-    <None Include="Resources\Eichenwalde.png" />
-    <None Include="Resources\Dorado.png" />
-    <None Include="Resources\ChateauGuillard_Halloween.png" />
-    <None Include="Resources\ChateauGuillard.png" />
-    <None Include="Resources\Castillo.png" />
-    <None Include="Resources\Busan.png" />
-    <None Include="Resources\BlizzardWorld.png" />
-    <None Include="Resources\BlackForest.png" />
-    <None Include="Resources\Ayutthaya.png" />
-    <None Include="Resources\Antarctica.png" />
-    <None Include="Resources\VolskayaIndustries.png" />
-    <None Include="Resources\TempleOfAnubis.png" />
-    <None Include="Resources\Route66.png" />
-    <None Include="Resources\Rialto.png" />
-    <None Include="Resources\Petra.png" />
-    <None Include="Resources\send_friend_request.png" />
-    <None Include="Resources\remove_friend.png" />
-    <None Include="Resources\wreckingball_markup.png" />
-    <None Include="Resources\view_career_profile.png" />
-    <None Include="Resources\winston_markup.png" />
-    <None Include="Resources\widowmaker_markup.png" />
-    <None Include="Resources\tracer_markup.png" />
-    <None Include="Resources\symmetra_markup.png" />
-    <None Include="Resources\reinhardt_markup.png" />
-    <None Include="Resources\pharah_markup.png" />
-    <None Include="Resources\orisa_markup.png" />
-    <None Include="Resources\moira_markup.png" />
-    <None Include="Resources\mercy_markup.png" />
-    <None Include="Resources\reaper_markup.png" />
-    <None Include="Resources\mei_markup.png" />
-    <None Include="Resources\mccree_markup.png" />
-    <None Include="Resources\zarya_markup.png" />
-    <None Include="Resources\torbjorn_markup.png" />
-    <None Include="Resources\sombra_markup.png" />
-    <None Include="Resources\soldier_markup.png" />
-    <None Include="Resources\roadhog_markup.png" />
-    <None Include="Resources\zenyatta_markup.png" />
     <None Include="ImageComments\AI.cs\EditAIDifficulty.xcf" />
     <None Include="ImageComments\AI.cs\EditAIHero.xcf" />
     <None Include="ImageComments\GetInfo.cs\DeadPlayers.xcf" />
@@ -189,15 +211,6 @@
     <Content Include="ImageComments\Interact.cs\OptionSelect.png" />
     <Content Include="ImageComments\HeroSettings.cs\Column.png" />
     <Content Include="ImageComments\HeroSettings.cs\SettingType.png" />
-    <None Include="Resources\ana_markup.png" />
-    <None Include="Resources\bastion_markup.png" />
-    <None Include="Resources\lucio_markup.png" />
-    <None Include="Resources\doomfist_markup.png" />
-    <None Include="Resources\dva_markup.png" />
-    <None Include="Resources\gengi_markup.png" />
-    <None Include="Resources\hanzo_markup.png" />
-    <None Include="Resources\junkrat_markup.png" />
-    <None Include="Resources\brigitte_markup.png" />
     <Compile Include="MenuNavigation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HeroSettings.cs" />
@@ -212,45 +225,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\put_in_queue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\remove_from_game.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\spectate_all.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\spectate_blue_only.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\spectate_red_only.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\swap_to_neutral_team.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\swap_to_spectators.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\swap_to_blue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\swap_to_red.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\remove_all_bots.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\easy_difficulty.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\hard_difficulty.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\medium_difficulty.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ImageComments\Chat.cs\" />

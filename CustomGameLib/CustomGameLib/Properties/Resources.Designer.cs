@@ -71,6 +71,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] BigNoodleTooOblique1 {
+            get {
+                object obj = ResourceManager.GetObject("BigNoodleTooOblique1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap D_Easy {
@@ -383,9 +393,9 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap H_Wreckingball {
+        public static System.Drawing.Bitmap H_WreckingBall {
             get {
-                object obj = ResourceManager.GetObject("H_Wreckingball", resourceCulture);
+                object obj = ResourceManager.GetObject("H_WreckingBall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -438,6 +448,37 @@ namespace Deltin.CustomGameAutomation.Properties {
         public static string hero_settings {
             get {
                 return ResourceManager.GetString("hero_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -General
+        ///
+        ///ability_cooldown_time value
+        ///quick_melee toggle
+        ///ultimate_ability toggle
+        ///ultimate_generation value
+        ///ultimate_generation_combat value
+        ///ultimate_generation_passive value
+        ///spawn_with_ultimate_ready toggle
+        ///ultimate_duration value
+        ///infinite_ultimate_duration toggle
+        ///
+        ///damage_dealt value
+        ///damage_recieved value
+        ///healing_dealt value
+        ///healing_recieved value
+        ///health value
+        ///jump_vertical_speed value
+        ///movement_gravity value
+        ///movement_speed value
+        ///projectile_gravity value
+        ///projectile_speed value
+        ///recieve_h [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string hero_settings1 {
+            get {
+                return ResourceManager.GetString("hero_settings1", resourceCulture);
             }
         }
         

@@ -2586,6 +2586,11 @@
               Looks up a localized resource of type System.Byte[].
             </summary>
         </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.BigNoodleTooOblique1">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.D_Easy">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
@@ -2741,7 +2746,7 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
-        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_Wreckingball">
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.H_WreckingBall">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
@@ -2757,6 +2762,33 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.hero_settings">
+             <summary>
+               Looks up a localized string similar to -General
+            
+            ability_cooldown_time value
+            quick_melee toggle
+            ultimate_ability toggle
+            ultimate_generation value
+            ultimate_generation_combat value
+            ultimate_generation_passive value
+            spawn_with_ultimate_ready toggle
+            ultimate_duration value
+            infinite_ultimate_duration toggle
+            
+            damage_dealt value
+            damage_recieved value
+            healing_dealt value
+            healing_recieved value
+            health value
+            jump_vertical_speed value
+            movement_gravity value
+            movement_speed value
+            projectile_gravity value
+            projectile_speed value
+            recieve_h [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.hero_settings1">
              <summary>
                Looks up a localized string similar to -General
             

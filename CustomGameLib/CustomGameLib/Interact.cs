@@ -156,6 +156,8 @@ namespace Deltin.CustomGameAutomation
                     optionWidth = 79, // The width of the option.
                     optionHeight = 6, // The height of the option.
                     yIncrement = 1; // Pixel distance between options.
+                int[] textcolor = new int[] { 169, 169, 169 };
+                int fade = 80;
 
                 bool menuPointsDown = MenuPointsDown(scanLocation);
 
@@ -170,15 +172,11 @@ namespace Deltin.CustomGameAutomation
                 }
 
                 cg.UpdateScreen();
-                List<int> percentResults = new List<int>();
-                List<Point> optionLocations = new List<Point>();
+                var options = new List<Tuple<Point, int>>();
 
                 int optionIndex = 0;
                 for (int y = yStart; optionHeight < y && y < cg.Capture.Height - optionHeight; y+=yIncrement)
                 {
-                    int[] textcolor = new int[] { 169, 169, 169 };
-                    int fade = 90;
-
                     bool oob = false;
                     while (!(oob = optionHeight > y || y > cg.Capture.Height - optionHeight) && !Capture.CompareColor(xStart, y + (menuPointsDown ? 1 : -optionHeight), textcolor, fade + 20))
                         y+=yIncrement;
@@ -187,25 +185,7 @@ namespace Deltin.CustomGameAutomation
                     if (oob || !Capture.CompareColor(xStart - 8, y, new int[] { 67, 67, 68 }, 30))
                         break;
 
-                    // Get bitmap of option
-                    if (saveMarkupsToFolder != null)
-                    {
-                        DirectBitmap work = Capture.Clone(xStart, y, optionWidth, optionHeight);
-
-                        for (int xi = 0; xi < work.Width; xi++)
-                            for (int yi = 0; yi < work.Height; yi++)
-                            {
-                                if (work.CompareColor(xi, yi, textcolor, fade))
-                                    work.SetPixel(xi, yi, Color.Black);
-                                else
-                                    work.SetPixel(xi, yi, Color.White);
-                            }
-                        //for (int index = 0; System.IO.File.Exists(saveMarkupTo = $@"{saveMarkupsToFolder}Option Markup-{index}.png"); index++);
-
-                        work.Save($@"{saveMarkupsToFolder}Option Markup-{optionIndex}.png");
-                        work.Dispose();
-                    }
-
+                    int percent = 0;
                     if (markup != null)
                     {
                         int success = 0;
@@ -222,26 +202,43 @@ namespace Deltin.CustomGameAutomation
                                 if (bmpPixelIsBlack == markupPixelIsBlack)
                                     success++;
                             }
-                        int percent = (int)(Convert.ToDouble(success) / Convert.ToDouble(total) * 100);
-                        percentResults.Add(percent);
+                        percent = (int)(Convert.ToDouble(success) / Convert.ToDouble(total) * 100);
                     }
-                    optionLocations.Add(new Point(xStart, y));
+
+                    // Get bitmap of option
+                    if (saveMarkupsToFolder != null)
+                    {
+                        DirectBitmap work = Capture.Clone(xStart, y, optionWidth, optionHeight);
+
+                        for (int xi = 0; xi < work.Width; xi++)
+                            for (int yi = 0; yi < work.Height; yi++)
+                            {
+                                if (work.CompareColor(xi, yi, textcolor, fade))
+                                    work.SetPixel(xi, yi, Color.Black);
+                                else
+                                    work.SetPixel(xi, yi, Color.White);
+                            }
+
+                        work.Save($@"{saveMarkupsToFolder}Option Markup-{optionIndex}.png");
+                        work.Dispose();
+                    }
+
+#if DEBUG
+                    if (cg.DebugMenu != null)
+                        Console.WriteLine($"{optionIndex} - {percent}%");
+#endif
+
+                    options.Add(new Tuple<Point, int>(new Point(xStart, y), percent));
                     optionIndex++;
                 }
 
                 Point optionLocation = Point.Empty;
 
-                if (markup != null && percentResults.Count > 0)
-                {
-                    int maxpercent = percentResults.IndexOf(percentResults.Max());
-                    if (percentResults[maxpercent] > 75)
-                        optionLocation = optionLocations[maxpercent];
-                }
+                if (markup != null && options.Count > 0)
+                    optionLocation = options.Where(o => o.Item2 > 75).OrderByDescending(o => o.Item2).FirstOrDefault()?.Item1 ?? Point.Empty;
 
                 if (flags.HasFlag(OptionScanFlags.Click))
-                {
                     SelectMenuOption(optionLocation);
-                }
 
                 // Close the menu.
                 if (flags.HasFlag(OptionScanFlags.CloseMenu) || (flags.HasFlag(OptionScanFlags.CloseIfNotFound) && optionLocation == Point.Empty))

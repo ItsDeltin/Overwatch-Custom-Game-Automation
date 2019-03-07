@@ -384,7 +384,7 @@ namespace Deltin.CustomGameAutomation
             new DirectBitmap(Resources.H_Tracer, true), // Tracer
             new DirectBitmap(Resources.H_Widowmaker, true), // Widowmaker
             new DirectBitmap(Resources.H_Winston, true), // Winston
-            new DirectBitmap(Resources.H_Wreckingball, true), // Wrecking Ball
+            new DirectBitmap(Resources.H_WreckingBall, true), // Wrecking Ball
             new DirectBitmap(Resources.H_Zarya, true), // Zarya
             new DirectBitmap(Resources.H_Zenyatta, true) // Zenyatta
         };
