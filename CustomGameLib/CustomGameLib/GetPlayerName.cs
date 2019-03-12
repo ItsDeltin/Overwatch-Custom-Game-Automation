@@ -37,17 +37,10 @@ namespace Deltin.CustomGameAutomation
             var pfc = new PrivateFontCollection();
             pfc.AddMemoryFont(fontData, fontBytes.Length);
             // Create the font with an EM size of 25.
-            FontFamily ff = pfc.Families[0];
-            Font font = new Font(ff, 25);
-
-            // Caluculate the baseline for the specified font
-            float lineSpace = ff.GetLineSpacing(font.Style); // The maximum distance between the top and bottom.
-            float ascent = ff.GetCellAscent(font.Style);     // The maximum height from the baseline.
-            float baseline = ascent / lineSpace;             // The position of the baseline relative to 1 em
+            Font font = new Font(pfc.Families[0], 25);
 
             Bitmap[] generated = new Bitmap[letters.Length]; // Stores the generated bitmaps.
-            int[] letterLengths = new int[letters.Length];   // Stores the last pixel on the X axis at the bottom of the letters.
-            int[] letterBaselines = new int[letters.Length]; // Stores the difference between the top of the cropped bitmap and the font's baseline.
+            int[] letterLengths = new int[letters.Length]; // Stores the last pixel on the X axis at the bottom of the letters.
 
             // Generate a bitmap of a picture of every letter using the font just loaded.
             // Store the bitmaps in the generated array.
@@ -60,8 +53,6 @@ namespace Deltin.CustomGameAutomation
                 Bitmap bmp = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
 
                 Graphics g = Graphics.FromImage(bmp);
-                // Store the initial baseline for the character relative to the graphic (this will be the same for every letter)
-                letterBaselines[l] = (int)(font.GetHeight(g) * baseline);
                 // Make the bitmap completely white
                 g.FillRectangle(Brushes.White, new Rectangle(0, 0, bmp.Width, bmp.Height));
                 // Set smoothing stuff
@@ -77,19 +68,15 @@ namespace Deltin.CustomGameAutomation
                 // Convert black and gray pixels to black and everything else white so it can be used as a markup.
                 for (int x = 0; x < bmp.Width; x++)
                     for (int y = 0; y < bmp.Height; y++)
-                        if (bmp.GetPixel(x, y).CompareColor(new int[] { 0, 0, 0 }, 35))
+                        if (bmp.GetPixel(x,y).CompareColor(new int[] { 0, 0, 0 }, 35))
                             bmp.SetPixel(x, y, Color.Black);
                         else
                             bmp.SetPixel(x, y, Color.White);
 
                 // The bitmap has a lot of extra area around it, crop the image around the letter.
-                Rectangle boundry = GetBounds(bmp);
-                Bitmap final = CropImage(bmp, boundry);
+                Bitmap final = CropImage(bmp, GetBounds(bmp));
                 bmp.Dispose();
                 // Don't use the bmp variable now!
-
-                // Adjust the baseline relative to the final bitmap
-                letterBaselines[l] -= boundry.Y;
 
                 // Get the pixels that are outside the letter.
                 // 'M' outside will get the pixels to the left and right of it,
@@ -165,7 +152,7 @@ namespace Deltin.CustomGameAutomation
             pfc.Dispose();
             Marshal.FreeCoTaskMem(fontData);
 
-            return new PlayerNameAlphabet(generated, letters, letterLengths, letterBaselines);
+            return new PlayerNameAlphabet(generated, letters, letterLengths);
         }
 
         private static byte[] GetFontResourceBytes(Assembly assembly, string fontResourceName)
@@ -361,7 +348,7 @@ namespace Deltin.CustomGameAutomation
                                         {
                                             // px and py is the Capture's relative letter position.
                                             int px = ax + lx;
-                                            int py = cy + ly + 2 - EnglishAlphabet.LetterBaselines[i];
+                                            int py = cy + ly + 2 - EnglishAlphabet.Markups[i].Height;
                                             bool pixelFilled = Capture.CompareColor(px, py, Colors.WHITE, letterCheckFade);
 
                                             // If a required pixel is missing, fail the letter.
@@ -582,16 +569,14 @@ namespace Deltin.CustomGameAutomation
         internal Bitmap[] Markups { get; private set; }
         internal string Letters { get; private set; }
         internal int[] LetterLengths { get; private set; }
-        internal int[] LetterBaselines { get; private set; }
         internal int Length { get; private set; }
 
-        internal PlayerNameAlphabet(Bitmap[] markups, string letters, int[] letterLengths, int[] letterBaselines)
+        internal PlayerNameAlphabet(Bitmap[] markups, string letters, int[] letterLengths)
         {
             Markups = markups;
             Letters = letters;
             Length = letters.Length;
             LetterLengths = letterLengths;
-            LetterBaselines = letterBaselines;
         }
 
         /// <summary>
