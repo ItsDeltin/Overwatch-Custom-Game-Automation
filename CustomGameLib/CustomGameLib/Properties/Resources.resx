@@ -127,15 +127,6 @@
   <data name="BigNoodleTooOblique1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BigNoodleTooOblique.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="D_Easy" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\D_Easy.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="D_Hard" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\D_Hard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="D_Medium" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\D_Medium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="E_ELIMRoundOver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\E_ELIMRoundOver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -420,5 +411,11 @@
   </data>
   <data name="O_ViewCareerProfile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\O_ViewCareerProfile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="H_Baptiste" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\H_Baptiste.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="M_Paris" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\M_Paris.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

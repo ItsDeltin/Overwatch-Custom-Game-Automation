@@ -123,7 +123,7 @@ namespace Deltin.CustomGameAutomation
         /// Resets the executing position in Overwatch.
         /// </summary>
         /// <returns>The state of Overwatch.</returns>
-        public OverwatchState Reset()     
+        public OverwatchState Reset()
         {
             using (LockHandler.Interactive)
             {
@@ -151,7 +151,8 @@ namespace Deltin.CustomGameAutomation
                     if (Capture.CompareTo(Points.LOBBY_NAV_ESCAPEMENU, Markups.NAV_ESCAPEMENU, 50, 95, DBCompareFlags.IgnoreBlack))
                     {
                         // Overwatch is in the escape menu.
-                        LeftClick(468, 284, Timing.LOBBY_FADE);
+                        KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
+                        Thread.Sleep(Timing.LOBBY_FADE);
                         UpdateScreen();
                     }
 
@@ -169,6 +170,24 @@ namespace Deltin.CustomGameAutomation
                     Activate();
                 }
                 throw new UnknownOverwatchStateException();
+            }
+        }
+
+        /// <summary>
+        /// Creates a Custom Game from the main menu.
+        /// </summary>
+        public void CreateCustomGame()
+        {
+            OverwatchState gameState = Reset();
+
+            if (gameState == OverwatchState.MainMenu)
+            {
+                KeyPress(100, Keys.Tab, Keys.Space);
+                Thread.Sleep(500);
+                KeyPress(100, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Space);
+                Thread.Sleep(500);
+                KeyPress(100, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Space);
+                Thread.Sleep(500);
             }
         }
 

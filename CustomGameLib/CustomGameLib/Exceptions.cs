@@ -55,7 +55,7 @@ namespace Deltin.CustomGameAutomation
     }
 
     /// <summary>
-    /// Thrown when creating an Overwatch process using <see cref="CustomGame.StartOverwatch(OverwatchInfoAuto)"/> or <see cref="CustomGame.StartOverwatch(OverwatchInfoManual)"/> fails.
+    /// Thrown when creating an Overwatch process using <see cref="CustomGame.StartOverwatch(OverwatchInfoAuto)"/> fails.
     /// </summary>
     public class OverwatchStartFailedException : Exception
     {

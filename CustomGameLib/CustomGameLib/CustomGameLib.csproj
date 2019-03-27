@@ -58,7 +58,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ColorChecking.cs" />
     <Compile Include="Commands.cs" />
-    <Compile Include="CreateOverwatchProcess.cs" />
+    <Compile Include="StartOverwatch.cs" />
     <Compile Include="CustomGame.cs" />
     <Compile Include="DebugMenu.cs" />
     <Compile Include="DebugMenu.Designer.cs">
@@ -85,6 +85,9 @@
     <Compile Include="TakeScreenshot.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
+    <Content Include="On Update Info.txt" />
+    <None Include="Resources\H_Baptiste.png" />
+    <None Include="Resources\M_Paris.png" />
     <None Include="Resources\N_MainMenu.png" />
     <None Include="Resources\N_EscapeMenu.png" />
     <None Include="Resources\N_CreateGame.png" />

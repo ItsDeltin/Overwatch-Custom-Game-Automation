@@ -1,0 +1,7 @@
+﻿On Hero update:
+Add the hero to the Hero enum in Enums.cs. Add the hero to AIHero if the new hero can be used as an AI in custom games.
+Add the hero markup to Markups.HERO_MARKUPS
+
+On Map Update:
+Add every variant of the map as a static variable in the Map class in Map.cs.
+Add the map markup to Markups.MAP_MARKUPS

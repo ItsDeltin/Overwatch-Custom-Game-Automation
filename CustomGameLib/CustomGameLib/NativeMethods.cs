@@ -27,6 +27,8 @@ namespace Deltin.CustomGameAutomation
         [DllImport("user32.dll")]
         internal static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
         [DllImport("user32.dll")]
+        internal static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+        [DllImport("user32.dll")]
         internal static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
 
         [DllImport("user32.dll", SetLastError = true)]

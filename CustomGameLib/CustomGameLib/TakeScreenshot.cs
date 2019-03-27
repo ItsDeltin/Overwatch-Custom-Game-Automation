@@ -37,14 +37,27 @@ namespace Deltin.CustomGameAutomation
             if (Disposed)
                 throw new ObjectDisposedException("This CustomGame object has already been disposed.");
 
-            Validate(OverwatchHandle);
-
             // This will take a screenshot of the Overwatch window.
             if (Monitor.TryEnter(ScreenshotLock)) // (1) If another thread is already updating the screen...
             {
                 try
                 {
-                    Screenshot(ScreenshotMethod, OverwatchHandle, ref Capture);
+                    Validate();
+                    SetupWindow();
+
+                    switch (ScreenshotMethod)
+                    {
+                        case ScreenshotMethod.BitBlt:
+                            ScreenshotBitBlt();
+                            break;
+
+                        case ScreenshotMethod.ScreenCopy:
+                            ScreenshotScreenCopy();
+                            break;
+
+                        default:
+                            throw new NotImplementedException();
+                    }
                 }
                 finally
                 {
@@ -54,31 +67,20 @@ namespace Deltin.CustomGameAutomation
             else
             {
                 // (1) ...Just wait for the thread to finish updating it then continue.
-                //Monitor.Wait(screenshotLock);
                 while (!Monitor.TryEnter(ScreenshotLock)) Thread.Sleep(10);
                 Monitor.Exit(ScreenshotLock);
             }
         }
 
-        private static void Screenshot(ScreenshotMethod method, IntPtr hWnd, ref DirectBitmap capture)
-        {
-            Validate(hWnd);
-
-            if (method == ScreenshotMethod.BitBlt)
-                ScreenshotBitBlt(hWnd, ref capture);
-            else if (method == ScreenshotMethod.ScreenCopy)
-                ScreenshotScreenCopy(hWnd, ref capture);
-        }
-
-        private static void ScreenshotBitBlt(IntPtr hWnd, ref DirectBitmap capture)
+        private void ScreenshotBitBlt()
         {
             try
             {
                 // get the hDC of the target window
-                IntPtr hdcSrc = User32.GetDC(hWnd);
+                IntPtr hdcSrc = User32.GetDC(OverwatchHandle);
                 // get the size
                 Rectangle windowRect = new Rectangle();
-                User32.GetWindowRect(hWnd, ref windowRect);
+                User32.GetWindowRect(OverwatchHandle, ref windowRect);
                 int width = windowRect.Right - windowRect.Left;
                 int height = windowRect.Bottom - windowRect.Top;
                 // create a device context we can copy to
@@ -93,13 +95,13 @@ namespace Deltin.CustomGameAutomation
                 // restore selection
                 Gdi32.SelectObject(hdcDest, hOld);
 
-                if (capture != null)
-                    capture.Dispose();
-                capture = new DirectBitmap(hdcSrc, hBitmap);
+                if (Capture != null)
+                    Capture.Dispose();
+                Capture = new DirectBitmap(hdcSrc, hBitmap);
 
                 // clean up 
                 Gdi32.DeleteDC(hdcDest);
-                User32.ReleaseDC(hWnd, hdcSrc);
+                User32.ReleaseDC(OverwatchHandle, hdcSrc);
                 // free up the Bitmap object
                 Gdi32.DeleteObject(hBitmap);
             }
@@ -112,21 +114,21 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        private static void ScreenshotScreenCopy(IntPtr hWnd, ref DirectBitmap capture)
+        private void ScreenshotScreenCopy()
         {
             Rectangle rect = new Rectangle();
-            User32.GetWindowRect(hWnd, ref rect);
+            User32.GetWindowRect(OverwatchHandle, ref rect);
 
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
 
-            if (capture != null)
-                capture.Dispose();
+            if (Capture != null)
+                Capture.Dispose();
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             g.CopyFromScreen(rect.Left - 7, rect.Top, -14, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
             g.Dispose();
-            capture = new DirectBitmap(bmp);
+            Capture = new DirectBitmap(bmp);
             bmp.Dispose();
         }
 
@@ -146,18 +148,20 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void SetupWindow()
         {
-            SetupWindow(OverwatchHandle, ScreenshotMethod);
-        }
+            Validate();
 
-        private static void SetupWindow(IntPtr hWnd, ScreenshotMethod method)
-        {
-            Validate(hWnd);
+            switch (ScreenshotMethod)
+            {
+                case ScreenshotMethod.ScreenCopy:
+                    User32.SetForegroundWindow(OverwatchHandle);
+                    break;
 
-            if (method == ScreenshotMethod.ScreenCopy)
-                User32.SetForegroundWindow(hWnd);
-            else
-                User32.ShowWindow(hWnd, User32.nCmdShow.SW_SHOWNOACTIVATE);
-            User32.MoveWindow(hWnd, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
+                case ScreenshotMethod.BitBlt:
+                    User32.ShowWindow(OverwatchHandle, User32.nCmdShow.SW_SHOWNOACTIVATE);
+                    break;
+            }
+
+            User32.MoveWindow(OverwatchHandle, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
         }
     }
 

@@ -62,7 +62,7 @@ namespace Deltin.CustomGameAutomation
             OverwatchProcess.Exited += InvokeOnExit;
 
             // Move the window to the correct position on the desktop for scanning and input.
-            SetupWindow(OverwatchHandle, ScreenshotMethod);
+            SetupWindow();
             Thread.Sleep(250);
 
             // Create subclass instances.

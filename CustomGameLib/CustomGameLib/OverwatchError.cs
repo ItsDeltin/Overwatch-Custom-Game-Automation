@@ -59,9 +59,9 @@ namespace Deltin.CustomGameAutomation
             return User32.IsWindowVisible(OverwatchHandle);
         }
 
-        static internal void Validate(IntPtr hwnd)
+        internal void Validate()
         {
-            if (!User32.IsWindowVisible(hwnd))
+            if (!User32.IsWindowVisible(OverwatchHandle))
                 throw new OverwatchClosedException("Overwatch was closed.");
         }
     }

@@ -12,54 +12,20 @@ namespace Deltin.CustomGameAutomation
         /// Overwatch's reccommended AI hero.
         /// </summary>
         Recommended,
-        /// <summary>
-        /// Ana AI hero.
-        /// </summary>
+#pragma warning disable CS1591
         Ana,
-        /// <summary>
-        /// Bastion AI hero.
-        /// </summary>
         Bastion,
-        /// <summary>
-        /// Lucio AI hero.
-        /// </summary>
         Lucio,
-        /// <summary>
-        /// McCree AI hero.
-        /// </summary>
         McCree,
-        /// <summary>
-        /// Mei AI hero.
-        /// </summary>
         Mei,
-        /// <summary>
-        /// Reaper AI hero.
-        /// </summary>
         Reaper,
-        /// <summary>
-        /// Roadhog AI hero.
-        /// </summary>
         Roadhog,
-        /// <summary>
-        /// Soldier 76 AI hero.
-        /// </summary>
         Soldier76,
-        /// <summary>
-        /// Sombra AI hero.
-        /// </summary>
         Sombra,
-        /// <summary>
-        /// Torbjorn AI hero.
-        /// </summary>
         Torbjorn,
-        /// <summary>
-        /// Zarya AI hero.
-        /// </summary>
         Zarya,
-        /// <summary>
-        /// Zenyatta AI hero.
-        /// </summary>
         Zenyatta
+#pragma warning restore CS1591
     }
 
     /// <summary>
@@ -326,122 +292,38 @@ namespace Deltin.CustomGameAutomation
     /// </summary>
     public enum Hero
     {
-        /// <summary>
-        /// Ana hero.
-        /// </summary>
+#pragma warning disable CS1591
         Ana,
-        /// <summary>
-        /// Ashe hero.
-        /// </summary>
         Ashe,
-        /// <summary>
-        /// Bastion hero.
-        /// </summary>
+        Baptiste,
         Bastion,
-        /// <summary>
-        /// Brigitte hero.
-        /// </summary>
         Brigitte,
-        /// <summary>
-        /// DVA hero.
-        /// </summary>
         DVA,
-        /// <summary>
-        /// Doomfist hero.
-        /// </summary>
         Doomfist,
-        /// <summary>
-        /// Genji hero.
-        /// </summary>
         Genji,
-        /// <summary>
-        /// Hanzo hero.
-        /// </summary>
         Hanzo,
-        /// <summary>
-        /// Junkrat hero.
-        /// </summary>
         Junkrat,
-        /// <summary>
-        /// Lucio hero.
-        /// </summary>
         Lucio,
-        /// <summary>
-        /// McCree hero.
-        /// </summary>
         McCree,
-        /// <summary>
-        /// Mei hero.
-        /// </summary>
         Mei,
-        /// <summary>
-        /// Mercy hero.
-        /// </summary>
         Mercy,
-        /// <summary>
-        /// Moira hero.
-        /// </summary>
         Moira,
-        /// <summary>
-        /// Orisa hero.
-        /// </summary>
         Orisa,
-        /// <summary>
-        /// Pharah hero.
-        /// </summary>
         Pharah,
-        /// <summary>
-        /// Reaper hero.
-        /// </summary>
         Reaper,
-        /// <summary>
-        /// Reinhardt hero.
-        /// </summary>
         Reinhardt,
-        /// <summary>
-        /// Roadhog hero.
-        /// </summary>
         Roadhog,
-        /// <summary>
-        /// Soldier 76 hero.
-        /// </summary>
         Soldier76,
-        /// <summary>
-        /// Sombra hero.
-        /// </summary>
         Sombra,
-        /// <summary>
-        /// Symmetra hero.
-        /// </summary>
         Symmetra,
-        /// <summary>
-        /// Torbjorn hero.
-        /// </summary>
         Torbjorn,
-        /// <summary>
-        /// Tracer hero.
-        /// </summary>
         Tracer,
-        /// <summary>
-        /// Widowmaker hero.
-        /// </summary>
         Widowmaker,
-        /// <summary>
-        /// Winston hero.
-        /// </summary>
         Winston,
-        /// <summary>
-        /// Wrecking Ball hero.
-        /// </summary>
         WreckingBall,
-        /// <summary>
-        /// Zarya hero.
-        /// </summary>
         Zarya,
-        /// <summary>
-        /// Zenyatta hero.
-        /// </summary>
         Zenyatta
+#pragma warning restore CS1591
     }
 
     /// <summary>
@@ -550,7 +432,7 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         Disconnected,
         /// <summary>
-        /// Overwatch is in the main menu.
+        /// Overwatch is in the main menu. Call <see cref="CustomGame.CreateCustomGame"/> to create a custom game.
         /// </summary>
         MainMenu
     }

@@ -267,35 +267,6 @@ namespace Deltin.CustomGameAutomation
             875
         };
         public static readonly int HERO_Y = 73;
-
-        public static readonly Point[] DIFFICULTY_LOCATIONS = new Point[]
-        {
-            // X    Y  Length
-            // Blue
-            new Point(145, 259),
-            new Point(145, 288),
-            new Point(145, 316),
-            new Point(145, 345),
-            new Point(145, 373),
-            new Point(145, 402),
-            // Red
-            new Point(401, 259),
-            new Point(401, 288),
-            new Point(401, 316),
-            new Point(401, 345),
-            new Point(401, 373),
-            new Point(401, 402)
-        };
-        public static readonly int DIFFICULTY_QUEUE_X = 686;
-        public static readonly int[] DIFFICULTY_QUEUE_LOCATIONS = new int[]
-        {
-            244,
-            257,
-            270,
-            283,
-            297,
-            310
-        };
     }
 
     internal static class Rectangles
@@ -348,18 +319,12 @@ namespace Deltin.CustomGameAutomation
         public static readonly DirectBitmap KOTH_ROUND_OVER = new DirectBitmap(Resources.E_KOTHRoundOver, true);
         public static readonly DirectBitmap ELIM_ROUND_OVER = new DirectBitmap(Resources.E_ELIMRoundOver, true);
 
-        // Difficulty
-        public static readonly DirectBitmap[] DIFFICULTY_MARKUPS = new DirectBitmap[]
-        {
-            new DirectBitmap(Resources.D_Easy, true),
-            new DirectBitmap(Resources.D_Medium, true),
-            new DirectBitmap(Resources.D_Hard, true)
-        };
         // Heroes
         public static readonly DirectBitmap[] HERO_MARKUPS = new DirectBitmap[]
         {
             new DirectBitmap(Resources.H_Ana, true), // Ana
             new DirectBitmap(Resources.H_Ashe, true), // Ashe
+            new DirectBitmap(Resources.H_Baptiste, true), // Baptiste
             new DirectBitmap(Resources.H_Bastion, true), // Bastion
             new DirectBitmap(Resources.H_Brigitte, true), // Brigitte
             new DirectBitmap(Resources.H_Dva, true), // Dva
@@ -388,6 +353,7 @@ namespace Deltin.CustomGameAutomation
             new DirectBitmap(Resources.H_Zarya, true), // Zarya
             new DirectBitmap(Resources.H_Zenyatta, true) // Zenyatta
         };
+
         // Maps
         public static readonly MapMarkup[] MAP_MARKUPS = new MapMarkup[]
         {
@@ -434,6 +400,7 @@ namespace Deltin.CustomGameAutomation
             new MapMarkup(Resources.M_Oasis_Gardens,             Map.CTF_Oasis_Gardens, Map.DM_Oasis_Gardens, Map.ELIM_Oasis_Gardens, Map.TDM_Oasis_Gardens),
             new MapMarkup(Resources.M_Oasis_University,          Map.CTF_Oasis_University, Map.DM_Oasis_University, Map.ELIM_Oasis_University, Map.TDM_Oasis_University),
             new MapMarkup(Resources.M_Petra,                     Map.DM_Petra, Map.TDM_Petra),
+            new MapMarkup(Resources.M_Paris,                     Map.A_Paris, Map.A_Paris),
             new MapMarkup(Resources.M_Rialto,                    Map.E_Rialto, Map.SKIRM_Rialto),
             new MapMarkup(Resources.M_Route66,                   Map.E_Route66, Map.SKIRM_Route66),
             new MapMarkup(Resources.M_TempleOfAnubis,            Map.A_TempleOfAnubis, Map.DM_TempleOfAnubis, Map.SKIRM_TempleOfAnubis, Map.TDM_TempleOfAnubis),
