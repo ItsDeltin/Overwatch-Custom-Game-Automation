@@ -139,7 +139,7 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     // Check if Overwatch is in the main menu
-                    if (Capture.CompareTo(Points.LOBBY_NAV_MAINMENU, Markups.NAV_MAINMENU, 50, 95, DBCompareFlags.IgnoreBlack))
+                    if (Capture.CompareTo(Points.LOBBY_NAV_MAINMENU, Markups.NAV_MAINMENU, 60, 90, DBCompareFlags.IgnoreBlack))
                     {
                         // Overwatch is in the main menu.
                         if (OpenChatIsDefault)
@@ -157,7 +157,7 @@ namespace Deltin.CustomGameAutomation
                     }
 
                     // Check if Overwatch is in the custom game menu.
-                    if (Capture.CompareTo(Points.LOBBY_NAV_CREATEGAME, Markups.NAV_LOBBY, new int[] { 152, 149, 151 }, 40, 95))
+                    if (Capture.CompareTo(Points.LOBBY_NAV_CREATEGAME, Markups.NAV_LOBBY, new int[] { 152, 149, 151 }, 30, 90))
                     {
                         // Overwatch is in the custom game menu.
                         if (OpenChatIsDefault)
