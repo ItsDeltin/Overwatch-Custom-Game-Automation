@@ -91,6 +91,38 @@ no_scope toggle
 ammunition_clip_size_scalar value
 no_ammunition_requirement toggle
 
+-Baptiste
+
+immortality_field toggle
+immortality_field_cooldown_time value
+regenerative_burst toggle
+regenerative_burst_cooldown_time value
+quick_melee toggle
+ultimate_ability toggle
+ultimate_generation_combat value
+ultimate_generation_passive value
+ultimate_generation value
+spawn_with_ultimate_ready toggle
+ultimate_duration value
+infinite_ultimate_duration toggle
+
+damage_dealt value
+damage_recieved value
+healing_dealt value
+healing_recieved value
+health value
+jump_vertical_speed value
+movement_gravity value
+movement_speed value
+projectile_gravity value
+projectile_speed value
+recieve_headshots_only toggle
+
+primary_fire toggle
+secondary_fire toggle
+ammunition_clip_size_scalar value
+no_ammunition_requirement toggle
+
 -Bastion
 
 reconfigure toggle
