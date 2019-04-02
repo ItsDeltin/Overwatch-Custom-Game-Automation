@@ -511,44 +511,15 @@ namespace Deltin.CustomGameAutomation
 
                 if (!noUpdate)
                     cg.UpdateScreen();
+
                 List<int> playersDead = new List<int>();
                 for (int i = 0; i < 12; i++)
-                    if (Capture.CompareColor(Points.KILLED_PLAYER_MARKERS[i], Points.KILLED_PLAYER_MARKER_Y, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
-                        && !HasHealthBar(i, true))
+                    if (Capture.CompareColor(Points.DEAD_PLAYER_MARKERS[i], Points.DEAD_PLAYER_MARKER_Y, Colors.DEAD_PLAYER, Fades.DEAD_PLAYER)
+                        && Capture.CompareColor(Points.DEAD_PLAYER_ALT_MARKERS[i], Points.DEAD_PLAYER_ALT_MARKER_Y, Colors.DEAD_PLAYER_ALT_MIN, Colors.DEAD_PLAYER_ALT_MAX))
                         playersDead.Add(i);
+
                 return playersDead;
             }
-        }
-
-        bool HasHealthBar(int slot, bool noUpdate = false)
-        {
-            int[] healthBarLocations = new int[]
-            {
-                // Blue
-                45,
-                94,
-                143,
-                192,
-                242,
-                291,
-                // Red
-                610,
-                660,
-                709,
-                758,
-                808,
-                856,
-            };
-            int xLength = 43;
-            int y = 96;
-
-            if (!noUpdate)
-                cg.UpdateScreen();
-
-            for (int x = healthBarLocations[slot]; x < healthBarLocations[slot] + xLength; x++)
-                if (Capture.CompareColor(x, y, new int[] { 110, 110, 110 }, 10))
-                    return true;
-            return false;
         }
 
         /// <summary>

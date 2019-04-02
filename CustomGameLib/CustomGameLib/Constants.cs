@@ -27,6 +27,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] SETTINGS_PRESETS_LOADABLE_PRESET = new int[] { 126, 128, 134 };
 
         public static readonly int[] DEAD_PLAYER = new int[] { 118, 74, 76 }; // Spectator UI red X
+        public static readonly int[] DEAD_PLAYER_ALT_MIN = new int[] { 75, 75, 75 };
+        public static readonly int[] DEAD_PLAYER_ALT_MAX = new int[] { 90, 90, 90 };
         public static readonly int[] HERO_CHOSEN_BLUE = new int[] { 83, 110, 123 };
         public static readonly int[] HERO_CHOSEN_RED = new int[] { 114, 77, 81 };
 
@@ -190,7 +192,7 @@ namespace Deltin.CustomGameAutomation
             new Point(896, 317), // slot 17
         };
 
-        public static readonly int[] KILLED_PLAYER_MARKERS = new int[]
+        public static readonly int[] DEAD_PLAYER_MARKERS = new int[]
         {
             66, // slot 0
             115, // slot 1
@@ -206,7 +208,13 @@ namespace Deltin.CustomGameAutomation
             830, // slot 10
             879, // slot 11
         };
-        public static readonly int KILLED_PLAYER_MARKER_Y = 98;
+        public static readonly int DEAD_PLAYER_MARKER_Y = 98;
+        public static readonly int[] DEAD_PLAYER_ALT_MARKERS = new int[]
+        {
+            88, 137, 186, 235, 284, 333,
+            648, 697, 746, 795, 844, 893,
+        };
+        public static readonly int DEAD_PLAYER_ALT_MARKER_Y = 84;
 
         public static readonly Point[] MODERATOR_ICON_LOCATIONS = new Point[]
         {
