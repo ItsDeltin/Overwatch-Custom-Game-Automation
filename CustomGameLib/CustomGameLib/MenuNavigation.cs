@@ -17,7 +17,7 @@ namespace Deltin.CustomGameAutomation
             {
                 Activate();
                 Thread.Sleep(100);
-                KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
+                KeyPress(DefaultKeys.OpenCustomGameLobbyKey.Key);
                 Thread.Sleep(Timing.LOBBY_FADE);
             }
 
@@ -151,7 +151,7 @@ namespace Deltin.CustomGameAutomation
                     if (Capture.CompareTo(Points.LOBBY_NAV_ESCAPEMENU, Markups.NAV_ESCAPEMENU, 50, 95, DBCompareFlags.IgnoreBlack))
                     {
                         // Overwatch is in the escape menu.
-                        KeyPress(DefaultKeys.OpenCustomGameLobbyKey);
+                        KeyPress(DefaultKeys.OpenCustomGameLobbyKey.Key);
                         Thread.Sleep(Timing.LOBBY_FADE);
                         UpdateScreen();
                     }
@@ -255,6 +255,12 @@ namespace Deltin.CustomGameAutomation
         internal void GoToCustomGameInfo()
         {
             RightClick(Points.LOBBY_CUSTOM_GAME_INFO);
+        }
+
+        internal void WaitForCareerProfileToLoad()
+        {
+            WaitForColor(345, 164, new int[] { 85, 91, 108 }, 5, 10000);
+            Thread.Sleep(250);
         }
     }
 }

@@ -93,6 +93,16 @@ namespace Deltin.CustomGameAutomation.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap E_ELIMRoundOver_Draw {
+            get {
+                object obj = ResourceManager.GetObject("E_ELIMRoundOver_Draw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap E_KOTHRoundOver {
             get {
                 object obj = ResourceManager.GetObject("E_KOTHRoundOver", resourceCulture);

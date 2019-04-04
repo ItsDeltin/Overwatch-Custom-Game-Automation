@@ -131,8 +131,13 @@ namespace Deltin.CustomGameAutomation
                 });
 
                 // Check for the elimination round over animation.
+                // Team wins
                 if (!isOver)
                     isOver = Capture.CompareTo(Points.LOBBY_ELIMINATION_ROUND_OVER, Markups.ELIM_ROUND_OVER, 30, 95, DBCompareFlags.IgnoreBlack);
+
+                // Draw
+                if (!isOver)
+                    isOver = Capture.CompareTo(Points.LOBBY_ELIMINATION_ROUND_OVER_DRAW, Markups.ELIM_ROUND_OVER_DRAW, 30, 95, DBCompareFlags.IgnoreBlack);
 
                 if (isOver && !roundOverScan.Executed)
                 {

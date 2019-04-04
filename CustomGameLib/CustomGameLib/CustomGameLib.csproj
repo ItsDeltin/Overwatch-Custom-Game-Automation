@@ -58,9 +58,12 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ColorChecking.cs" />
     <Compile Include="Commands.cs" />
+    <Compile Include="Identity.cs" />
     <Compile Include="StartOverwatch.cs" />
     <Compile Include="CustomGame.cs" />
-    <Compile Include="DebugMenu.cs" />
+    <Compile Include="DebugMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DebugMenu.Designer.cs">
       <DependentUpon>DebugMenu.cs</DependentUpon>
     </Compile>
@@ -86,6 +89,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="OverwatchError.cs" />
     <Content Include="On Update Info.txt" />
+    <None Include="Resources\E_ELIMRoundOver_Draw.png" />
     <None Include="Resources\H_Baptiste.png" />
     <None Include="Resources\M_Paris.png" />
     <None Include="Resources\N_MainMenu.png" />

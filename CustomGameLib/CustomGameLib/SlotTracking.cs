@@ -115,7 +115,7 @@ namespace Deltin.CustomGameAutomation
                         slotInfo.SlotIdentities[slot] = slotIdentity;
                     }
                     // Slot swapped
-                    else if (slotIdentity != null && slotInfo.SlotIdentities[slot] != null && !slotInfo.SlotIdentities[slot].CompareIdentities(slotIdentity))
+                    else if (slotIdentity != null && slotInfo.SlotIdentities[slot] != null && !Identity.Compare(slotInfo.SlotIdentities[slot], slotIdentity))
                     {
                         slotInfo.SlotIdentities[slot].Dispose();
                         slotInfo.SlotIdentities[slot] = slotIdentity;
@@ -155,11 +155,11 @@ namespace Deltin.CustomGameAutomation
                 foreach (int slot in changedSlots)
                     if (slots.Contains(slot))
                     {
-                        PlayerIdentity newIdentity = Commands.GetPlayerIdentity(slot);
+                        PlayerIdentity newIdentity = GetPlayerIdentity(slot);
                         if (newIdentity == null)
                             continue;
 
-                        var pi = playerTracker._players.FirstOrDefault(p => newIdentity.CompareIdentities(p.PlayerIdentity));
+                        var pi = playerTracker._players.FirstOrDefault(p => Identity.Compare(newIdentity, p.PlayerIdentity));
 
                         // New player joined the game
                         if (pi == null)
@@ -187,26 +187,36 @@ namespace Deltin.CustomGameAutomation
         /// <summary>
         /// Waits for the slots in overwatch to change.
         /// </summary>
+        /// <param name="slotInfo">Slot info to compare to.</param>
+        /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+        /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
+        public bool WaitForSlotUpdate(SlotInfo slotInfo, int maxtime = 1000)
+        {
+            using (LockHandler.Passive)
+            {
+                Stopwatch time = new Stopwatch();
+                time.Start();
+                while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
+                {
+                    if (GetUpdatedSlots(slotInfo).Count > 0)
+                        return true;
+                    Thread.Sleep(10);
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Waits for the slots in overwatch to change.
+        /// </summary>
         /// <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
         /// <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         public bool WaitForSlotUpdate(int maxtime = 1000)
         {
-            using (LockHandler.Passive)
+            using (SlotInfo slotInfo = new SlotInfo())
             {
-                using (SlotInfo slotInfo = new SlotInfo())
-                {
-                    GetUpdatedSlots(slotInfo);
-
-                    Stopwatch time = new Stopwatch();
-                    time.Start();
-                    while (time.ElapsedMilliseconds < maxtime || maxtime == -1)
-                    {
-                        if (GetUpdatedSlots(slotInfo).Count > 0)
-                            return true;
-                        Thread.Sleep(10);
-                    }
-                    return false;
-                }
+                GetUpdatedSlots(slotInfo);
+                return WaitForSlotUpdate(slotInfo, maxtime);
             }
         }
     }
@@ -241,11 +251,6 @@ namespace Deltin.CustomGameAutomation
         }
 
         public int Slot { get; private set; }
-
-        public bool CompareIdentities(SlotIdentity other)
-        {
-            return Identity.CompareIdentities(this, other);
-        }
     }
 
     /// <summary>
@@ -273,7 +278,7 @@ namespace Deltin.CustomGameAutomation
                 throw new ArgumentNullException(nameof(identity), $"{nameof(identity)} was null.");
 
             foreach (var player in _players)
-                if (player.PlayerIdentity.CompareIdentities(identity))
+                if (Identity.Compare(player.PlayerIdentity, identity))
                     return player.Slot;
             return -1;
         }

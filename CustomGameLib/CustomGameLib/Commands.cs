@@ -448,26 +448,26 @@ namespace Deltin.CustomGameAutomation
             // If it was not found, pi is still null. Register the profile if _registerPlayerProfiles is true.
             if (ltd.GetNameAndProfile || ltd.CheckIfFriend)
             {
-                Point openMenuAt = new Point(56, y);
-
-                // Open the chat
-                cg.Chat.OpenChat();
-
-                // Open the career profile
-                cg.RightClick(openMenuAt, Timing.OPTION_MENU);
-
-                // If the Send Friend Request option exists, they are not a friend.
-                isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
-
-                if (ltd.GetNameAndProfile)
+                using (cg.LockHandler.Interactive)
                 {
-                    using (cg.LockHandler.Interactive)
+                    Point openMenuAt = new Point(56, y);
+
+                    // Open the chat
+                    cg.Chat.OpenChat();
+
+                    // Open the career profile
+                    cg.RightClick(openMenuAt, Timing.OPTION_MENU);
+
+                    // If the Send Friend Request option exists, they are not a friend.
+                    isFriend = !(bool)cg.Interact.MenuOptionScan(openMenuAt, OptionScanFlags.ReturnFound, null, Markups.SEND_FRIEND_REQUEST);
+
+                    if (ltd.GetNameAndProfile)
                     {
                         // By default, the career profile option is selected and we can just press enter to open it.
                         cg.KeyPress(Keys.Enter);
 
                         // Wait for the career profile to load.
-                        WaitForCareerProfileToLoad();
+                        cg.WaitForCareerProfileToLoad();
 
                         // Get the player name
                         name = cg.GetPlayerName();
@@ -489,9 +489,9 @@ namespace Deltin.CustomGameAutomation
                         if (!cg.OpenChatIsDefault)
                             cg.KeyPress(Keys.Enter);
                     }
+                    else
+                        cg.Interact.CloseOptionMenu();
                 }
-                else
-                    cg.Interact.CloseOptionMenu();
             }
             #endregion
 
@@ -579,39 +579,6 @@ namespace Deltin.CustomGameAutomation
             public int Marker { get; private set; }
             public int[] Lines { get; private set; }
         }
-
-        /// <summary>
-        /// Gets the player identity of a slot.
-        /// </summary>
-        /// <param name="slot">Slot to check.</param>
-        /// <returns>The player identity of the slot.</returns>
-        public PlayerIdentity GetPlayerIdentity(int slot)
-        {
-            using (cg.LockHandler.Interactive)
-            {
-                bool careerProfileOpenSuccess = cg.Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
-                if (!careerProfileOpenSuccess)
-                    return null;
-
-                WaitForCareerProfileToLoad();
-
-                cg.UpdateScreen();
-
-                DirectBitmap careerProfile = Capture.Clone(Rectangles.LOBBY_CAREER_PROFILE);
-
-                cg.GoBack(1);
-
-                Thread.Sleep(500);
-
-                return new PlayerIdentity(careerProfile);
-            }
-        }
-
-        internal void WaitForCareerProfileToLoad()
-        {
-            cg.WaitForColor(345, 164, new int[] { 85, 91, 108 }, 5, 10000);
-            System.Threading.Thread.Sleep(250);
-        }
     }
 
     /// <summary>
@@ -678,74 +645,6 @@ namespace Deltin.CustomGameAutomation
         /// Method to be executed when the command is executed.
         /// </summary>
         public CommandExecuted Callback;
-    }
-
-#pragma warning disable CS1591
-    public abstract class Identity : IDisposable
-    {
-        internal Identity(DirectBitmap identityMarkup)
-        {
-            IdentityMarkup = identityMarkup;
-        }
-
-        internal DirectBitmap IdentityMarkup;
-
-        protected internal static bool CompareIdentities(Identity i1, Identity i2, int percentMatches = 90, int fade = 50)
-        {
-            if (i1.IdentityMarkup.Width != i2.IdentityMarkup.Width || i1.IdentityMarkup.Height != i2.IdentityMarkup.Height)
-                return false;
-
-            return i1.IdentityMarkup.CompareTo(i2.IdentityMarkup, fade, percentMatches, DBCompareFlags.Multithread);
-        }
-
-        /// <summary>
-        /// Disposes data used by the Identity object.
-        /// </summary>
-        public void Dispose()
-        {
-            Disposed = true;
-            if (!Disposed && IdentityMarkup != null)
-                IdentityMarkup.Dispose();
-        }
-        private bool Disposed = false;
-    }
-#pragma warning restore CS1591
-
-
-    /// <summary>
-    /// Contains data for identifying players who executed a command.
-    /// </summary>
-    public class PlayerIdentity : Identity
-    {
-        internal PlayerIdentity(DirectBitmap careerProfileMarkup) : base(careerProfileMarkup) { }
-
-        /// <summary>
-        /// Compares player identities.
-        /// </summary>
-        /// <param name="other">The other PlayerIdentity to compare to.</param>
-        /// <returns>Returns true if the player identities are equal.</returns>
-        public bool CompareIdentities(PlayerIdentity other)
-        {
-            return CompareIdentities(this, other);
-        }
-    }
-
-    /// <summary>
-    /// Contains data for identifying players who executed a command.
-    /// </summary>
-    public class ChatIdentity : Identity
-    {
-        internal ChatIdentity(DirectBitmap chatMarkup) : base(chatMarkup) { }
-
-        /// <summary>
-        /// Compares chat identity.
-        /// </summary>
-        /// <param name="other">The other ChatIdentity to compare to.</param>
-        /// <returns>Returns true if the chat identities are equal.</returns>
-        public bool CompareIdentities(ChatIdentity other)
-        {
-            return CompareIdentities(this, other);
-        }
     }
 
     /// <summary>

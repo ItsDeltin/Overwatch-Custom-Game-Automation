@@ -169,6 +169,7 @@ namespace Deltin.CustomGameAutomation
     /// <summary>
     /// Stores Overwatch's capture data.
     /// </summary>
+    [Serializable]
     public class DirectBitmap : IDisposable
     {
 #region Public Fields
@@ -308,7 +309,6 @@ namespace Deltin.CustomGameAutomation
             return CompareColor(point.X, point.Y, min, max);
         }
 
-        //internal bool CompareTo(Rectangle rectangle, DirectBitmap other, int fade, double min, DBCompareFlags flags)
         internal bool CompareTo(Point scanAt, DirectBitmap other, int fade, double min, DBCompareFlags flags)
         {
             int maxFail = (int)((double)other.Width * other.Height * ((100 - min) / 100));
@@ -364,6 +364,61 @@ namespace Deltin.CustomGameAutomation
 
             return !failed;
         }
+
+        /*
+        internal bool CompareTo(Point scanAt, DirectBitmap other, int fade, float min, DBCompareFlags flags = DBCompareFlags.None, int[] blackColor = null)
+        {
+            bool ignoreBlack = flags.HasFlag(DBCompareFlags.IgnoreBlack),
+                ignoreWhite = flags.HasFlag(DBCompareFlags.IgnoreWhite),
+                multithread = flags.HasFlag(DBCompareFlags.Multithread);
+
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (ignoreBlack && blackColor != null)
+                throw new Exception($"{nameof(flags)} has the flag {DBCompareFlags.IgnoreBlack} and {nameof(blackColor)} isn't null.");
+
+            float maxFail = (other.Width * other.Height) * min;
+            int pixelsFailed = 0;
+            bool failed = false;
+
+            Action<int, ParallelLoopState> check = new Action<int, ParallelLoopState>((x, loopState) =>
+            {
+                for (int y = 0; y < other.Height && !failed; y++)
+                {
+                    Color pixelColor = other.GetPixel(x, y);
+
+                    bool pixelIsBlack = pixelColor == Color.FromArgb(255, 0, 0, 0);
+                    bool pixelIsWhite = pixelColor == Color.FromArgb(255, 255, 255, 255);
+
+                    if ((ignoreBlack && pixelIsBlack) || (ignoreWhite && pixelIsWhite))
+                        continue;
+
+                    if (pixelIsBlack && blackColor != null)
+                    {
+                        if (!CompareColor(x + scanAt.X, y + scanAt.Y, blackColor, fade))
+                            pixelsFailed++;
+                    }
+                    else if (!CompareColor(x + scanAt.X, y + scanAt.Y, pixelColor.ToInt(), fade))
+                        pixelsFailed++;
+
+                    failed = pixelsFailed >= maxFail;
+
+                    if (loopState != null && failed)
+                        loopState.Break();
+                }
+            });
+
+            if (!flags.HasFlag(DBCompareFlags.Multithread))
+                for (int x = 0; x < other.Width && !failed; x++)
+                    check.Invoke(x, null);
+            else
+                Parallel.For(0, other.Width, check);
+
+            return !failed;
+        }
+        internal bool CompareToMarkup(Point scanAt, DirectBitmap markup, int[] blackColor, int fade, float min) => CompareTo(scanAt, markup, fade, min, DBCompareFlags.IgnoreWhite, blackColor);
+        */
 
         public DirectBitmap Clone()
         {

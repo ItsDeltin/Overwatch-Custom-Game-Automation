@@ -27,7 +27,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly int[] SETTINGS_PRESETS_LOADABLE_PRESET = new int[] { 126, 128, 134 };
 
         public static readonly int[] DEAD_PLAYER = new int[] { 118, 74, 76 }; // Spectator UI red X
-        public static readonly int[] DEAD_PLAYER_ALT_MIN = new int[] { 75, 75, 75 };
+        public static readonly int[] DEAD_PLAYER_ALT_MIN = new int[] { 70, 70, 70 };
         public static readonly int[] DEAD_PLAYER_ALT_MAX = new int[] { 90, 90, 90 };
         public static readonly int[] HERO_CHOSEN_BLUE = new int[] { 83, 110, 123 };
         public static readonly int[] HERO_CHOSEN_RED = new int[] { 114, 77, 81 };
@@ -117,6 +117,7 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point LOBBY_NAV_ESCAPEMENU = new Point(310, 60);
         public static readonly Point LOBBY_NAV_MAINMENU = new Point(48, 50);
         public static readonly Point LOBBY_ELIMINATION_ROUND_OVER = new Point(393, 142);
+        public static readonly Point LOBBY_ELIMINATION_ROUND_OVER_DRAW = new Point(433, 142);
 
         public static readonly Point EDIT_AI_CONFIRM = new Point(447, 354);
 
@@ -326,6 +327,7 @@ namespace Deltin.CustomGameAutomation
         // Events
         public static readonly DirectBitmap KOTH_ROUND_OVER = new DirectBitmap(Resources.E_KOTHRoundOver, true);
         public static readonly DirectBitmap ELIM_ROUND_OVER = new DirectBitmap(Resources.E_ELIMRoundOver, true);
+        public static readonly DirectBitmap ELIM_ROUND_OVER_DRAW = new DirectBitmap(Resources.E_ELIMRoundOver_Draw, true);
 
         // Heroes
         public static readonly DirectBitmap[] HERO_MARKUPS = new DirectBitmap[]

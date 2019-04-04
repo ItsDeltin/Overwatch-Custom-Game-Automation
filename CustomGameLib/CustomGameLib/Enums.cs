@@ -436,6 +436,17 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         MainMenu
     }
+
+#pragma warning disable CS1591
+    [Flags]
+    public enum KeybindModifier
+    {
+        None = 0,
+        Alt = 1,
+        Control = 2,
+        Shift = 4
+    }
+#pragma warning restore CS1591
     #endregion
 
     #region Internal Enums

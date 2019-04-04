@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -261,8 +262,27 @@ namespace Deltin.CustomGameAutomation
     public class DefaultKeys
     {
         /// <summary>
-        /// The key used to open the Custom Game lobby. Is <see cref="Keys.L"/> by default.
+        /// The key used to open the Custom Game lobby. Is L by default.
         /// </summary>
-        public Keys OpenCustomGameLobbyKey = Keys.L;
+        public KeyBind OpenCustomGameLobbyKey = new KeyBind(Keys.L, KeybindModifier.None);
+
+        /// <summary>
+        /// The key used to pause the custom game. Is CTRL+SHIFT+= by default.
+        /// </summary>
+        public KeyBind Pause = new KeyBind(Keys.Oemplus, KeybindModifier.Control | KeybindModifier.Shift);
     }
+
+#pragma warning disable CS1591
+    public class KeyBind
+    {
+        public KeyBind(Keys key, KeybindModifier modifiers)
+        {
+            Key = key;
+            Modifiers = modifiers;
+        }
+
+        public Keys Key { get; set; }
+        public KeybindModifier Modifiers { get; set; }
+    }
+#pragma warning restore CS1591
 }

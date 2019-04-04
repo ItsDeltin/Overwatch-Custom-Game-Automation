@@ -24,6 +24,13 @@
             Chat commands for Overwatch.
             </summary>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerIdentity(System.Int32)">
+            <summary>
+            Gets the player identity of a slot.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <returns>The player identity of the slot.</returns>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.StartOverwatch(Deltin.CustomGameAutomation.OverwatchInfoAuto)">
             <summary>
             Creates an Overwatch process using the currently logged in battle.net account.
@@ -99,14 +106,14 @@
             <param name="letters">Characters to generate.</param>
             <returns>An alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32,System.String)">
             <summary>
             Gets the name of a player.
             </summary>
             <param name="slot">The slot of the player.</param>
             <returns>The name of the player.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.String)">
             <summary>
             Gets the name of the player when already in the career profile.
             </summary>
@@ -525,6 +532,14 @@
             </summary>
             <param name="playerTracker"></param>
             <param name="slotFlags">Slots to track.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(Deltin.CustomGameAutomation.SlotInfo,System.Int32)">
+            <summary>
+            Waits for the slots in overwatch to change.
+            </summary>
+            <param name="slotInfo">Slot info to compare to.</param>
+            <param name="maxtime">Time to wait. Set to -1 to wait forever.</param>
+            <returns>Returns true if Overwatch's slots changed. Returns false if the time ran out.</returns>
         </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.WaitForSlotUpdate(System.Int32)">
             <summary>
@@ -1151,13 +1166,6 @@
             Set to true to start listening to commands. Set to false to stop.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Commands.GetPlayerIdentity(System.Int32)">
-            <summary>
-            Gets the player identity of a slot.
-            </summary>
-            <param name="slot">Slot to check.</param>
-            <returns>The player identity of the slot.</returns>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.ListenTo">
             <summary>
             Data for commands to listen to on the Commands class.
@@ -1207,35 +1215,6 @@
             Method to be executed when the command is executed.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.Identity.Dispose">
-            <summary>
-            Disposes data used by the Identity object.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.PlayerIdentity">
-            <summary>
-            Contains data for identifying players who executed a command.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.PlayerIdentity.CompareIdentities(Deltin.CustomGameAutomation.PlayerIdentity)">
-            <summary>
-            Compares player identities.
-            </summary>
-            <param name="other">The other PlayerIdentity to compare to.</param>
-            <returns>Returns true if the player identities are equal.</returns>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
-            <summary>
-            Contains data for identifying players who executed a command.
-            </summary>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.ChatIdentity.CompareIdentities(Deltin.CustomGameAutomation.ChatIdentity)">
-            <summary>
-            Compares chat identity.
-            </summary>
-            <param name="other">The other ChatIdentity to compare to.</param>
-            <returns>Returns true if the chat identities are equal.</returns>
-        </member>
         <member name="T:Deltin.CustomGameAutomation.CommandData">
             <summary>
             Data of an executed chat command.
@@ -1280,6 +1259,16 @@
             <param name="data">Data of the command executed.</param>
             <seealso cref="T:Deltin.CustomGameAutomation.CommandData"/>
             <seealso cref="T:Deltin.CustomGameAutomation.Commands"/>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PlayerIdentity">
+            <summary>
+            Contains data for identifying players who executed a command.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.ChatIdentity">
+            <summary>
+            Contains data for identifying players who executed a command.
+            </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.OverwatchInfoAuto">
             <summary>
@@ -1388,7 +1377,34 @@
         </member>
         <member name="F:Deltin.CustomGameAutomation.DefaultKeys.OpenCustomGameLobbyKey">
             <summary>
-            The key used to open the Custom Game lobby. Is <see cref="F:System.Windows.Forms.Keys.L"/> by default.
+            The key used to open the Custom Game lobby. Is L by default.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DefaultKeys.Pause">
+            <summary>
+            The key used to pause the custom game. Is CTRL+SHIFT+= by default.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DebugMenu.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PictureBoxExtended">
+            <summary>
+            Inherits from PictureBox; adds Interpolation Mode Setting
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">
@@ -2312,6 +2328,11 @@
             </summary>
         </member>
         <member name="P:Deltin.CustomGameAutomation.Properties.Resources.E_ELIMRoundOver">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Deltin.CustomGameAutomation.Properties.Resources.E_ELIMRoundOver_Draw">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>

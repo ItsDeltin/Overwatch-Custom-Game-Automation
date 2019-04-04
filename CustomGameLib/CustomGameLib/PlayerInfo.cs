@@ -641,8 +641,8 @@ namespace Deltin.CustomGameAutomation
                 // If the blue color is greater than the red color, the queue slot is on blue team.
                 if (color.B > color.R)
                     return QueueTeam.Blue;
-                // If the green color is less than 90, the queue slot is on the red team.
-                else if (color.G < 90)
+                // If the green color is less than 100, the queue slot is on the red team.
+                else if (color.G < 100)
                     return QueueTeam.Red;
                 // Else, the queue slot is on neutral team.
                 else

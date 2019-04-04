@@ -271,7 +271,7 @@ namespace Deltin.CustomGameAutomation
                 bool careerProfileOpenSuccess = Interact.ClickOption(slot, Markups.VIEW_CAREER_PROFILE);
                 if (!careerProfileOpenSuccess)
                     return null;
-                Commands.WaitForCareerProfileToLoad();
+                WaitForCareerProfileToLoad();
 
                 string name = GetPlayerName(
 #if DEBUG

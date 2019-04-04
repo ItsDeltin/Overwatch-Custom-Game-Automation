@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Deltin.CustomGameAutomation
 {
@@ -33,7 +34,7 @@ namespace Deltin.CustomGameAutomation
         {
             Validate();
 
-            User32.PostMessage(OverwatchHandle, 0x0006, 2, 0); // 0x0006 = WM_ACTIVATE 2 = WA_CLICKACTIVE
+            //User32.PostMessage(OverwatchHandle, 0x0006, 2, 0); // 0x0006 = WM_ACTIVATE 2 = WA_CLICKACTIVE
             User32.PostMessage(OverwatchHandle, 0x0086, 1, 0); // 0x0086 = WM_NCACTIVATE
             User32.PostMessage(OverwatchHandle, 0x0007, 0, 0); // 0x0007 = WM_DEVICECHANGE
         }
@@ -171,9 +172,7 @@ namespace Deltin.CustomGameAutomation
         {
             Validate();
             Activate();
-            Thread.Sleep(50);
-            Activate();
-            Thread.Sleep(50);
+            Thread.Sleep(25);
             User32.PostMessage(OverwatchHandle, WM_SYSKEYDOWN, 0x12, 1);
             User32.PostMessage(OverwatchHandle, WM_SYSKEYUP, (uint)key, 1);
             User32.PostMessage(OverwatchHandle, WM_KEYUP, 0x12, 0);
@@ -195,6 +194,39 @@ namespace Deltin.CustomGameAutomation
             setClipboardThread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
             setClipboardThread.Start();
             setClipboardThread.Join();
+        }
+
+        public void PressKeybind(KeyBind keybind)
+        {
+            Validate();
+
+            Activate();
+            Thread.Sleep(50);
+
+            if (keybind.Modifiers == KeybindModifier.None)
+            {
+                KeyPress(keybind.Key);
+                return;
+            }
+
+            bool alt = keybind.Modifiers.HasFlag(KeybindModifier.Alt),
+                control = keybind.Modifiers.HasFlag(KeybindModifier.Control),
+                shift = keybind.Modifiers.HasFlag(KeybindModifier.Shift);
+
+            if (control)
+                KeyDown(Keys.LControlKey);
+            if (shift)
+                KeyDown(Keys.LShiftKey);
+
+            if (alt)
+                Alt(keybind.Key);
+            else
+                KeyPress(keybind.Key);
+
+            if (shift)
+                KeyUp(Keys.LShiftKey);
+            if (control)
+                KeyUp(Keys.LControlKey);
         }
 
         internal void SelectAll()

@@ -83,12 +83,8 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public Locker SemiInteractive { get { return new Locker(SemiInteractiveNum, this); } }
 
-        private List<PassiveData> PassiveList = new List<PassiveData>(); // List of passive methods running.
-        private readonly object AccessLock = new object(); // Lock for accessing the PassiveList list.
-
-        private readonly object InteractiveLock = new object(); // Lock for semi-interactive and interactive methods.
-        private int InteractiveThreadID = -1; // The ID of the interactive thread. -1 for no interactive threads.
-        private int StackLength = 0;
+        readonly ReaderWriterLockSlim RWLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        readonly object InteractiveLock = new object();
 
         private void SetLock(Locker locker)
         {
@@ -96,78 +92,51 @@ namespace Deltin.CustomGameAutomation
             {
                 // Passive:
                 case PassiveNum:
-                    // Add the thread id to the list of passive threads.
-                    SpinWait.SpinUntil(() => { return InteractiveThreadID == -1 || InteractiveThreadID == locker.ThreadID; });
-                    lock (AccessLock)
-                        PassiveList.Add(new PassiveData(locker.ThreadID));
+
+                    RWLock.EnterUpgradeableReadLock();
+
                     break;
 
                 // Interactive:
-                case InteractiveNum:
-                    // Ignore calling thread if the calling thread is passive.
-                    lock (AccessLock)
-                        for (int i = 0; i < PassiveList.Count; i++)
-                            if (PassiveList[i].ThreadID == locker.ThreadID)
-                            {
-                                PassiveList[i].Waiting = true;
-                                break;
-                            }
-                    // Wait for all passive and interactive methods on other threads to finish.
+                case SemiInteractiveNum:
+
                     Monitor.Enter(InteractiveLock);
-                    SpinWait.SpinUntil(() => { lock (AccessLock) return !PassiveList.Any(p => p.ThreadID != locker.ThreadID && !p.Waiting); });
-                    InteractiveThreadID = locker.ThreadID;
 
                     break;
 
                 // Semi-Interactive:
-                case SemiInteractiveNum:
+                case InteractiveNum:
+
                     Monitor.Enter(InteractiveLock);
+                    RWLock.EnterWriteLock();
 
                     break;
-            }
-            
-            if (locker.LockType != PassiveNum)
-            {
-                StackLength++;
-                if (cg.DisableInput && StackLength == 1)
-                    cg.EnableExternalInput(false);
             }
         }
         private void Unlock(Locker locker)
         {
-            if (locker.LockType != PassiveNum)
-            {
-                if (cg.DisableInput && StackLength == 1)
-                    cg.EnableExternalInput(true);
-                StackLength--;
-            }
-
             switch (locker.LockType)
             {
                 // Passive:
                 case PassiveNum:
-                    // Remove from passive list.
-                    lock (AccessLock)
-                        PassiveList.RemoveAll(v => v.ThreadID == locker.ThreadID);
-                    break;
 
-                // Interactive:
-                case InteractiveNum:
-                    lock (AccessLock)
-                        // Stop ignoring passive caller if it exists.
-                        for (int i = 0; i < PassiveList.Count; i++)
-                            if (PassiveList[i].ThreadID == locker.ThreadID)
-                            {
-                                PassiveList[i].Waiting = false;
-                                break;
-                            }
-                    InteractiveThreadID = -1;
-                    Monitor.Exit(InteractiveLock);
+                    RWLock.ExitUpgradeableReadLock();
+
                     break;
 
                 // Semi-Interactive:
                 case SemiInteractiveNum:
+
                     Monitor.Exit(InteractiveLock);
+
+                    break;
+
+                // Interactive:
+                case InteractiveNum:
+
+                    RWLock.ExitWriteLock();
+                    Monitor.Exit(InteractiveLock);
+
                     break;
             }
         }
@@ -183,7 +152,6 @@ namespace Deltin.CustomGameAutomation
                 LockHandler = lockHandler;
                 LockHandler.SetLock(this);
             }
-            internal int ThreadID { get; private set; } = Thread.CurrentThread.ManagedThreadId;
             internal int LockType { get; private set; }
             private LockHandler LockHandler;
 
@@ -194,16 +162,6 @@ namespace Deltin.CustomGameAutomation
             {
                 LockHandler.Unlock(this);
             }
-        }
-
-        private class PassiveData
-        {
-            public PassiveData(int threadID)
-            {
-                ThreadID = threadID;
-            }
-            public int ThreadID { get; private set; }
-            public bool Waiting { get; set; }
         }
     }
 }

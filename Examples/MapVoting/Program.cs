@@ -114,7 +114,7 @@ class MapVoting
         {
             // Test if the player already voted for a map. If they did, update the map they are voting for.
             for (int i = 0; i < voteResults.Count; i++)
-                if (commandData.ChatIdentity.CompareIdentities(voteResults[i].ChatIdentity))
+                if (Identity.Compare(commandData.ChatIdentity, voteResults[i].ChatIdentity))
                 {
                     // Don't log if the player is voting for the same map again.
                     if (voteResults[i].VotingFor != voteFor)
