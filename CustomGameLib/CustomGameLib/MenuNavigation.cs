@@ -180,6 +180,9 @@ namespace Deltin.CustomGameAutomation
         {
             OverwatchState gameState = Reset();
 
+            Chat.CloseChat();
+            ResetMouse();
+
             if (gameState == OverwatchState.MainMenu)
             {
                 KeyPress(100, Keys.Tab, Keys.Space);
@@ -189,6 +192,9 @@ namespace Deltin.CustomGameAutomation
                 KeyPress(100, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Tab, Keys.Space);
                 Thread.Sleep(500);
             }
+
+            if (OpenChatIsDefault)
+                Chat.OpenChat();
         }
 
         internal void GoToSettings()

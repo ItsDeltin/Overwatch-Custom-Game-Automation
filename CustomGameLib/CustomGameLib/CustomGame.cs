@@ -157,15 +157,13 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void Dispose()
         {
-            using (LockHandler.Interactive)
-            {
-                Disposed = true;
-                Commands.StopScanning();
-                PersistentScan = false;
+            Commands.StopScanning();
+            PersistentScan = false;
+            PersistentScanningTask.Wait();
 
-                if (Capture != null)
-                    Capture.Dispose();
-            }
+            if (Capture != null)
+                Capture.Dispose();
+            Disposed = true;
         }
 
         /// <summary>

@@ -31,6 +31,14 @@
             <param name="slot">Slot to check.</param>
             <returns>The player identity of the slot.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerIdentityAndName(System.Int32,Deltin.CustomGameAutomation.PlayerIdentity@,System.String@)">
+            <summary>
+            Gets the identity and name of a slot.
+            </summary>
+            <param name="slot">Slot to check.</param>
+            <param name="pi">The <see cref="T:Deltin.CustomGameAutomation.PlayerIdentity" /> of the slot.</param>
+            <param name="name">The name of the slot.</param>
+        </member>
         <member name="M:Deltin.CustomGameAutomation.CustomGame.StartOverwatch(Deltin.CustomGameAutomation.OverwatchInfoAuto)">
             <summary>
             Creates an Overwatch process using the currently logged in battle.net account.

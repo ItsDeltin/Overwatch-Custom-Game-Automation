@@ -174,6 +174,7 @@ namespace Deltin.CustomGameAutomation
         internal void StopScanning()
         {
             KeepScanning = false;
+            ScanCommandsTask.Wait();
         }
 
         private void ScanCommands()

@@ -26,7 +26,7 @@ namespace Deltin.CustomGameAutomation
             return i1.IdentityMarkup.CompareTo(i2.IdentityMarkup, i1.Fade, i1.PercentMatches, DBCompareFlags.Multithread);
         }
 
-        protected virtual int PercentMatches { get { return 90; } }
+        protected virtual int PercentMatches { get { return 97; } }
         protected virtual int Fade { get { return 50; } }
 
         public void Dispose()
