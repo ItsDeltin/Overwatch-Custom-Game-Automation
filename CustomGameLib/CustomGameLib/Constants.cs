@@ -71,6 +71,8 @@ namespace Deltin.CustomGameAutomation
 
     internal static class Points
     {
+        public static readonly Point BITBLT_WINDOW_LOCATION = new Point(1, 31);
+
         public static readonly Point RESET_POINT = new Point(500, 500);
 
         public static readonly Point PRE_MAIN_MENU_LOGIN = new Point(419, 473);
@@ -280,7 +282,7 @@ namespace Deltin.CustomGameAutomation
 
     internal static class Rectangles
     {
-        public static readonly Rectangle ENTIRE_SCREEN = new Rectangle(0, 0, 960, 540);
+        public static readonly Rectangle ENTIRE_SCREEN = new Rectangle(0, 0, 944, 501);
 
         public static readonly Rectangle LOBBY_CHATBOX = new Rectangle(50, 440, 200, 47);
         public static readonly Rectangle LOBBY_CAREER_PROFILE = new Rectangle(46, 101, 265, 82);

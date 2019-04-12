@@ -3,6 +3,25 @@
 namespace Deltin.CustomGameAutomation
 {
     #region Public Enums
+
+    /// <summary>
+    /// The screenshot method used to capture the Overwatch window screen.
+    /// BitBlt is faster and works even if another window is over the Overwatch window.
+    /// If BitBlt does not work for you, use ScreenCopy.
+    /// </summary>
+    public enum ScreenshotMethod
+    {
+        /// <summary>
+        /// The BitBlt method of screen capturing.
+        /// </summary>
+        BitBlt,
+
+        /// <summary>
+        /// The ScreenCopy method of screen capturing.
+        /// </summary>
+        ScreenCopy
+    }
+
     /// <summary>
     /// AI heroes.
     /// </summary>
@@ -447,9 +466,11 @@ namespace Deltin.CustomGameAutomation
         Shift = 4
     }
 #pragma warning restore CS1591
+
     #endregion
 
     #region Internal Enums
+
     [Flags]
     internal enum DBCompareFlags
     {
@@ -471,5 +492,6 @@ namespace Deltin.CustomGameAutomation
         Empty, // Dark red pixel
         Required // Blue pixel
     }
+
     #endregion
 }

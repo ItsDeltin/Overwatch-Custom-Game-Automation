@@ -47,6 +47,7 @@ namespace Deltin.CustomGameAutomation
 
             int yoffset = 0;
             int xoffset = 0;
+            /*
             if (cg.IsDeathmatch(true))
             {
                 if (CustomGame.IsSlotBlue(slot))
@@ -60,6 +61,7 @@ namespace Deltin.CustomGameAutomation
                     yoffset += Distances.LOBBY_SLOT_DM_Y_OFFSET;
                 }
             }
+            */
 
             if (CustomGame.IsSlotInQueue(slot) && !cg.CheckRange(CustomGame.QueueMin, CustomGame.QueueMax, 0, true).Contains(slot)) return Point.Empty; // If a queue slot is selected and there is no one in that queue slot, return empty.
             if (CustomGame.IsSlotSpectator(slot)) yoffset = cg.FindSpectatorOffset(true); // If there is players in the queue, the spectator slots move down. Find the offset in pixels to spectator.

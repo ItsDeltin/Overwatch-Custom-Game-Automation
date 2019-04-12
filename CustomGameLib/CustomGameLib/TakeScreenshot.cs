@@ -9,27 +9,10 @@ using System.Runtime.InteropServices;
 
 namespace Deltin.CustomGameAutomation
 {
-    /// <summary>
-    /// The screenshot method used to capture the Overwatch window screen.
-    /// BitBlt is faster and works even if another window is over the Overwatch window.
-    /// If BitBlt does not work for you, use ScreenCopy.
-    /// </summary>
-    public enum ScreenshotMethod
-    {
-        /// <summary>
-        /// The BitBlt method of screen capturing.
-        /// </summary>
-        BitBlt,
-        /// <summary>
-        /// The ScreenCopy method of screen capturing.
-        /// </summary>
-        ScreenCopy
-    }
-
     partial class CustomGame
     {
-        private ScreenshotMethod ScreenshotMethod;
-        internal object ScreenshotLock = new object();
+        private readonly ScreenshotMethod ScreenshotMethod;
+        internal readonly object ScreenshotLock = new object();
 
         // This grabs a screenshot of the Overwatch handle
         internal void UpdateScreen()
@@ -79,10 +62,8 @@ namespace Deltin.CustomGameAutomation
                 // get the hDC of the target window
                 IntPtr hdcSrc = User32.GetDC(OverwatchHandle);
                 // get the size
-                Rectangle windowRect = new Rectangle();
-                User32.GetWindowRect(OverwatchHandle, ref windowRect);
-                int width = windowRect.Right - windowRect.Left;
-                int height = windowRect.Bottom - windowRect.Top;
+                int width = Rectangles.ENTIRE_SCREEN.Width + Points.BITBLT_WINDOW_LOCATION.X;
+                int height = Rectangles.ENTIRE_SCREEN.Height + Points.BITBLT_WINDOW_LOCATION.Y;
                 // create a device context we can copy to
                 IntPtr hdcDest = Gdi32.CreateCompatibleDC(hdcSrc);
                 // create a bitmap we can copy it to,
@@ -91,7 +72,7 @@ namespace Deltin.CustomGameAutomation
                 // select the bitmap object
                 IntPtr hOld = Gdi32.SelectObject(hdcDest, hBitmap);
                 // bitblt over
-                Gdi32.BitBlt(hdcDest, 1, 31, width - 10, height, hdcSrc, 0, 0, (uint)Gdi32.TernaryRasterOperations.SRCCOPY | (uint)Gdi32.TernaryRasterOperations.CAPTUREBLT);
+                Gdi32.BitBlt(hdcDest, Points.BITBLT_WINDOW_LOCATION.X, Points.BITBLT_WINDOW_LOCATION.Y, width, height, hdcSrc, 0, 0, (uint)Gdi32.TernaryRasterOperations.SRCCOPY | (uint)Gdi32.TernaryRasterOperations.CAPTUREBLT);
                 // restore selection
                 Gdi32.SelectObject(hdcDest, hOld);
 
@@ -116,17 +97,14 @@ namespace Deltin.CustomGameAutomation
 
         private void ScreenshotScreenCopy()
         {
-            Rectangle rect = new Rectangle();
-            User32.GetWindowRect(OverwatchHandle, ref rect);
-
-            int width = rect.Right - rect.Left;
-            int height = rect.Bottom - rect.Top;
+            int width = Rectangles.ENTIRE_SCREEN.Width + Points.BITBLT_WINDOW_LOCATION.X;
+            int height = Rectangles.ENTIRE_SCREEN.Height + Points.BITBLT_WINDOW_LOCATION.Y;
 
             if (Capture != null)
                 Capture.Dispose();
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
-            g.CopyFromScreen(rect.Left - 7, rect.Top, -14, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
+            g.CopyFromScreen(0, 0, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
             g.Dispose();
             Capture = new DirectBitmap(bmp);
             bmp.Dispose();
@@ -161,7 +139,7 @@ namespace Deltin.CustomGameAutomation
                     break;
             }
 
-            User32.MoveWindow(OverwatchHandle, -7, 0, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
+            User32.MoveWindow(OverwatchHandle, Points.BITBLT_WINDOW_LOCATION.X, Points.BITBLT_WINDOW_LOCATION.Y, Rectangles.ENTIRE_SCREEN.Width, Rectangles.ENTIRE_SCREEN.Height, false);
         }
     }
 

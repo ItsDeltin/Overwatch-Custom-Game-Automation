@@ -182,6 +182,7 @@ namespace Deltin.CustomGameAutomation
                     int x = Points.SLOT_LOCATIONS[slot].X,
                         y = Points.SLOT_LOCATIONS[slot].Y;
 
+                    /*
                     if (IsDeathmatch(true))
                     {
                         if (IsSlotBlue(slot))
@@ -195,6 +196,7 @@ namespace Deltin.CustomGameAutomation
                             y += Distances.LOBBY_SLOT_DM_Y_OFFSET;
                         }
                     }
+                    */
 
                     int compareToX = Points.SLOT_LOCATIONS[slot].X;
 
@@ -473,12 +475,14 @@ namespace Deltin.CustomGameAutomation
             return GetSlots(flags, noUpdate).Count;
         }
 
+        /*
         internal bool IsDeathmatch(bool noUpdate = false)
         {
             if (!noUpdate)
                 UpdateScreen();
             return !Capture.CompareColor(327, 302, new int[] { 172, 173, 175 }, 15);
         }
+        */
 
         /// <summary>
         /// Info about players in an Overwatch custom game.

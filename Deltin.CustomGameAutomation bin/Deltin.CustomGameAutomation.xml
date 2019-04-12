@@ -114,14 +114,14 @@
             <param name="letters">Characters to generate.</param>
             <returns>An alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32,System.String)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32)">
             <summary>
             Gets the name of a player.
             </summary>
             <param name="slot">The slot of the player.</param>
             <returns>The name of the player.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.String)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName">
             <summary>
             Gets the name of the player when already in the career profile.
             </summary>
@@ -1393,26 +1393,21 @@
             The key used to pause the custom game. Is CTRL+SHIFT+= by default.
             </summary>
         </member>
-        <member name="F:Deltin.CustomGameAutomation.DebugMenu.components">
+        <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
             <summary>
-            Required designer variable.
+            The screenshot method used to capture the Overwatch window screen.
+            BitBlt is faster and works even if another window is over the Overwatch window.
+            If BitBlt does not work for you, use ScreenCopy.
             </summary>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.DebugMenu.Dispose(System.Boolean)">
+        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.BitBlt">
             <summary>
-            Clean up any resources being used.
-            </summary>
-            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:Deltin.CustomGameAutomation.DebugMenu.InitializeComponent">
-            <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
+            The BitBlt method of screen capturing.
             </summary>
         </member>
-        <member name="T:Deltin.CustomGameAutomation.PictureBoxExtended">
+        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.ScreenCopy">
             <summary>
-            Inherits from PictureBox; adds Interpolation Mode Setting
+            The ScreenCopy method of screen capturing.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.AIHero">
@@ -2933,23 +2928,6 @@
         <member name="P:Deltin.CustomGameAutomation.PlayerTrackerSlot.Slot">
             <summary>
             The slot of the player.
-            </summary>
-        </member>
-        <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
-            <summary>
-            The screenshot method used to capture the Overwatch window screen.
-            BitBlt is faster and works even if another window is over the Overwatch window.
-            If BitBlt does not work for you, use ScreenCopy.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.BitBlt">
-            <summary>
-            The BitBlt method of screen capturing.
-            </summary>
-        </member>
-        <member name="F:Deltin.CustomGameAutomation.ScreenshotMethod.ScreenCopy">
-            <summary>
-            The ScreenCopy method of screen capturing.
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.DirectBitmap">

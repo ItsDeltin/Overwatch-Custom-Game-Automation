@@ -236,6 +236,7 @@ namespace Deltin.CustomGameAutomation
                     else if (CustomGame.IsSlotRed(slot))
                         checkX = 399; // The start of the red slots on the X axis
 
+                    /*
                     if (cg.IsDeathmatch(true))
                     {
                         checkY += Distances.LOBBY_SLOT_DM_Y_OFFSET - 9;
@@ -244,6 +245,7 @@ namespace Deltin.CustomGameAutomation
                         else if (CustomGame.IsSlotRed(slot))
                             checkX += Distances.LOBBY_SLOT_DM_RED_X_OFFSET;
                     }
+                    */
 
                     checkXLength = 195; // The length of the slots.
                 }
