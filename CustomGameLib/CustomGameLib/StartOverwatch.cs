@@ -18,127 +18,133 @@ namespace Deltin.CustomGameAutomation
         /// <returns>The created Overwatch process.</returns>
         public static Process StartOverwatch(OverwatchInfoAuto processInfo = null)
         {
+            // Return any Overwatch process that might already be running.
+            Process foundProcess = GetOverwatchProcess();
+            if (foundProcess != null)
+                return foundProcess;
+
+            #region Argument check
             if (processInfo == null)
                 processInfo = new OverwatchInfoAuto();
 
+            // Check if the files in processInfo exist.
             if (!File.Exists(processInfo.BattlenetExecutableFilePath))
-                throw new FileNotFoundException(string.Format("Battle.net.exe's executable at {0} was not found. " +
-                    "Change battlenetExeLocation to the location of the battle.net.exe executable.", processInfo.BattlenetExecutableFilePath));
+                throw new FileNotFoundException($"Battle.net.exe's executable at {processInfo.BattlenetExecutableFilePath} was not found. " +
+                    "Change OverwatchInfoAuto.BattlenetExecutableFilePath to the location of the battle.net.exe executable.");
 
-            Stopwatch startTime = new Stopwatch();
+            if (!File.Exists(processInfo.OverwatchSettingsFilePath))
+                throw new FileNotFoundException($"Overwatch's settings file at {processInfo.OverwatchSettingsFilePath} was not found. " +
+                    "Change OverwatchInfoAuto.OverwatchSettingsFilePath to the location of Overwatch's settings file.");
+            #endregion
 
+            #region Start battle.net
             // If battle.net is not started, start it.
             if (Process.GetProcessesByName("battle.net").Length == 0)
             {
-#if DEBUG
                 CustomGameDebug.WriteLine("No battle.net process found, starting battle.net.");
-#endif
 
                 Process battlenet = new Process();
                 battlenet.StartInfo.FileName = processInfo.BattlenetExecutableFilePath;
                 battlenet.Start();
 
-                startTime.Start();
                 // The battle.net app is fully started when there are 3 battle.net processes. Loop while there are less than 3.
-                while (Process.GetProcessesByName("battle.net").Length < 3)
+                if (!SpinWait.SpinUntil(() => 
                 {
-                    if (startTime.ElapsedMilliseconds >= processInfo.MaxBattlenetStartTime || processInfo.MaxBattlenetStartTime == -1)
-                    {
-#if DEBUG
-                        CustomGameDebug.WriteLine("Error: Battle.net took too long to start.");
-#endif
-                        throw new OverwatchStartFailedException("Battle.net took too long to start.");
-                    }
-                    Thread.Sleep(200);
+                    return Process.GetProcessesByName("battle.net").Length >= 3;
+                }, processInfo.MaxBattlenetStartTime))
+                {
+                    // This code block will run if battle.net isn't finished setting up before the specified maximum time.
+                    CustomGameDebug.WriteLine("Error: Battle.net took too long to start.");
+                    throw new OverwatchStartFailedException("Battle.net took too long to start.");
                 }
-#if DEBUG
                 CustomGameDebug.WriteLine("Finished starting Battle.net.");
-#endif
             }
-#if DEBUG
             else
                 CustomGameDebug.WriteLine("Battle.net process found.");
+            #endregion
 
             CustomGameDebug.WriteLine("Starting the Overwatch process.");
-#endif
-
-            Process[] processList = Process.GetProcessesByName("Overwatch");
 
             // Set the video settings.
             var initialSettings = ChangeVideoSettings(processInfo.OverwatchSettingsFilePath, VideoSettings.Item1, VideoSettings.Item2);
 
-            Process battlenetOW = new Process();
-            // The arguments to start the game directly before August 2018:
-            // battlenet.StartInfo.FileName = "battlenet://Pro";
-            // The arguments after:
-            battlenetOW.StartInfo.FileName = processInfo.BattlenetExecutableFilePath;
-            battlenetOW.StartInfo.Arguments = "--exec=\"launch Pro\"";
-            battlenetOW.Start();
-
-            startTime.Restart();
-
-            while (startTime.ElapsedMilliseconds < processInfo.MaxOverwatchStartTime || processInfo.MaxOverwatchStartTime == -1)
+            try
             {
-                Process[] newProcessList = Process.GetProcessesByName("Overwatch");
+                try
+                {
+                    Process battlenetOW = new Process();
+                    // The arguments to start the game directly before August 2018:
+                    // battlenet.StartInfo.FileName = "battlenet://Pro";
+                    // The arguments after:
+                    battlenetOW.StartInfo.FileName = processInfo.BattlenetExecutableFilePath;
+                    battlenetOW.StartInfo.Arguments = "--exec=\"launch Pro\"";
+                    battlenetOW.Start();
 
-                for (int i = 0; i < newProcessList.Length; i++)
-                    if (processList.Contains(newProcessList[i]) == false)
+                    Process owProcess = null;
+
+                    TimeSpan overwatchStartTimeSpan = new TimeSpan(0, 0, 0, 0, processInfo.MaxOverwatchStartTime);
+
+                    if (!SpinWait.SpinUntil(() =>
                     {
-                        Process owProcess = newProcessList[i];
-
-                        WaitForVisibleProcessWindow(owProcess);
-                        RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
-
-                        if (processInfo.AutomaticallyCreateCustomGame)
-                        {
-                            CustomGame cg = new CustomGame(new CustomGameBuilder()
-                            {
-                                OpenChatIsDefault = false,
-                                ScreenshotMethod = processInfo.ScreenshotMethod,
-                                OverwatchProcess = owProcess
-                            });
-
-                            DirectBitmap bmp = null;
-                            if (WaitForMainMenu(cg, processInfo.MaxWaitForMenuTime))
-                            {
-#if DEBUG
-                                CustomGameDebug.WriteLine("Finished starting Overwatch.");
-#endif
-                                cg.CreateCustomGame();
-                                if (bmp != null)
-                                    bmp.Dispose();
-                            }
-                            else
-                            {
-#if DEBUG
-                                CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
-#endif
-                                if (bmp != null)
-                                    bmp.Dispose();
-                                if (processInfo.CloseOverwatchProcessOnFailure)
-                                {
-                                    owProcess.CloseMainWindow();
-                                    owProcess.Close();
-                                }
-                                throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
-                            }
-                        }
-#if DEBUG
-                        else
-                            CustomGameDebug.WriteLine("Finished starting Overwatch.");
-#endif
-
-                        return newProcessList[i];
+                        owProcess = GetOverwatchProcess();
+                        return owProcess != null;
+                    }, overwatchStartTimeSpan))
+                    {
+                        CustomGameDebug.WriteLine("Error: Overwatch took too long to start.");
+                        throw new OverwatchStartFailedException("Overwatch took too long to start.");
                     }
 
-                Thread.Sleep(200);
-            }
+                    // Wait for the window to be visible.
+                    if (!SpinWait.SpinUntil(() =>
+                    {
+                        owProcess.Refresh();
+                        return !string.IsNullOrEmpty(owProcess.MainWindowTitle);
+                    }, overwatchStartTimeSpan))
+                    {
+                        CustomGameDebug.WriteLine("Error: Overwatch took too long to start.");
+                        throw new OverwatchStartFailedException("Overwatch took too long to start.");
+                    }
 
-#if DEBUG
-            CustomGameDebug.WriteLine("Error: Overwatch took too long to start.");
-#endif
-            RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
-            throw new OverwatchStartFailedException("Overwatch took too long to start.");
+                    RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
+                    initialSettings = null;
+
+                    if (processInfo.AutomaticallyCreateCustomGame)
+                    {
+                        CustomGame cg = new CustomGame(new CustomGameBuilder()
+                        {
+                            OpenChatIsDefault = false,
+                            ScreenshotMethod = processInfo.ScreenshotMethod,
+                            OverwatchProcess = owProcess
+                        });
+
+                        if (WaitForMainMenu(cg, processInfo.MaxWaitForMenuTime))
+                            cg.CreateCustomGame();
+                        else
+                        {
+                            CustomGameDebug.WriteLine("Could not start Overwatch, main menu did not load.");
+
+                            if (processInfo.CloseOverwatchProcessOnFailure)
+                                owProcess.CloseMainWindow();
+
+                            throw new OverwatchStartFailedException("Could not start Overwatch, main menu did not load.");
+                        }
+                    }
+
+                    CustomGameDebug.WriteLine("Finished starting Overwatch.");
+                    return owProcess;
+                }
+                finally
+                {
+                    CustomGameDebug.WriteLine("Restoring video settings.");
+                    if (initialSettings != null)
+                        RestoreVideoSettings(processInfo.OverwatchSettingsFilePath, initialSettings);
+                }
+            }
+            catch (OverwatchClosedException)
+            {
+                CustomGameDebug.WriteLine("Could not start Overwatch, was closed during initialization.");
+                throw new OverwatchStartFailedException("Could not start Overwatch, was closed during initialization.");
+            }
         }
 
         private static List<Tuple<string, string>> ChangeVideoSettings(string settingsFilePath, string[] settings, string[] setTo)
@@ -181,15 +187,6 @@ namespace Deltin.CustomGameAutomation
             ChangeVideoSettings(settingsFilePath, settings.ToArray(), setTo.ToArray());
         }
 
-        private static void WaitForVisibleProcessWindow(Process process)
-        {
-            while (string.IsNullOrEmpty(process.MainWindowTitle))
-            {
-                Thread.Sleep(100);
-                process.Refresh();
-            }
-        }
-
         private static bool WaitForMainMenu(CustomGame cg, int maxtime)
         {
             return cg.WaitForColor(Points.MAIN_MENU_OVERWATCH_WATERMARK, Colors.WHITE, 10, maxtime);
@@ -200,8 +197,8 @@ namespace Deltin.CustomGameAutomation
         /// <para>Item2 = what the setting should equal.</para>
         /// </summary>
         private static readonly Tuple<string[], string[]> VideoSettings = new Tuple<string[], string[]>(
-            new string[] { "RenderContrast", "RenderBrightness", "RenderGamma", "ColorblindMode", "FullscreenWindow", "FullscreenWindowEnabled", "MaximizedWindow" }, 
-            new string[] { "0.5",            "0",                "2.2",         "0",              "0",                "0",                       "0" });
+            new string[] { "RenderContrast", "RenderBrightness", "RenderGamma", "ColorblindMode", "FullscreenWindow", "FullscreenWindowEnabled", "MaximizedWindow", "WindowedFullscreen", "WindowMode" }, 
+            new string[] { "0.5",            "0",                "2.2",         "0",              "0",                "0",                       "0",               "1",                  "1" });
 
         /// <summary>
         /// Gets a running Overwatch process.

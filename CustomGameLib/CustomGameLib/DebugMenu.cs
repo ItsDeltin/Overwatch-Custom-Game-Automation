@@ -1,5 +1,4 @@
-﻿#if DEBUG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,7 +13,8 @@ using System.Diagnostics;
 
 namespace Deltin.CustomGameAutomation
 {
-    public partial class DebugMenu : Form
+#if DEBUG
+    internal partial class DebugMenu : Form
     {
         #region Fields
         private readonly CustomGame cg;
@@ -443,24 +443,9 @@ namespace Deltin.CustomGameAutomation
         }
     }
 
-    internal class CustomGameDebug
-    {
-        private const string DebugHeader = "[CGA]";
-
-        public static void WriteLine(string text)
-        {
-            Debug.WriteLine(Format(text));
-        }
-
-        private static string Format(string text)
-        {
-            return DebugHeader + " " + text;
-        }
-    }
-
     partial class CustomGame
     {
-        public DebugMenu DebugMenu = null;
+        internal DebugMenu DebugMenu = null;
         private bool DebugStarted = false;
 
         private void SetupDebugWindow()
@@ -478,5 +463,22 @@ namespace Deltin.CustomGameAutomation
             DebugStarted = true;
         }
     }
-}
+
 #endif
+
+    internal class CustomGameDebug
+    {
+        private const string DebugHeader = "[CGA]";
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        public static void WriteLine(string text)
+        {
+            Debug.WriteLine(Format(text));
+        }
+
+        private static string Format(string text)
+        {
+            return DebugHeader + " " + text;
+        }
+    }
+}
