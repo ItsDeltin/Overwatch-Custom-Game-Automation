@@ -14,23 +14,27 @@ namespace Deltin.CustomGameAutomation
         {
             PersistentScanningTask = new Task(() =>
             {
-                GameOverScan gameOverData = new GameOverScan();
-                RoundOverScan roundOverData = new RoundOverScan();
-
-                while (PersistentScan)
+                try
                 {
-                    SpinWait.SpinUntil(() => { return OnGameOver != null || OnRoundOver != null || OnDisconnect != null; });
+                    GameOverScan gameOverData = new GameOverScan();
+                    RoundOverScan roundOverData = new RoundOverScan();
 
-                    using (LockHandler.Passive)
+                    while (PersistentScan)
                     {
-                        UpdateScreen();
-                        ScanGameOver(gameOverData);
-                        ScanRoundOver(roundOverData);
-                        InvokeOnDisconnect();
-                    }
+                        SpinWait.SpinUntil(() => { return OnGameOver != null || OnRoundOver != null || OnDisconnect != null; });
 
-                    Thread.Sleep(10); // End
+                        using (LockHandler.Passive)
+                        {
+                            UpdateScreen();
+                            ScanGameOver(gameOverData);
+                            ScanRoundOver(roundOverData);
+                            InvokeOnDisconnect();
+                        }
+
+                        Thread.Sleep(10); // End
+                    }
                 }
+                catch (OverwatchClosedException) { }
             });
             PersistentScanningTask.Start();
         }

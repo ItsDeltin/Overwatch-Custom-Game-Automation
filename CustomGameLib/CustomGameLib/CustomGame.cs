@@ -157,12 +157,16 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         public void Dispose()
         {
+            if (Disposed)
+                return;
+
             Commands.StopScanning();
             PersistentScan = false;
             PersistentScanningTask.Wait();
 
             if (Capture != null)
                 Capture.Dispose();
+
             Disposed = true;
         }
 

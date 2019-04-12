@@ -37,7 +37,11 @@ namespace Deltin.CustomGameAutomation
         {
             ScanCommandsTask = new Task(() =>
             {
-                ScanCommands();
+                try
+                {
+                    ScanCommands();
+                }
+                catch (OverwatchClosedException) { }
             });
             ScanCommandsTask.Start();
         }
