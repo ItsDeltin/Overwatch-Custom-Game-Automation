@@ -107,8 +107,8 @@ namespace Deltin.CustomGameAutomation
                 // Semi-Interactive:
                 case InteractiveNum:
 
-                    Monitor.Enter(InteractiveLock);
                     RWLock.EnterWriteLock();
+                    Monitor.Enter(InteractiveLock);
 
                     break;
             }
@@ -134,8 +134,8 @@ namespace Deltin.CustomGameAutomation
                 // Interactive:
                 case InteractiveNum:
 
-                    RWLock.ExitWriteLock();
                     Monitor.Exit(InteractiveLock);
+                    RWLock.ExitWriteLock();
 
                     break;
             }
