@@ -93,7 +93,8 @@ namespace Deltin.CustomGameAutomation
                 // Passive:
                 case PassiveNum:
 
-                    RWLock.EnterUpgradeableReadLock();
+                    //RWLock.EnterUpgradeableReadLock();
+                    Monitor.Enter(InteractiveLock);
 
                     break;
 
@@ -107,7 +108,7 @@ namespace Deltin.CustomGameAutomation
                 // Semi-Interactive:
                 case InteractiveNum:
 
-                    RWLock.EnterWriteLock();
+                    //RWLock.EnterWriteLock();
                     Monitor.Enter(InteractiveLock);
 
                     break;
@@ -120,7 +121,8 @@ namespace Deltin.CustomGameAutomation
                 // Passive:
                 case PassiveNum:
 
-                    RWLock.ExitUpgradeableReadLock();
+                    //RWLock.ExitUpgradeableReadLock();
+                    Monitor.Exit(InteractiveLock);
 
                     break;
 
@@ -135,7 +137,7 @@ namespace Deltin.CustomGameAutomation
                 case InteractiveNum:
 
                     Monitor.Exit(InteractiveLock);
-                    RWLock.ExitWriteLock();
+                    //RWLock.ExitWriteLock();
 
                     break;
             }
