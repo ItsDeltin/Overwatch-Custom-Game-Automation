@@ -32,18 +32,18 @@ namespace Deltin.CustomGameAutomation
         /// </summary>
         Recommended,
 #pragma warning disable CS1591
-        Ana,
-        Bastion,
-        Lucio,
-        McCree,
-        Mei,
         Reaper,
-        Roadhog,
-        Soldier76,
-        Sombra,
         Torbjorn,
+        Bastion,
+        Zenyatta,
+        Roadhog,
+        McCree,
         Zarya,
-        Zenyatta
+        Soldier76,
+        Lucio,
+        Mei,
+        Sombra,
+        Ana,
 #pragma warning restore CS1591
     }
 

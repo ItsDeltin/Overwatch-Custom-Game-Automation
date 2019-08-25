@@ -49,81 +49,78 @@ namespace Deltin.CustomGameAutomation
 
                 cg.UpdateScreen();
 
-                if (cg.DoesAddButtonExist())
                 /*
                  * If the blue shade of the "Move" button is there, that means that the Add AI button is there. 
                  * If the Add AI button is missing, we can't add AI, so return false. If it is there, add the bots.
                  * The AI button will be missing if the server is full
                  */
+                if (!cg.DoesAddButtonExist()) return false;
+
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.CloseChat();
+
+                // Open AddAI menu.
+                cg.MoveMouseTo(Points.LOBBY_ADD_AI);
+                cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
+                cg.LeftClick(Points.LOBBY_ADD_AI, 500);
+
+                List<Keys> press = new List<Keys>();
+
+                if (hero != AIHero.Recommended)
                 {
-                    if (cg.OpenChatIsDefault)
-                        cg.Chat.CloseChat();
-
-                    // Open AddAI menu.
-                    cg.MoveMouseTo(Points.LOBBY_ADD_AI);
-                    cg.WaitForUpdate(Points.LOBBY_ADD_AI, 20, 2000);
-                    cg.LeftClick(Points.LOBBY_ADD_AI, 500);
-
-                    List<Keys> press = new List<Keys>();
-
-                    if (hero != AIHero.Recommended)
-                    {
-                        press.Add(Keys.Space);
-                        int heroid = (int)hero;
-                        for (int i = 0; i < heroid; i++)
-                            press.Add(Keys.Down);
-                        press.Add(Keys.Space);
-                    }
-
-                    press.Add(Keys.Down);
-
-                    if (difficulty != Difficulty.Easy)
-                    {
-                        press.Add(Keys.Space);
-                        int difficultyID = (int)difficulty;
-                        for (int i = 0; i < difficultyID; i++)
-                            press.Add(Keys.Down);
-                        press.Add(Keys.Space);
-                    }
-
-                    press.Add(Keys.Down);
-                    press.Add(Keys.Down);
-
-                    if (team != Team.BlueAndRed)
-                    {
-                        press.Add(Keys.Space);
-                        int teamID = (int)team;
-                        for (int i = 0; i < teamID; i++)
-                            press.Add(Keys.Down);
-                        press.Add(Keys.Space);
-                    }
-
-                    if (count > 0)
-                    {
-                        press.Add(Keys.Up);
-                        for (int i = 0; i < 12; i++)
-                            press.Add(Keys.Left);
-                        for (int i = 0; i < count; i++)
-                            press.Add(Keys.Right);
-                        press.Add(Keys.Down);
-                    }
-
-                    press.Add(Keys.Down);
                     press.Add(Keys.Space);
-
-                    cg.KeyPress(press.ToArray());
-
-                    //cg.//ResetMouse();
-
-                    Thread.Sleep(50);
-
-                    if (cg.OpenChatIsDefault)
-                        cg.Chat.OpenChat();
-
-                    return true;
+                    int heroid = (int)hero;
+                    for (int i = 0; i < heroid; i++)
+                        press.Add(Keys.Down);
+                    press.Add(Keys.Space);
                 }
-                else
-                    return false;
+
+                press.Add(Keys.Down);
+
+                if (difficulty != Difficulty.Easy)
+                {
+                    press.Add(Keys.Space);
+                    int difficultyID = (int)difficulty;
+                    for (int i = 0; i < difficultyID; i++)
+                        press.Add(Keys.Down);
+                    press.Add(Keys.Space);
+                }
+
+                press.Add(Keys.Down);
+                press.Add(Keys.Down);
+
+                if (team != Team.BlueAndRed)
+                {
+                    press.Add(Keys.Space);
+                    int teamID = (int)team;
+                    for (int i = 0; i < teamID; i++)
+                        press.Add(Keys.Down);
+                    press.Add(Keys.Space);
+                }
+
+                if (count > 0)
+                {
+                    press.Add(Keys.Up);
+                    for (int i = 0; i < 12; i++)
+                        press.Add(Keys.Left);
+                    for (int i = 0; i < count; i++)
+                        press.Add(Keys.Right);
+                    press.Add(Keys.Down);
+                }
+
+                press.Add(Keys.Down);
+                press.Add(Keys.Space);
+
+                cg.KeyPress(press.ToArray());
+
+                //cg.//ResetMouse();
+
+                Thread.Sleep(50);
+
+                if (cg.OpenChatIsDefault)
+                    cg.Chat.OpenChat();
+
+                return true;
             }
         }
 
