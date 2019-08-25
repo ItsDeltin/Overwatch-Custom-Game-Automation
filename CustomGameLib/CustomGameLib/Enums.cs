@@ -332,6 +332,7 @@ namespace Deltin.CustomGameAutomation
         Reaper,
         Reinhardt,
         Roadhog,
+        Sigma,
         Soldier76,
         Sombra,
         Symmetra,

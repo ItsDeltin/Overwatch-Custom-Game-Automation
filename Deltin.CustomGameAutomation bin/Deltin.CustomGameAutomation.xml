@@ -3222,5 +3222,25 @@
             </summary>
             <param name="settings">Settings to change.</param>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.Import(System.String,System.Boolean)">
+            <summary>
+            Imports a custom game code.
+            </summary>
+            <param name="code">The code to import.</param>
+            <param name="testIfSuccessful">If true, the method will test if importing the code was successful. Will take more time.</param>
+            <returns>Will return true if importing was successful. Will return false if the code was already loaded or the code does not exist.</returns>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetDescription(System.String)">
+            <summary>
+            Sets the description of the game.
+            </summary>
+            <param name="value">The new description.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.GetDescription">
+            <summary>
+            Gets the description of the game.
+            </summary>
+            <returns>The current description.</returns>
+        </member>
     </members>
 </doc>

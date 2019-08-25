@@ -596,6 +596,111 @@ namespace Deltin.CustomGameAutomation
                 settings.SetSettings(cg);
             }
         }
+
+        const string IMPORT_TEST = "!OCGA Import Test!";
+
+        /// <summary>
+        /// Imports a custom game code.
+        /// </summary>
+        /// <param name="code">The code to import.</param>
+        /// <param name="testIfSuccessful">If true, the method will test if importing the code was successful. Will take more time.</param>
+        /// <returns>Will return true if importing was successful. Will return false if the code was already loaded or the code does not exist.</returns>
+        public bool Import(string code, bool testIfSuccessful = true)
+        {
+            cg.GoToSettings();
+
+            string initialDescription = null;
+            if (testIfSuccessful)
+            {
+                initialDescription = GetDescription(false);
+                SetDescription(IMPORT_TEST, false);
+            }
+
+            // Import the code.
+            cg.LeftClick(Points.SETTINGS_IMPORT);
+            cg.TextInput(code);
+            cg.KeyPress(Keys.Enter);
+
+            // Give time for the code to import.
+            Thread.Sleep(1000);
+
+            // Test if the import was successful.
+            bool wasSuccessful;
+            if (testIfSuccessful)
+            {
+                if (GetDescription(false) != IMPORT_TEST)
+                    wasSuccessful = true;
+                else
+                {
+                    wasSuccessful = false;
+                    SetDescription(initialDescription, false);
+                }
+            }
+            else wasSuccessful = true;
+
+            cg.GoBack(1);
+
+            return wasSuccessful;
+        }
+
+        /// <summary>
+        /// Sets the description of the game.
+        /// </summary>
+        /// <param name="value">The new description.</param>
+        public void SetDescription(string value) => SetDescription(value, true);
+
+        private void SetDescription(string value, bool goToSettings)
+        {
+            if (goToSettings) cg.GoToSettings();
+
+            cg.LeftClick(Points.SETTINGS_DESCRIPTION, 100);
+            cg.SelectAll();
+            Thread.Sleep(100);
+
+            cg.KeyPress(Keys.Back);
+            Thread.Sleep(100);
+
+            cg.TextInput(value);
+            Thread.Sleep(100);
+
+            cg.KeyPress(Keys.Enter);
+            Thread.Sleep(100);
+
+            if (goToSettings) cg.GoBack(1);
+        }
+
+        /// <summary>
+        /// Gets the description of the game.
+        /// </summary>
+        /// <returns>The current description.</returns>
+        public string GetDescription() => GetDescription(true);
+
+        private string GetDescription(bool goToSettings)
+        {
+            if (goToSettings) cg.GoToSettings();
+
+            cg.LeftClick(Points.SETTINGS_DESCRIPTION, 100);
+            cg.SelectAll();
+            Thread.Sleep(100);
+
+            // Save the clipboard.
+            string clipboardText = CustomGame.GetClipboard();
+
+            // Copy the selected text into the clipboard.
+            cg.Copy();
+            Thread.Sleep(100);
+
+            // The clipboard now has the description. Save the clipboard.
+            string description = CustomGame.GetClipboard();
+
+            // Reset the clipboard.
+            if (!string.IsNullOrEmpty(clipboardText))
+                CustomGame.SetClipboard(clipboardText);
+
+            if (goToSettings) cg.GoBack(1);
+
+            return description;
+        }
     }
 
 #pragma warning disable CS1591
@@ -1129,4 +1234,14 @@ namespace Deltin.CustomGameAutomation
         }
     }
 #pragma warning restore CS1591
+    
+    /*
+    [Flags]
+    enum ImportTest
+    {
+        None,
+        PreserveDescriptionOnFailure = 1 << 1,
+        UseOldDescription            = 1 << 2
+    }
+    */
 }
