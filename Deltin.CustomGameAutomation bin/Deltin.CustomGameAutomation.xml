@@ -114,14 +114,14 @@
             <param name="letters">Characters to generate.</param>
             <returns>An alphabet to be used with <see cref="!:GetPlayerName(int, PlayerNameAlphabet)"/></returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32)">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.Int32,System.String)">
             <summary>
             Gets the name of a player.
             </summary>
             <param name="slot">The slot of the player.</param>
             <returns>The name of the player.</returns>
         </member>
-        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName">
+        <member name="M:Deltin.CustomGameAutomation.CustomGame.GetPlayerName(System.String)">
             <summary>
             Gets the name of the player when already in the career profile.
             </summary>
@@ -1391,6 +1391,28 @@
         <member name="F:Deltin.CustomGameAutomation.DefaultKeys.Pause">
             <summary>
             The key used to pause the custom game. Is CTRL+SHIFT+= by default.
+            </summary>
+        </member>
+        <member name="F:Deltin.CustomGameAutomation.DebugMenu.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.DebugMenu.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Deltin.CustomGameAutomation.PictureBoxExtended">
+            <summary>
+            Inherits from PictureBox; adds Interpolation Mode Setting
             </summary>
         </member>
         <member name="T:Deltin.CustomGameAutomation.ScreenshotMethod">
