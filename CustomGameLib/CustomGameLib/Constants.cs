@@ -140,7 +140,8 @@ namespace Deltin.CustomGameAutomation
         public static readonly Point SETTINGS_BACK = new Point(855, 507);
         public static readonly Point SETTINGS_DISCARD = new Point(436, 318);
         public static readonly Point SETTINGS_IMPORT = new Point(738, 153);
-        public static readonly Point SETTINGS_DESCRIPTION = new Point(707, 199);
+        public static readonly Point SETTINGS_MODENAME = new Point(707, 199);
+        public static readonly Point SETTINGS_DESCRIPTION = new Point(707, 238);
 
         public static readonly Point PRESETS_FIRST_PRESET = new Point(86, 155);
         public static readonly Point PRESETS_CONFIRM = new Point(480, 327);
