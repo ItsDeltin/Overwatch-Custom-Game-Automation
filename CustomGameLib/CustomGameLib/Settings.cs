@@ -597,7 +597,7 @@ namespace Deltin.CustomGameAutomation
             }
         }
 
-        const string IMPORT_TEST = "!OCGA Import Test!";
+        const string IMPORT_TEST = "settings\n{\n\tmodes\n\t{\n\t\tAssault\n\t}\n}";
 
         /// <summary>
         /// Imports a custom game code.
@@ -609,11 +609,11 @@ namespace Deltin.CustomGameAutomation
         {
             cg.GoToSettings();
 
-            string initialDescription = null;
+            string initialScript = null;
             if (testIfSuccessful)
             {
-                initialDescription = GetDescription(false);
-                SetDescription(IMPORT_TEST, false);
+                initialScript = GetScript(false);
+                SetScript(IMPORT_TEST, false);
             }
 
             // Import the code.
@@ -621,20 +621,23 @@ namespace Deltin.CustomGameAutomation
             cg.TextInput(code);
             cg.KeyPress(Keys.Enter);
 
-            // Give time for the code to import.
-            Thread.Sleep(1000);
-
             // Test if the import was successful.
-            bool wasSuccessful;
+            bool wasSuccessful = false;
             if (testIfSuccessful)
             {
-                if (GetDescription(false) != IMPORT_TEST)
-                    wasSuccessful = true;
-                else
+                // Loop for three seconds, keeping track of current time with i (100ms for GetScript() to return)
+                for (int i = 0; i < 3000; i += 100 + 150)
                 {
-                    wasSuccessful = false;
-                    SetDescription(initialDescription, false);
+                    Thread.Sleep(150);
+                    if (GetScript(false) != IMPORT_TEST)
+                    {
+                        wasSuccessful = true;
+                        break;
+                    }
                 }
+
+                if (!wasSuccessful)
+                    SetScript(initialScript, false);
             }
             else wasSuccessful = true;
 
