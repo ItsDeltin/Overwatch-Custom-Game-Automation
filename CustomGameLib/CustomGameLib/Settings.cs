@@ -701,6 +701,59 @@ namespace Deltin.CustomGameAutomation
 
             return description;
         }
+
+        /// <summary>
+        /// Sets the script of the game.
+        /// </summary>
+        /// <param name="value">The new script.</param>
+        public void SetScript(string value) => SetScript(value, true);
+
+        private void SetScript(string value, bool goToSettings)
+        {
+            if (goToSettings) cg.GoToSettings();
+
+            string clipboardText = CustomGame.GetClipboard();
+
+            CustomGame.SetClipboard(value);
+
+            cg.LeftClick(Points.SETTINGS_PASTE, 100);
+            Thread.Sleep(100);
+
+            cg.LeftClick(Points.PRESETS_CONFIRM, 100);
+            Thread.Sleep(100);
+
+            if (!string.IsNullOrEmpty(clipboardText))
+                CustomGame.SetClipboard(clipboardText);
+
+            if (goToSettings) cg.GoBack(1);
+        }
+
+        /// <summary>
+        /// Gets the script of the game.
+        /// </summary>
+        /// <returns>The current script.</returns>
+        public string GetScript() => GetScript(true);
+
+        private string GetScript(bool goToSettings)
+        {
+            if (goToSettings) cg.GoToSettings();
+
+            // Save the clipboard.
+            string clipboardText = CustomGame.GetClipboard();
+
+            cg.LeftClick(Points.SETTINGS_COPY, 100);
+
+            // The clipboard now has the script. Save the clipboard.
+            string script = CustomGame.GetClipboard();
+
+            // Reset the clipboard.
+            if (!string.IsNullOrEmpty(clipboardText))
+                CustomGame.SetClipboard(clipboardText);
+
+            if (goToSettings) cg.GoBack(1);
+
+            return script;
+        }
     }
 
 #pragma warning disable CS1591
