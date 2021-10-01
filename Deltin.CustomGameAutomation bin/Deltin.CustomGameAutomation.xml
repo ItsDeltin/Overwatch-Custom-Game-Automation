@@ -3264,5 +3264,17 @@
             </summary>
             <returns>The current description.</returns>
         </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.SetScript(System.String)">
+            <summary>
+            Sets the script of the game.
+            </summary>
+            <param name="value">The new script.</param>
+        </member>
+        <member name="M:Deltin.CustomGameAutomation.Settings.GetScript">
+            <summary>
+            Gets the script of the game.
+            </summary>
+            <returns>The current script.</returns>
+        </member>
     </members>
 </doc>
